@@ -7,7 +7,8 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "types": "pnpm run cf-typegen && tsc --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -25,6 +26,7 @@
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@sentry/cloudflare": "^10.38.0",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",
     "hono": "^4.11.8",

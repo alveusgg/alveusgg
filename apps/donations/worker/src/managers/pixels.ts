@@ -5,10 +5,15 @@ import type { AppRouter } from "@alveusgg/alveusgg-website";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import * as Sentry from "@sentry/cloudflare";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
-import { createSharedKeyMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
+import { getSentryConfig } from "../utils/sentry";
 
 interface PixelsManagerState {
   pixels: Pixel[];
@@ -22,7 +27,7 @@ const Grid = z.object({
 });
 type Grid = z.infer<typeof Grid>;
 
-export class PixelsManagerDurableObject extends DurableObject<Env> {
+class PixelsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private startup?: Promise<void>;
   private provider?: SyncProvider<PixelsManagerState>;
@@ -39,11 +44,12 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.muralId = env.MURAL_ID;
+    this.muralId = env.MURAL_ID!;
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
       .use(cors())
+      .use(setSentryTagsMiddleware)
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
@@ -68,6 +74,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           return c.json({ success: true });
         } catch (error) {
           console.error(error);
+          Sentry.captureException(error);
           return c.json(
             { error: "Failed to resync pixels", success: false },
             500,
@@ -112,13 +119,14 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
   private async getStateFromAPI() {
     if (!this.api) throw new Error("API not initialized");
-    const pixels: Omit<Pixel, "data">[] =
+    const pixels: Omit<Pixel, "data" | "muralId">[] =
       await this.api.donations.getPixels.query({ muralId: this.muralId });
 
     const pixelsWithImageData = pixels.map((pixel) => {
       if (!this.grid) throw new Error("Grid not initialized");
       return {
         ...pixel,
+        muralId: this.muralId,
         data: this.grid.squares[`${pixel.column}:${pixel.row}`],
       };
     });
@@ -249,6 +257,12 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     return this.router.fetch(request);
   }
 }
+
+export const PixelsManagerDurableObject =
+  Sentry.instrumentDurableObjectWithSentry(
+    getSentryConfig,
+    PixelsManagerDurableObjectBase,
+  );
 
 function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
   const totalPossibleSquares = grid.columns * grid.rows;
