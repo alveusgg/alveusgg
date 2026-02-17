@@ -84,7 +84,7 @@ const gardenPresets: Record<string, Preset> = {
   pastureright: {
     description: "Pasture Right",
     image: pastureright,
-    position: { pan: 75.57, tilt: -12.38, zoom: 60 },
+    position: { pan: -77.99, tilt: -9.6, zoom: 60 },
     // modified: 2025-10-09T11:10:30.312Z
   },
   pasturewater: {
