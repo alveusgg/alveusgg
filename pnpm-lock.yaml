@@ -240,8 +240,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(next@16.1.6(@babel/core@7.28.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@vercel/functions':
-        specifier: ^3.4.1
-        version: 3.4.1(@aws-sdk/credential-provider-web-identity@3.972.5)
+        specifier: ^3.4.2
+        version: 3.4.2(@aws-sdk/credential-provider-web-identity@3.972.5)
       '@xyflow/react':
         specifier: ^12.10.0
         version: 12.10.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3262,8 +3262,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@3.4.1':
-    resolution: {integrity: sha512-+wqs1fscC1l2NZYL8Ahxe/vba4YzcuhxTV99Kf8sNwNeATaxQ9rbR6BILksoGDmm99YiD0wc0hBJcYxVNwiNaw==}
+  '@vercel/functions@3.4.2':
+    resolution: {integrity: sha512-WDsNNuGOOUhRYxfcSgk8nlXaYW/6u1Lw2eaKm0y4+gDPGK/hwmYIeP2hESfccuCiPXd5ZGO8Jz/V5Ud3ZByoUQ==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -3271,8 +3271,8 @@ packages:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
 
-  '@vercel/oidc@3.1.0':
-    resolution: {integrity: sha512-Fw28YZpRnA3cAHHDlkt7xQHiJ0fcL+NRcIqsocZQUSmbzeIKRpwttJjik5ZGanXP+vlA4SbTg+AbA3bP363l+w==}
+  '@vercel/oidc@3.2.0':
+    resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
     engines: {node: '>= 20'}
 
   '@vitest/expect@4.0.18':
@@ -9974,13 +9974,13 @@ snapshots:
       next: 16.1.6(@babel/core@7.28.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@vercel/functions@3.4.1(@aws-sdk/credential-provider-web-identity@3.972.5)':
+  '@vercel/functions@3.4.2(@aws-sdk/credential-provider-web-identity@3.972.5)':
     dependencies:
-      '@vercel/oidc': 3.1.0
+      '@vercel/oidc': 3.2.0
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.5
 
-  '@vercel/oidc@3.1.0': {}
+  '@vercel/oidc@3.2.0': {}
 
   '@vitest/expect@4.0.18':
     dependencies:
