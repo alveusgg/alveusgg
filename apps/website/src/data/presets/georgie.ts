@@ -44,8 +44,8 @@ const georgiePresets: Record<string, Preset> = {
   far: {
     description: "Far",
     image: far,
-    position: { pan: 48.62, tilt: -8.96, zoom: 10181 },
-    // modified: 2025-12-19T02:46:46.222Z
+    position: { pan: 48.57, tilt: -14.32, zoom: 11717 },
+    // modified: 2026-02-18T17:08:09.318Z
   },
   land: {
     description: "Land",

@@ -110,8 +110,8 @@ const pasturePresets: Record<string, Preset> = {
   brush: {
     description: "Squitchy",
     image: brush,
-    position: { pan: -7.24, tilt: -7.45, zoom: 1798 },
-    // modified: 2025-10-09T11:10:30.088Z
+    position: { pan: -7.23, tilt: -7.46, zoom: 1201 },
+    // modified: 2026-02-17T15:25:36.551Z
   },
   brushl: {
     description: "brushl",
