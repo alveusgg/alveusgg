@@ -2,6 +2,7 @@ import bowld from "@/assets/presets/macaws/bowld.png";
 import bowlr from "@/assets/presets/macaws/bowlr.png";
 import closebranches from "@/assets/presets/macaws/closebranches.png";
 import home from "@/assets/presets/macaws/home.png";
+import leftpole from "@/assets/presets/macaws/leftpole.png";
 import perchbr from "@/assets/presets/macaws/perchbr.png";
 import postmb from "@/assets/presets/macaws/postmb.png";
 import postmt from "@/assets/presets/macaws/postmt.png";
@@ -39,6 +40,12 @@ const macawsPresets: Record<string, Preset> = {
     position: { pan: -173.35, tilt: -32.25, zoom: 1 },
     // modified: 2026-01-04T17:41:33.617Z
   },
+  leftpole: {
+    description: "leftpole",
+    image: leftpole,
+    position: { pan: 158.18, tilt: -40.22, zoom: 1 },
+    // modified: 2026-02-18T15:24:47.675Z
+  },
   perchbr: {
     description: "perchbr",
     image: perchbr,
@@ -60,8 +67,8 @@ const macawsPresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
-    position: { pan: -146.31, tilt: -24.15, zoom: 1 },
-    // modified: 2025-10-13T21:24:01.163Z
+    position: { pan: -140.85, tilt: -23.58, zoom: 1 },
+    // modified: 2026-02-17T15:40:49.078Z
   },
   water: {
     description: "Water",
