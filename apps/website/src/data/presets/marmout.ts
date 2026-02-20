@@ -1,4 +1,5 @@
 import domell from "@/assets/presets/marmout/domell.png";
+import domellshelf from "@/assets/presets/marmout/domellshelf.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
@@ -19,6 +20,7 @@ import nearleftshelf from "@/assets/presets/marmout/nearleftshelf.png";
 import nearlefttop from "@/assets/presets/marmout/nearlefttop.png";
 import nearrightshelves from "@/assets/presets/marmout/nearrightshelves.png";
 import right from "@/assets/presets/marmout/right.png";
+import rightcorner from "@/assets/presets/marmout/rightcorner.png";
 import rightpost from "@/assets/presets/marmout/rightpost.png";
 import table from "@/assets/presets/marmout/table.png";
 import tablet from "@/assets/presets/marmout/tablet.png";
@@ -39,8 +41,14 @@ const marmoutPresets: Record<string, Preset> = {
   domell: {
     description: "Dome Left Lower",
     image: domell,
-    position: { pan: 126.28, tilt: -8.91, zoom: 1718 },
-    // modified: 2025-11-30T18:55:02.883Z
+    position: { pan: 126.28, tilt: -8.9, zoom: 1718 },
+    // modified: 2026-02-19T14:51:49.348Z
+  },
+  domellshelf: {
+    description: "domellshelf",
+    image: domellshelf,
+    position: { pan: 121.34, tilt: -8.91, zoom: 898 },
+    // modified: 2026-02-19T14:48:50.697Z
   },
   domelu: {
     description: "Dome Left Upper",
@@ -155,6 +163,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: right,
     position: { pan: 159.36, tilt: -17.56, zoom: 1 },
     // modified: 2025-11-07T22:53:17.546Z
+  },
+  rightcorner: {
+    description: "rightcorner",
+    image: rightcorner,
+    position: { pan: 174.68, tilt: -3.4, zoom: 462 },
+    // modified: 2026-02-19T14:45:56.006Z
   },
   rightpost: {
     description: "rightpost",

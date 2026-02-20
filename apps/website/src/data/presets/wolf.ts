@@ -40,6 +40,7 @@ import right from "@/assets/presets/wolf/right.png";
 import rightfence from "@/assets/presets/wolf/rightfence.png";
 import river from "@/assets/presets/wolf/river.png";
 import shaft from "@/assets/presets/wolf/shaft.png";
+import shaftr from "@/assets/presets/wolf/shaftr.png";
 import switchden from "@/assets/presets/wolf/switchden.png";
 import switchgatel from "@/assets/presets/wolf/switchgatel.png";
 import switchgater from "@/assets/presets/wolf/switchgater.png";
@@ -307,6 +308,12 @@ const wolfPresets: Record<string, Preset> = {
     image: shaft,
     position: { pan: 101.4, tilt: -11.36, zoom: 219 },
     // modified: 2025-11-30T18:56:13.336Z
+  },
+  shaftr: {
+    description: "shaftr",
+    image: shaftr,
+    position: { pan: 118.97, tilt: -11, zoom: 649 },
+    // modified: 2026-02-19T14:56:36.060Z
   },
   switchden: {
     description: "Switch Den",
