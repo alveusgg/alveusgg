@@ -34,6 +34,7 @@ import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
 import rivert from "@/assets/presets/fox/rivert.png";
 import stump from "@/assets/presets/fox/stump.png";
+import table from "@/assets/presets/fox/table.png";
 import timbertree from "@/assets/presets/fox/timbertree.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -254,6 +255,12 @@ const foxPresets: Record<string, Preset> = {
     image: stump,
     position: { pan: -120.97, tilt: -3.41, zoom: 4014 },
     // modified: 2026-01-03T20:24:47.181Z
+  },
+  table: {
+    description: "table",
+    image: table,
+    position: { pan: 35.11, tilt: -1.17, zoom: 2217 },
+    // modified: 2026-02-20T18:57:38.266Z
   },
   timbertree: {
     description: "timbertree",
