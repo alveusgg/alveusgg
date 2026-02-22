@@ -61,8 +61,8 @@ const Wolves = ({
           href="https://www.fws.gov/project/red-wolf-recovery-program"
           dark
         >
-          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update - February
-          2026
+          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update -
+          February 2026
         </Link>
       </li>
       <li className="mb-1">
