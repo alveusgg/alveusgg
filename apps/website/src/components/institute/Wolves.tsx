@@ -23,7 +23,7 @@ const Wolves = ({
       <div className="relative rounded-r-xl bg-red py-2 pr-20 before:absolute before:inset-y-0 before:-left-full before:w-full before:bg-red @md:pr-30">
         <Heading level={-1}>
           <span className="mr-1 inline-block text-6xl tabular-nums">
-            <span className="opacity-10 select-none">0</span>18
+            <span className="opacity-10 select-none">0</span>26
           </span>{" "}
           Red wolves exist in the wild today.{" "}
           <Link
@@ -61,8 +61,8 @@ const Wolves = ({
           href="https://www.fws.gov/project/red-wolf-recovery-program"
           dark
         >
-          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update - August
-          2025
+          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update -
+          February 2026
         </Link>
       </li>
       <li className="mb-1">
