@@ -14,6 +14,7 @@ import left from "@/assets/presets/wolfswitch/left.png";
 import leftcorner from "@/assets/presets/wolfswitch/leftcorner.png";
 import middleleft from "@/assets/presets/wolfswitch/middleleft.png";
 import pond from "@/assets/presets/wolfswitch/pond.png";
+import switchgate from "@/assets/presets/wolfswitch/switchgate.png";
 import water from "@/assets/presets/wolfswitch/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -114,6 +115,12 @@ const wolfswitchPresets: Record<string, Preset> = {
     image: pond,
     position: { pan: 2.51, tilt: -8.07, zoom: 741 },
     // modified: 2025-11-30T18:56:37.816Z
+  },
+  switchgate: {
+    description: "switchgate",
+    image: switchgate,
+    position: { pan: -42.88, tilt: -18.72, zoom: 172 },
+    // modified: 2026-02-23T21:30:40.899Z
   },
   water: {
     description: "Water",
