@@ -68,7 +68,7 @@ const macawsPresets: Record<string, Preset> = {
   postmt: {
     description: "postmt",
     image: postmt,
-    position: { pan: 165.63, tilt: -22.03, zoom: 601 },
+    position: { pan: 165.64, tilt: -14.46, zoom: 601 },
     // modified: 2025-10-16T15:10:37.349Z
   },
   right: {
