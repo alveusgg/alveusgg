@@ -113,8 +113,8 @@ importers:
         specifier: ^11.9.0
         version: 11.9.0(typescript@5.9.3)
       hono:
-        specifier: ^4.12.1
-        version: 4.12.1
+        specifier: ^4.12.2
+        version: 4.12.2
       superjson:
         specifier: ^2.2.6
         version: 2.2.6
@@ -4371,8 +4371,8 @@ packages:
     resolution: {integrity: sha512-U7tt8JsyrxSRKspfhtLET79pU8K+tInj5QZXs1jSugO1Vq5dFj3kmZsRldo29mTBfcjDRVRXrEZ6LS63Cog9ZA==}
     engines: {node: '>=16.9.0'}
 
-  hono@4.12.1:
-    resolution: {integrity: sha512-hi9afu8g0lfJVLolxElAZGANCTTl6bewIdsRNhaywfP9K8BPf++F2z6OLrYGIinUwpRKzbZHMhPwvc0ZEpAwGw==}
+  hono@4.12.2:
+    resolution: {integrity: sha512-gJnaDHXKDayjt8ue0n8Gs0A007yKXj4Xzb8+cNjZeYsSzzwKc0Lr+OZgYwVfB0pHfUs17EPoLvrOsEaJ9mj+Tg==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@9.0.2:
@@ -11247,7 +11247,7 @@ snapshots:
 
   hono@4.11.4: {}
 
-  hono@4.12.1: {}
+  hono@4.12.2: {}
 
   hosted-git-info@9.0.2:
     dependencies:
