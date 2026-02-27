@@ -14,6 +14,7 @@ import hut from "@/assets/presets/pushpop/hut.png";
 import hutz from "@/assets/presets/pushpop/hutz.png";
 import insidedoor from "@/assets/presets/pushpop/insidedoor.png";
 import left from "@/assets/presets/pushpop/left.png";
+import pondt from "@/assets/presets/pushpop/pondt.png";
 import right from "@/assets/presets/pushpop/right.png";
 import water from "@/assets/presets/pushpop/water.png";
 
@@ -115,6 +116,12 @@ const pushpopPresets: Record<string, Preset> = {
     image: left,
     position: { pan: -108.09, tilt: -21, zoom: 1 },
     // modified: 2025-10-09T11:10:30.344Z
+  },
+  pondt: {
+    description: "pondt",
+    image: pondt,
+    position: { pan: -102.1, tilt: -10.94, zoom: 507 },
+    // modified: 2026-02-26T17:13:51.281Z
   },
   right: {
     description: "Right",
