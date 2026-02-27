@@ -47,9 +47,8 @@ export function CalendarEvents() {
       <Panel>
         {selected && (
           <Calendar
-            events={eventsWithChildren || []}
+            events={eventsWithChildren}
             selectedDateTime={selected}
-            loading={events.isPending}
             onChange={setSelected}
             timeZone={timeZone}
             setTimeZone={setTimeZone}
