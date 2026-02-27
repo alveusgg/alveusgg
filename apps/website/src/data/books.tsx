@@ -55,6 +55,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/48Le5cT",
     thickness: thickness.sm, // 280 pages
     color: "border-gray-200",
+    vodId: "x3vV-65vy_k",
   },
   // no 2025-11 book
   {
@@ -65,6 +66,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/3KrRFVS",
     thickness: thickness.xs, // 230 pages
     color: "border-red-700",
+    vodId: "IoPa65jB9U8",
   },
   {
     title: "Why Sharks Matter",
