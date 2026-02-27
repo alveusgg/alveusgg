@@ -306,7 +306,7 @@ const BookClubPage: NextPage = () => {
             {booksWithPlaceholders.map((book, i) =>
               book.type === "placeholder" ? (
                 <div key={`placeholder-${i}`} className="mx-auto w-64">
-                  <Cover />
+                  <Cover className="opacity-50" />
 
                   <Heading level={2} className="relative mt-4 mb-0">
                     <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
@@ -339,7 +339,7 @@ const BookClubPage: NextPage = () => {
                   books.length % 2 === 0 || i > 0 ? "xl:block" : "md:block",
                 )}
               >
-                <Cover />
+                <Cover className="opacity-50" />
               </div>
             ))}
           </div>

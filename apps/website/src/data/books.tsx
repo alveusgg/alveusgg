@@ -4,6 +4,7 @@ import { type PartialDateString } from "@/utils/datetime-partial";
 
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
+import braidingSweetgrass from "@/assets/book-club/books/braiding-sweetgrass.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
 import livingWithLynx from "@/assets/book-club/books/living-with-lynx.jpg";
 import onTheWing from "@/assets/book-club/books/on-the-wing.jpg";
@@ -36,6 +37,17 @@ export type BookInfo = {
 
 const books: [BookInfo, ...BookInfo[]] = [
   {
+    title: "Braiding Sweetgrass",
+    author: "Robin Wall Kimmerer",
+    image: braidingSweetgrass,
+    month: "2026-03",
+    link: "https://amzn.to/4kRiocB",
+    thickness: thickness.lg, // 410 pages
+    color: "border-gray-400",
+  },
+  // no 2026-02 book
+  // no 2026-01 book
+  {
     title: "Living with Lynx",
     author: "Jonny Hanson",
     image: livingWithLynx,
@@ -43,6 +55,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/48Le5cT",
     thickness: thickness.sm, // 280 pages
     color: "border-gray-200",
+    vodId: "x3vV-65vy_k",
   },
   // no 2025-11 book
   {
@@ -53,6 +66,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/3KrRFVS",
     thickness: thickness.xs, // 230 pages
     color: "border-red-700",
+    vodId: "IoPa65jB9U8",
   },
   {
     title: "Why Sharks Matter",
