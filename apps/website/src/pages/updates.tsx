@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useRef } from "react";
 
 import useCrawler from "@/hooks/crawler";
 import usePrefersReducedMotion from "@/hooks/motion";
@@ -32,6 +33,20 @@ const UpdatesPage: NextPage = () => {
   const mightBeWebkit = useIsWebKit() !== false; // assume it's WebKit until we know
 
   const showVideo = !crawler && !reducedMotion && !mightBeWebkit;
+
+  // If we've got an anchor in the URL, and it is a valid element on the page, scroll to it
+  // We do this after the schedule has loaded to handle layout shifts that we cannot predict
+  const firstLoad = useRef(true);
+  const onScheduleLoad = useCallback(() => {
+    if (!firstLoad.current) return;
+    firstLoad.current = false;
+
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const element = document.getElementById(hash.slice(1));
+    element?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   return (
     <>
@@ -111,7 +126,7 @@ const UpdatesPage: NextPage = () => {
             <Heading level={3} id="schedule" link>
               Schedule
             </Heading>
-            <Schedule />
+            <Schedule onLoad={onScheduleLoad} />
           </section>
 
           <section>
