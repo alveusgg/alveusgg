@@ -45,8 +45,10 @@ const UpdatesPage: NextPage = () => {
     if (!hash) return;
 
     const element = document.getElementById(hash.slice(1));
-    element?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+    element?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [reducedMotion]);
 
   return (
     <>
