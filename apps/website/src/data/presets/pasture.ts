@@ -140,7 +140,7 @@ const pasturePresets: Record<string, Preset> = {
   downleft: {
     description: "downleft",
     image: downleft,
-    position: { pan: 83.89, tilt: -6.61, zoom: 1 },
+    position: { pan: -19.14, tilt: -47.7, zoom: 1 },
     // modified: 2025-11-18T17:55:38.827Z
   },
   feeder: {
