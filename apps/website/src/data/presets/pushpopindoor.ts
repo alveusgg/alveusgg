@@ -12,6 +12,7 @@ import nearcorner from "@/assets/presets/pushpopindoor/nearcorner.png";
 import right from "@/assets/presets/pushpopindoor/right.png";
 import rightcorner from "@/assets/presets/pushpopindoor/rightcorner.png";
 import rightcornerz from "@/assets/presets/pushpopindoor/rightcornerz.png";
+import rightcornerzzz from "@/assets/presets/pushpopindoor/rightcornerzzz.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -99,6 +100,12 @@ const pushpopindoorPresets: Record<string, Preset> = {
     image: rightcornerz,
     position: { pan: 113.78, tilt: -10.57, zoom: 9083 },
     // modified: 2025-10-09T11:10:30.440Z
+  },
+  rightcornerzzz: {
+    description: "rightcornerzzz",
+    image: rightcornerzzz,
+    position: { pan: 117.63, tilt: -11.54, zoom: 10374 },
+    // modified: 2026-02-28T20:37:39.428Z
   },
 };
 

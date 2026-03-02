@@ -12,6 +12,7 @@ import left from "@/assets/presets/littles/left.png";
 import leftb from "@/assets/presets/littles/leftb.png";
 import leftback from "@/assets/presets/littles/leftback.png";
 import leftcorner from "@/assets/presets/littles/leftcorner.png";
+import macawdoor from "@/assets/presets/littles/macawdoor.png";
 import macawsinside from "@/assets/presets/littles/macawsinside.png";
 import miasleep from "@/assets/presets/littles/miasleep.png";
 import right from "@/assets/presets/littles/right.png";
@@ -107,6 +108,12 @@ const littlesPresets: Record<string, Preset> = {
     image: leftcorner,
     position: { pan: 109.17, tilt: -6.51, zoom: 798 },
     // modified: 2025-11-28T16:10:30.034Z
+  },
+  macawdoor: {
+    description: "macawdoor",
+    image: macawdoor,
+    position: { pan: 146.11, tilt: -10.34, zoom: 468 },
+    // modified: 2026-02-27T20:32:07.810Z
   },
   macawsinside: {
     description: "macawsinside",
