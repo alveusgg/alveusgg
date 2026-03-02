@@ -202,9 +202,8 @@ type CalendarEvent = {
 };
 
 type CalendarProps = {
-  events: CalendarEvent[];
+  events?: CalendarEvent[];
   selectedDateTime: DateTime;
-  loading?: boolean;
   onChange?: Dispatch<SetStateAction<MonthSelection>>;
   className?: string;
   children?: ReactNode;
@@ -218,7 +217,6 @@ const getDateKey = (date: DateTime, timeZone?: string) =>
 export function Calendar({
   events,
   selectedDateTime,
-  loading = false,
   onChange,
   className,
   children,
@@ -273,7 +271,7 @@ export function Calendar({
   }, [selectedDateTime, daysInMonth, timeZone]);
 
   const byDay = useMemo(() => {
-    const grouped = (loading ? placeholders : events).reduce<
+    const grouped = (events ?? placeholders).reduce<
       Record<string, CalendarEvent[]>
     >((acc, event) => {
       const dateKey = getDateKey(DateTime.fromJSDate(event.date), timeZone);
@@ -295,7 +293,7 @@ export function Calendar({
         }),
       ]),
     );
-  }, [loading, placeholders, events, timeZone]);
+  }, [placeholders, events, timeZone]);
 
   const theme = useMemo(
     () => getCalendarTheme(selectedDateTime.month - 1),

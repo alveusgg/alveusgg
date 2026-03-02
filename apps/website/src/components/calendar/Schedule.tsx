@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import { standardCategories } from "@/data/calendar-events";
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
@@ -49,7 +49,7 @@ const webcalUrls = typeSafeObjectKeys(channels)
 const selectionButtonClasses =
   "flex items-center gap-2 p-1 text-sm leading-none text-alveus-green-500 transition-colors hover:text-alveus-green-800";
 
-export function Schedule() {
+export function Schedule({ onLoad }: { onLoad?: () => void }) {
   const [timeZone, setTimeZone] = useTimezone();
   const today = useToday(timeZone);
   const [selected, setSelected] = useMonthSelection(timeZone, today);
@@ -77,14 +77,19 @@ export function Schedule() {
     [today, events.data, categories, timeZone],
   );
 
+  useEffect(() => {
+    if (eventsWithChildren) {
+      onLoad?.();
+    }
+  }, [eventsWithChildren, onLoad]);
+
   if (!selected) return null;
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-2 xl:grid-cols-3">
       <Calendar
-        events={eventsWithChildren || []}
+        events={eventsWithChildren}
         selectedDateTime={selected}
-        loading={events.isPending}
         onChange={setSelected}
         className="mt-2 md:mt-6 xl:col-span-2"
         timeZone={timeZone}
