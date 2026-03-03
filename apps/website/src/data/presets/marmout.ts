@@ -1,3 +1,4 @@
+import basket from "@/assets/presets/marmout/basket.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
@@ -38,6 +39,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 135.7, tilt: -18.09, zoom: 1 },
     // modified: 2025-11-07T22:34:48.564Z
+  },
+  basket: {
+    description: "basket",
+    image: basket,
+    position: { pan: 151.08, tilt: 4.86, zoom: 1291 },
+    // modified: 2026-03-02T15:28:06.254Z
   },
   domell: {
     description: "Dome Left Lower",

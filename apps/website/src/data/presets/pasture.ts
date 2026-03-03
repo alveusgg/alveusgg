@@ -164,8 +164,8 @@ const pasturePresets: Record<string, Preset> = {
   fencel: {
     description: "Fence Left",
     image: fencel,
-    position: { pan: -26.7, tilt: -11.16, zoom: 1812 },
-    // modified: 2025-10-09T11:10:30.092Z
+    position: { pan: -26.71, tilt: -11.16, zoom: 739 },
+    // modified: 2026-03-02T22:02:17.346Z
   },
   gate: {
     description: "Gate",
