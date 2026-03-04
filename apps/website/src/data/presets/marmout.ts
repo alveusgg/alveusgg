@@ -157,8 +157,8 @@ const marmoutPresets: Record<string, Preset> = {
   nearleftshelf: {
     description: "Near Left Shelf",
     image: nearleftshelf,
-    position: { pan: 84.63, tilt: -0.52, zoom: 332 },
-    // modified: 2025-11-09T15:52:13.676Z
+    position: { pan: 84.62, tilt: -0.5, zoom: 332 },
+    // modified: 2026-03-03T17:29:46.814Z
   },
   nearlefttop: {
     description: "Near Left Top",
