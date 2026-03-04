@@ -27,6 +27,7 @@ import farcorner from "@/assets/presets/wolf/farcorner.png";
 import farfence from "@/assets/presets/wolf/farfence.png";
 import grass from "@/assets/presets/wolf/grass.png";
 import grassl from "@/assets/presets/wolf/grassl.png";
+import grassr from "@/assets/presets/wolf/grassr.png";
 import home from "@/assets/presets/wolf/home.png";
 import insidedoor from "@/assets/presets/wolf/insidedoor.png";
 import left from "@/assets/presets/wolf/left.png";
@@ -236,6 +237,12 @@ const wolfPresets: Record<string, Preset> = {
     image: grassl,
     position: { pan: 143.34, tilt: -0.92, zoom: 936 },
     // modified: 2025-10-09T11:10:30.188Z
+  },
+  grassr: {
+    description: "grassr",
+    image: grassr,
+    position: { pan: 150.53, tilt: -1.48, zoom: 1224 },
+    // modified: 2026-03-03T20:05:19.699Z
   },
   insidedoor: {
     description: "Inside Door",
