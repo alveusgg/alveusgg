@@ -23,7 +23,10 @@ const Wolves = ({
       <div className="relative rounded-r-xl bg-red py-2 pr-20 before:absolute before:inset-y-0 before:-left-full before:w-full before:bg-red @md:pr-30">
         <Heading level={-1}>
           <span className="mr-1 inline-block text-6xl tabular-nums">
-            <span className="opacity-10 select-none">0</span>26
+            <span className="opacity-10 select-none" aria-hidden="true">
+              0
+            </span>
+            26
           </span>{" "}
           Red wolves exist in the wild today.{" "}
           <Link
@@ -38,7 +41,7 @@ const Wolves = ({
 
       <div className="relative rounded-r-xl bg-red py-2 pr-20 before:absolute before:inset-y-0 before:-left-full before:w-full before:bg-red @md:pr-30">
         <Heading level={-1}>
-          <span className="mr-1 inline-block text-6xl tabular-nums">286</span>{" "}
+          <span className="mr-1 inline-block text-6xl tabular-nums">319</span>{" "}
           Mexican Gray wolves exist in the wild today.{" "}
           <Link
             href="#wolf-sources"
@@ -69,11 +72,11 @@ const Wolves = ({
         [2]{" "}
         <Link
           external
-          href="https://www.fws.gov/media/name-mexican-wolf-recovery-program-quarterly-update-second-quarter-2025"
+          href="https://read.dgf.nm.gov/mexican-wolf-population-survey-reveals-a-minimum-of-319-mexican-wolves-distributed-across-arizona-and-new-mexico"
           dark
         >
-          U.S. Fish & Wildlife Service Mexican Wolf Recovery Program Quarterly
-          Update - Second Quarter 2025
+          New Mexico Department of Wildlife and Arizona Game & Fish Department -
+          February 2026
         </Link>
       </li>
     </ul>
