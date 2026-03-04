@@ -730,6 +730,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/institute",
         },
       },
+      {
+        key: "linden",
+        date: "2025-12",
+        content: [
+          "Linden joins the Alveus team",
+          "Linden joins the team as a Horticulturist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
 ];
