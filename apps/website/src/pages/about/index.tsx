@@ -707,6 +707,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
+        key: "rocky",
+        date: "2025-08",
+        content: [
+          "Rocky joins the Alveus team",
+          "Rocky joins the team as a Facilities Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
         key: "summer-camp-2025",
         date: "2025-08",
         content: [

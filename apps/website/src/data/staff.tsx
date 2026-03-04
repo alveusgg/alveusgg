@@ -17,6 +17,7 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import rockyImage from "@/assets/people/rocky.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -223,6 +224,25 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-07",
+  },
+  rocky: {
+    image: rockyImage,
+    name: "Rocky",
+    title: "Facilities Specialist",
+    description: (
+      <>
+        <p>
+          Rocky is a hands-on learner and a lover for the outdoors. He has a
+          never-ending hunger to learn about all the interesting and
+          never-ending aspects of conservation. Starting off as a volunteer
+          while working as a full time automotive technician, he quickly became
+          fascinated with the amazing people and knowledge that the world of
+          conservation has to offer through the amazing Alveus team. His
+          favorite ambassador and best friend is the one and only Stompy!
+        </p>
+      </>
+    ),
+    joined: "2025-08",
   },
   space: {
     image: spaceVoyageImage,
