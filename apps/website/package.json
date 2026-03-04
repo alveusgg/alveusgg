@@ -111,15 +111,15 @@
     "@types/country-list": "^2.1.4",
     "@types/jsdom": "^27.0.0",
     "@types/linkify-it": "^5.0.0",
-    "@types/lodash": "^4.17.23",
+    "@types/lodash": "^4.17.24",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^24.10.13",
+    "@types/node": "^24.11.0",
     "@types/oauth": "^0.9.6",
     "@types/pluralize": "^0.0.33",
     "@types/probe-image-size": "^7.2.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@types/serviceworker": "^0.0.191",
+    "@types/serviceworker": "^0.0.192",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
@@ -135,9 +135,9 @@
     "ts-morph": "^27.0.2",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.56.0",
+    "typescript-eslint": "^8.56.1",
     "vitest": "^4.0.18",
-    "webpack": "^5.105.2"
+    "webpack": "^5.105.3"
   },
   "prettier": {
     "plugins": [
