@@ -11,11 +11,13 @@ import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
+import lindenImage from "@/assets/people/linden.jpg";
 import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import rockyImage from "@/assets/people/rocky.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -166,6 +168,28 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2024-07",
   },
+  linden: {
+    image: lindenImage,
+    name: "Linden",
+    title: "Horticulturist",
+    description: (
+      <>
+        <p>
+          Linden combines her passion of conservation science &amp; plants to
+          create landscape designs that support the rich biodiversity within our
+          local ecosystem. As an avid bug lover, she recognizes the important
+          role fauna plays in the stability of invertebrate populations
+          globally. She believes in the power of small-scale change &amp; aims
+          to inspire others to become conservationists in their own communities.
+          When she&apos;s not digging in the dirt or looking at bugs, you may
+          find her looking for fossils, exploring a new crafty hobby, or hunting
+          for weird trinkets at an antique store. Her favorite ambassador at
+          Alveus is Reed &amp; her favorite insect order is Diptera (flies).
+        </p>
+      </>
+    ),
+    joined: "2025-12",
+  },
   lukas: {
     image: lukasMeyerImage,
     name: "Lukas Meyer",
@@ -200,6 +224,25 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-07",
+  },
+  rocky: {
+    image: rockyImage,
+    name: "Rocky",
+    title: "Facilities Specialist",
+    description: (
+      <>
+        <p>
+          Rocky is a hands-on learner and a lover for the outdoors. He has a
+          never-ending hunger to learn about all the interesting and
+          never-ending aspects of conservation. Starting off as a volunteer
+          while working as a full time automotive technician, he quickly became
+          fascinated with the amazing people and knowledge that the world of
+          conservation has to offer through the amazing Alveus team. His
+          favorite ambassador and best friend is the one and only Stompy!
+        </p>
+      </>
+    ),
+    joined: "2025-08",
   },
   space: {
     image: spaceVoyageImage,
