@@ -175,16 +175,16 @@ const staff: Record<string, Staff> = {
     description: (
       <>
         <p>
-          Linden combines her passion of conservation science &amp; plants to
+          Linden combines her passion of conservation science and plants to
           create landscape designs that support the rich biodiversity within our
           local ecosystem. As an avid bug lover, she recognizes the important
-          role fauna plays in the stability of invertebrate populations
-          globally. She believes in the power of small-scale change &amp; aims
-          to inspire others to become conservationists in their own communities.
+          role flora plays in the stability of invertebrate populations
+          globally. She believes in the power of small-scale change and aims to
+          inspire others to become conservationists in their own communities.
           When she&apos;s not digging in the dirt or looking at bugs, you may
           find her looking for fossils, exploring a new crafty hobby, or hunting
           for weird trinkets at an antique store. Her favorite ambassador at
-          Alveus is Reed &amp; her favorite insect order is Diptera (flies).
+          Alveus is Reed and her favorite insect order is Diptera (flies).
         </p>
       </>
     ),
