@@ -125,8 +125,8 @@ const wolfswitchPresets: Record<string, Preset> = {
   water: {
     description: "Water",
     image: water,
-    position: { pan: -99.13, tilt: -22.28, zoom: 258 },
-    // modified: 2025-10-09T11:10:30.408Z
+    position: { pan: -99.17, tilt: -22.1, zoom: 258 },
+    // modified: 2026-03-04T18:47:38.583Z
   },
 };
 
