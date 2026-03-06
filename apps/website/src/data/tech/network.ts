@@ -530,8 +530,8 @@ const data: RootNetworkItem[] = [
                           {
                             type: "camera",
                             name: "Wolf SwitchPen",
-                            model: "AXIS Q6155-E (PTZ)",
-                            url: "https://www.axis.com/products/axis-q6115-e/",
+                            model: "AXIS Q6135-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6135-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
@@ -675,36 +675,29 @@ const data: RootNetworkItem[] = [
                       {
                         type: "switch",
                         name: "Fox",
-                        model: "Ubiquiti US-8-150W",
-                        url: "https://store.ui.com/us/en/pro/category/switching-utility/products/us-8-150w",
+                        model: "Ubiquiti USW-Pro-24-PoE",
+                        url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-pro-24-poe",
                         connection: { type: "fiber", location: "buried" },
                         links: [
                           {
                             type: "camera",
                             name: "Fox",
-                            model: "AXIS M5525-E (PTZ)",
-                            url: "https://www.axis.com/products/axis-m5525-e",
+                            model: "AXIS Q6358-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6358-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "camera",
-                            name: "Fox Corner",
-                            model: "AXIS M2036-LE (Fixed)",
-                            url: "https://www.axis.com/products/axis-m2036-le",
-                            connection: { type: "ethernet", location: "wall" },
-                          },
-                          {
-                            type: "camera",
-                            name: "Fox Den",
-                            model: "AXIS P3268-LV (Fixed)",
-                            url: "https://www.axis.com/products/axis-p3268-lv",
+                            name: "Fox Covered",
+                            model: "AXIS P5676-LE (PTX)",
+                            url: "https://www.axis.com/products/axis-p5676-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "accessPoint",
                             name: "Fox",
-                            model: "Ubiquiti UAP-AC-M",
-                            url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-ac-mesh",
+                            model: "Ubiquiti U7-Pro-Outdoor",
+                            url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/u7-pro-outdoor-us",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
