@@ -356,8 +356,8 @@ const pasturePresets: Record<string, Preset> = {
   water: {
     description: "Water",
     image: water,
-    position: { pan: 59.43, tilt: -2.62, zoom: 1815 },
-    // modified: 2025-10-09T11:10:30.104Z
+    position: { pan: 59.39, tilt: -4.64, zoom: 1599 },
+    // modified: 2026-03-05T12:42:38.559Z
   },
 };
 

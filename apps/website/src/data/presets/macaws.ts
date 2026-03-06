@@ -1,6 +1,7 @@
 import bowld from "@/assets/presets/macaws/bowld.png";
 import bowlr from "@/assets/presets/macaws/bowlr.png";
 import closebranches from "@/assets/presets/macaws/closebranches.png";
+import door from "@/assets/presets/macaws/door.png";
 import downleft from "@/assets/presets/macaws/downleft.png";
 import home from "@/assets/presets/macaws/home.png";
 import leftpole from "@/assets/presets/macaws/leftpole.png";
@@ -40,6 +41,12 @@ const macawsPresets: Record<string, Preset> = {
     image: closebranches,
     position: { pan: -173.35, tilt: -32.25, zoom: 1 },
     // modified: 2026-01-04T17:41:33.617Z
+  },
+  door: {
+    description: "door",
+    image: door,
+    position: { pan: -168.21, tilt: -12.13, zoom: 1 },
+    // modified: 2026-03-05T13:02:24.049Z
   },
   downleft: {
     description: "downleft",
