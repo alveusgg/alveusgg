@@ -19,6 +19,7 @@ import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
 import emu from "../presets/emu";
 import fox from "../presets/fox";
+import foxcovered from "../presets/foxcovered";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
@@ -95,6 +96,7 @@ const cameras = {
   },
   emu,
   fox,
+  foxcovered,
   garden,
   georgie,
   georgiewater,
