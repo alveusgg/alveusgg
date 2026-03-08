@@ -2,6 +2,7 @@ import basket from "@/assets/presets/marmout/basket.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
+import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import down from "@/assets/presets/marmout/down.png";
@@ -18,6 +19,8 @@ import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import lefthammock from "@/assets/presets/marmout/lefthammock.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
+import leftshelfl from "@/assets/presets/marmout/leftshelfl.png";
+import leftshelfr from "@/assets/presets/marmout/leftshelfr.png";
 import nearleftshelf from "@/assets/presets/marmout/nearleftshelf.png";
 import nearlefttop from "@/assets/presets/marmout/nearlefttop.png";
 import nearrightshelves from "@/assets/presets/marmout/nearrightshelves.png";
@@ -63,6 +66,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: domelu,
     position: { pan: 128.88, tilt: 0.01, zoom: 1633 },
     // modified: 2025-11-09T15:41:24.398Z
+  },
+  domelushelfl: {
+    description: "domelushelfl",
+    image: domelushelfl,
+    position: { pan: 121.13, tilt: -1.64, zoom: 464 },
+    // modified: 2026-03-07T15:50:49.961Z
   },
   domelut: {
     description: "domelut",
@@ -153,6 +162,18 @@ const marmoutPresets: Record<string, Preset> = {
     image: leftposttop,
     position: { pan: 109.56, tilt: -9.46, zoom: 664 },
     // modified: 2025-11-07T22:47:32.733Z
+  },
+  leftshelfl: {
+    description: "leftshelfl",
+    image: leftshelfl,
+    position: { pan: 101.2, tilt: -4.72, zoom: 154 },
+    // modified: 2026-03-07T15:48:26.650Z
+  },
+  leftshelfr: {
+    description: "leftshelfr",
+    image: leftshelfr,
+    position: { pan: 112.51, tilt: -4.72, zoom: 154 },
+    // modified: 2026-03-07T15:47:28.089Z
   },
   nearleftshelf: {
     description: "Near Left Shelf",
