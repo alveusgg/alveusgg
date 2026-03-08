@@ -1,6 +1,7 @@
 import home from "@/assets/presets/foxcovered/home.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
+import platformfl from "@/assets/presets/foxcovered/platformfl.png";
 import rampb from "@/assets/presets/foxcovered/rampb.png";
 import right from "@/assets/presets/foxcovered/right.png";
 
@@ -24,6 +25,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     image: platform,
     position: { pan: -130.47, tilt: 0, zoom: 500 },
     // modified: 2026-03-05T14:23:44.204Z
+  },
+  platformfl: {
+    description: "platformfl",
+    image: platformfl,
+    position: { pan: -134.58, tilt: 0, zoom: 2911 },
+    // modified: 2026-03-07T16:57:19.496Z
   },
   rampb: {
     description: "rampb",
