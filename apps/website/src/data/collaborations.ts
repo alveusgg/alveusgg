@@ -130,6 +130,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/emiru",
       date: new Date("2026-01-22"),
       videoId: "vm6IVBA8Ke8",
+      vodId: "7SbZgLeUZk0", // Non-Alveus VoD
       creators: [
         {
           name: "Emiru",
@@ -156,6 +157,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/austinshow",
       date: new Date("2025-12-28"),
       videoId: "LyJRAqYvx_E",
+      vodId: "mQ7YUjJ62QE",
       creators: [
         {
           name: "AustinShow",
