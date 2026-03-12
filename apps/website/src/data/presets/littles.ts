@@ -1,4 +1,5 @@
 import abovedoor from "@/assets/presets/littles/abovedoor.png";
+import acs from "@/assets/presets/littles/acs.png";
 import awning from "@/assets/presets/littles/awning.png";
 import bowll from "@/assets/presets/littles/bowll.png";
 import bowlm from "@/assets/presets/littles/bowlm.png";
@@ -36,6 +37,12 @@ const littlesPresets: Record<string, Preset> = {
     image: abovedoor,
     position: { pan: -179.34, tilt: -1.91, zoom: 754 },
     // modified: 2026-02-03T18:24:12.492Z
+  },
+  acs: {
+    description: "acs",
+    image: acs,
+    position: { pan: 159.62, tilt: -24.06, zoom: 1 },
+    // modified: 2026-03-11T22:17:23.278Z
   },
   awning: {
     description: "awning",
