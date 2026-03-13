@@ -411,6 +411,7 @@ export function ShowAndTellEntryForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     const formData = new FormData(e.currentTarget);
 
     const numberGroupChar = new Intl.NumberFormat(locale, {
@@ -827,7 +828,7 @@ export function ShowAndTellEntryForm({
           <MessageBox variant="success">{successMessage}</MessageBox>
         )}
 
-        <Button type="submit">
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? (
             <>
               <IconLoading className="size-5" />
