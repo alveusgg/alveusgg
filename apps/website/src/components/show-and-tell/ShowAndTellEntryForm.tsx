@@ -227,6 +227,7 @@ export function ShowAndTellEntryForm({
   onUpdate,
   onUnsavedChangesRef,
 }: ShowAndTellEntryFormProps) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
@@ -411,7 +412,10 @@ export function ShowAndTellEntryForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLoading) return;
+
+    if (isProcessing || isLoading) return;
+    setIsProcessing(true);
+
     const formData = new FormData(e.currentTarget);
 
     const numberGroupChar = new Intl.NumberFormat(locale, {
@@ -454,6 +458,7 @@ export function ShowAndTellEntryForm({
 
       if (att.file.status !== "upload.done" && att.file.status !== "saved") {
         setError("Please wait for all uploads to finish");
+        setIsProcessing(false);
         return;
       }
 
@@ -473,6 +478,7 @@ export function ShowAndTellEntryForm({
           data.dominantColor = await att.file.extractColor();
         } catch {
           setError("Failed to extract dominant color from attached image");
+          setIsProcessing(false);
           return;
         }
       }
@@ -525,6 +531,7 @@ export function ShowAndTellEntryForm({
           );
         } catch {
           setError("Failed to extract dominant color from attached video");
+          setIsProcessing(false);
           return;
         }
       }
@@ -586,6 +593,7 @@ export function ShowAndTellEntryForm({
     }
 
     setError(null);
+    setIsProcessing(false);
   };
 
   if (isSubmitted) {
@@ -828,8 +836,8 @@ export function ShowAndTellEntryForm({
           <MessageBox variant="success">{successMessage}</MessageBox>
         )}
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? (
+        <Button type="submit" disabled={isProcessing || isLoading}>
+          {isProcessing || isLoading ? (
             <>
               <IconLoading className="size-5" />
               Saving …
