@@ -1,5 +1,7 @@
 import behind from "@/assets/presets/marmin/behind.png";
 import domel from "@/assets/presets/marmin/domel.png";
+import domell from "@/assets/presets/marmin/domell.png";
+import domelr from "@/assets/presets/marmin/domelr.png";
 import domelshelf from "@/assets/presets/marmin/domelshelf.png";
 import domelt from "@/assets/presets/marmin/domelt.png";
 import domer from "@/assets/presets/marmin/domer.png";
@@ -43,6 +45,18 @@ const marminPresets: Record<string, Preset> = {
     image: domel,
     position: { pan: 87.41, tilt: -15.33, zoom: 689 },
     // modified: 2025-11-07T22:45:52.543Z
+  },
+  domell: {
+    description: "domell",
+    image: domell,
+    position: { pan: 83.95, tilt: -14.73, zoom: 689 },
+    // modified: 2026-03-12T14:51:10.054Z
+  },
+  domelr: {
+    description: "domelr",
+    image: domelr,
+    position: { pan: 91.08, tilt: -14.83, zoom: 689 },
+    // modified: 2026-03-12T14:49:59.477Z
   },
   domelshelf: {
     description: "Dome Left Shelf",
