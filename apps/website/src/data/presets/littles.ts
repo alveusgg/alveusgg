@@ -9,6 +9,8 @@ import down from "@/assets/presets/littles/down.png";
 import floorr from "@/assets/presets/littles/floorr.png";
 import home from "@/assets/presets/littles/home.png";
 import inside from "@/assets/presets/littles/inside.png";
+import insidel from "@/assets/presets/littles/insidel.png";
+import insidet from "@/assets/presets/littles/insidet.png";
 import left from "@/assets/presets/littles/left.png";
 import leftb from "@/assets/presets/littles/leftb.png";
 import leftback from "@/assets/presets/littles/leftback.png";
@@ -91,6 +93,18 @@ const littlesPresets: Record<string, Preset> = {
     image: inside,
     position: { pan: 173.04, tilt: -8.16, zoom: 1900 },
     // modified: 2025-10-31T23:45:17.001Z
+  },
+  insidel: {
+    description: "insidel",
+    image: insidel,
+    position: { pan: 171.1, tilt: -7.97, zoom: 4143 },
+    // modified: 2026-03-12T15:29:32.185Z
+  },
+  insidet: {
+    description: "insidet",
+    image: insidet,
+    position: { pan: 172.66, tilt: -7.14, zoom: 3515 },
+    // modified: 2026-03-12T14:58:02.929Z
   },
   left: {
     description: "Left",
