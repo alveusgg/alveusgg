@@ -17,6 +17,7 @@ import botzSisters from "@/assets/collaborations/botez-sisters.png";
 import carlyIncontro from "@/assets/collaborations/carly-incontro.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
 import cdawg from "@/assets/collaborations/cdawg.png";
+import chrisnxtdoor from "@/assets/collaborations/chrisnxtdoor.png";
 import cinna from "@/assets/collaborations/cinna.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import dailyDose from "@/assets/collaborations/daily-dose.png";
@@ -98,6 +99,20 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Chrisnxtdoor",
+      link: "https://www.twitch.tv/chrisnxtdoor",
+      date: new Date("2026-03-10"),
+      videoId: "fnW6n3Cvai4",
+      vodId: "ecZzRN-ZBDs", // Non-Alveus VoD
+      creators: [
+        {
+          name: "Chrisnxtdoor",
+          image: chrisnxtdoor,
+          popularity: 841_000, // Twitch followers, 2026-03-11
+        },
+      ],
+    },
+    {
       name: "Lindsay Nikole",
       link: "https://www.youtube.com/@LindsayNikole",
       date: new Date("2026-02-28"),
@@ -115,6 +130,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/emiru",
       date: new Date("2026-01-22"),
       videoId: "vm6IVBA8Ke8",
+      vodId: "7SbZgLeUZk0", // Non-Alveus VoD
       creators: [
         {
           name: "Emiru",
@@ -141,6 +157,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/austinshow",
       date: new Date("2025-12-28"),
       videoId: "LyJRAqYvx_E",
+      vodId: "mQ7YUjJ62QE",
       creators: [
         {
           name: "AustinShow",
