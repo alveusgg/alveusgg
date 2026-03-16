@@ -249,4 +249,19 @@ describe("oauth tokens", () => {
       message: "Token header is invalid.",
     });
   });
+
+  test("rejects a token with extra dot-separated segments", async () => {
+    const token = await issueAccessToken({
+      subject: "user-1",
+      clientId: "census-production",
+      roles: ["admin"],
+    });
+
+    await expect(
+      verifyOAuthTokenClaims<Record<string, unknown>>(`${token}.extra`),
+    ).rejects.toMatchObject({
+      error: "invalid_grant",
+      message: "Token is malformed.",
+    });
+  });
 });

@@ -116,7 +116,13 @@ export async function signOAuthTokenClaims(claims: Record<string, unknown>) {
 }
 
 export async function verifyOAuthTokenClaims<T>(token: string): Promise<T> {
-  const [encodedHeader, encodedPayload, encodedSignature] = token.split(".");
+  const parts = token.split(".");
+
+  if (parts.length !== 3) {
+    throw new OAuthRequestError(400, "invalid_grant", "Token is malformed.");
+  }
+
+  const [encodedHeader, encodedPayload, encodedSignature] = parts;
 
   if (!encodedHeader || !encodedPayload || !encodedSignature) {
     throw new OAuthRequestError(400, "invalid_grant", "Token is malformed.");
