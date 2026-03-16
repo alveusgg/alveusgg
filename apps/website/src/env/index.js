@@ -57,6 +57,7 @@ export const env = createEnv({
     TWITCH_CLIENT_SECRET: z.string(),
     OAUTH_PRIVATE_KEY_PEM: z.string().optional(),
     OAUTH_KID: z.string().optional(),
+    OAUTH_CLIENTS_JSON: z.string().optional(),
     TWITCH_EXCLUDED_CLIPS: listOfSchema(z.string()).optional(),
     ACTION_API_SECRET: z.string(),
     CRON_SECRET: z.string().optional(),
@@ -172,6 +173,7 @@ export const env = createEnv({
     TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
     OAUTH_PRIVATE_KEY_PEM: process.env.OAUTH_PRIVATE_KEY_PEM,
     OAUTH_KID: process.env.OAUTH_KID,
+    OAUTH_CLIENTS_JSON: process.env.OAUTH_CLIENTS_JSON,
     TWITCH_EXCLUDED_CLIPS: process.env.TWITCH_EXCLUDED_CLIPS,
     ACTION_API_SECRET: process.env.ACTION_API_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
@@ -262,18 +264,3 @@ export const env = createEnv({
    */
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
-
-const hasUpstashRedisUrl = Boolean(env.UPSTASH_REDIS_REST_URL);
-const hasUpstashRedisToken = Boolean(env.UPSTASH_REDIS_REST_TOKEN);
-
-if (hasUpstashRedisUrl !== hasUpstashRedisToken) {
-  throw new Error(
-    "UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be set together.",
-  );
-}
-
-if (!hasUpstashRedisUrl && !env.REDIS_URL) {
-  throw new Error(
-    "Redis is required. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, or REDIS_URL.",
-  );
-}

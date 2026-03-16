@@ -1,10 +1,14 @@
 import { z } from "zod";
 
+import {
+  authenticateOAuthClient,
+  getInvalidClientHeaders,
+} from "@/server/oauth/client-auth";
 import { compareAuthorizationCode } from "@/server/oauth/codes";
 import {
   OAUTH_ACCESS_TOKEN_TTL_SECONDS,
   OAUTH_TOKEN_TYPE,
-  getOAuthClient,
+  type OAuthClient,
   isAllowedRedirectUri,
 } from "@/server/oauth/config";
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
@@ -21,7 +25,6 @@ const TokenGrantTypeSchema = z.enum(["authorization_code", "refresh_token"]);
 const AuthorizationCodeGrantSchema = z.object({
   grant_type: z.literal("authorization_code"),
   code: z.string().min(1),
-  client_id: z.string().min(1),
   redirect_uri: z.string().min(1),
   code_verifier: z.string().min(1),
 });
@@ -29,7 +32,6 @@ const AuthorizationCodeGrantSchema = z.object({
 const RefreshTokenGrantSchema = z.object({
   grant_type: z.literal("refresh_token"),
   refresh_token: z.string().min(1),
-  client_id: z.string().min(1),
 });
 
 const TokenRequestSchema = z.discriminatedUnion("grant_type", [
@@ -75,7 +77,7 @@ function parseTokenRequest(formData: FormData) {
     throw new OAuthRequestError(
       400,
       "invalid_request",
-      "code, client_id, redirect_uri, and code_verifier are required.",
+      "code, redirect_uri, and code_verifier are required.",
     );
   }
 
@@ -83,7 +85,7 @@ function parseTokenRequest(formData: FormData) {
     throw new OAuthRequestError(
       400,
       "invalid_request",
-      "refresh_token and client_id are required.",
+      "refresh_token is required.",
     );
   }
 
@@ -132,47 +134,38 @@ async function issueTokenPairForUser(userId: string, clientId: string) {
   };
 }
 
-async function handleAuthorizationCodeGrant({
-  code,
-  client_id: clientId,
-  redirect_uri: redirectUri,
-  code_verifier: codeVerifier,
-}: AuthorizationCodeGrantRequest) {
-  if (
-    !getOAuthClient(clientId) ||
-    !isAllowedRedirectUri(clientId, redirectUri)
-  ) {
+async function handleAuthorizationCodeGrant(
+  {
+    code,
+    redirect_uri: redirectUri,
+    code_verifier: codeVerifier,
+  }: AuthorizationCodeGrantRequest,
+  client: OAuthClient,
+) {
+  if (!isAllowedRedirectUri(client.clientId, redirectUri)) {
     throw new OAuthRequestError(
-      401,
-      "invalid_client",
-      "OAuth client is not allowed.",
+      400,
+      "invalid_grant",
+      "Authorization code mismatch.",
     );
   }
 
   const claims = await compareAuthorizationCode({
     code,
-    clientId,
+    clientId: client.clientId,
     redirectUri,
     codeVerifier,
   });
 
-  return issueTokenPairForUser(claims.sub, clientId);
+  return issueTokenPairForUser(claims.sub, client.clientId);
 }
 
-async function handleRefreshTokenGrant({
-  refresh_token: refreshToken,
-  client_id: clientId,
-}: RefreshTokenGrantRequest) {
-  if (!getOAuthClient(clientId)) {
-    throw new OAuthRequestError(
-      401,
-      "invalid_client",
-      "OAuth client is not allowed.",
-    );
-  }
-
+async function handleRefreshTokenGrant(
+  { refresh_token: refreshToken }: RefreshTokenGrantRequest,
+  client: OAuthClient,
+) {
   const claims = await verifyRefreshToken(refreshToken);
-  if (claims.client_id !== clientId) {
+  if (claims.client_id !== client.clientId) {
     throw new OAuthRequestError(
       400,
       "invalid_grant",
@@ -180,7 +173,7 @@ async function handleRefreshTokenGrant({
     );
   }
 
-  const tokens = await issueTokensForUser(claims.sub, clientId);
+  const tokens = await issueTokensForUser(claims.sub, client.clientId);
   return {
     access_token: tokens.access_token,
     refresh_token: refreshToken,
@@ -199,18 +192,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const client = authenticateOAuthClient(request);
     const formData = await request.formData();
     const tokenRequest = parseTokenRequest(formData);
 
     if (tokenRequest.grant_type === "authorization_code") {
-      const response = await handleAuthorizationCodeGrant(tokenRequest);
+      const response = await handleAuthorizationCodeGrant(tokenRequest, client);
       return Response.json(response, {
         headers: TOKEN_RESPONSE_HEADERS,
       });
     }
 
     if (tokenRequest.grant_type === "refresh_token") {
-      const response = await handleRefreshTokenGrant(tokenRequest);
+      const response = await handleRefreshTokenGrant(tokenRequest, client);
       return Response.json(response, {
         headers: TOKEN_RESPONSE_HEADERS,
       });
@@ -224,7 +218,12 @@ export async function POST(request: Request) {
         },
         {
           status: error.status,
-          headers: TOKEN_RESPONSE_HEADERS,
+          headers: {
+            ...TOKEN_RESPONSE_HEADERS,
+            ...(error.status === 401 && error.error === "invalid_client"
+              ? getInvalidClientHeaders()
+              : {}),
+          },
         },
       );
     }

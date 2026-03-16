@@ -1,11 +1,27 @@
+import { z } from "zod";
+
 import { env } from "@/env";
 
-export type OAuthClient = {
-  clientId: string;
-  redirectUris: string[];
-};
+import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
-const clients: OAuthClient[] = [];
+export const OAuthClientSchema = z.object({
+  clientId: z.string().min(1),
+  clientSecret: z.string().min(1),
+  redirectUris: z.array(z.url()).min(1),
+});
+
+export type OAuthClient = z.infer<typeof OAuthClientSchema>;
+
+const OAuthClientsSchema = z.array(OAuthClientSchema);
+
+export const OAuthClientsJsonSchema = z
+  .string()
+  .transform((value) => JSON.parse(value))
+  .pipe(OAuthClientsSchema);
+
+const clients = OAuthClientsJsonSchema.default([]).parse(
+  env.OAUTH_CLIENTS_JSON,
+);
 
 export const OAUTH_SIGNING_ALG = "RS256";
 export const OAUTH_ACCESS_TOKEN_TTL_SECONDS = 10 * 60;
@@ -22,6 +38,18 @@ export const OAUTH_JWKS_URI = `${OAUTH_ISSUER}/.well-known/jwks.json`;
 
 export function getOAuthClient(clientId: string) {
   return clients.find((client) => client.clientId === clientId);
+}
+
+export function isValidOAuthClientSecret(
+  clientId: string,
+  clientSecret: string,
+) {
+  const client = getOAuthClient(clientId);
+  if (!client) {
+    return false;
+  }
+
+  return timingSafeCompareString(client.clientSecret, clientSecret);
 }
 
 export function isAllowedRedirectUri(clientId: string, redirectUri: string) {

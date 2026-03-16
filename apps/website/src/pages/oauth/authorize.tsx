@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import { issueAuthorizationCode } from "@/server/oauth/codes";
 import {
   OAUTH_CODE_CHALLENGE_METHOD,
+  getOAuthClient,
   isAllowedRedirectUri,
 } from "@/server/oauth/config";
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
@@ -69,6 +70,10 @@ export const getServerSideProps: GetServerSideProps<
       code_challenge: codeChallenge,
       state,
     } = result.data;
+
+    if (!getOAuthClient(clientId)) {
+      throw new Error("Invalid client_id.");
+    }
 
     if (!isAllowedRedirectUri(clientId, redirectUri)) {
       throw new Error("Invalid client_id or redirect_uri.");
