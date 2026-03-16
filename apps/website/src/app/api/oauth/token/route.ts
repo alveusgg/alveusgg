@@ -43,14 +43,7 @@ type AuthorizationCodeGrantRequest = z.infer<
 >;
 type RefreshTokenGrantRequest = z.infer<typeof RefreshTokenGrantSchema>;
 
-const OAUTH_CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
 const TOKEN_RESPONSE_HEADERS = {
-  ...OAUTH_CORS_HEADERS,
   "Cache-Control": "no-store",
 };
 
@@ -224,11 +217,4 @@ export async function POST(request: Request) {
       },
     );
   }
-}
-
-export function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: OAUTH_CORS_HEADERS,
-  });
 }

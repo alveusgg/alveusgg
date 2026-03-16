@@ -125,6 +125,7 @@ describe("oauth token route", () => {
       refresh_token: "refresh-token",
       token_type: "Bearer",
     });
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBeNull();
     expect(mockAuthenticateOAuthClient).toHaveBeenCalledOnce();
     expect(mockCompareAuthorizationCode).toHaveBeenCalledWith({
       code: "auth-code",

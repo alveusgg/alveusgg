@@ -4,17 +4,6 @@ import {
   verifyAccessToken,
 } from "@/server/oauth/tokens";
 
-const OAUTH_CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
-const USERINFO_RESPONSE_HEADERS = {
-  ...OAUTH_CORS_HEADERS,
-  "Cache-Control": "no-store",
-};
-
 function getBearerToken(request: Request) {
   const authorization = request.headers.get("authorization");
   if (!authorization || !/^bearer\s+/i.test(authorization)) {
@@ -33,7 +22,6 @@ function unauthorized(description: string) {
     {
       status: 401,
       headers: {
-        ...USERINFO_RESPONSE_HEADERS,
         "WWW-Authenticate": `Bearer error="invalid_token", error_description="${description}"`,
       },
     },
@@ -61,7 +49,9 @@ export async function GET(request: Request) {
         twitch_user_id: user.twitchUserId ?? null,
       },
       {
-        headers: USERINFO_RESPONSE_HEADERS,
+        headers: {
+          "Cache-Control": "no-store",
+        },
       },
     );
   } catch (error) {
@@ -72,11 +62,4 @@ export async function GET(request: Request) {
     console.error(error);
     return unauthorized("Unable to load user profile.");
   }
-}
-
-export function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: OAUTH_CORS_HEADERS,
-  });
 }

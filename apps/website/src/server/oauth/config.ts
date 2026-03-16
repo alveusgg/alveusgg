@@ -16,7 +16,23 @@ const OAuthClientsSchema = z.array(OAuthClientSchema);
 
 export const OAuthClientsJsonSchema = z
   .string()
-  .transform((value) => JSON.parse(value))
+  .transform((value, ctx) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue === "") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(trimmedValue);
+    } catch {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "OAUTH_CLIENTS_JSON must be valid JSON.",
+      });
+      return z.NEVER;
+    }
+  })
   .pipe(OAuthClientsSchema);
 
 const clients = OAuthClientsJsonSchema.default([]).parse(
