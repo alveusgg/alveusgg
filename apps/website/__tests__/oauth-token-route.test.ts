@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { OAuthRequestError } from "@/server/oauth/tokens";
 
-import { POST } from "@/app/api/oauth/token/route";
 import { GET as getAuthorizationServerMetadata } from "@/app/.well-known/oauth-authorization-server/route";
+import { POST } from "@/app/api/oauth/token/route";
 
 const {
   mockAuthenticateOAuthClient,
