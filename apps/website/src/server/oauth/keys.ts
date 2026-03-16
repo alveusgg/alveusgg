@@ -5,7 +5,7 @@ import { env } from "@/env";
 import { OAUTH_KID, OAUTH_SIGNING_ALG } from "./config";
 
 export function hasOAuthSigningKey() {
-  return Boolean(env.OAUTH_PRIVATE_KEY_PEM?.trim());
+  return Boolean(env.OAUTH_PRIVATE_KEY_PEM?.trim() && OAUTH_KID?.trim());
 }
 
 function getPrivateKeyPem() {
