@@ -8,20 +8,18 @@ import { GET as getAuthorizationServerMetadata } from "@/app/.well-known/oauth-a
 const {
   mockAuthenticateOAuthClient,
   mockCompareAuthorizationCode,
-  mockGetOAuthUser,
   mockHasOAuthSigningKey,
   mockIsAllowedRedirectUri,
-  mockIssueAccessToken,
+  mockIssueAccessTokenForUser,
   mockIssueRefreshToken,
   mockVerifyRefreshToken,
 } = vi.hoisted(() => {
   return {
     mockAuthenticateOAuthClient: vi.fn(),
     mockCompareAuthorizationCode: vi.fn(),
-    mockGetOAuthUser: vi.fn(),
     mockHasOAuthSigningKey: vi.fn(),
     mockIsAllowedRedirectUri: vi.fn(),
-    mockIssueAccessToken: vi.fn(),
+    mockIssueAccessTokenForUser: vi.fn(),
     mockIssueRefreshToken: vi.fn(),
     mockVerifyRefreshToken: vi.fn(),
   };
@@ -65,9 +63,9 @@ vi.mock("@/server/oauth/keys", () => {
 vi.mock("@/server/oauth/tokens", async () => {
   const actual = await vi.importActual("@/server/oauth/tokens");
   return {
+    ...actual,
     OAuthRequestError: actual.OAuthRequestError,
-    getOAuthUser: mockGetOAuthUser,
-    issueAccessToken: mockIssueAccessToken,
+    issueAccessTokenForUser: mockIssueAccessTokenForUser,
     issueRefreshToken: mockIssueRefreshToken,
     verifyRefreshToken: mockVerifyRefreshToken,
   };
@@ -97,13 +95,9 @@ describe("oauth token route", () => {
       redirectUris: ["http://localhost:3001/callback"],
     });
     mockCompareAuthorizationCode.mockResolvedValue({ sub: "user-1" });
-    mockGetOAuthUser.mockResolvedValue({
-      id: "user-1",
-      roles: ["admin"],
-    });
     mockHasOAuthSigningKey.mockReturnValue(true);
     mockIsAllowedRedirectUri.mockReturnValue(true);
-    mockIssueAccessToken.mockResolvedValue("access-token");
+    mockIssueAccessTokenForUser.mockResolvedValue("access-token");
     mockIssueRefreshToken.mockResolvedValue("refresh-token");
     mockVerifyRefreshToken.mockResolvedValue({
       sub: "user-1",
