@@ -29,6 +29,7 @@ export const OAUTH_AUTHORIZATION_CODE_TTL_SECONDS = 60;
 export const OAUTH_REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
 export const OAUTH_CODE_CHALLENGE_METHOD = "S256";
 export const OAUTH_TOKEN_TYPE = "Bearer";
+export const OAUTH_FIRST_PARTY_CLIENT_ID = "_self";
 export const OAUTH_ISSUER = env.NEXT_PUBLIC_BASE_URL;
 export const OAUTH_KID = env.OAUTH_KID;
 export const OAUTH_AUTHORIZATION_ENDPOINT = `${OAUTH_ISSUER}/oauth/authorize`;

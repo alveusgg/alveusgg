@@ -201,6 +201,26 @@ export async function issueAccessToken(params: {
   } satisfies OAuthAccessTokenClaims);
 }
 
+export async function issueAccessTokenForUser(params: {
+  userId: string;
+  clientId: string;
+}) {
+  const user = await getOAuthUser(params.userId);
+  if (!user) {
+    throw new OAuthRequestError(
+      400,
+      "invalid_grant",
+      "User is no longer available.",
+    );
+  }
+
+  return issueAccessToken({
+    subject: user.id,
+    clientId: params.clientId,
+    roles: user.roles,
+  });
+}
+
 export async function verifyAccessToken(token: string) {
   const claims = await verifyOAuthTokenClaims<OAuthAccessTokenClaims>(token);
   if (claims.type !== "access") {

@@ -14,8 +14,7 @@ import {
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
 import {
   OAuthRequestError,
-  getOAuthUser,
-  issueAccessToken,
+  issueAccessTokenForUser,
   issueRefreshToken,
   verifyRefreshToken,
 } from "@/server/oauth/tokens";
@@ -97,23 +96,8 @@ function parseTokenRequest(formData: FormData) {
 }
 
 async function issueTokensForUser(userId: string, clientId: string) {
-  const user = await getOAuthUser(userId);
-  if (!user) {
-    throw new OAuthRequestError(
-      400,
-      "invalid_grant",
-      "User is no longer available.",
-    );
-  }
-
-  const accessToken = await issueAccessToken({
-    subject: user.id,
-    clientId,
-    roles: user.roles,
-  });
-
   return {
-    access_token: accessToken,
+    access_token: await issueAccessTokenForUser({ userId, clientId }),
     token_type: OAUTH_TOKEN_TYPE,
     expires_in: OAUTH_ACCESS_TOKEN_TTL_SECONDS,
   };
