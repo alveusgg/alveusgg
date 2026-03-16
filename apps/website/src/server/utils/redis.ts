@@ -18,12 +18,20 @@ export class RedisValueAlreadyExistsError extends Error {
   }
 }
 
-function parseRedisJson<T>(value: string | null) {
+function parseRedisJson<T>(value: string | null): T | null {
   if (value === null) {
     return null;
   }
 
-  return JSON.parse(value) as T;
+  try {
+    return JSON.parse(value) as T;
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      // Treat invalid JSON as a cache miss.
+      return null;
+    }
+    throw error;
+  }
 }
 
 export class UpstashRedisCache implements RedisCache {
