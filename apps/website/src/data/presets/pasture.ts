@@ -1,6 +1,7 @@
 import angel from "@/assets/presets/pasture/angel.png";
 import barn2 from "@/assets/presets/pasture/barn2.png";
 import barn2hay from "@/assets/presets/pasture/barn2hay.png";
+import barn2l from "@/assets/presets/pasture/barn2l.png";
 import barn2r from "@/assets/presets/pasture/barn2r.png";
 import barn2w from "@/assets/presets/pasture/barn2w.png";
 import barn2z from "@/assets/presets/pasture/barn2z.png";
@@ -12,6 +13,7 @@ import brushr from "@/assets/presets/pasture/brushr.png";
 import donksleep from "@/assets/presets/pasture/donksleep.png";
 import down from "@/assets/presets/pasture/down.png";
 import downleft from "@/assets/presets/pasture/downleft.png";
+import farright from "@/assets/presets/pasture/farright.png";
 import feeder from "@/assets/presets/pasture/feeder.png";
 import feederstatus from "@/assets/presets/pasture/feederstatus.png";
 import feedstall from "@/assets/presets/pasture/feedstall.png";
@@ -83,6 +85,12 @@ const pasturePresets: Record<string, Preset> = {
     position: { pan: -24.34, tilt: -6.59, zoom: 3209 },
     // modified: 2025-10-09T11:10:30.088Z
   },
+  barn2l: {
+    description: "barn2l",
+    image: barn2l,
+    position: { pan: -28.35, tilt: -6.25, zoom: 2709 },
+    // modified: 2026-03-17T13:23:29.284Z
+  },
   barn2r: {
     description: "Barn 2 right",
     image: barn2r,
@@ -142,6 +150,12 @@ const pasturePresets: Record<string, Preset> = {
     image: downleft,
     position: { pan: -19.14, tilt: -47.7, zoom: 1 },
     // modified: 2025-11-18T17:55:38.827Z
+  },
+  farright: {
+    description: "farright",
+    image: farright,
+    position: { pan: 58.49, tilt: -0.5, zoom: 3211 },
+    // modified: 2026-03-17T13:02:16.240Z
   },
   feeder: {
     description: "Feeder",
