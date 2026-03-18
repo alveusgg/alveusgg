@@ -61,7 +61,7 @@
     "@twurple/chat": "^8.0.3",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
-    "@vercel/analytics": "^1.6.1",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.4.3",
     "@xyflow/react": "^12.10.1",
     "country-list": "^2.4.1",
