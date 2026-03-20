@@ -3,6 +3,7 @@ import den from "@/assets/presets/wolfswitch/den.png";
 import denl from "@/assets/presets/wolfswitch/denl.png";
 import denr from "@/assets/presets/wolfswitch/denr.png";
 import dentop from "@/assets/presets/wolfswitch/dentop.png";
+import denz from "@/assets/presets/wolfswitch/denz.png";
 import down from "@/assets/presets/wolfswitch/down.png";
 import downleft from "@/assets/presets/wolfswitch/downleft.png";
 import downright from "@/assets/presets/wolfswitch/downright.png";
@@ -58,6 +59,12 @@ const wolfswitchPresets: Record<string, Preset> = {
     image: dentop,
     position: { pan: 17.45, tilt: -0.32, zoom: 1134 },
     // modified: 2026-03-05T23:43:28.713Z
+  },
+  denz: {
+    description: "denz",
+    image: denz,
+    position: { pan: 18.13, tilt: -6.42, zoom: 3527 },
+    // modified: 2026-03-19T16:27:27.417Z
   },
   down: {
     description: "Down",
