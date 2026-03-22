@@ -106,8 +106,8 @@ const marmoutPresets: Record<string, Preset> = {
   farcornerb: {
     description: "Far Corner Bottom",
     image: farcornerb,
-    position: { pan: 135.35, tilt: -10.27, zoom: 332 },
-    // modified: 2025-11-30T18:55:02.883Z
+    position: { pan: 135.66, tilt: -11.05, zoom: 332 },
+    // modified: 2026-03-20T21:04:56.947Z
   },
   farcornert: {
     description: "Far Corner Top",
