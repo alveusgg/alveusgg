@@ -71,6 +71,7 @@
     "feed": "^5.2.0",
     "heic-to": "^1.4.2",
     "html-react-parser": "^5.2.17",
+    "ioredis": "^5.10.0",
     "jsdom": "^28.1.0",
     "linkify-it": "^5.0.0",
     "lodash": "^4.17.23",
