@@ -57,10 +57,10 @@ export const consentData = {
     description: "Embedded presentations from Prezi.com",
     privacy: "https://prezi.com/legal/privacy-policy/",
   },
-  givingBlock: {
-    name: "The Giving Block",
-    description: "Embedded donation widget from The Giving Block",
-    privacy: "https://thegivingblock.com/about/privacy-policy/",
+  neon: {
+    name: "Neon One CRM",
+    description: "Embedded donation widget from Neon CRM",
+    privacy: "https://neonone.com/privacypolicy/",
   },
   vote: {
     name: "Vote.org",

@@ -11,7 +11,7 @@ import IconAmazon from "@/icons/IconAmazon";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
-import IconPayPal from "@/icons/IconPayPal";
+import IconDollar from "@/icons/IconDollar";
 import IconTwitch from "@/icons/IconTwitch";
 
 import Box from "./Box";
@@ -32,14 +32,6 @@ const links = {
     external: true,
     description:
       "Donate to Alveus on Twitch via PayPal's Giving Fund, using a credit/debit card or PayPal account.",
-  },
-  paypal: {
-    icon: IconPayPal,
-    title: "PayPal",
-    link: "/paypal",
-    external: true,
-    description:
-      "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
   },
   wishlist: {
     icon: IconAmazon,
@@ -62,8 +54,15 @@ const links = {
     title: "The Giving Block",
     link: "/giving-block",
     external: true,
+    description: "Donate cryptocurrency to Alveus using The Giving Block.",
+  },
+  direct: {
+    icon: IconDollar,
+    title: "Donate Directly",
+    link: "/donate/direct",
+    external: true,
     description:
-      "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
+      "Make a one-time or monthly donation to Alveus, using a credit/debit card, Paypal, Venmo, or Google Pay.",
   },
 } as const satisfies Record<string, DonateLink>;
 

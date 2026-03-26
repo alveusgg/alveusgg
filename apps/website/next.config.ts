@@ -361,12 +361,6 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/paypal/pixels",
-      destination:
-        "https://www.paypal.com/donate/?hosted_button_id=AQ9RASYNG5ZWC",
-      permanent: true,
-    },
-    {
       source: "/giving-block",
       destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
       permanent: true,
@@ -374,6 +368,11 @@ const config: NextConfig = {
     {
       source: "/twitch-charity",
       destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/direct",
+      destination: "https://alveussanctuary.app.neoncrm.com/forms/donate",
       permanent: true,
     },
     {
@@ -497,8 +496,8 @@ const config: NextConfig = {
               "https://streamable.com/",
               // Prezi embeds:
               "https://prezi.com/",
-              // The Giving Block (donation widget):
-              "https://widget.thegivingblock.com/",
+              // Neon One CRM (donation widget):
+              "https://alveussanctuary.app.neoncrm.com/",
               // Vote.org embeds:
               "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
               // Imgur embeds:
