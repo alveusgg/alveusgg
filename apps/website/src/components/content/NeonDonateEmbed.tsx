@@ -1,5 +1,34 @@
 import { useEffect, useRef } from "react";
 
+const WIDGET_ID = "neon-form-embed-4-container";
+const WIDGET_URL =
+  "https://alveussanctuary.app.neoncrm.com/forms/share/Rk9STS1FTUJFRFNIQVJJTkctQ09ERTQ=";
+
+function getOrCreateParkingLot() {
+  let parkingLot = document.getElementById(`${WIDGET_ID}-parking-lot`);
+  if (!parkingLot) {
+    parkingLot = document.createElement("div");
+    parkingLot.style.display = "none";
+    parkingLot.id = `${WIDGET_ID}-parking-lot`;
+    document.body.appendChild(parkingLot);
+  }
+  return parkingLot;
+}
+
+function getOrLoadWidget() {
+  let widgetNode = document.getElementById(WIDGET_ID);
+  if (!widgetNode) {
+    widgetNode = document.createElement("div");
+    widgetNode.id = WIDGET_ID;
+
+    const script = document.createElement("script");
+    script.src = WIDGET_URL;
+    document.body.appendChild(script);
+  }
+
+  return widgetNode;
+}
+
 const NeonDonateEmbed = ({ className }: { className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -7,34 +36,11 @@ const NeonDonateEmbed = ({ className }: { className?: string }) => {
     const container = containerRef.current;
     if (!container) return;
 
-    let widgetNode = document.getElementById("neon-form-embed-4-container");
-    if (widgetNode) {
-      container.appendChild(widgetNode);
-    } else {
-      widgetNode = document.createElement("div");
-      widgetNode.id = "neon-form-embed-4-container";
-      container.appendChild(widgetNode);
-
-      const script = document.createElement("script");
-      script.src =
-        "https://alveussanctuary.app.neoncrm.com/forms/share/Rk9STS1FTUJFRFNIQVJJTkctQ09ERTQ=";
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    const widgetNode = getOrLoadWidget();
+    container.appendChild(widgetNode);
 
     return () => {
-      // move the widget to the parking lot node outside the React app
-      let parkingLot = document.getElementById("neon-parking-lot");
-      if (!parkingLot) {
-        parkingLot = document.createElement("div");
-        parkingLot.style.display = "none";
-        parkingLot.id = "neon-parking-lot";
-        document.body.appendChild(parkingLot);
-      }
-
-      if (widgetNode && parkingLot) {
-        parkingLot.appendChild(widgetNode);
-      }
+      getOrCreateParkingLot().appendChild(widgetNode);
     };
   }, []);
 
