@@ -377,6 +377,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/donate/direct",
+      destination: "https://alveussanctuary.app.neoncrm.com/forms/donate",
+      permanent: true,
+    },
+    {
       source: "/github",
       destination: "https://github.com/alveusgg",
       permanent: true,
@@ -497,8 +502,8 @@ const config: NextConfig = {
               "https://streamable.com/",
               // Prezi embeds:
               "https://prezi.com/",
-              // The Giving Block (donation widget):
-              "https://widget.thegivingblock.com/",
+              // Neon CRM (donation widget):
+              "https://alveussanctuary.app.neoncrm.com/",
               // Vote.org embeds:
               "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
               // Imgur embeds:

@@ -130,6 +130,10 @@ We use Cloudflare Stream to host a low-latency variation of the live cams specif
    - `CF_STREAM_LOLA_VIDEO_ID`
    - `CF_STREAM_HOST`
 
+### Neon Donation Embed
+
+For the Neon CRM donation embed to load successfully, the site needs to be running with SSL on a domain that is trusted by Neon CRM. To aid local development with this, we've configured `local.alveussanctuary.org` to be trusted by Neon CRM and set it to resolve to `127.0.0.1` (localhost). Next.js can be started with HTTPS support bound to that hostname via `pnpm dev:next --experimental-https --hostname local.alveussanctuary.org --port 443`, allowing [`https://local.alveussanctuary.org`](https://local.alveussanctuary.org) to be accessed to test the Neon CRM donation embed locally.
+
 ## Production deployment
 
 ### Website
