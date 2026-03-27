@@ -238,7 +238,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
 
         <div className="flex flex-col gap-8">
           <Donate type="twitch" highlight />
-          <Donate type="paypal" link="/paypal/pixels" />
+          <Donate type="direct" />
 
           <Box
             dark
