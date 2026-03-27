@@ -28,7 +28,7 @@ const links = {
   twitch: {
     icon: IconTwitch,
     title: "Twitch Charity",
-    link: "/twitch-charity",
+    link: "/donate/twitch",
     external: true,
     description: "Donate to Alveus on Twitch.tv via PayPal's Giving Fund.",
   },
@@ -51,7 +51,7 @@ const links = {
   givingBlock: {
     icon: IconBitcoin,
     title: "The Giving Block",
-    link: "/giving-block",
+    link: "/donate/giving-block",
     external: true,
     description: "Donate cryptocurrency to Alveus using The Giving Block.",
   },
