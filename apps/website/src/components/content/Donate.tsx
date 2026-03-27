@@ -12,7 +12,6 @@ import IconArrowUp from "@/icons/IconArrowUp";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
-import IconPayPal from "@/icons/IconPayPal";
 import IconTwitch from "@/icons/IconTwitch";
 
 import Box from "./Box";
@@ -32,14 +31,6 @@ const links = {
     link: "/twitch-charity",
     external: true,
     description: "Donate to Alveus on Twitch.tv via PayPal's Giving Fund.",
-  },
-  paypal: {
-    icon: IconPayPal,
-    title: "PayPal",
-    link: "/paypal",
-    external: true,
-    description:
-      "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
   },
   wishlist: {
     icon: IconAmazon,
