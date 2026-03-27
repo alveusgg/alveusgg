@@ -98,6 +98,7 @@ export const getServerSideProps: GetServerSideProps<
       },
     };
   } catch (error) {
+    console.error(error);
     return {
       props: {
         error:
