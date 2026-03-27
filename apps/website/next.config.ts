@@ -366,12 +366,33 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/donate/paypal",
+      destination:
+        "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
+    {
       source: "/giving-block",
       destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
       permanent: true,
     },
     {
+      source: "/donate/giving-block",
+      destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
+      permanent: true,
+    },
+    {
       source: "/twitch-charity",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/twitch-charity",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/twitch",
       destination: "https://www.twitch.tv/charity/alveussanctuary",
       permanent: true,
     },
