@@ -187,6 +187,7 @@ export async function POST(request: Request) {
       });
     }
   } catch (error) {
+    console.error(error);
     if (error instanceof OAuthRequestError) {
       return Response.json(
         {

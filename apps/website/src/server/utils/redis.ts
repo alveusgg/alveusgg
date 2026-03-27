@@ -23,6 +23,10 @@ function parseRedisJson<T>(value: string | null): T | null {
     return null;
   }
 
+  if (typeof value !== "string") {
+    return value as T;
+  }
+
   try {
     return JSON.parse(value) as T;
   } catch (error) {
