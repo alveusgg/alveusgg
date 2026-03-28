@@ -59,6 +59,14 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   const isAdminPopout =
     pathname.startsWith("/admin/") && pathname.match(/\/popout\/?$/) !== null;
 
+  // Prevent NeonDonateEmbed from using document.write() and breaking React
+  // React + Next.js don't need this, so we safely make it a global no-op
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      document.write = () => {};
+    }
+  }, []);
+
   if (isStream) {
     return (
       <>

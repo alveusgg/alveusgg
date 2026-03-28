@@ -33,7 +33,7 @@ import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
-import IconPayPal from "@/icons/IconPayPal";
+import IconDollar from "@/icons/IconDollar";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -118,7 +118,7 @@ const latestAnimalQuest = animalQuestEpisodes.toSorted(
 
 const help = {
   donate: {
-    icon: IconPayPal,
+    icon: IconDollar,
     title: "Donate to Alveus directly",
     link: "/donate",
     external: false,
