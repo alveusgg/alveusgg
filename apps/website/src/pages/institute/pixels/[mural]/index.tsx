@@ -238,7 +238,6 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
 
         <div className="flex flex-col gap-8">
           <Donate type="twitch" highlight />
-          <Donate type="direct" />
 
           <Box
             dark
