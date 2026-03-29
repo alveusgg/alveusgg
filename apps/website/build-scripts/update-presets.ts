@@ -2,8 +2,15 @@ import { spawnSync } from "node:child_process";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
-import { Project, StructureKind, SyntaxKind } from "ts-morph";
+import {
+  Project,
+  StructureKind,
+  SyntaxKind,
+  VariableDeclarationKind,
+} from "ts-morph";
 import { z } from "zod";
+
+import { sentenceToTitle } from "../src/utils/string-case";
 
 const upstreamCameraMap: Record<string, string> = {
   chickenin: "chickenindoor",
@@ -66,13 +73,86 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
     return;
   }
 
-  const obj = file
+  // Find, or create, the camera object declaration
+  let objCamera = file
+    .getVariableDeclaration(name)
+    ?.getFirstDescendantByKind(SyntaxKind.ObjectLiteralExpression);
+  if (!objCamera) {
+    objCamera = file
+      .addVariableStatement({
+        declarationKind: VariableDeclarationKind.Const,
+        declarations: [
+          {
+            name,
+            initializer: (writer) => {
+              writer.block(() => {
+                writer.writeLine(`title: "${sentenceToTitle(name)}",`);
+                writer.writeLine(`group: "${name}",`);
+                writer.writeLine(`presets: ${name}Presets,`);
+              });
+            },
+          },
+        ],
+      })
+      .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+    file.addExportAssignment({
+      isExportEquals: false,
+      expression: name,
+    });
+  }
+
+  // Find, or create, the default export assignment for the camera object
+  let exportAssignment = file.getExportAssignments()[0];
+  if (!exportAssignment) {
+    exportAssignment = file.addExportAssignment({
+      isExportEquals: false,
+      expression: name,
+    });
+  } else {
+    exportAssignment.setExpression(name);
+  }
+
+  // Ensure the camera object and the export are placed at the end of the file, with a linebreak between them
+  objCamera.appendWhitespace((writer) => writer.newLine().newLine());
+  objCamera
+    .getFirstAncestorByKindOrThrow(SyntaxKind.VariableStatement)
+    .setOrder(file.getStatements().length - 1);
+  exportAssignment.appendWhitespace((writer) => writer.newLine().newLine());
+  exportAssignment.setOrder(file.getStatements().length - 1);
+
+  // Find, or create, the presets object declaration
+  let objPresets = file
     .getVariableDeclaration(`${name}Presets`)
     ?.getFirstDescendantByKind(SyntaxKind.ObjectLiteralExpression);
-  if (!obj) {
-    console.error(`No presets object found for camera ${name}`);
-    return;
+  if (!objPresets) {
+    objPresets = file
+      .addVariableStatement({
+        declarationKind: VariableDeclarationKind.Const,
+        declarations: [
+          {
+            name: `${name}Presets`,
+            type: "Record<string, Preset>",
+            initializer: (writer) => {
+              writer.block();
+            },
+          },
+        ],
+      })
+      .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+    // Add an import for the Preset type if it doesn't already exist
+    file.addImportDeclaration({
+      isTypeOnly: true,
+      moduleSpecifier: "../tech/cameras.types",
+      namedImports: ["Preset"],
+    });
   }
+
+  // Ensure the presets object is placed at the top of the file, before any other code except imports
+  objPresets.appendWhitespace((writer) => writer.newLine().newLine());
+  objPresets
+    .getFirstAncestorByKindOrThrow(SyntaxKind.VariableStatement)
+    .setOrder(file.getImportDeclarations().length);
 
   const presets = new Set(camera.presets.map((p) => p.name));
   const added: [string, ArrayBuffer][] = [];
@@ -94,7 +174,7 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
     }
 
     // Try to find an existing entry for the preset
-    const existing = obj.getProperty(preset.name);
+    const existing = objPresets.getProperty(preset.name);
     const modified = existing
       ?.getDescendantsOfKind(SyntaxKind.SingleLineCommentTrivia)
       .map((comment) => {
@@ -140,7 +220,7 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
         : JSON.stringify(preset.name);
 
       // Add a new property for the preset
-      obj.addPropertyAssignment({
+      objPresets.addPropertyAssignment({
         name: preset.name,
         initializer: (writer) => {
           writer.block(() => {
@@ -181,8 +261,8 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
   }
 
   // Sort the presets alphabetically
-  obj.addProperties(
-    obj
+  objPresets.addProperties(
+    objPresets
       .getProperties()
       .map((prop) => {
         const struct = prop.getStructure();
@@ -200,11 +280,11 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
   );
 
   // Hoist the home preset to the top if it exists
-  const homePreset = obj
+  const homePreset = objPresets
     .getProperty("home")
     ?.asKind(SyntaxKind.PropertyAssignment);
   if (homePreset) {
-    obj.insertProperty(0, homePreset.getStructure());
+    objPresets.insertProperty(0, homePreset.getStructure());
     homePreset.remove();
   }
 
