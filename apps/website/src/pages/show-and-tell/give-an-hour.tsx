@@ -41,6 +41,7 @@ interface WWFGiveAnHourCampaign {
 }
 
 const wwfGiveAnHourCampaigns: WWFGiveAnHourCampaign[] = [
+  { start: "2026-03-23", end: "2026-04-30" },
   {
     start: "2025-03-23",
     end: "2025-04-22",
