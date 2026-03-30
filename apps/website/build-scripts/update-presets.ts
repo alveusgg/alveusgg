@@ -38,9 +38,26 @@ const upstreamCameraSchema = z.object({
       zoom: z.number().optional(),
     }),
   ),
+  multi: z
+    .object({
+      name: z.string(),
+      modified: z.iso
+        .datetime()
+        .transform((str) => new Date(str))
+        .nullable(),
+      cameras: z.array(z.string()),
+    })
+    .nullable(),
 });
 
 type UpstreamCamera = z.infer<typeof upstreamCameraSchema>;
+type UpstreamCameraMulti = UpstreamCamera & {
+  multi: NonNullable<UpstreamCamera["multi"]>;
+};
+
+const isUpstreamCameraMulti = (
+  camera: UpstreamCamera,
+): camera is UpstreamCameraMulti => camera.multi !== null;
 
 const getUpstreamCameras = async () => {
   const response = await fetch("https://ptz.app/api/presets-ext");
@@ -121,7 +138,9 @@ const processCamera = async (project: Project, camera: UpstreamCamera) => {
   exportAssignment.appendWhitespace((writer) => writer.newLine().newLine());
   exportAssignment.setOrder(file.getStatements().length - 1);
 
-  const added = await processCameraPTZ(camera, file, objCamera);
+  const added = isUpstreamCameraMulti(camera)
+    ? await processCameraMulti(camera, file, objCamera)
+    : await processCameraPTZ(camera, file, objCamera);
 
   // Remove any imports that are no longer used
   const removed = file
@@ -232,7 +251,7 @@ const processCameraPTZ = async (
 ) => {
   const name = upstreamCameraMap[camera.name] || camera.name;
 
-  // Ensure the camera object has the required presets property
+  // Ensure the camera object has the required presets property, and not a multi property
   const propPresets = objCamera.getProperty("presets");
   if (!propPresets) {
     objCamera.addPropertyAssignment({
@@ -240,6 +259,8 @@ const processCameraPTZ = async (
       initializer: `${name}Presets`,
     });
   }
+  const propMulti = objCamera.getProperty("multi");
+  if (propMulti) propMulti.remove();
 
   // Find, or create, the presets object declaration
   let objPresets = file
@@ -361,6 +382,46 @@ const processCameraPTZ = async (
   }
 
   return added;
+};
+
+const processCameraMulti = async (
+  camera: UpstreamCameraMulti,
+  file: SourceFile,
+  objCamera: ObjectLiteralExpression,
+) => {
+  const name = upstreamCameraMap[camera.name] || camera.name;
+
+  if (!camera.multi.modified) {
+    console.warn(
+      `Camera ${name} has multi data but invalid modified date, skipping`,
+    );
+    return [];
+  }
+
+  // Ensure we don't have a presets property or object
+  const propPresets = objCamera.getProperty("presets");
+  if (propPresets) propPresets.remove();
+  const objPresets = file.getVariableDeclaration(`${name}Presets`);
+  if (objPresets) objPresets.remove();
+
+  // Create the multi property with the image and cameras
+  const result = await processImage(
+    file,
+    objCamera,
+    {
+      name: "multi",
+      upstream: `swap-img/${camera.multi.name}.png`,
+      local: `${name}.png`,
+      modified: camera.multi.modified,
+    },
+    (writer) => {
+      writer.writeLine(
+        `cameras: ${JSON.stringify(camera.multi.cameras.map((cam) => upstreamCameraMap[cam] || cam))},`,
+      );
+    },
+  );
+
+  return result ? [result] : [];
 };
 
 const main = async () => {
