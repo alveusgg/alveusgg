@@ -18,14 +18,23 @@ import { sentenceToTitle } from "../src/utils/string-case";
 
 const upstreamCameraMap: Record<string, string> = {
   chickenin: "chickenindoor",
+  parrotmacaw: "littlesmulti",
   pushcrunch: "pushpopcrunch",
   pushinptz: "pushpopindoor",
-  parrots: "littles",
   macaw: "macaws",
+  macawparrot: "macawsmulti",
+  marmoutmarminmulti: "marmmulti",
+  parrots: "littles",
+  wolfcwolfin: "wolfcornerwolfin",
+  wolfwolfcornermulti: "wolfwolfcorner",
+  wolfwolfden2: "wolfcornerwolfden2",
 };
 
 const upstreamCameraSchema = z.object({
-  name: z.string().toLowerCase(),
+  name: z
+    .string()
+    .toLowerCase()
+    .transform((str) => str.replace(/cam$/, "")),
   presets: z.array(
     z.object({
       name: z.string(),
