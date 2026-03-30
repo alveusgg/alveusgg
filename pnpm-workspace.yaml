@@ -4,6 +4,7 @@ packages:
 
 optimisticRepeatInstall: true
 strictPeerDependencies: true
+dedupePeers: true
 
 peerDependencyRules:
   allowedVersions:
