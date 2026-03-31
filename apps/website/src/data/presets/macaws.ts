@@ -11,6 +11,7 @@ import postmt from "@/assets/presets/macaws/postmt.png";
 import right from "@/assets/presets/macaws/right.png";
 import water from "@/assets/presets/macaws/water.png";
 import window from "@/assets/presets/macaws/window.png";
+import windowz from "@/assets/presets/macaws/windowz.png";
 import winl from "@/assets/presets/macaws/winl.png";
 import winr from "@/assets/presets/macaws/winr.png";
 import winrf from "@/assets/presets/macaws/winrf.png";
@@ -95,6 +96,12 @@ const macawsPresets: Record<string, Preset> = {
     image: window,
     position: { pan: 174.6, tilt: -11.17, zoom: 773 },
     // modified: 2025-10-31T16:33:29.976Z
+  },
+  windowz: {
+    description: "windowz",
+    image: windowz,
+    position: { pan: 171.52, tilt: -11.18, zoom: 1111 },
+    // modified: 2026-03-30T15:45:13.011Z
   },
   winl: {
     description: "winl",
