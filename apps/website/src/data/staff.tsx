@@ -160,13 +160,13 @@ const staff: Record<string, Staff> = {
           her local zoo, Sruti was fortunate to realize her passion for animal
           behavior, conservation, and environmental education. This passion
           translated to jobs all over the world, participating in field research
-          and education. That trend continued when she moved to Michigan and
-          served as the Mammal Curator for The Creature Conservancy. This
-          opportunity channeled her interest in behavior into training, where
-          she trained with animals both big and small for fear-free veterinary
-          care, educational programs, and mental well-being. To further improve
-          her training skills, Sruti studied and worked with K9 Turbo Training
-          to obtain her certification in professional dog training. She
+          and education, including serving as the Mammal Curator for The
+          Creature Conservancy. This opportunity channeled her interest in
+          behavior into training, where she trained with animals both big and
+          small for fear-free veterinary care, educational programs, and mental
+          well-being. Sruti went on to study and work with K9 Turbo Training to
+          obtain her Certification Council for Professional Dog Trainers®
+          (CCPDT®) certification, which she continues to maintain. She
           specializes in fear and aggression and loves working with families to
           create a training environment that is supportive, engaging, and fun
           for everyone!
