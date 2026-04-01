@@ -9,7 +9,7 @@ import Link from "./Link";
 export interface Person {
   image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
   name: string;
-  title: string;
+  title: ReactNode;
   description: ReactNode;
 }
 
