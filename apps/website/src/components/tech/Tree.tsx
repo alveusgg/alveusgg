@@ -42,6 +42,7 @@ interface TreeProps<T extends Record<string, unknown>> {
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   nodeSpacing?: { ranks: number; siblings: number };
+  direction?: "TB" | "LR";
   onInit?: (instance: TreeInstance<T>) => void;
 }
 
@@ -238,12 +239,13 @@ const useNodesEdgesState = <T extends Record<string, unknown>>(
   data: TreeNode<T> | TreeNode<T>[],
   nodeSize: { width: number; height: number },
   nodeSpacing: { ranks: number; siblings: number },
+  direction: "TB" | "LR" = "LR",
 ) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(() => {
     const result = getNodesEdges(data);
-    return withPositions(result, nodeSize, nodeSpacing);
-  }, [data, nodeSize, nodeSpacing]);
+    return withPositions(result, nodeSize, nodeSpacing, direction);
+  }, [data, nodeSize, nodeSpacing, direction]);
 
   const [statefulNodes, setNodes, onNodesChange] = useNodesState(nodes);
   useEffect(() => {
@@ -272,6 +274,7 @@ const Tree = <T extends Record<string, unknown>>({
   edgeType,
   nodeSize = defaultNodeSize,
   nodeSpacing = defaultNodeSpacing,
+  direction = "LR",
   onInit,
 }: TreeProps<T>) => {
   // Convert the nested data into stateful nodes and edges
@@ -279,6 +282,7 @@ const Tree = <T extends Record<string, unknown>>({
     data,
     nodeSize,
     nodeSpacing,
+    direction,
   );
 
   // Override the default edge type if one is provided
