@@ -53,6 +53,7 @@ export const departments = {
 type Department = keyof typeof departments;
 
 export interface Staff extends Person {
+  title: string;
   joined: PartialDateString;
   department: Department;
 }
