@@ -2,10 +2,25 @@
   "name": "@alveusgg/donations-core",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "scripts": {},
+  "scripts": {
+    "types": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0"
+  },
   "dependencies": {
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^24.12.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.2",
+    "globals": "^17.4.0",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^8.57.1"
   }
 }
