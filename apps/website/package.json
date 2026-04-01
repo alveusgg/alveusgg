@@ -96,7 +96,7 @@
     "react-textarea-autosize": "^8.5.9",
     "react-to-text": "^2.0.1",
     "remark-heading-id": "^1.0.1",
-    "schema-dts": "^1.1.5",
+    "schema-dts": "^2.0.0",
     "slugify": "^1.6.8",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "superjson": "^2.2.6",
