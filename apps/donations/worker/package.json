@@ -15,19 +15,19 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-import-x": "^4.16.2",
     "globals": "^17.4.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^5.5.2",
-    "typescript-eslint": "^8.56.1",
-    "wrangler": "^4.71.0"
+    "typescript-eslint": "^8.57.1",
+    "wrangler": "^4.76.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",
-    "hono": "^4.12.7",
+    "hono": "^4.12.8",
     "superjson": "^2.2.6",
     "zod": "^4.3.6"
   }

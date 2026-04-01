@@ -36,20 +36,6 @@ export default tseslint.config(
   importXPluginConfigs.typescript,
   {
     name: "import-x/custom",
-    rules: {
-      "import-x/order": [
-        "warn",
-        {
-          pathGroups: [
-            {
-              pattern: "@/**",
-              group: "external",
-              position: "after",
-            },
-          ],
-        },
-      ],
-    },
     settings: {
       "import-x/resolver": {
         typescript: {
