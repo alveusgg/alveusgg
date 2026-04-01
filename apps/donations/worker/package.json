@@ -7,6 +7,7 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
+    "types": "wrangler types && tsc --noEmit",
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
