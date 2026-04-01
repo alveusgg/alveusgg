@@ -303,20 +303,21 @@ const Network = () => {
       nodeTypes: { network: Node },
       edgeType: NetworkEdge,
       nodeSize: { width: 176, height: 80 },
+      direction: "TB" as const,
       onInit: (instance: TreeInstance<Data>) => {
-        // After the initial fit, vertically center on the first node
+        // After the initial fit, horizontally center on the first node
         window.requestAnimationFrame(() => {
           const nodes = instance.getNodes();
 
           const firstNode = nodes[0];
           if (!firstNode) return;
 
-          const centerX =
-            nodes.reduce((acc, node) => acc + node.position.x, 0) /
+          const centerY =
+            nodes.reduce((acc, node) => acc + node.position.y, 0) /
             nodes.length;
 
           const viewport = instance.getViewport();
-          instance.setCenter(centerX, firstNode.position.y, {
+          instance.setCenter(firstNode.position.x, centerY, {
             zoom: viewport.zoom,
           });
         });
