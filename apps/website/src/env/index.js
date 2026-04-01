@@ -83,7 +83,7 @@ export const env = createEnv({
     UPSTASH_QSTASH_KEY: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.url().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
-    REDIS_URL: z.string(),
+    REDIS_URL: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
     PUSH_TEXT_DIR: z.literal(["ltr", "rtl"]).default("ltr"),
     PUSH_BATCH_SIZE: z.coerce.number().int().min(1).default(50),
