@@ -59,7 +59,7 @@ export default tseslint.config(
   },
   {
     name: "custom/ignores",
-    ignores: ["dist/", ".wragler/*", "worker-configuration.d.ts"],
+    ignores: ["dist/", ".wrangler/*", "worker-configuration.d.ts"],
   },
   {
     name: "custom/rules",
