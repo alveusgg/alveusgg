@@ -9,7 +9,7 @@
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
     "types": "wrangler types && tsc --noEmit",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "wrangler types && eslint . --max-warnings 0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
