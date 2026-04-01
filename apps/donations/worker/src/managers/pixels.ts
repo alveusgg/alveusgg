@@ -40,6 +40,11 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
     this.muralId = env.MURAL_ID;
+
+    if (!env.SHARED_KEY) {
+      throw new Error("SHARED_KEY must be defined in environment variables");
+    }
+
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
@@ -77,8 +82,11 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   }
 
   async init() {
-    const grid = await getGrid(this.env.GRID_URL);
-    this.grid = grid;
+    if (!this.env.GRID_URL) {
+      throw new Error("GRID_URL must be defined in environment variables");
+    }
+
+    this.grid = await getGrid(this.env.GRID_URL);
 
     this.api = createTRPCProxyClient<AppRouter>({
       links: [
@@ -110,20 +118,21 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     }));
   }
 
-  private async getStateFromAPI() {
+  private async getStateFromAPI(): Promise<Pixel[]> {
     if (!this.api) throw new Error("API not initialized");
-    const pixels: Omit<Pixel, "data">[] =
-      await this.api.donations.getPixels.query({ muralId: this.muralId });
 
-    const pixelsWithImageData = pixels.map((pixel) => {
-      if (!this.grid) throw new Error("Grid not initialized");
-      return {
-        ...pixel,
-        data: this.grid.squares[`${pixel.column}:${pixel.row}`],
-      };
+    const pixels = await this.api.donations.getPixels.query({
+      muralId: this.muralId,
     });
 
-    return pixelsWithImageData;
+    const grid = this.grid;
+    if (!grid) throw new Error("Grid not initialized");
+
+    return pixels.map(({ renamedAt: _, ...pixel }) => ({
+      ...pixel,
+      muralId: this.muralId,
+      data: grid.squares[`${pixel.column}:${pixel.row}`],
+    }));
   }
 
   private async startWebsocketConnection(server: WebSocket) {

@@ -52,6 +52,19 @@
   "observability": {
     "enabled": true,
   },
+  "vars": {
+    "SANDBOX": "true",
+    "SITE_URL": "https://preview.alveus.gg",
+    "SELF_URL": "http://localhost:8787",
+    "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
+    "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
+    "STATE_KEY": "dev",
+    "MURAL_ID": "two",
+    "GRID_URL": "http://localhost:8787/pixels/example-grid",
+    "SHARED_KEY": "secret",
+    "OPTIONAL_VERCEL_PROTECTION_BYPASS": "secret",
+    "TWITCH_SUBSCRIPTION_SECRET": "secret",
+  },
 
   "env": {
     "production": {
