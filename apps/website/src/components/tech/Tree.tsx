@@ -1,4 +1,10 @@
-import { type Node as DagreNode, graphlib, layout } from "@dagrejs/dagre";
+import {
+  type EdgeLabel,
+  Graph,
+  type GraphLabel,
+  type NodeLabel,
+  layout,
+} from "@dagrejs/dagre";
 import {
   Background,
   Controls,
@@ -36,6 +42,7 @@ interface TreeProps<T extends Record<string, unknown>> {
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   nodeSpacing?: { ranks: number; siblings: number };
+  direction?: "TB" | "LR";
   onInit?: (instance: TreeInstance<T>) => void;
 }
 
@@ -50,7 +57,7 @@ const withPositions = <T extends Record<string, unknown>>(
   direction: "TB" | "LR" = "LR",
 ) => {
   // Create the graph
-  const dagreGraph = new graphlib.Graph();
+  const dagreGraph = new Graph<GraphLabel, NodeLabel, EdgeLabel>();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     ranksep: separation.ranks,
@@ -84,9 +91,10 @@ const withPositions = <T extends Record<string, unknown>>(
     // Determine which axis we want to align on
     const axis = direction === "LR" ? "y" : "x";
     const dimension = direction === "LR" ? "height" : "width";
+    const getAxis = (node: NodeLabel) => node[axis] ?? NaN;
 
     // Get the children nodes
-    type ChildNode = { id: string } & DagreNode;
+    type ChildNode = { id: string } & NodeLabel;
     const dagreChildren: ChildNode[] = [];
     for (const child of children) {
       const node = dagreGraph.node(child.id);
@@ -94,7 +102,7 @@ const withPositions = <T extends Record<string, unknown>>(
         dagreChildren.push({ id: child.id, ...node });
       }
     }
-    dagreChildren.sort((a, b) => a[axis] - b[axis]);
+    dagreChildren.sort((a, b) => getAxis(a) - getAxis(b));
     if (!dagreChildren[0]) return;
 
     // Find the child node that is nearest to the parent
@@ -102,8 +110,8 @@ const withPositions = <T extends Record<string, unknown>>(
       .slice(1)
       .reduce<[ChildNode, number]>(
         (acc: [ChildNode, number], child: ChildNode, idx: number) => {
-          const accDistance = Math.abs(acc[0][axis] - dagreParent[axis]);
-          const childDistance = Math.abs(child[axis] - dagreParent[axis]);
+          const accDistance = Math.abs(getAxis(acc[0]) - getAxis(dagreParent));
+          const childDistance = Math.abs(getAxis(child) - getAxis(dagreParent));
           return childDistance < accDistance ? [child, idx + 1] : acc;
         },
         [dagreChildren[0], 0],
@@ -112,7 +120,7 @@ const withPositions = <T extends Record<string, unknown>>(
     let idx: number, pos: number;
 
     // Walk backwards from the nearest node, and fix any misalignment
-    for (idx = nearestIdx - 1, pos = nearestNode[axis]; idx >= 0; idx--) {
+    for (idx = nearestIdx - 1, pos = getAxis(nearestNode); idx >= 0; idx--) {
       const node = dagreChildren[idx];
       if (!node) continue; // Make TS happy
 
@@ -125,7 +133,7 @@ const withPositions = <T extends Record<string, unknown>>(
 
     // Walk forwards from the nearest node, and fix any misalignment
     for (
-      idx = nearestIdx + 1, pos = nearestNode[axis] + nearestNode[dimension];
+      idx = nearestIdx + 1, pos = getAxis(nearestNode) + nearestNode[dimension];
       idx < dagreChildren.length;
       idx++
     ) {
@@ -151,8 +159,8 @@ const withPositions = <T extends Record<string, unknown>>(
       sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
       // Dagre gives the position as the center, we need the top left corner
       position: {
-        x: nodeWithPosition.x - size.width / 2,
-        y: nodeWithPosition.y - size.height / 2,
+        x: (nodeWithPosition.x ?? NaN) - size.width / 2,
+        y: (nodeWithPosition.y ?? NaN) - size.height / 2,
       },
     };
   });
@@ -231,12 +239,13 @@ const useNodesEdgesState = <T extends Record<string, unknown>>(
   data: TreeNode<T> | TreeNode<T>[],
   nodeSize: { width: number; height: number },
   nodeSpacing: { ranks: number; siblings: number },
+  direction: "TB" | "LR" = "LR",
 ) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(() => {
     const result = getNodesEdges(data);
-    return withPositions(result, nodeSize, nodeSpacing);
-  }, [data, nodeSize, nodeSpacing]);
+    return withPositions(result, nodeSize, nodeSpacing, direction);
+  }, [data, nodeSize, nodeSpacing, direction]);
 
   const [statefulNodes, setNodes, onNodesChange] = useNodesState(nodes);
   useEffect(() => {
@@ -265,6 +274,7 @@ const Tree = <T extends Record<string, unknown>>({
   edgeType,
   nodeSize = defaultNodeSize,
   nodeSpacing = defaultNodeSpacing,
+  direction = "LR",
   onInit,
 }: TreeProps<T>) => {
   // Convert the nested data into stateful nodes and edges
@@ -272,6 +282,7 @@ const Tree = <T extends Record<string, unknown>>({
     data,
     nodeSize,
     nodeSpacing,
+    direction,
   );
 
   // Override the default edge type if one is provided

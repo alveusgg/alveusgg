@@ -52,6 +52,18 @@
   "observability": {
     "enabled": true,
   },
+  "vars": {
+    "SANDBOX": "true",
+    "SITE_URL": "https://preview.alveus.gg",
+    "SELF_URL": "http://localhost:8787",
+    "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
+    "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
+    "MURAL_ID": "two",
+    "GRID_URL": "http://localhost:8787/pixels/example-grid",
+    "SHARED_KEY": "",
+    "OPTIONAL_VERCEL_PROTECTION_BYPASS": "",
+    "TWITCH_SUBSCRIPTION_SECRET": "",
+  },
 
   "env": {
     "production": {
@@ -63,7 +75,6 @@
         "SELF_URL": "https://donation-manager.workers.alveussanctuary.org",
         "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
         "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-        "STATE_KEY": "prod3",
         "MURAL_ID": "two",
       },
 
@@ -120,7 +131,6 @@
         "SELF_URL": "https://donation-manager.preview.workers.alveussanctuary.org",
         "TWITCH_CHARITY_NAME": "Example Charity",
         "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
-        "STATE_KEY": "preview1",
         "MURAL_ID": "two",
       },
 

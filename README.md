@@ -77,14 +77,17 @@ If you aren't working on features related to Twitch authentication, you can set 
 6. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. If your feature is not related to Twitch authentication, you can set `DISABLE_ADMIN_AUTH` to `true` in order to use the admin dashboard without authentication. Otherwise, fill in `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` as mentioned above.
    2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`), TRPC API secret (`TRPC_API_SHARED_KEY`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 7. Copy `apps/database/.env.example` to `apps/database/.env`
-8. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
-9. Start the dev server using `pnpm dev` from within `apps/website`
-10. The website should be running at `http://localhost:3000/` (open in browser)
+8. Copy `apps/donations/worker/.env.example` to `apps/donations/worker/.env`
+   1. Copy your `TRPC_API_SHARED_KEY` from `apps/website/.env` as the value for `SHARED_KEY`
+   2. Set a secret for Twitch EventSub as the value for `TWITCH_SUBSCRIPTION_SECRET`. See [Twitch EventSub secrets](https://dev.twitch.tv/docs/eventsub/eventsub-secret) for more info. This is used to verify that incoming EventSub webhooks are actually from Twitch.
+9. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
+10. Start the dev server using `pnpm dev` from within `apps/website`
+11. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio` from within `apps/database`
