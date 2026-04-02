@@ -41,6 +41,17 @@ export class TwitchDonationProvider implements DonationProvider {
         headers["x-vercel-protection-bypass"] =
           env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
       }
+
+      if (!env.SHARED_KEY) {
+        throw new Error("SHARED_KEY must be defined in environment variables");
+      }
+
+      if (!env.TWITCH_SUBSCRIPTION_SECRET) {
+        throw new Error(
+          "TWITCH_SUBSCRIPTION_SECRET must be defined in environment variables",
+        );
+      }
+
       await setupTwitchSubscription(
         env.SITE_URL,
         env.SELF_URL,
@@ -51,7 +62,7 @@ export class TwitchDonationProvider implements DonationProvider {
 
       const config = {
         secret: env.TWITCH_SUBSCRIPTION_SECRET,
-      };
+      } as const satisfies TwitchDonationProviderConfig;
       await service.config.set("twitch", config);
 
       return new TwitchDonationProvider(config, options, service);

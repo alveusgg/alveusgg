@@ -2,12 +2,14 @@
   "name": "@alveusgg/donations-manager",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
-    "lint": "eslint . --max-warnings 0"
+    "types": "wrangler types && tsc --noEmit",
+    "lint": "wrangler types && eslint . --max-warnings 0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

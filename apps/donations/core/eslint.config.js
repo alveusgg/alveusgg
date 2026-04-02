@@ -39,27 +39,11 @@ export default tseslint.config(
           extensions: [".js", ".jsx", ".ts", ".tsx"],
         },
       },
-      "import-x/ignore": ["^cloudflare:"],
-    },
-  },
-  {
-    name: "import-x/cloudflare-override",
-    rules: {
-      "import-x/no-unresolved": [
-        "error",
-        {
-          ignore: ["^cloudflare:"],
-        },
-      ],
     },
   },
   {
     name: "prettier/config",
     ...prettiereslint,
-  },
-  {
-    name: "custom/ignores",
-    ignores: ["dist/", ".wrangler/*", "worker-configuration.d.ts"],
   },
   {
     name: "custom/rules",
