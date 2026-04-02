@@ -206,7 +206,6 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error(error);
     return Response.json(
       {
         error: "server_error",
