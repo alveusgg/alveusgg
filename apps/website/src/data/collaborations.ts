@@ -117,7 +117,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/chrisnxtdoor",
       date: new Date("2026-03-10"),
       videoId: "fnW6n3Cvai4",
-      vodId: "ecZzRN-ZBDs", // Non-Alveus VoD
+      vodId: "Qi6oXKL516Q",
       creators: [
         {
           name: "Chrisnxtdoor",
