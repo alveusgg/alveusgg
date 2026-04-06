@@ -54,6 +54,7 @@ import lacari from "@/assets/collaborations/lacari.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
+import marlon from "@/assets/collaborations/marlon.png";
 import misterArther from "@/assets/collaborations/mister-arther.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
@@ -99,11 +100,24 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Marlon",
+      link: "https://www.twitch.tv/marlon",
+      date: new Date("2026-04-05"),
+      videoId: "hi9TnKJfUVM",
+      creators: [
+        {
+          name: "Marlon",
+          image: marlon,
+          popularity: 2_000_000, // Twitch followers, 2026-04-06
+        },
+      ],
+    },
+    {
       name: "Chrisnxtdoor",
       link: "https://www.twitch.tv/chrisnxtdoor",
       date: new Date("2026-03-10"),
       videoId: "fnW6n3Cvai4",
-      vodId: "ecZzRN-ZBDs", // Non-Alveus VoD
+      vodId: "Qi6oXKL516Q",
       creators: [
         {
           name: "Chrisnxtdoor",
@@ -130,7 +144,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/emiru",
       date: new Date("2026-01-22"),
       videoId: "vm6IVBA8Ke8",
-      vodId: "7SbZgLeUZk0", // Non-Alveus VoD
+      vodId: "ggIGmCZqB8k",
       creators: [
         {
           name: "Emiru",
