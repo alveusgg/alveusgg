@@ -144,7 +144,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/emiru",
       date: new Date("2026-01-22"),
       videoId: "vm6IVBA8Ke8",
-      vodId: "7SbZgLeUZk0", // Non-Alveus VoD
+      vodId: "ggIGmCZqB8k",
       creators: [
         {
           name: "Emiru",
