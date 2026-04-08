@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { type PartialDateString } from "@/utils/datetime-partial";
 
 import { MayaText } from "@/components/content/Maya";
@@ -22,8 +24,38 @@ import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 
+export const departments = {
+  leadership: null, // No label for Maya as she isn't really in a department
+  animalCare: (
+    <>
+      Animal Care (
+      <abbr title="Animal Care Staff" className="cursor-help">
+        ACS
+      </abbr>
+      )
+    </>
+  ),
+  facilities: (
+    <>
+      Facilities and Infrastructure (
+      <abbr
+        title="Facilities and Infrastructure Department"
+        className="cursor-help"
+      >
+        FAID
+      </abbr>
+      )
+    </>
+  ),
+  production: "Production",
+} as const satisfies Record<string, ReactNode>;
+
+type Department = keyof typeof departments;
+
 export interface Staff extends Person {
+  title: string;
   joined: PartialDateString;
+  department: Department;
 }
 
 const staff: Record<string, Staff> = {
@@ -42,6 +74,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-02",
+    department: "leadership",
   },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
@@ -66,6 +99,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
+    department: "facilities",
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -91,6 +125,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
+    department: "animalCare",
   },
   lindsay: {
     image: [lindsayBellawImage, lindsayBellawFunImage],
@@ -112,6 +147,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2023-07",
+    department: "animalCare",
   },
   sruti: {
     image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
@@ -125,13 +161,13 @@ const staff: Record<string, Staff> = {
           her local zoo, Sruti was fortunate to realize her passion for animal
           behavior, conservation, and environmental education. This passion
           translated to jobs all over the world, participating in field research
-          and education. That trend continued when she moved to Michigan and
-          served as the Mammal Curator for The Creature Conservancy. This
-          opportunity channeled her interest in behavior into training, where
-          she trained with animals both big and small for fear-free veterinary
-          care, educational programs, and mental well-being. To further improve
-          her training skills, Sruti studied and worked with K9 Turbo Training
-          to obtain her certification in professional dog training. She
+          and education, including serving as the Mammal Curator for The
+          Creature Conservancy. This opportunity channeled her interest in
+          behavior into training, where she trained with animals both big and
+          small for fear-free veterinary care, educational programs, and mental
+          well-being. Sruti went on to study and work with K9 Turbo Training to
+          obtain her Certification Council for Professional Dog Trainers®
+          (CCPDT®) certification, which she continues to maintain. She
           specializes in fear and aggression and loves working with families to
           create a training environment that is supportive, engaging, and fun
           for everyone!
@@ -145,6 +181,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2024-04",
+    department: "animalCare",
   },
   amanda: {
     image: [amandaDenaroImage, amandaDenaroFunImage],
@@ -167,6 +204,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2024-07",
+    department: "animalCare",
   },
   linden: {
     image: lindenImage,
@@ -189,6 +227,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-12",
+    department: "facilities",
   },
   lukas: {
     image: lukasMeyerImage,
@@ -207,6 +246,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-01",
+    department: "facilities",
   },
   dan: {
     image: danielDoormanImage,
@@ -224,6 +264,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-07",
+    department: "facilities",
   },
   rocky: {
     image: rockyImage,
@@ -243,6 +284,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-08",
+    department: "facilities",
   },
   space: {
     image: spaceVoyageImage,
@@ -268,6 +310,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-02",
+    department: "production",
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -279,6 +322,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-04",
+    department: "production",
   },
 };
 
