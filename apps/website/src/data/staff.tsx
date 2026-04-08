@@ -25,7 +25,7 @@ import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg"
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 
 export const departments = {
-  leadership: "Executive Leadership",
+  leadership: null, // No label for Maya as she isn't really in a department
   animalCare: (
     <>
       Animal Care (

@@ -32,9 +32,11 @@ const staffWithDepartments = Object.fromEntries(
       title: (
         <span className="flex flex-col flex-wrap items-baseline lg:flex-row">
           {person.title}
-          <span className="font-sans text-base text-alveus-green-600 uppercase lg:ml-auto">
-            {departments[person.department]}
-          </span>
+          {!!departments[person.department] && (
+            <span className="font-sans text-base text-alveus-green-600 uppercase lg:ml-auto">
+              {departments[person.department]}
+            </span>
+          )}
         </span>
       ),
     },
