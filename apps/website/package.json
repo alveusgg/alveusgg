@@ -70,7 +70,7 @@
     "fast-xml-parser": "^5.5.10",
     "feed": "^5.2.0",
     "heic-to": "^1.4.2",
-    "html-react-parser": "^5.2.17",
+    "html-react-parser": "^6.0.0",
     "ioredis": "^5.10.0",
     "jsdom": "^29.0.1",
     "linkify-it": "^5.0.0",
