@@ -52,8 +52,8 @@ const tarantulaptzPresets: Record<string, Preset> = {
   kiwi: {
     description: "Kiwi",
     image: kiwi,
-    position: { pan: -141.5, tilt: -55.01, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.300Z
+    position: { pan: -12.13, tilt: -65.36, zoom: 1 },
+    // modified: 2026-04-08T13:38:39.707Z
   },
   kiwibottomleft: {
     description: "Kiwi Bottom Left",
