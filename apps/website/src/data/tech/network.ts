@@ -234,24 +234,43 @@ const data: RootNetworkItem[] = [
               {
                 type: "switch",
                 name: "Training Center",
-                model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                model: "Ubiquiti USW-Pro-24-PoE",
+                url: "https://store.ui.com/products/usw-pro-24-poe",
                 connection: { type: "ethernet", location: "overhead" },
                 links: [
-                  /*
                   {
                     type: "camera",
                     name: "Training Center",
-                    model: "AXIS M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
+                    model: "AXIS Q6155-E (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6155-e",
                     connection: { type: "ethernet", location: "wall" },
                   },
-                  */
+                  {
+                    type: "camera",
+                    name: "Serval",
+                    model: "AXIS Q6358-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6358-le",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Pollinator Garden",
+                    model: "AXIS Q6318-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6318-le",
+                    connection: { type: "ethernet", location: "buried" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Training Center",
+                    model: "Ubiquiti U6-Mesh",
+                    url: "https://store.ui.com/products/u6-mesh",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
                   {
                     type: "accessPoint",
                     name: "Pasture",
                     model: "Ubiquiti U7-Pro-Outdoor",
-                    url: "https://store.ui.com/us/en/category/wifi-outdoor/products/u7-pro-outdoor-us",
+                    url: "https://store.ui.com/products/u7-pro-outdoor-us",
                     connection: { type: "ethernet", location: "buried" },
                   },
                 ],
