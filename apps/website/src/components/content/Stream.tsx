@@ -214,6 +214,7 @@ export const StreamEmbed = ({
           ) : (
             <StreamPreview
               src={src}
+              alt=""
               className="rounded-none shadow-none"
               icon={false}
             />
