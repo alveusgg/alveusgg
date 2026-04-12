@@ -1,0 +1,36 @@
+{
+  "name": "@alveusgg/cams-manager",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "generate:control": "openapi-ts",
+    "types": "wrangler types && tsc --noEmit",
+    "lint": "wrangler types && eslint . --max-warnings 0"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.95.0",
+    "@types/node": "^25.5.0",
+    "typescript": "^5.5.2",
+    "wrangler": "^4.77.0",
+    "globals": "^17.4.0",
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.2",
+    "typescript-eslint": "^8.58.0"
+  },
+  "dependencies": {
+    "@conservation-stream/mtx-manager": "^0.0.6",
+    "@hono/standard-validator": "^0.2.2",
+    "cloudflare": "^5.2.0",
+    "hono": "^4.12.9",
+    "jose": "^6.2.2",
+    "partysocket": "^1.1.16",
+    "zod": "^4.3.6"
+  }
+}
