@@ -8,8 +8,8 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "generate:control": "openapi-ts",
-    "types": "wrangler types && tsc --noEmit",
-    "lint": "wrangler types && eslint . --max-warnings 0"
+    "types": "wrangler types --env-file .env.example && tsc --noEmit",
+    "lint": "wrangler types --env-file .env.example && eslint . --max-warnings 0"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.95.0",
