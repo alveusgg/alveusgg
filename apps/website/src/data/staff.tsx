@@ -12,6 +12,8 @@ import chandlerImage from "@/assets/people/chandler.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
+import jacobIckesFunImage from "@/assets/people/jacob-ickes-fun.jpg";
+import jacobIckesImage from "@/assets/people/jacob-ickes.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindenImage from "@/assets/people/linden.jpg";
 import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
@@ -48,6 +50,7 @@ export const departments = {
     </>
   ),
   production: "Production",
+  administration: "Administration",
 } as const satisfies Record<string, ReactNode>;
 
 type Department = keyof typeof departments;
@@ -323,6 +326,28 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-04",
     department: "production",
+  },
+  jacob: {
+    image: [jacobIckesImage, jacobIckesFunImage],
+    name: "Jacob Ickes",
+    title: "Development and Administration Coordinator",
+    description: (
+      <p>
+        Jacob graduated with a degree in political science with a minor in
+        business and a postgraduate certificate in non-profit management. As a
+        Community Impact Coordinator he has managed volunteers, supported the
+        planning and implementation of community action initiatives, and hosted
+        trainings to build capacity for local non-profits focused on basic needs
+        and economic development. As a fundraiser and grant writer he has raised
+        over $4 million through individual, corporate and foundation donors for
+        multiple organizations, managing both solicitation and stewardship of
+        the giving process. His passion for conservation and the natural world
+        formed through volunteering and learning from The Wildlife Center of
+        Texas, Bayou Land Conservancy, and Alveus Sanctuary.
+      </p>
+    ),
+    joined: "2026-01",
+    department: "administration",
   },
 };
 

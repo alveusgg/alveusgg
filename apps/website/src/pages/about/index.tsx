@@ -754,6 +754,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/about/staff",
         },
       },
+      {
+        key: "jacob",
+        date: "2026-01",
+        content: [
+          "Jacob joins the Alveus team",
+          "Jacob joins the team as Alveus' Development and Administration Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
 ];
