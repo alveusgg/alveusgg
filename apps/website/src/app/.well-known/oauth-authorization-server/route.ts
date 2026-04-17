@@ -26,7 +26,11 @@ export async function GET() {
     userinfo_endpoint: OAUTH_USERINFO_ENDPOINT,
     jwks_uri: OAUTH_JWKS_URI,
     response_types_supported: ["code"],
-    grant_types_supported: ["authorization_code", "refresh_token"],
+    grant_types_supported: [
+      "authorization_code",
+      "refresh_token",
+      "client_credentials",
+    ],
     code_challenge_methods_supported: [OAUTH_CODE_CHALLENGE_METHOD],
     token_endpoint_auth_methods_supported: ["client_secret_basic"],
   });

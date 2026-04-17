@@ -10,6 +10,7 @@ const {
   mockCompareAuthorizationCode,
   mockHasOAuthSigningKey,
   mockIsAllowedRedirectUri,
+  mockIssueAccessToken,
   mockIssueAccessTokenForUser,
   mockIssueRefreshToken,
   mockVerifyRefreshToken,
@@ -19,6 +20,7 @@ const {
     mockCompareAuthorizationCode: vi.fn(),
     mockHasOAuthSigningKey: vi.fn(),
     mockIsAllowedRedirectUri: vi.fn(),
+    mockIssueAccessToken: vi.fn(),
     mockIssueAccessTokenForUser: vi.fn(),
     mockIssueRefreshToken: vi.fn(),
     mockVerifyRefreshToken: vi.fn(),
@@ -65,6 +67,7 @@ vi.mock("@/server/oauth/tokens", async () => {
   return {
     ...actual,
     OAuthRequestError: actual.OAuthRequestError,
+    issueAccessToken: mockIssueAccessToken,
     issueAccessTokenForUser: mockIssueAccessTokenForUser,
     issueRefreshToken: mockIssueRefreshToken,
     verifyRefreshToken: mockVerifyRefreshToken,
@@ -97,6 +100,7 @@ describe("oauth token route", () => {
     mockCompareAuthorizationCode.mockResolvedValue({ sub: "user-1" });
     mockHasOAuthSigningKey.mockReturnValue(true);
     mockIsAllowedRedirectUri.mockReturnValue(true);
+    mockIssueAccessToken.mockResolvedValue("client-credentials-access-token");
     mockIssueAccessTokenForUser.mockResolvedValue("access-token");
     mockIssueRefreshToken.mockResolvedValue("refresh-token");
     mockVerifyRefreshToken.mockResolvedValue({
@@ -206,6 +210,68 @@ describe("oauth token route", () => {
       error_description: "Refresh token mismatch.",
     });
   });
+
+  test("issues an access token for client_credentials with scope roles", async () => {
+    const response = await POST(
+      createFormRequest({
+        grant_type: "client_credentials",
+        scope: "dashboard forms dashboard",
+      }),
+    );
+    if (!response) {
+      throw new Error("Expected response.");
+    }
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toStrictEqual({
+      access_token: "client-credentials-access-token",
+      expires_in: 600,
+      token_type: "Bearer",
+    });
+    expect(mockIssueAccessToken).toHaveBeenCalledWith({
+      subject: "census-production",
+      clientId: "census-production",
+      roles: ["dashboard", "forms"],
+    });
+    expect(mockIssueRefreshToken).not.toHaveBeenCalled();
+  });
+
+  test("client_credentials with no scope yields empty roles", async () => {
+    const response = await POST(
+      createFormRequest({
+        grant_type: "client_credentials",
+      }),
+    );
+    if (!response) {
+      throw new Error("Expected response.");
+    }
+
+    expect(response.status).toBe(200);
+    expect(mockIssueAccessToken).toHaveBeenCalledWith({
+      subject: "census-production",
+      clientId: "census-production",
+      roles: [],
+    });
+  });
+
+  test("rejects client_credentials with unknown scope values", async () => {
+    const response = await POST(
+      createFormRequest({
+        grant_type: "client_credentials",
+        scope: "dashboard not_a_real_role",
+      }),
+    );
+    if (!response) {
+      throw new Error("Expected response.");
+    }
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toStrictEqual({
+      error: "invalid_scope",
+      error_description: "Unknown or invalid scope: not_a_real_role",
+    });
+    expect(mockIssueAccessToken).not.toHaveBeenCalled();
+  });
 });
 
 describe("oauth authorization server metadata", () => {
@@ -221,7 +287,11 @@ describe("oauth authorization server metadata", () => {
     expect(await response.json()).toMatchObject({
       token_endpoint_auth_methods_supported: ["client_secret_basic"],
       code_challenge_methods_supported: ["S256"],
-      grant_types_supported: ["authorization_code", "refresh_token"],
+      grant_types_supported: [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials",
+      ],
       response_types_supported: ["code"],
     });
   });
