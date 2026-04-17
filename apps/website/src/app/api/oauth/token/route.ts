@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { isValidUserRole } from "@/data/user-roles";
 import {
   authenticateOAuthClient,
   getInvalidClientHeaders,
@@ -20,6 +19,8 @@ import {
   issueRefreshToken,
   verifyRefreshToken,
 } from "@/server/oauth/tokens";
+
+import { isValidUserRole } from "@/data/user-roles";
 
 const TokenGrantTypeSchema = z.enum([
   "authorization_code",
