@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "old=$(pnpm --version)" >> $GITHUB_OUTPUT
           pnpm self-update
+          pnpm install --frozen-lockfile
           echo "new=$(pnpm --version)" >> $GITHUB_OUTPUT
           cat <<< $(jq '.engines.pnpm = "^" + (.packageManager | split("@")[1])' package.json) > package.json
 
