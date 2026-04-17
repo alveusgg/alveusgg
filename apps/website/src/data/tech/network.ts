@@ -708,8 +708,15 @@ const data: RootNetworkItem[] = [
                           {
                             type: "camera",
                             name: "Fox Covered",
-                            model: "AXIS P5676-LE (PTX)",
+                            model: "AXIS P5676-LE (PTZ)",
                             url: "https://www.axis.com/products/axis-p5676-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "camera",
+                            name: "Fox Indoor",
+                            model: "AXIS P1468-LE (Fixed)",
+                            url: "https://www.axis.com/products/axis-p1468-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {

@@ -13,6 +13,7 @@ import crowoutcrowin from "../presets/crowoutcrowin";
 import emu from "../presets/emu";
 import fox from "../presets/fox";
 import foxcovered from "../presets/foxcovered";
+import foxindoor from "../presets/foxindoor";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
@@ -67,6 +68,7 @@ const cameras = {
   emu,
   fox,
   foxcovered,
+  foxindoor,
   garden,
   georgie,
   georgiewater,
