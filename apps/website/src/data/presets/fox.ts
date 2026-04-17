@@ -243,7 +243,7 @@ const foxPresets: Record<string, Preset> = {
   rightplatform: {
     description: "rightplatform",
     image: rightplatform,
-    position: { pan: -14.61, tilt: 1.23, zoom: 440 },
+    position: { pan: -14.6, tilt: 1.23, zoom: 440 },
     // modified: 2025-12-13T18:24:52.292Z
   },
   rightramp: {
