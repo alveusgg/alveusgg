@@ -14,12 +14,19 @@ import {
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
 import {
   OAuthRequestError,
+  issueAccessToken,
   issueAccessTokenForUser,
   issueRefreshToken,
   verifyRefreshToken,
 } from "@/server/oauth/tokens";
 
-const TokenGrantTypeSchema = z.enum(["authorization_code", "refresh_token"]);
+import { isValidUserRole } from "@/data/user-roles";
+
+const TokenGrantTypeSchema = z.enum([
+  "authorization_code",
+  "refresh_token",
+  "client_credentials",
+]);
 
 const AuthorizationCodeGrantSchema = z.object({
   grant_type: z.literal("authorization_code"),
@@ -33,15 +40,24 @@ const RefreshTokenGrantSchema = z.object({
   refresh_token: z.string().min(1),
 });
 
+const ClientCredentialsGrantSchema = z.object({
+  grant_type: z.literal("client_credentials"),
+  scope: z.string().optional(),
+});
+
 const TokenRequestSchema = z.discriminatedUnion("grant_type", [
   AuthorizationCodeGrantSchema,
   RefreshTokenGrantSchema,
+  ClientCredentialsGrantSchema,
 ]);
 
 type AuthorizationCodeGrantRequest = z.infer<
   typeof AuthorizationCodeGrantSchema
 >;
 type RefreshTokenGrantRequest = z.infer<typeof RefreshTokenGrantSchema>;
+type ClientCredentialsGrantRequest = z.infer<
+  typeof ClientCredentialsGrantSchema
+>;
 
 const TOKEN_RESPONSE_HEADERS = {
   "Cache-Control": "no-store",
@@ -81,6 +97,13 @@ function parseTokenRequest(formData: FormData) {
     );
   }
 
+  if (
+    !tokenRequestResult.success &&
+    grantTypeResult.data === "client_credentials"
+  ) {
+    throw new OAuthRequestError(400, "invalid_request", "Invalid request.");
+  }
+
   if (!tokenRequestResult.success) {
     throw new OAuthRequestError(400, "invalid_request", "Invalid request.");
   }
@@ -108,6 +131,51 @@ async function issueTokenPairForUser(userId: string, clientId: string) {
   return {
     ...accessTokenResponse,
     refresh_token: refreshToken,
+  };
+}
+
+function rolesFromOAuthScope(scope: string | undefined): string[] {
+  if (!scope?.trim()) {
+    return [];
+  }
+
+  const requested = scope.trim().split(/\s+/).filter(Boolean);
+  const roles: string[] = [];
+  const seen = new Set<string>();
+
+  for (const token of requested) {
+    if (!isValidUserRole(token)) {
+      throw new OAuthRequestError(
+        400,
+        "invalid_scope",
+        `Unknown or invalid scope: ${token}`,
+      );
+    }
+    if (seen.has(token)) {
+      continue;
+    }
+    seen.add(token);
+    roles.push(token);
+  }
+
+  return roles;
+}
+
+async function handleClientCredentialsGrant(
+  { scope }: ClientCredentialsGrantRequest,
+  client: OAuthClient,
+) {
+  const roles = rolesFromOAuthScope(scope);
+  const access_token = await issueAccessToken({
+    subject: client.clientId,
+    clientId: client.clientId,
+    roles,
+  });
+
+  return {
+    access_token,
+    token_type: OAUTH_TOKEN_TYPE,
+    expires_in: OAUTH_ACCESS_TOKEN_TTL_SECONDS,
   };
 }
 
@@ -182,6 +250,13 @@ export async function POST(request: Request) {
 
     if (tokenRequest.grant_type === "refresh_token") {
       const response = await handleRefreshTokenGrant(tokenRequest, client);
+      return Response.json(response, {
+        headers: TOKEN_RESPONSE_HEADERS,
+      });
+    }
+
+    if (tokenRequest.grant_type === "client_credentials") {
+      const response = await handleClientCredentialsGrant(tokenRequest, client);
       return Response.json(response, {
         headers: TOKEN_RESPONSE_HEADERS,
       });
