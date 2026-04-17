@@ -9,9 +9,14 @@ export class MTXManager extends DurableObject {
     super(ctx, env);
     this.ctx.blockConcurrencyWhile(async () => {
       this.mtx = await setup(env, {
-        garden: {
+        dev_garden: {
           host: "garden.cam",
           dynamic: true,
+          record: false,
+        },
+        garden: {
+          host: "garden.cam",
+          dynamic: false,
           record: true,
         },
       });

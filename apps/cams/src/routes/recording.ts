@@ -17,31 +17,29 @@ const RecordingClipBodySchema = z.object({
   }),
 });
 
-export default recording
-  .use(accountWithRoles("ptzControl"))
-  .post(
-    "/:path/clip",
-    sValidator("json", RecordingClipBodySchema),
-    async (c) => {
-      const path = c.req.param("path");
-      if (!path) throw new Error("Path is required");
+export default recording.post(
+  "/:path/clip",
+  accountWithRoles("ptzControl"),
+  sValidator("json", RecordingClipBodySchema),
+  async (c) => {
+    const path = c.req.param("path");
+    if (!path) throw new Error("Path is required");
 
-      const body = c.req.valid("json");
+    const body = c.req.valid("json");
 
-      const stub = c.env.MTX_MANAGER.getByName("singleton");
-      const proxy = createManagerProxy<MTX>(stub.dispatch);
+    const stub = c.env.MTX_MANAGER.getByName("singleton");
+    const proxy = createManagerProxy<MTX>(stub.dispatch);
 
-      try {
-        await proxy.recording.request({
-          path,
-          uploadInfo: body.uploadInfo,
-          startDate: body.startDate,
-          duration: body.duration,
-        });
-        return c.json({ success: true });
-      } catch (error) {
-        console.error(error);
-        return c.json({ error: "Failed to request recording" }, 500);
-      }
-    },
-  );
+    try {
+      await proxy.recording.request({
+        path,
+        uploadInfo: body.uploadInfo,
+        startDate: body.startDate,
+        duration: body.duration,
+      });
+      return c.json({ success: true });
+    } catch {
+      return c.json({ error: "Failed to request recording" }, 500);
+    }
+  },
+);

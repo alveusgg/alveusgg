@@ -70,6 +70,7 @@ export const setup = async (env: Env, cameras: Record<string, Camera>) => {
       createAuthModule({
         check: async (params) => {
           if (isLoopback(params.ip)) return true;
+          if (isLAN(params.ip)) return true;
           try {
             return await validateJWTForRoles(params.token, "ptzControl");
           } catch (error) {
@@ -83,7 +84,7 @@ export const setup = async (env: Env, cameras: Record<string, Camera>) => {
         logLevel: "info",
         onLogs: (logs) => {
           for (const log of logs) {
-            console.log(log);
+            // console.log(log);
           }
         },
       }),
@@ -96,4 +97,8 @@ export const setup = async (env: Env, cameras: Record<string, Camera>) => {
       }),
     ],
   });
+};
+
+const isLAN = (ip: string) => {
+  return ip.startsWith("192.168.");
 };

@@ -88,7 +88,7 @@ export const createDynamicModule =
       const input = await getOrCreateLiveInput(
         cloudflare,
         config.cloudflare.accountId,
-        `dev_${path}`,
+        path,
         liveInputs,
       );
       const publishUrl = input.webRTC?.url;

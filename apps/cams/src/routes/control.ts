@@ -35,7 +35,6 @@ export class ControlManager extends DurableObject {
 
   async connect() {
     if (this.outgoing.readyState === WebSocket.OPEN) return;
-    console.log(`Control API not connected, connecting...`);
 
     const { resolve, reject, promise } = Promise.withResolvers<void>();
     this.outgoing.addEventListener("open", () => resolve(), { once: true });
@@ -43,9 +42,7 @@ export class ControlManager extends DurableObject {
       once: true,
     });
     this.outgoing.reconnect();
-    console.log("Connecting to control API");
     await promise;
-    console.log("Control API connected");
   }
 
   async fetch(request: Request): Promise<Response> {
