@@ -55,15 +55,24 @@ export const getServerSideProps: GetServerSideProps<
       throw new Error("Invalid client_id or post_logout_redirect_uri.");
     }
 
-    const destination = new URL(postLogoutRedirectUri);
+    const url = new URL(postLogoutRedirectUri);
     if (state) {
-      destination.searchParams.set("state", state);
+      url.searchParams.set("state", state);
+    }
+
+    const params = new URLSearchParams({
+      clientId: clientId,
+      callbackUrl: url.toString(),
+    });
+
+    if (state) {
+      params.set("state", state);
     }
 
     return {
       redirect: {
         permanent: false,
-        destination: `/auth/signout?callbackUrl=${encodeURIComponent(destination.toString())}`,
+        destination: `/auth/signout?${params.toString()}`,
       },
     };
   } catch (error) {

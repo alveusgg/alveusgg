@@ -72,7 +72,13 @@ export function isValidOAuthClientSecret(
 }
 
 export function isAllowedRedirectUri(clientId: string, redirectUri: string) {
-  return getOAuthClient(clientId)?.redirectUris.includes(redirectUri) ?? false;
+  // Get without params
+  const parsed = new URL(redirectUri);
+  parsed.search = "";
+  const withoutParams = parsed.toString();
+  return (
+    getOAuthClient(clientId)?.redirectUris.includes(withoutParams) ?? false
+  );
 }
 
 export function listOAuthClients() {
