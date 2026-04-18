@@ -102,15 +102,17 @@ export const getServerSideProps = async (context: NextPageContext) => {
 const getBannerFromQuery = (query: ParsedUrlQuery) => {
   const errorType = typeof query.error === "string" ? query.error : undefined;
   if (errorType) {
+    const errorMessage = messages[errorType.toLowerCase()] ?? messages.default;
+
     return {
       type: "error",
-      message: messages[errorType.toLowerCase()],
+      message: errorMessage,
     };
   }
 
   return {
     type: "error",
-    message: messages["default"],
+    message: messages.default,
   };
 };
 
