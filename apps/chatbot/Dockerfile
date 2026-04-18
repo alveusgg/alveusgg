@@ -13,7 +13,7 @@ COPY ./pnpm-workspace.yaml .
 WORKDIR /app/apps/database
 COPY ./apps/database/tsconfig.json .
 COPY ./apps/database/package.json .
-COPY ./apps/database/tsup.config.ts .
+COPY ./apps/database/tsdown.config.ts .
 COPY ./apps/database/prisma.config.ts .
 COPY ./apps/database/src/ src/
 

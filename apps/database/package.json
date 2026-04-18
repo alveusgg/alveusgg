@@ -15,7 +15,7 @@
   "scripts": {
     "types": "tsc --noEmit",
     "build:generate": "prisma generate",
-    "build:compile": "tsup",
+    "build:compile": "tsdown",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "postinstall": "pnpm build",
     "lint:validate": "prisma validate",
@@ -31,7 +31,7 @@
     "@types/node": "^24.12.2",
     "dotenv": "^17.4.1",
     "prisma": "^7.7.0",
-    "tsup": "^8.3.5"
+    "tsdown": "^0.21.9"
   },
   "exports": {
     ".": {
