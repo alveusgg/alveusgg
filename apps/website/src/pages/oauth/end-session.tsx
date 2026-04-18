@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<
     }
 
     if (!isAllowedRedirectUri(clientId, postLogoutRedirectUri)) {
-      throw new Error("Invalid client_id or redirect_uri.");
+      throw new Error("Invalid client_id or post_logout_redirect_uri.");
     }
 
     const destination = new URL(postLogoutRedirectUri);
