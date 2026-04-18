@@ -15,6 +15,7 @@ vi.mock("@/env", () => {
         {
           clientId: "census-production",
           clientSecret: "top-secret",
+          name: "Census",
           redirectUris: ["http://localhost:3001/callback"],
         },
       ]),

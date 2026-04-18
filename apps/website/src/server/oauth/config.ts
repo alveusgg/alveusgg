@@ -7,6 +7,7 @@ import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 export const OAuthClientSchema = z.object({
   clientId: z.string().min(1),
   clientSecret: z.string().min(1),
+  name: z.string().min(1),
   redirectUris: z.array(z.url()).min(1),
 });
 
@@ -49,6 +50,7 @@ export const OAUTH_FIRST_PARTY_CLIENT_ID = "_self";
 export const OAUTH_ISSUER = env.NEXT_PUBLIC_BASE_URL;
 export const OAUTH_KID = env.OAUTH_KID;
 export const OAUTH_AUTHORIZATION_ENDPOINT = `${OAUTH_ISSUER}/oauth/authorize`;
+export const OAUTH_SIGNOUT_ENDPOINT = `${OAUTH_ISSUER}/oauth/end-session`;
 export const OAUTH_TOKEN_ENDPOINT = `${OAUTH_ISSUER}/api/oauth/token`;
 export const OAUTH_USERINFO_ENDPOINT = `${OAUTH_ISSUER}/api/oauth/userinfo`;
 export const OAUTH_JWKS_URI = `${OAUTH_ISSUER}/.well-known/jwks.json`;
@@ -70,7 +72,13 @@ export function isValidOAuthClientSecret(
 }
 
 export function isAllowedRedirectUri(clientId: string, redirectUri: string) {
-  return getOAuthClient(clientId)?.redirectUris.includes(redirectUri) ?? false;
+  // Get without params
+  const parsed = new URL(redirectUri);
+  parsed.search = "";
+  const withoutParams = parsed.toString();
+  return (
+    getOAuthClient(clientId)?.redirectUris.includes(withoutParams) ?? false
+  );
 }
 
 export function listOAuthClients() {

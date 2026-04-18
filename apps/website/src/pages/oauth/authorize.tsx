@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<
     return {
       redirect: {
         permanent: false,
-        destination: `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+        destination: `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}&mode=oauth`,
       },
     };
   }

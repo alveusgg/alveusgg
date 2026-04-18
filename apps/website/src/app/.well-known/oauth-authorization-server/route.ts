@@ -3,6 +3,7 @@ import {
   OAUTH_CODE_CHALLENGE_METHOD,
   OAUTH_ISSUER,
   OAUTH_JWKS_URI,
+  OAUTH_SIGNOUT_ENDPOINT,
   OAUTH_TOKEN_ENDPOINT,
   OAUTH_USERINFO_ENDPOINT,
 } from "@/server/oauth/config";
@@ -31,6 +32,7 @@ export async function GET() {
       "refresh_token",
       "client_credentials",
     ],
+    end_session_endpoint: OAUTH_SIGNOUT_ENDPOINT,
     code_challenge_methods_supported: [OAUTH_CODE_CHALLENGE_METHOD],
     token_endpoint_auth_methods_supported: ["client_secret_basic"],
   });
