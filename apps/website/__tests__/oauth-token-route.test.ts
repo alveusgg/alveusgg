@@ -49,6 +49,7 @@ vi.mock("@/server/oauth/config", () => {
     OAUTH_CODE_CHALLENGE_METHOD: "S256",
     OAUTH_ISSUER: "http://localhost:3000",
     OAUTH_JWKS_URI: "http://localhost:3000/.well-known/jwks.json",
+    OAUTH_SIGNOUT_ENDPOINT: "http://localhost:3000/oauth/end-session",
     OAUTH_TOKEN_ENDPOINT: "http://localhost:3000/api/oauth/token",
     OAUTH_TOKEN_TYPE: "Bearer",
     OAUTH_USERINFO_ENDPOINT: "http://localhost:3000/api/oauth/userinfo",
