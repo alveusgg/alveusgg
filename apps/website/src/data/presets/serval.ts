@@ -2,6 +2,7 @@ import cratel from "@/assets/presets/serval/cratel.png";
 import door from "@/assets/presets/serval/door.png";
 import down from "@/assets/presets/serval/down.png";
 import home from "@/assets/presets/serval/home.png";
+import insidecrate from "@/assets/presets/serval/insidecrate.png";
 import left from "@/assets/presets/serval/left.png";
 import leftplatform from "@/assets/presets/serval/leftplatform.png";
 import leftplatformb from "@/assets/presets/serval/leftplatformb.png";
@@ -43,6 +44,12 @@ const servalPresets: Record<string, Preset> = {
     image: down,
     position: { pan: -100.71, tilt: -51.55, zoom: 1 },
     // modified: 2026-04-02T12:33:29.949Z
+  },
+  insidecrate: {
+    description: "insidecrate",
+    image: insidecrate,
+    position: { pan: -68.37, tilt: -58.36, zoom: 3174 },
+    // modified: 2026-04-18T16:14:28.097Z
   },
   left: {
     description: "left",
