@@ -1,5 +1,6 @@
 import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
+import bed from "@/assets/presets/fox/bed.png";
 import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
 import belowleftplatformr from "@/assets/presets/fox/belowleftplatformr.png";
 import den1 from "@/assets/presets/fox/den1.png";
@@ -14,19 +15,19 @@ import den2tr from "@/assets/presets/fox/den2tr.png";
 import dirtpile from "@/assets/presets/fox/dirtpile.png";
 import doorleft from "@/assets/presets/fox/doorleft.png";
 import doorright from "@/assets/presets/fox/doorright.png";
+import down from "@/assets/presets/fox/down.png";
 import downleft from "@/assets/presets/fox/downleft.png";
 import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
 import farcornerz from "@/assets/presets/fox/farcornerz.png";
 import farfencel from "@/assets/presets/fox/farfencel.png";
+import farfencl from "@/assets/presets/fox/farfencl.png";
+import fenntree from "@/assets/presets/fox/fenntree.png";
 import home from "@/assets/presets/fox/home.png";
-import insidecenter from "@/assets/presets/fox/insidecenter.png";
-import insideleft from "@/assets/presets/fox/insideleft.png";
-import insideright from "@/assets/presets/fox/insideright.png";
 import left from "@/assets/presets/fox/left.png";
 import leftplatform from "@/assets/presets/fox/leftplatform.png";
 import leftplatformb from "@/assets/presets/fox/leftplatformb.png";
-import leftplatforml from "@/assets/presets/fox/leftplatforml.png";
+import leftplatformtl from "@/assets/presets/fox/leftplatformtl.png";
 import middleplatform from "@/assets/presets/fox/middleplatform.png";
 import nearleft from "@/assets/presets/fox/nearleft.png";
 import right from "@/assets/presets/fox/right.png";
@@ -45,128 +46,140 @@ const foxPresets: Record<string, Preset> = {
   home: {
     description: "home",
     image: home,
-    position: { pan: -76.63, tilt: -3.3, zoom: 1 },
-    // modified: 2025-12-13T18:01:21.562Z
+    position: { pan: -76.83, tilt: -4.63, zoom: 1 },
+    // modified: 2026-04-18T13:31:31.063Z
   },
   backleftcorner: {
     description: "backleftcorner",
     image: backleftcorner,
-    position: { pan: -125.46, tilt: -3.93, zoom: 1589 },
-    // modified: 2026-01-07T21:50:57.869Z
+    position: { pan: -125.46, tilt: -3.93, zoom: 1588 },
+    // modified: 2026-04-18T13:34:29.838Z
   },
   backrightcorner: {
     description: "backrightcorner",
     image: backrightcorner,
-    position: { pan: 13.51, tilt: -2.08, zoom: 664 },
-    // modified: 2025-12-23T20:58:43.156Z
+    position: { pan: 10.75, tilt: -2.05, zoom: 1451 },
+    // modified: 2026-04-18T13:58:25.737Z
+  },
+  bed: {
+    description: "bed",
+    image: bed,
+    position: { pan: -93.43, tilt: -6.56, zoom: 1219 },
+    // modified: 2026-04-18T13:42:41.450Z
   },
   belowleftplatform: {
     description: "belowleftplatform",
     image: belowleftplatform,
-    position: { pan: -110.48, tilt: -3.78, zoom: 4432 },
-    // modified: 2026-01-04T20:19:30.771Z
+    position: { pan: -112.09, tilt: -4.06, zoom: 5176 },
+    // modified: 2026-04-18T13:38:03.318Z
   },
   belowleftplatformr: {
     description: "belowleftplatformr",
     image: belowleftplatformr,
-    position: { pan: -107.63, tilt: -3.66, zoom: 1686 },
-    // modified: 2026-01-30T15:20:04.380Z
+    position: { pan: -107.89, tilt: -4.29, zoom: 2350 },
+    // modified: 2026-04-18T13:40:28.992Z
   },
   den1: {
     description: "den1",
     image: den1,
-    position: { pan: -87.53, tilt: -1.4, zoom: 2235 },
-    // modified: 2025-12-13T18:21:14.116Z
+    position: { pan: -88.47, tilt: -2.29, zoom: 3005 },
+    // modified: 2026-04-18T13:45:39.801Z
   },
   den1r: {
     description: "den1r",
     image: den1r,
-    position: { pan: -82.07, tilt: -1.15, zoom: 1335 },
-    // modified: 2026-01-17T19:56:16.332Z
+    position: { pan: -81.95, tilt: -2.66, zoom: 957 },
+    // modified: 2026-04-18T13:47:00.242Z
   },
   den1rampb: {
     description: "den1rampb",
     image: den1rampb,
-    position: { pan: -94.41, tilt: -2.39, zoom: 8834 },
-    // modified: 2026-02-11T20:20:40.578Z
+    position: { pan: -95.17, tilt: -3.06, zoom: 6092 },
+    // modified: 2026-04-18T13:43:21.927Z
   },
   den1t: {
     description: "den1t",
     image: den1t,
-    position: { pan: -88.16, tilt: 0.67, zoom: 5608 },
-    // modified: 2025-12-13T15:35:57.034Z
+    position: { pan: -88.77, tilt: -0.44, zoom: 6092 },
+    // modified: 2026-04-18T13:44:11.764Z
   },
   den1tr: {
     description: "den1tr",
     image: den1tr,
-    position: { pan: -87.25, tilt: 0.6, zoom: 5608 },
-    // modified: 2025-12-25T19:33:06.635Z
+    position: { pan: -87.78, tilt: -0.54, zoom: 9341 },
+    // modified: 2026-04-18T13:45:09.816Z
   },
   den1w: {
     description: "den1w",
     image: den1w,
-    position: { pan: -87.53, tilt: -1.33, zoom: 916 },
-    // modified: 2026-01-17T19:57:47.429Z
+    position: { pan: -88.71, tilt: -2.89, zoom: 957 },
+    // modified: 2026-04-18T13:46:17.438Z
   },
   den2: {
     description: "den2",
     image: den2,
-    position: { pan: -2.41, tilt: 1.54, zoom: 1035 },
-    // modified: 2025-12-13T18:22:27.505Z
+    position: { pan: -4.8, tilt: -3.18, zoom: 754 },
+    // modified: 2026-04-18T13:56:19.495Z
   },
   den2t: {
     description: "den2t",
     image: den2t,
     position: { pan: -4.41, tilt: 3.69, zoom: 1035 },
-    // modified: 2026-01-30T15:20:44.181Z
+    // modified: 2026-04-18T13:55:03.462Z
   },
   den2tr: {
     description: "den2tr",
     image: den2tr,
-    position: { pan: -0.23, tilt: 3.05, zoom: 7847 },
-    // modified: 2026-02-21T21:15:30.907Z
+    position: { pan: -0.88, tilt: 0.52, zoom: 8878 },
+    // modified: 2026-04-18T13:57:49.737Z
   },
   dirtpile: {
     description: "dirtpile",
     image: dirtpile,
-    position: { pan: 41.86, tilt: -7.23, zoom: 1 },
-    // modified: 2025-12-13T18:16:32.644Z
+    position: { pan: 42.3, tilt: -8.02, zoom: 103 },
+    // modified: 2026-04-18T14:00:29.703Z
   },
   doorleft: {
     description: "doorleft",
     image: doorleft,
-    position: { pan: 163.79, tilt: -49.23, zoom: 1 },
-    // modified: 2025-12-13T18:27:15.310Z
+    position: { pan: 177.63, tilt: -45.68, zoom: 103 },
+    // modified: 2026-04-18T14:02:07.581Z
   },
   doorright: {
     description: "doorright",
     image: doorright,
     position: { pan: 76.38, tilt: -43.97, zoom: 1 },
-    // modified: 2025-12-13T18:26:47.245Z
+    // modified: 2026-04-18T14:01:28.348Z
+  },
+  down: {
+    description: "down",
+    image: down,
+    position: { pan: -57.51, tilt: -24.04, zoom: 1 },
+    // modified: 2026-04-18T13:52:45.860Z
   },
   downleft: {
     description: "Down Left",
     image: downleft,
-    position: { pan: -168.43, tilt: -27.94, zoom: 1 },
-    // modified: 2025-12-13T18:17:51.469Z
+    position: { pan: -167.97, tilt: -28.13, zoom: 1 },
+    // modified: 2026-04-18T13:32:58.501Z
   },
   downright: {
     description: "Down Right",
     image: downright,
-    position: { pan: -16.53, tilt: -22.67, zoom: 1 },
-    // modified: 2025-12-13T18:20:33.520Z
+    position: { pan: -17.39, tilt: -18.23, zoom: 1 },
+    // modified: 2026-04-18T13:53:39.937Z
   },
   farcorner: {
     description: "farcorner",
     image: farcorner,
-    position: { pan: -78.76, tilt: -1, zoom: 2144 },
-    // modified: 2025-12-13T18:26:14.225Z
+    position: { pan: -79.41, tilt: -2.36, zoom: 2660 },
+    // modified: 2026-04-18T13:47:34.099Z
   },
   farcornerz: {
     description: "farcornerz",
     image: farcornerz,
     position: { pan: -76.95, tilt: -1.02, zoom: 10090 },
-    // modified: 2026-01-23T14:32:06.965Z
+    // modified: 2026-04-18T13:48:06.043Z
   },
   farfencel: {
     description: "farfencel",
@@ -174,113 +187,107 @@ const foxPresets: Record<string, Preset> = {
     position: { pan: -99.71, tilt: -3.18, zoom: 166 },
     // modified: 2025-12-23T20:59:40.513Z
   },
-  insidecenter: {
-    description: "insidecenter",
-    image: insidecenter,
-    position: { pan: 118.72, tilt: -19.05, zoom: 1 },
-    // modified: 2026-01-17T20:13:35.723Z
+  farfencl: {
+    description: "farfencl",
+    image: farfencl,
+    position: { pan: -102.38, tilt: -2.95, zoom: 406 },
+    // modified: 2026-04-18T13:41:37.889Z
   },
-  insideleft: {
-    description: "insideleft",
-    image: insideleft,
-    position: { pan: 140.96, tilt: -14.89, zoom: 1 },
-    // modified: 2025-12-14T20:09:15.410Z
-  },
-  insideright: {
-    description: "insideright",
-    image: insideright,
-    position: { pan: 96.94, tilt: -14.73, zoom: 1 },
-    // modified: 2025-12-14T20:07:21.836Z
+  fenntree: {
+    description: "fenntree",
+    image: fenntree,
+    position: { pan: 53.73, tilt: -5.86, zoom: 5693 },
+    // modified: 2026-04-18T18:39:23.633Z
   },
   left: {
     description: "left",
     image: left,
-    position: { pan: -101.93, tilt: -4.37, zoom: 1 },
-    // modified: 2025-12-13T18:17:07.908Z
+    position: { pan: -107.85, tilt: -8.15, zoom: 1 },
+    // modified: 2026-04-18T13:41:07.677Z
   },
   leftplatform: {
     description: "leftplatform",
     image: leftplatform,
-    position: { pan: -107.39, tilt: -0.32, zoom: 588 },
-    // modified: 2025-12-13T18:19:34.095Z
+    position: { pan: -107.89, tilt: -0.69, zoom: 2350 },
+    // modified: 2026-04-18T13:39:53.987Z
   },
   leftplatformb: {
     description: "leftplatformb",
     image: leftplatformb,
-    position: { pan: -112.36, tilt: -3.76, zoom: 588 },
-    // modified: 2025-12-15T18:58:55.093Z
+    position: { pan: -114.13, tilt: -2.28, zoom: 2385 },
+    // modified: 2026-04-18T13:37:29.449Z
   },
-  leftplatforml: {
-    description: "leftplatforml",
-    image: leftplatforml,
-    position: { pan: -109.38, tilt: -0.32, zoom: 2352 },
-    // modified: 2026-02-25T13:18:20.597Z
+  leftplatformtl: {
+    description: "leftplatformtl",
+    image: leftplatformtl,
+    position: { pan: -110.01, tilt: -0.65, zoom: 5108 },
+    // modified: 2026-04-18T13:38:59.555Z
   },
   middleplatform: {
     description: "middleplatform",
     image: middleplatform,
-    position: { pan: -68.18, tilt: -1.45, zoom: 931 },
-    // modified: 2025-12-13T18:20:04.315Z
+    position: { pan: -68.97, tilt: -2.24, zoom: 1433 },
+    // modified: 2026-04-18T13:48:56.060Z
   },
   nearleft: {
     description: "nearleft",
     image: nearleft,
-    position: { pan: -133.81, tilt: -9.41, zoom: 1 },
-    // modified: 2026-01-17T20:01:25.937Z
+    position: { pan: -135.34, tilt: -12.6, zoom: 1 },
+    // modified: 2026-04-18T13:33:33.417Z
   },
   right: {
     description: "right",
     image: right,
-    position: { pan: 13.51, tilt: -2.08, zoom: 1 },
-    // modified: 2025-12-13T18:15:59.683Z
+    position: { pan: 19.4, tilt: -4.75, zoom: 1 },
+    // modified: 2026-04-18T13:59:10.106Z
   },
   rightcorner: {
     description: "rightcorner",
     image: rightcorner,
-    position: { pan: 60.14, tilt: -4.22, zoom: 166 },
-    // modified: 2026-01-04T17:35:05.911Z
+    position: { pan: 58, tilt: -5.7, zoom: 103 },
+    // modified: 2026-04-18T14:01:02.016Z
   },
   rightplatform: {
     description: "rightplatform",
     image: rightplatform,
-    position: { pan: -14.6, tilt: 1.23, zoom: 440 },
-    // modified: 2025-12-13T18:24:52.292Z
+    position: { pan: -15.87, tilt: -1.38, zoom: 691 },
+    // modified: 2026-04-18T13:54:32.290Z
   },
   rightramp: {
     description: "rightramp",
     image: rightramp,
-    position: { pan: -1.06, tilt: -0.76, zoom: 638 },
-    // modified: 2025-12-13T18:18:29.562Z
+    position: { pan: 0.68, tilt: -3.31, zoom: 754 },
+    // modified: 2026-04-18T13:57:13.800Z
   },
   river: {
     description: "river",
     image: river,
-    position: { pan: -42.21, tilt: -3.64, zoom: 1 },
-    // modified: 2025-12-13T18:15:17.407Z
+    position: { pan: -42.93, tilt: -5.92, zoom: 1 },
+    // modified: 2026-04-18T13:49:28.017Z
   },
   rivert: {
     description: "rivert",
     image: rivert,
-    position: { pan: -25.21, tilt: -0.15, zoom: 638 },
-    // modified: 2026-02-02T13:30:55.354Z
+    position: { pan: -27.08, tilt: -3.79, zoom: 683 },
+    // modified: 2026-04-18T13:50:53.610Z
   },
   stump: {
     description: "stump",
     image: stump,
-    position: { pan: -120.97, tilt: -3.41, zoom: 4014 },
-    // modified: 2026-01-03T20:24:47.181Z
+    position: { pan: -120.96, tilt: -3.41, zoom: 4014 },
+    // modified: 2026-04-18T13:35:05.211Z
   },
   table: {
     description: "table",
     image: table,
-    position: { pan: 35.11, tilt: -1.17, zoom: 2217 },
-    // modified: 2026-02-20T18:57:38.266Z
+    position: { pan: 23.1, tilt: -2.47, zoom: 2493 },
+    // modified: 2026-04-18T13:59:51.187Z
   },
   timbertree: {
     description: "timbertree",
     image: timbertree,
-    position: { pan: -32.89, tilt: -0.65, zoom: 2237 },
-    // modified: 2025-12-23T20:59:12.048Z
+    position: { pan: -33.41, tilt: -3.42, zoom: 4140 },
+    // modified: 2026-04-18T13:50:05.981Z
   },
 };
 
