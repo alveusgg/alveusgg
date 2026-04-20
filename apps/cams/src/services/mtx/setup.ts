@@ -82,11 +82,7 @@ export const setup = async (env: Env, cameras: Record<string, Camera>) => {
       createLogModule({
         logFile: "/logs/stream.log",
         logLevel: "info",
-        onLogs: (logs) => {
-          for (const log of logs) {
-            // console.log(log);
-          }
-        },
+        onLogs: () => {},
       }),
       createRecordingModule({
         ttl: "14d",
