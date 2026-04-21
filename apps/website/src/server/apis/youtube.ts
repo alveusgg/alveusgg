@@ -27,10 +27,7 @@ const FeedSchema = z.object({
   }),
 });
 
-export const fetchYouTubeFeed = async (
-  type: "channel" | "playlist",
-  id: string,
-) => {
+const fetchYouTubeFeed = async (type: "channel" | "playlist", id: string) => {
   const resp = await fetch(
     `https://www.youtube.com/feeds/videos.xml?${type}_id=${id}`,
   );
@@ -52,7 +49,7 @@ export interface YouTubeVideo {
   published: Date;
 }
 
-export const fetchYouTubeVideos = async (
+export const fetchYouTubeVideosSafe = async (
   channelId: string,
 ): Promise<YouTubeVideo[]> => {
   if (!channelId.startsWith("UC"))
@@ -65,8 +62,8 @@ export const fetchYouTubeVideos = async (
   // Get the built-in videos playlist for the channel
   // This contains only long-form videos, not shorts or live streams (or VoDs)
   // See https://stackoverflow.com/a/76602819 for other playlist prefixes
-  return fetchYouTubeFeed("playlist", channelId.replace(/^UC/, "UULF")).then(
-    (feed) =>
+  return fetchYouTubeFeed("playlist", channelId.replace(/^UC/, "UULF"))
+    .then((feed) =>
       feed
         .map((entry) => ({
           id: entry.id.replace(/^yt:video:/, ""),
@@ -82,7 +79,14 @@ export const fetchYouTubeVideos = async (
         // If a title contains a hashtag, remove it as a precaution
         // We've seen YouTube accidentally include shorts in this playlist
         .filter((entry) => !/\W#\w/.test(entry.title)),
-  );
+    )
+    .catch((error) => {
+      console.error(
+        `Failed to fetch YouTube videos for channel ${channelId}:`,
+        error,
+      );
+      return [];
+    });
 };
 
 const SearchSchema = z.object({
