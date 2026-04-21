@@ -1,4 +1,4 @@
-import { fetchYouTubeVideos } from "@/server/apis/youtube";
+import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 import { channels } from "@/data/youtube";
 
@@ -22,7 +22,7 @@ export async function GET(
   }
 
   try {
-    const videos = await fetchYouTubeVideos(channels[channel].id);
+    const videos = await fetchYouTubeVideosSafe(channels[channel].id);
     const latest = videos.sort(
       (a, b) => b.published.getTime() - a.published.getTime(),
     )[0];

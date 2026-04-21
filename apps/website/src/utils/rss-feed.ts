@@ -1,6 +1,6 @@
 import { Feed } from "feed";
 
-import { fetchYouTubeVideos } from "@/server/apis/youtube";
+import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 export type RssFeedItem = {
   title: string;
@@ -54,7 +54,7 @@ export async function getYouTubeRssFeedContent(
   channelIds: string[],
 ) {
   const latestVideos = await Promise.all(
-    channelIds.map((channelId) => fetchYouTubeVideos(channelId)),
+    channelIds.map((channelId) => fetchYouTubeVideosSafe(channelId)),
   ).then((feeds) =>
     feeds.flat().sort((a, b) => b.published.getTime() - a.published.getTime()),
   );
