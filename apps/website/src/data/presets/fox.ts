@@ -21,7 +21,6 @@ import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
 import farcornerz from "@/assets/presets/fox/farcornerz.png";
 import farfencel from "@/assets/presets/fox/farfencel.png";
-import farfencl from "@/assets/presets/fox/farfencl.png";
 import fenntree from "@/assets/presets/fox/fenntree.png";
 import home from "@/assets/presets/fox/home.png";
 import left from "@/assets/presets/fox/left.png";
@@ -184,14 +183,8 @@ const foxPresets: Record<string, Preset> = {
   farfencel: {
     description: "farfencel",
     image: farfencel,
-    position: { pan: -99.71, tilt: -3.18, zoom: 166 },
-    // modified: 2025-12-23T20:59:40.513Z
-  },
-  farfencl: {
-    description: "farfencl",
-    image: farfencl,
-    position: { pan: -102.38, tilt: -2.95, zoom: 406 },
-    // modified: 2026-04-18T13:41:37.889Z
+    position: { pan: -102.38, tilt: -2.94, zoom: 406 },
+    // modified: 2026-04-21T00:21:33.794Z
   },
   fenntree: {
     description: "fenntree",
