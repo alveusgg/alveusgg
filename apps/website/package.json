@@ -126,19 +126,19 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import-x": "^4.16.2",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "file-type": "^22.0.1",
-    "globals": "^17.4.0",
+    "globals": "^17.5.0",
     "loader-utils": "^3.3.1",
-    "postcss": "^8.5.9",
+    "postcss": "^8.5.10",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
     "ts-morph": "^27.0.2",
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.58.1",
+    "typescript-eslint": "^8.58.2",
     "vitest": "^4.1.4",
-    "webpack": "^5.106.1"
+    "webpack": "^5.106.2"
   },
   "prettier": {
     "plugins": [
