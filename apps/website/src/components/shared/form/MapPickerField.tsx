@@ -84,6 +84,7 @@ export const MapPickerField = ({
   const geolocateRef = useRef<GeolocateControl>(null);
   const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
+  const handleLocationSetRef = useRef<typeof handleLocationSet>(null);
 
   /**
    * Clears the markers and resets the location
@@ -132,7 +133,10 @@ export const MapPickerField = ({
           marker.setLngLat(roundedCoords).setDraggable(true).addTo(map);
           marker.on("dragstart", () => (isDraggingRef.current = true));
           marker.on("dragend", () => {
-            handleLocationSet(marker.getLngLat().lat, marker.getLngLat().lng);
+            handleLocationSetRef.current?.(
+              marker.getLngLat().lat,
+              marker.getLngLat().lng,
+            );
             isDraggingRef.current = false;
           });
           markersRef.current.push(marker);
@@ -150,6 +154,8 @@ export const MapPickerField = ({
     },
     [coordsPrecision, allowMultipleMarkers, onLocationChange],
   );
+  // eslint-disable-next-line react-hooks/refs -- we're just passing the function through a ref to allow it to access itself
+  handleLocationSetRef.current = handleLocationSet;
 
   /**
    * Toggles the map visibility and resets location if hiding

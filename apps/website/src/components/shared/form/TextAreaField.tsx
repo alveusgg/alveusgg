@@ -32,6 +32,7 @@ export const TextAreaField = (props: TextAreaFieldProps) => {
           props.inputClassName,
         )}
         {...textareaProps}
+        // eslint-disable-next-line react-hooks/immutability -- this is a ref, it can be mutated
         ref={(element) => {
           ownRef.current = element;
           if (typeof forwardedRef === "function") {
