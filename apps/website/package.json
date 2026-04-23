@@ -133,7 +133,7 @@
     "postcss": "^8.5.10",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
-    "ts-morph": "^27.0.2",
+    "ts-morph": "^28.0.0",
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript-eslint": "^8.58.2",
