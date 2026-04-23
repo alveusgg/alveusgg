@@ -239,6 +239,7 @@ export function Calendar({
     const days = Array.from({ length: daysInMonth! }, (_, i) => i);
 
     return Array.from({ length: 10 }, () => {
+      // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
       const idx = Math.floor(Math.random() * days.length);
       const day = days.splice(idx, 1)[0] as number;
       return {
@@ -260,7 +261,9 @@ export function Calendar({
               // Delay stops a flash of placeholders if we load quickly
               className={classes(
                 "transition-delay-200 mb-auto block animate-pulse rounded-xs bg-gray-400/50 transition-opacity duration-500 data-[closed]:opacity-0",
+                // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
                 delay[Math.floor(Math.random() * delay.length)],
+                // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
                 height[Math.floor(Math.random() * height.length)],
               )}
             />
