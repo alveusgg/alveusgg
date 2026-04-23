@@ -38,7 +38,7 @@
     "@alveusgg/data": "0.71.0",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
-    "@auth/prisma-adapter": "^2.11.1",
+    "@auth/prisma-adapter": "^2.11.2",
     "@aws-sdk/client-s3": "^3.1029.0",
     "@aws-sdk/s3-request-presigner": "^3.1029.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
