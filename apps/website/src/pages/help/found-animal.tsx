@@ -261,7 +261,7 @@ const FoundAnimalPage: NextPage = () => {
                 surrender a pet, check out our dedicated guide.
               </p>
 
-              <Button href="/neglect-surrender">
+              <Button href="/help/report-neglect-surrender">
                 Click here for our Neglect & Surrender Guide
               </Button>
             </div>

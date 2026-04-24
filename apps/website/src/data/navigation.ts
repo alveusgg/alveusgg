@@ -85,11 +85,11 @@ export const mainNavStructure: NavStructure = {
       },
       foundAnimal: {
         title: "Found an Animal?",
-        link: "/found-animal",
+        link: "/help/found-animal",
       },
       reportNeglectSurrender: {
         title: "Report Neglect & Surrender",
-        link: "/report-neglect-surrender",
+        link: "/help/report-neglect-surrender",
       },
     },
   },

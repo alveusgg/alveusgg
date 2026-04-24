@@ -345,7 +345,7 @@ const NeglectSurrenderPage: NextPage = () => {
             our dedicated guide.
           </p>
 
-          <Button href="/found-animal">
+          <Button href="/help/found-animal">
             Click here for our Wildlife Guide
           </Button>
         </Section>
