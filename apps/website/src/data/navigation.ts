@@ -76,7 +76,7 @@ export const mainNavStructure: NavStructure = {
         link: "/collaborations",
       },
       showAndTell: {
-        title: "Show and Tell",
+        title: "Show & Tell",
         link: "/show-and-tell",
       },
       bookClub: {
@@ -84,11 +84,11 @@ export const mainNavStructure: NavStructure = {
         link: "/book-club",
       },
       foundAnimal: {
-        title: "Found an Animal?",
+        title: "Found a Wild Animal?",
         link: "/help/found-animal",
       },
       reportNeglectSurrender: {
-        title: "Report Neglect & Surrender",
+        title: "Neglect & Surrender Guide",
         link: "/help/report-neglect-surrender",
       },
     },
