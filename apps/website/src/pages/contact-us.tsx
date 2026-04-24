@@ -57,6 +57,14 @@ const ContactUsPage: NextPage = () => {
                 youtooz.com/pages/contact-us
               </Link>
             </p>
+
+            <p className="col-span-full text-xl font-semibold">
+              To connect with Maya regarding collaboration or to offer support
+              for Alveus Sanctuary: <br />
+              <Link href="mailto:mayahiga@alveussanctuary.org">
+                mayahiga@alveussanctuary.org
+              </Link>
+            </p>
           </div>
 
           <ul className="my-3 flex flex-wrap gap-4">
