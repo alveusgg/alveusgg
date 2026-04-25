@@ -78,6 +78,7 @@ type FailedUploadFileReference = {
 export type FileUploadRenderProps = {
   key: Key;
   fileReference: FileReference;
+  disabled?: boolean;
 };
 
 type FileUploadingPropsType = {
@@ -89,6 +90,7 @@ type FileUploadingPropsType = {
   label?: string;
   allowedFileTypes?: readonly string[];
   multiple?: boolean;
+  disabled?: boolean;
   maxNumber?: number;
   maxFileSize?: number;
   renderAttachment?: (props: FileUploadRenderProps) => ReactNode;
@@ -203,6 +205,7 @@ export const UploadAttachmentsField = ({
   upload,
   label = "Attachments",
   multiple = true,
+  disabled = false,
   maxNumber,
   maxFileSize,
   allowedFileTypes,
@@ -359,12 +362,17 @@ export const UploadAttachmentsField = ({
         onChange={onInputChange}
         className="hidden"
         id={id}
+        disabled={disabled}
       />
       <div>
         {RenderAttachment && files.length > 0 && (
           <div className={attachmentsClassName}>
             {files.map((file) => (
-              <RenderAttachment key={file.id} fileReference={file} />
+              <RenderAttachment
+                key={file.id}
+                fileReference={file}
+                disabled={disabled}
+              />
             ))}
           </div>
         )}
@@ -373,6 +381,7 @@ export const UploadAttachmentsField = ({
           className={isDragging ? "bg-red-300" : defaultButtonClasses}
           onClick={onFileUpload}
           {...dragProps}
+          disabled={disabled}
         >
           <IconUploadFiles className="size-5" />
           Click or Drop here

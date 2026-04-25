@@ -82,10 +82,11 @@ export const showAndTellRouter = router({
 
   update: protectedProcedure
     .input(showAndTellUpdateInputSchema)
-    .mutation(
-      async ({ ctx, input }) =>
-        await updatePost(ctx.res, input, ctx.session.user.id),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      await updatePost(ctx.res, input, ctx.session.user.id);
+      const entry = await getUserPosts(ctx.session.user.id, input.id);
+      return entry?.[0];
+    }),
 
   getMyEntries: protectedProcedure.query(({ ctx }) =>
     getUserPosts(ctx.session.user.id),
