@@ -196,7 +196,6 @@ const AdminReviewShowAndTellPage: NextPage<
     setIsPreviewOpen(true);
   }, [entry]);
 
-<<<<<<< HEAD
   // Handlers that check for unsaved changes
   const handleApprove = useCallback(() => {
     if (
@@ -205,7 +204,12 @@ const AdminReviewShowAndTellPage: NextPage<
       ) === false
     ) {
       return;
-=======
+    }
+    if (entry) {
+      approveMutation.mutate(entry.id);
+    }
+  }, [approveMutation, entry]);
+
   const handleSaveAndApprove = useCallback(() => {
     if (!formRef.current || !entry) return;
 
@@ -225,12 +229,11 @@ const AdminReviewShowAndTellPage: NextPage<
 
   const handleSaveSuccess = useCallback(() => {
     // If we should approve after save, do it now
-    // Note: shouldApproveAfterSaveRef is not in dependencies because refs don't trigger re-renders
+    // Note: shouldApproveAfterSaveRef is not in dependencies because refs don't trigger re-renders,
     // and we always want to read the latest value from the ref
     if (shouldApproveAfterSaveRef.current && entry) {
       approveMutation.mutate(entry.id);
       shouldApproveAfterSaveRef.current = false;
->>>>>>> 78cb5350 (Address review comments)
     }
     if (entry) {
       approveMutation.mutate(entry.id);
