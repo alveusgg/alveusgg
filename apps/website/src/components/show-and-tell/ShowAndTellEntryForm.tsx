@@ -73,6 +73,7 @@ import { VideoLinksField } from "../shared/form/VideoLinksField";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
+  className?: string;
   isAnonymous?: boolean;
   entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
@@ -221,6 +222,7 @@ function GiveAnHourInput({
 }
 
 export function ShowAndTellEntryForm({
+  className,
   isAnonymous = false,
   action = "create",
   entry,
@@ -239,7 +241,7 @@ export function ShowAndTellEntryForm({
   const isLoading = create.isPending || update.isPending || review.isPending;
 
   // Only enable unsaved changes warning for admin review action
-  const { markAsChanged, resetChanges, confirmIfUnsaved } =
+  const { hasUnsavedChanges, markAsChanged, resetChanges, confirmIfUnsaved } =
     useFormChangeWarning(action === "review");
 
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
@@ -610,7 +612,14 @@ export function ShowAndTellEntryForm({
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
   return (
-    <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form
+      className={classes(
+        "flex flex-col gap-5 rounded-xs",
+        className,
+        hasUnsavedChanges && "ring-4 ring-yellow",
+      )}
+      onSubmit={handleSubmit}
+    >
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
           <IconWarningTriangle className="size-6 text-yellow-900" />
@@ -625,7 +634,7 @@ export function ShowAndTellEntryForm({
       )}
 
       <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
-        <div className="flex flex-[3] flex-col gap-5">
+        <div className="flex flex-3 flex-col gap-5">
           <Fieldset legend="About you">
             <TextField
               label="Name"

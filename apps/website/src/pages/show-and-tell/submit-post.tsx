@@ -59,7 +59,7 @@ const ShowAndTellSubmitPage: NextPage = () => {
         <Heading level={2}>Your submission</Heading>
 
         {session?.status !== "authenticated" && !isAnonymous && (
-          <div>
+          <>
             <p>
               Please log in if you would like to edit or keep track of your
               posts:
@@ -79,11 +79,15 @@ const ShowAndTellSubmitPage: NextPage = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </>
         )}
 
         {showForm && (
-          <ShowAndTellEntryForm action="create" isAnonymous={isAnonymous} />
+          <ShowAndTellEntryForm
+            className="mt-5"
+            action="create"
+            isAnonymous={isAnonymous}
+          />
         )}
       </Section>
     </>

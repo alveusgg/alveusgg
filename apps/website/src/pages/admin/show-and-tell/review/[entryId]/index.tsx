@@ -28,6 +28,7 @@ import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntr
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconEye from "@/icons/IconEye";
+import IconLoading from "@/icons/IconLoading";
 import IconMinus from "@/icons/IconMinus";
 import IconTrash from "@/icons/IconTrash";
 
@@ -157,6 +158,11 @@ const AdminReviewShowAndTellPage: NextPage<
     [],
   );
 
+  const isMutationPending =
+    approveMutation.isPending ||
+    removeApprovalMutation.isPending ||
+    deleteMutation.isPending;
+
   return (
     <>
       <Meta title="Review submission - Admin Show and Tell" />
@@ -195,7 +201,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 Last updated:{" "}
                 <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
                 <br />
-                {entry.approvedAt && (
+                {entry.approvedAt ? (
                   <>
                     Approved at:{" "}
                     <DateTime
@@ -203,6 +209,8 @@ const AdminReviewShowAndTellPage: NextPage<
                       format={{ time: "minutes" }}
                     />
                   </>
+                ) : (
+                  "Not approved"
                 )}
               </div>
               <div className="flex flex-col gap-2">
@@ -221,9 +229,19 @@ const AdminReviewShowAndTellPage: NextPage<
                     size="small"
                     className={defaultButtonClasses}
                     onClick={handleRemoveApproval}
+                    disabled={isMutationPending}
                   >
-                    <IconMinus className="size-4" />
-                    Remove approval
+                    {removeApprovalMutation.isPending ? (
+                      <>
+                        <IconLoading className="size-4" />
+                        Removing approval …
+                      </>
+                    ) : (
+                      <>
+                        <IconMinus className="size-4" />
+                        Remove approval
+                      </>
+                    )}
                   </Button>
                 )}
                 {status === "pendingApproval" && (
@@ -231,18 +249,38 @@ const AdminReviewShowAndTellPage: NextPage<
                     size="small"
                     className={approveButtonClasses}
                     onClick={handleApprove}
+                    disabled={isMutationPending}
                   >
-                    <IconCheckCircle className="size-4" />
-                    Approve
+                    {approveMutation.isPending ? (
+                      <>
+                        <IconLoading className="size-4" />
+                        Approving …
+                      </>
+                    ) : (
+                      <>
+                        <IconCheckCircle className="size-4" />
+                        Approve
+                      </>
+                    )}
                   </Button>
                 )}
                 <Button
                   size="small"
                   className={dangerButtonClasses}
                   onClick={handleDelete}
+                  disabled={isMutationPending}
                 >
-                  <IconTrash className="size-4" />
-                  Delete
+                  {deleteMutation.isPending ? (
+                    <>
+                      <IconLoading className="size-4" />
+                      Deleting …
+                    </>
+                  ) : (
+                    <>
+                      <IconTrash className="size-4" />
+                      Delete
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
@@ -254,6 +292,7 @@ const AdminReviewShowAndTellPage: NextPage<
             <Headline>Review or edit post:</Headline>
             <Panel lightMode>
               <ShowAndTellEntryForm
+                className="-m-4 p-4"
                 action="review"
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}
