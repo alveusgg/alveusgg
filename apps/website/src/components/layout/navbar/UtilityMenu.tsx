@@ -1,14 +1,10 @@
-import type { ComponentType } from "react";
-
-import socials, { type SocialLink } from "@/data/socials";
-
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
-
-import type { IconProps } from "@/icons/BaseIcon";
-import { getSocialIcon } from "@/icons/SocialIcon";
+import socialsLinks, {
+  type SocialLinkWithIcon,
+} from "@/components/shared/data/socials";
 
 import UserMenuDesktop from "./UserMenuDesktop";
 
@@ -19,44 +15,43 @@ const Divider = ({ className }: { className?: string }) => (
   <div className={classes("mx-1 h-6 border-r opacity-70", className)} />
 );
 
-export type UtilityNavItem = SocialLink & {
+export type UtilityNavItem = SocialLinkWithIcon & {
   key: string;
-  Icon: ComponentType<IconProps>;
   rel: string;
 };
 
-const utilityNavStructure: UtilityNavItem[] = typeSafeObjectEntries(socials)
+const linkEntries = typeSafeObjectEntries(socialsLinks);
+
+const utilityNavStructure: UtilityNavItem[] = linkEntries
   .filter(([, { isLiveStream }]) => !isLiveStream)
   .map(([key, value]) => ({
     key,
-    ...value,
-    Icon: getSocialIcon(key),
     rel: "noreferrer me",
+    ...value,
   }));
 
-const liveNavStructure: UtilityNavItem[] = typeSafeObjectEntries(socials)
+const liveNavStructure: UtilityNavItem[] = linkEntries
   .filter(([, { isLiveStream }]) => isLiveStream)
   .map(([key, value]) => ({
     key,
-    ...value,
-    Icon: getSocialIcon(key),
     rel: "noreferrer me",
+    ...value,
   }));
 
 const Section = ({ items }: { items: UtilityNavItem[] }) => (
   <>
-    {items.map(({ key, rel, link, title, Icon }) => (
-      <li key={key}>
+    {items.map((item) => (
+      <li key={item.key}>
         {/* eslint-disable-next-line react/jsx-no-target-blank */}
         <a
           className={utilityLinkClasses}
           target="_blank"
-          rel={rel}
-          href={link}
-          title={title}
+          rel={item.rel}
+          href={item.link}
+          title={item.title}
         >
-          <Icon size={24} />
-          <span className="sr-only">Open Alveus&apos; {title}</span>
+          <item.icon size={24} />
+          <span className="sr-only">Open Alveus&apos; {item.title}</span>
         </a>
       </li>
     ))}

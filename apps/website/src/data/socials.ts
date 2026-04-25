@@ -4,6 +4,8 @@ export type SocialLink = {
   isLiveStream: boolean;
 };
 
+export type SocialKey = keyof typeof socials;
+
 const socials = {
   twitch: {
     link: "https://twitch.tv/alveussanctuary",
