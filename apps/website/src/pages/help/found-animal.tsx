@@ -9,6 +9,7 @@ import foundAnimal, {
 
 import { classes } from "@/utils/classes";
 
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -95,8 +96,8 @@ const FoundAnimalPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Found an Animal?"
-        description="Walk through a step-by-step guide to understand how to help an animal in need."
+        title="Found a Wild Animal?"
+        description="Walk through a step-by-step guide to understand how to help a wild animal in need."
       />
 
       {/* Nav background */}
@@ -117,7 +118,7 @@ const FoundAnimalPage: NextPage = () => {
 
         <Section
           className="flex grow items-center pt-4 pb-16"
-          containerClassName="flex flex-wrap items-center xl:flex-nowrap gap-16"
+          containerClassName="flex flex-wrap xl:flex-nowrap gap-16"
         >
           <Image
             src={leafLeftImage1}
@@ -127,9 +128,9 @@ const FoundAnimalPage: NextPage = () => {
 
           <div className="mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col overflow-hidden rounded-xl border border-alveus-green bg-alveus-tan/75 shadow-lg backdrop-blur-sm xl:mx-0">
             <div className="shrink-0 grow-0 border-b border-alveus-green bg-alveus-green-50/75 p-4 text-alveus-green-800">
-              <Heading>Found an Animal?</Heading>
+              <Heading>Found a Wild Animal?</Heading>
               <p>
-                Use this interactive tool to get guidance on how to help an
+                Use this interactive tool to get guidance on how to help a wild
                 animal in need that you&apos;ve found.
               </p>
             </div>
@@ -193,60 +194,78 @@ const FoundAnimalPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="max-w-3xl shrink grow xl:max-w-xl 2xl:max-w-3xl">
-            <Heading level={2}>Finding a Wildlife Rehabilitator</Heading>
-            <p className="mb-8 text-xl">
-              If you&apos;re ever unsure about what to do with an animal
-              you&apos;ve found that you believe needs help, the best thing to
-              do is keep an eye on it from a safe distance and contact a
-              wildlife rehabilitator who can give you guidance, make an
-              assessment, or rescue the animal.
-            </p>
+          <div className="flex max-w-3xl shrink grow flex-col justify-evenly gap-8 xl:max-w-xl 2xl:max-w-3xl">
+            <div>
+              <Heading level={2}>Finding a Wildlife Rehabilitator</Heading>
+              <p className="mb-8 text-xl">
+                If you&apos;re ever unsure about what to do with a wild animal
+                you&apos;ve found that you believe needs help, the best thing to
+                do is keep an eye on it from a safe distance and contact a
+                wildlife rehabilitator who can give you guidance, make an
+                assessment, or rescue the animal.
+              </p>
 
-            <p className="mb-4">
-              There are a bunch of different ways to find a wildlife
-              rehabilitator, and it may depend on where you are. A good first
-              place to start is by searching online for rehabilitation
-              organizations that are local to you. You can also try calling a
-              local veterinarian who may be able to give you some suggestions
-              for who to contact, or you can reach out to your local wildlife
-              authority.
-            </p>
+              <p className="mb-4">
+                There are a bunch of different ways to find a wildlife
+                rehabilitator, and it may depend on where you are. A good first
+                place to start is by searching online for rehabilitation
+                organizations that are local to you. You can also try calling a
+                local veterinarian who may be able to give you some suggestions
+                for who to contact, or you can reach out to your local wildlife
+                authority.
+              </p>
 
-            <p className="mb-2">
-              If you&apos;re in the United States, you can also try using:
-            </p>
-            <ul className="mx-2 mb-4">
-              <li>
-                <Link
-                  href="https://www.humanesociety.org/resources/how-find-wildlife-rehabilitator"
-                  external
-                >
-                  The Humane Society&apos;s Wildlife Rehabilitator Finder
-                </Link>
-              </li>
-              <li>
-                <Link href="https://ahnow.org/" external>
-                  Animal Help Now
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://www.onthefeeder.com/wildlife-rescue-directory/"
-                  external
-                >
-                  On The Feeder&apos;s Wildlife Rescue Directory
-                </Link>
-              </li>
-            </ul>
+              <p className="mb-2">
+                If you&apos;re in the United States, you can also try using:
+              </p>
+              <ul className="mx-2 mb-4">
+                <li>
+                  <Link
+                    href="https://www.humanesociety.org/resources/how-find-wildlife-rehabilitator"
+                    external
+                  >
+                    The Humane Society&apos;s Wildlife Rehabilitator Finder
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://ahnow.org/" external>
+                    Animal Help Now
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://www.onthefeeder.com/wildlife-rescue-directory/"
+                    external
+                  >
+                    On The Feeder&apos;s Wildlife Rescue Directory
+                  </Link>
+                </li>
+              </ul>
 
-            <p>
-              Please remember that it is generally not a good idea to interfere
-              with an animal unless you are sure that it needs help. It is
-              against the law in many places to keep wild animals under your
-              care without a permit, even if you have good intentions and intend
-              to release them.
-            </p>
+              <p>
+                Please remember that it is generally not a good idea to
+                interfere with an animal unless you are sure that it needs help.
+                It is against the law in many places to keep wild animals under
+                your care without a permit, even if you have good intentions and
+                intend to release them.
+              </p>
+            </div>
+
+            <div>
+              <Heading id="pets" level={2}>
+                Looking to Report Animal Cruelty or Surrender a Pet?
+              </Heading>
+
+              <p className="mt-2 mb-6 text-lg text-pretty">
+                If you&apos;ve encountered animal cruelty or neglect and wish to
+                report it, or if you want to surrender a pet, check out our
+                dedicated guide.
+              </p>
+
+              <Button href="/help/report-neglect-surrender">
+                Read our Neglect &amp; Surrender Guide
+              </Button>
+            </div>
           </div>
         </Section>
       </div>
