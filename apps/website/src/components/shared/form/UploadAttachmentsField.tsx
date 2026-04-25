@@ -181,6 +181,22 @@ async function handleImageResize(
   };
 }
 
+function normalizeFileName(fileName: string, maxLength = 30) {
+  const lastDotIndex = fileName.lastIndexOf(".");
+  const hasExtension = lastDotIndex !== -1;
+  const extension = hasExtension ? fileName.substring(lastDotIndex) : "";
+  const nameWithoutExtension = hasExtension
+    ? fileName.substring(0, lastDotIndex)
+    : fileName;
+  // Normalize to NFKD, remove diacritics, then filter safe chars
+  const normalized = nameWithoutExtension
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "");
+  const safeName =
+    normalized.replace(/[^a-zA-Z0-9-_]/g, "").substring(0, maxLength) || "file";
+  return `${safeName}${extension}`;
+}
+
 export const UploadAttachmentsField = ({
   files,
   dispatch,
@@ -233,9 +249,14 @@ export const UploadAttachmentsField = ({
       const file = filesToAdd[i];
       if (!file) continue;
 
+      // Rename file to only include safe characters (up to 30) and preserve the file extension
+      const renamedFile = new File([file], normalizeFileName(file.name), {
+        type: file.type,
+      });
+
       // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
       // returns the original file if conversion not needed
-      const fileToUpload = await convertImage(file);
+      const fileToUpload = await convertImage(renamedFile);
 
       if (!fileToUpload) continue;
 
