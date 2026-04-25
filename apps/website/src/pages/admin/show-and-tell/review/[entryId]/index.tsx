@@ -1,7 +1,7 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { type MouseEventHandler, useCallback, useRef } from "react";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -18,13 +18,16 @@ import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
+  LinkButton,
   approveButtonClasses,
   dangerButtonClasses,
   defaultButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
 import IconLoading from "@/icons/IconLoading";
 import IconMinus from "@/icons/IconMinus";
 import IconTrash from "@/icons/IconTrash";
@@ -132,6 +135,29 @@ const AdminReviewShowAndTellPage: NextPage<
     }
   }, [deleteMutation, entry]);
 
+  const handlePreview: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    (e) => {
+      if (
+        confirmIfUnsavedRef.current?.(
+          "You have unsaved changes. Preview will show the old version! Continue?",
+        ) === false
+      ) {
+        e.preventDefault();
+        return;
+      }
+
+      const popup = window.open(
+        e.currentTarget.href,
+        "preview",
+        "popup=yes,width=800,height=600",
+      );
+      if (popup) {
+        e.preventDefault();
+      }
+    },
+    [],
+  );
+
   const isMutationPending =
     approveMutation.isPending ||
     removeApprovalMutation.isPending ||
@@ -188,6 +214,16 @@ const AdminReviewShowAndTellPage: NextPage<
                 )}
               </div>
               <div className="flex flex-col gap-2">
+                <LinkButton
+                  size="small"
+                  className={secondaryButtonClasses}
+                  href={`/admin/show-and-tell/review/${entry.id}/preview`}
+                  target="_blank"
+                  onClick={handlePreview}
+                >
+                  <IconEye className="size-5" />
+                  Preview
+                </LinkButton>
                 {status === "approved" && (
                   <Button
                     size="small"
