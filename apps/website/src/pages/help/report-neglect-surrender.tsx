@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Image from "next/image";
 
 import Accordion, { type AccordionItem } from "@/components/content/Accordion";
 import Button from "@/components/content/Button";
@@ -7,6 +8,11 @@ import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
 const reportingItems: Record<string, AccordionItem> = {
   signs: {
@@ -281,61 +287,92 @@ const NeglectSurrenderPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section
-        dark
-        className="py-8"
-        containerClassName="flex flex-wrap items-center justify-between"
-      >
-        <div className="flex basis-full flex-col gap-4 pt-4 pb-16 xl:basis-1/2 xl:py-24">
-          <Heading className="my-0">
-            Thank you for caring about animals!
-          </Heading>
+      <div className="relative">
+        <Image
+          src={leafRightImage1}
+          alt=""
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block xl:max-w-sm"
+        />
 
-          <p className="text-lg">
-            Because we are an educational sanctuary, we cannot take in public
-            drop-offs, injured wildlife, or purchase animals from pet stores.
-            Please select your situation below for guidance on the best
-            protocols to help an animal in need.
-          </p>
-        </div>
-      </Section>
+        <Section
+          dark
+          className="py-8"
+          containerClassName="flex flex-wrap items-center justify-between"
+        >
+          <div className="flex basis-full flex-col gap-4 pt-4 pb-16 xl:basis-1/2 xl:py-24">
+            <Heading className="my-0">
+              Thank you for caring about animals!
+            </Heading>
+
+            <p className="text-lg">
+              Because we are an educational sanctuary, we cannot take in public
+              drop-offs, injured wildlife, or purchase animals from pet stores.
+              Please select your situation below for guidance on the best
+              protocols to help an animal in need.
+            </p>
+          </div>
+        </Section>
+      </div>
 
       <SubNav links={navLinks} className="z-20" />
 
-      <Section>
-        <Heading id="reporting" level={2} link>
-          Reporting Animal Cruelty, Neglect, and Pet Store Concerns
-        </Heading>
+      <div className="relative">
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-4 z-10 hidden h-auto w-1/2 max-w-32 -scale-100 select-none lg:block 2xl:max-w-40"
+        />
 
-        <div className="mt-4 mb-6 text-alveus-green-600">
-          <p>
-            If you suspect an animal is being mistreated, your prompt action can
-            be life-saving. Because laws and authorities vary by location, this
-            guide is organized to help you reach the right people quickly.
-          </p>
-        </div>
+        <Section>
+          <Heading id="reporting" level={2} link>
+            Reporting Animal Cruelty, Neglect, and Pet Store Concerns
+          </Heading>
 
-        <Accordion items={reportingItems} />
-      </Section>
+          <div className="mt-4 mb-6 text-alveus-green-600">
+            <p>
+              If you suspect an animal is being mistreated, your prompt action
+              can be life-saving. Because laws and authorities vary by location,
+              this guide is organized to help you reach the right people
+              quickly.
+            </p>
+          </div>
 
-      <Section>
-        <Heading id="surrendering" level={2} link>
-          Surrendering or Finding a Pet
-        </Heading>
+          <Accordion items={reportingItems} />
+        </Section>
+      </div>
 
-        <div className="mt-4 mb-6">
-          <p>
-            If you can no longer care for a pet or have found a stray one,
-            please follow these professional protocols to ensure the
-            animal&apos;s safety and legal protection.
-          </p>
-        </div>
+      <div className="relative">
+        <Image
+          src={leafLeftImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-16 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-18 2xl:max-w-48"
+        />
 
-        <Accordion items={surrenderItems} />
-      </Section>
+        <Section dark>
+          <Heading id="surrendering" level={2} link>
+            Surrendering or Finding a Pet
+          </Heading>
+
+          <div className="mt-4 mb-6">
+            <p>
+              If you can no longer care for a pet or have found a stray one,
+              please follow these professional protocols to ensure the
+              animal&apos;s safety and legal protection.
+            </p>
+          </div>
+
+          <Accordion items={surrenderItems} />
+        </Section>
+      </div>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
+        />
+
         <Section className="grow">
           <Heading id="wildlife" level={2}>
             Found an Injured or Orphaned Wild Animal?
