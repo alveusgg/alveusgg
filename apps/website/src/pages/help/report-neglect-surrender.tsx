@@ -334,19 +334,21 @@ const NeglectSurrenderPage: NextPage = () => {
         <Accordion items={surrenderItems} />
       </Section>
 
+      {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
-        <Section className="flex grow flex-col items-start justify-center py-16 text-left">
-          <Heading id="wildlife" level={2} className="mt-0">
-            Did You Find an Injured or Orphaned Wild Animal?
+        <Section className="grow">
+          <Heading id="wildlife" level={2}>
+            Found an Injured or Orphaned Wild Animal?
           </Heading>
 
           <p className="mt-2 mb-6 text-lg">
-            If you found native wildlife that might need assistance, check out
-            our dedicated guide.
+            If you found native wildlife that might need assistance, and you
+            aren&apos;t sure what to do or who to contact, check out our
+            dedicated interactive tool.
           </p>
 
           <Button href="/help/found-animal">
-            Click here for our Wildlife Guide
+            Try our Found a Wild Animal? tool
           </Button>
         </Section>
       </div>

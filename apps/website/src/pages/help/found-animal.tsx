@@ -194,7 +194,7 @@ const FoundAnimalPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="flex max-w-3xl shrink grow flex-col justify-evenly gap-10 xl:max-w-xl 2xl:max-w-3xl">
+          <div className="flex max-w-3xl shrink grow flex-col justify-evenly gap-8 xl:max-w-xl 2xl:max-w-3xl">
             <div>
               <Heading level={2}>Finding a Wildlife Rehabilitator</Heading>
               <p className="mb-8 text-xl">
@@ -257,12 +257,13 @@ const FoundAnimalPage: NextPage = () => {
               </Heading>
 
               <p className="mt-2 mb-6 text-lg text-pretty">
-                If you need to report animal cruelty, neglect, or need to
-                surrender a pet, check out our dedicated guide.
+                If you&apos;ve encountered animal cruelty or neglect and wish to
+                report it, or if you want to surrender a pet, check out our
+                dedicated guide.
               </p>
 
               <Button href="/help/report-neglect-surrender">
-                Click here for our Neglect & Surrender Guide
+                Read our Neglect &amp; Surrender Guide
               </Button>
             </div>
           </div>
