@@ -218,6 +218,7 @@ const AdminReviewShowAndTellPage: NextPage<
             <Headline>Review or edit post:</Headline>
             <Panel lightMode>
               <ShowAndTellEntryForm
+                className="-m-4 p-4"
                 action="review"
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}
