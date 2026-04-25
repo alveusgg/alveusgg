@@ -142,13 +142,15 @@ const AdminReviewShowAndTellPage: NextPage<
         ) === false
       ) {
         e.preventDefault();
-        return false;
+        return;
       }
 
-      const url =
-        e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href;
-      if (url) {
-        window.open(url, "preview", "popup=yes,width=800,height=600");
+      const popup = window.open(
+        e.currentTarget.href,
+        "preview",
+        "popup=yes,width=800,height=600",
+      );
+      if (popup) {
         e.preventDefault();
       }
     },
