@@ -308,6 +308,11 @@ const config: NextConfig = {
       destination: "/animal-quest/beef-edition",
       permanent: false,
     },
+    {
+      source: "/found-animal",
+      destination: "/help/found-animal",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
