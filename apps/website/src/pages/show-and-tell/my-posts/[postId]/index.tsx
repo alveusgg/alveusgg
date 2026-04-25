@@ -80,7 +80,11 @@ const EditShowAndTellPage: NextPage = () => {
               </MessageBox>
             )}
             {getMyPost.data && (
-              <ShowAndTellEntryForm action="update" entry={getMyPost.data} />
+              <ShowAndTellEntryForm
+                className="mt-5"
+                action="update"
+                entry={getMyPost.data}
+              />
             )}
           </>
         )}
