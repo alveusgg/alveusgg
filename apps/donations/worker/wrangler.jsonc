@@ -77,6 +77,8 @@
     "SHARED_KEY": "",
     "OPTIONAL_VERCEL_PROTECTION_BYPASS": "",
     "TWITCH_SUBSCRIPTION_SECRET": "",
+    "SENTRY_DSN": "",
+    "SENTRY_RELEASE": "",
   },
 
   "env": {

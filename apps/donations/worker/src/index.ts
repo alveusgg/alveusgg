@@ -8,14 +8,12 @@ import superjson, { parse } from "superjson";
 import { setSentryTagsMiddleware } from "./utils/middleware";
 import { getSentryConfig } from "./utils/sentry";
 import { forwardWithoutRoutePrefix } from "./utils/url";
-
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(logger());
-
-app.all("*", setSentryTagsMiddleware);
+app.use(setSentryTagsMiddleware());
 
 app.all("/donations/*", async (c) => {
   const manager = c.env.DONATIONS_MANAGER.getByName("alveus");
@@ -58,11 +56,13 @@ export default Sentry.withSentry<Env, string>(getSentryConfig, {
     if (batch.queue === "alveus-donations") {
       await api.donations.createDonations.mutate({ donations });
       await env.PIXELS_QUEUE.sendBatch(batch.messages);
+      return;
     }
 
     if (batch.queue === "alveus-pixels") {
       const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
       await manager.process(donations);
+      return;
     }
 
     throw new Error(`Unknown queue: ${batch.queue}`);
