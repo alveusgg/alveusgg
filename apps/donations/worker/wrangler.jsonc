@@ -39,11 +39,25 @@
         "queue": "alveus-donations-dead-letter",
         "binding": "DEAD_LETTER_QUEUE",
       },
+      {
+        "queue": "alveus-pixels",
+        "binding": "PIXELS_QUEUE",
+      },
+      {
+        "queue": "alveus-pixels-dead-letter",
+        "binding": "PIXELS_DEAD_LETTER_QUEUE",
+      },
     ],
     "consumers": [
       {
         "queue": "alveus-donations",
         "dead_letter_queue": "alveus-donations-dead-letter",
+        "max_batch_size": 50,
+        "max_batch_timeout": 1,
+      },
+      {
+        "queue": "alveus-pixels",
+        "dead_letter_queue": "alveus-pixels-dead-letter",
         "max_batch_size": 50,
         "max_batch_timeout": 1,
       },
@@ -63,6 +77,8 @@
     "SHARED_KEY": "",
     "OPTIONAL_VERCEL_PROTECTION_BYPASS": "",
     "TWITCH_SUBSCRIPTION_SECRET": "",
+    "SENTRY_DSN": "",
+    "SENTRY_RELEASE": "",
   },
 
   "env": {
@@ -110,11 +126,26 @@
             "queue": "alveus-donations-dead-letter",
             "binding": "DEAD_LETTER_QUEUE",
           },
+          {
+            "queue": "alveus-pixels",
+            "binding": "PIXELS_QUEUE",
+          },
+          {
+            "queue": "alveus-pixels-dead-letter",
+            "binding": "PIXELS_DEAD_LETTER_QUEUE",
+          },
         ],
         "consumers": [
           {
             "queue": "alveus-donations",
             "dead_letter_queue": "alveus-donations-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 1,
+            "max_concurrency": 1,
+          },
+          {
+            "queue": "alveus-pixels",
+            "dead_letter_queue": "alveus-pixels-dead-letter",
             "max_batch_size": 50,
             "max_batch_timeout": 1,
             "max_concurrency": 1,
@@ -166,11 +197,25 @@
             "queue": "alveus-preview-donations-dead-letter",
             "binding": "DEAD_LETTER_QUEUE",
           },
+          {
+            "queue": "alveus-preview-pixels",
+            "binding": "PIXELS_QUEUE",
+          },
+          {
+            "queue": "alveus-preview-pixels-dead-letter",
+            "binding": "PIXELS_DEAD_LETTER_QUEUE",
+          },
         ],
         "consumers": [
           {
             "queue": "alveus-preview-donations",
             "dead_letter_queue": "alveus-preview-donations-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 5,
+          },
+          {
+            "queue": "alveus-preview-pixels",
+            "dead_letter_queue": "alveus-preview-pixels-dead-letter",
             "max_batch_size": 50,
             "max_batch_timeout": 5,
           },
