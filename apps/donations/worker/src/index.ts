@@ -49,9 +49,17 @@ export default {
     const donations: Donation[] = batch.messages.map((message) =>
       parse(message.body),
     );
-    await api.donations.createDonations.mutate({ donations });
 
-    const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
-    await manager.process(donations);
+    if (batch.queue === "alveus-donations") {
+      await api.donations.createDonations.mutate({ donations });
+      await env.PIXELS_QUEUE.sendBatch(batch.messages);
+    }
+
+    if (batch.queue === "alveus-pixels") {
+      const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
+      await manager.process(donations);
+    }
+
+    throw new Error(`Unknown queue: ${batch.queue}`);
   },
 } satisfies ExportedHandler<Env, string>;
