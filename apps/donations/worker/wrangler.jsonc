@@ -71,20 +71,6 @@
       "enabled": true,
     },
   },
-  // "vars": {
-  //   "SANDBOX": "true",
-  //   "SITE_URL": "https://preview.alveus.gg",
-  //   "SELF_URL": "http://localhost:8787",
-  //   "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
-  //   "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-  //   "MURAL_ID": "two",
-  //   "GRID_URL": "http://localhost:8787/pixels/example-grid",
-  //   "SHARED_KEY": "",
-  //   "OPTIONAL_VERCEL_PROTECTION_BYPASS": "",
-  //   "TWITCH_SUBSCRIPTION_SECRET": "",
-  //   "SENTRY_DSN": "",
-  //   "SENTRY_RELEASE": "",
-  // },
 
   "env": {
     "production": {
