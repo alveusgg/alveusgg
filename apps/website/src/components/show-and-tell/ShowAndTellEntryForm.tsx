@@ -141,7 +141,7 @@ function ImageAttachment({
         label={<strong className="font-bold">Caption</strong>}
         maxLength={200}
         defaultValue={initialData?.caption}
-        disabled={disabled}
+        isDisabled={disabled}
       />
 
       <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
@@ -181,7 +181,7 @@ function ImageAttachment({
             maxLength={300}
             defaultValue={initialData?.alternativeText}
             onChange={(val) => setHasAlt(!!val)}
-            disabled={disabled}
+            isDisabled={disabled}
           />
         </DisclosurePanel>
       </Disclosure>

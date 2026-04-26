@@ -13,7 +13,6 @@ export type TextAreaFieldProps = Omit<
   inputClassName?: string;
   labelClassName?: string;
   ref?: Ref<HTMLTextAreaElement>;
-  disabled?: boolean;
 };
 
 export const TextAreaField = (props: TextAreaFieldProps) => {
