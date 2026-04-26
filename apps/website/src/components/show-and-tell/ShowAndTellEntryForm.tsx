@@ -20,6 +20,7 @@ import type { ImageAttachment, ShowAndTellEntry } from "@alveusgg/database";
 
 import type {
   PublicShowAndTellEntryWithAttachments,
+  ShowAndTellEntryAttachments,
   ShowAndTellSubmitInput,
 } from "@/server/db/show-and-tell";
 
@@ -103,6 +104,7 @@ function ImageAttachment({
   fileReference,
   onClick,
   children,
+  disabled = false,
   ...props
 }: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
   Pick<ShowAndTellEntryFormProps, "entry"> & {
@@ -132,12 +134,14 @@ function ImageAttachment({
       {...props}
       onClick={handlePreviewClick}
       fileReference={fileReference}
+      disabled={disabled}
     >
       <TextAreaField
         name={`image[${fileReference.id}][caption]`}
         label={<strong className="font-bold">Caption</strong>}
         maxLength={200}
         defaultValue={initialData?.caption}
+        isDisabled={disabled}
       />
 
       <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
@@ -177,6 +181,7 @@ function ImageAttachment({
             maxLength={300}
             defaultValue={initialData?.alternativeText}
             onChange={(val) => setHasAlt(!!val)}
+            isDisabled={disabled}
           />
         </DisclosurePanel>
       </Disclosure>
@@ -220,6 +225,27 @@ function GiveAnHourInput({
     />
   );
 }
+
+const mapSavedAttachments = (
+  attachments: ShowAndTellEntryAttachments,
+): LocalAttachment[] =>
+  attachments.map((att) => {
+    if (att.attachmentType === "image" && att.imageAttachment) {
+      return {
+        type: "image",
+        file: makeSavedFileRef(att.imageAttachment),
+      };
+    }
+
+    if (att.attachmentType === "video" && att.linkAttachment) {
+      return {
+        type: "video",
+        url: att.linkAttachment.url,
+      };
+    }
+
+    throw new Error("Unknown attachment type");
+  });
 
 export function ShowAndTellEntryForm({
   className,
@@ -294,25 +320,8 @@ export function ShowAndTellEntryForm({
     [markAsChanged],
   );
 
-  const [attachments, setAttachments] = useState<LocalAttachment[]>(
-    () =>
-      entry?.attachments.map((att) => {
-        if (att.attachmentType === "image" && att.imageAttachment) {
-          return {
-            type: "image",
-            file: makeSavedFileRef(att.imageAttachment),
-          };
-        }
-
-        if (att.attachmentType === "video" && att.linkAttachment) {
-          return {
-            type: "video",
-            url: att.linkAttachment.url,
-          };
-        }
-
-        throw new Error("Unknown attachment type");
-      }) || [],
+  const [attachments, setAttachments] = useState<LocalAttachment[]>(() =>
+    entry ? mapSavedAttachments(entry.attachments) : [],
   );
   const swapAttachments = useCallback(
     (fromIdx: number, toIdx: number) => {
@@ -561,12 +570,16 @@ export function ShowAndTellEntryForm({
       update.mutate(
         { ...data, id: entry.id },
         {
-          onSuccess: () => {
+          onSuccess: (updatedEntry) => {
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            if (updatedEntry) {
+              setAttachments(mapSavedAttachments(updatedEntry.attachments));
+            }
           },
           onError: (err) => {
+            setSuccessMessage(null);
             setError(err.message);
             onUpdate?.();
           },
@@ -581,12 +594,16 @@ export function ShowAndTellEntryForm({
           notePublic: (formData.get("notePublic") as string) ?? "",
         },
         {
-          onSuccess: () => {
+          onSuccess: (updatedEntry) => {
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            if (updatedEntry) {
+              setAttachments(mapSavedAttachments(updatedEntry.attachments));
+            }
           },
           onError: (err) => {
+            setSuccessMessage(null);
             setError(err.message);
             onUpdate?.();
           },
@@ -610,6 +627,8 @@ export function ShowAndTellEntryForm({
   }
 
   const wasApproved = entry && getEntityStatus(entry) === "approved";
+
+  const isMutationPending = update.isPending || review.isPending;
 
   return (
     <form
@@ -675,7 +694,7 @@ export function ShowAndTellEntryForm({
             />
           </Fieldset>
         </div>
-        <div className="flex flex-[2] flex-col gap-5">
+        <div className="flex flex-2 flex-col gap-5">
           <Fieldset legend="Attachments">
             <VideoLinksField
               name="videoUrls"
@@ -692,6 +711,7 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
+              disabled={isMutationPending}
             />
 
             <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
@@ -701,7 +721,7 @@ export function ShowAndTellEntryForm({
                     <Button
                       size="small"
                       width="auto"
-                      disabled={idx === 0}
+                      disabled={isMutationPending || idx === 0}
                       onClick={() => swapAttachments(idx, idx - 1)}
                     >
                       <IconArrowUp className="size-5" />
@@ -710,7 +730,9 @@ export function ShowAndTellEntryForm({
                     <Button
                       size="small"
                       width="auto"
-                      disabled={idx === attachments.length - 1}
+                      disabled={
+                        isMutationPending || idx === attachments.length - 1
+                      }
                       onClick={() => swapAttachments(idx, idx + 1)}
                     >
                       <IconArrowDown className="size-5" />
@@ -722,6 +744,7 @@ export function ShowAndTellEntryForm({
                       onClick={() =>
                         setAttachments((prev) => prev.filter((a) => a !== att))
                       }
+                      disabled={isMutationPending}
                     >
                       <IconTrash className="size-5" />
                       Remove
@@ -736,6 +759,7 @@ export function ShowAndTellEntryForm({
                         entry={entry}
                         fileReference={att.file}
                         onClick={openModal}
+                        disabled={isMutationPending}
                       >
                         {buttons}
                       </ImageAttachment>
