@@ -7,6 +7,7 @@
   "name": "donation-manager",
   "main": "src/index.ts",
   "compatibility_date": "2025-11-01",
+  "account_id": "1f4b83a9106fec33c984912210d93e1b",
   "compatibility_flags": ["nodejs_compat"],
   "migrations": [
     {
