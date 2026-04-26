@@ -53,13 +53,13 @@ export default Sentry.withSentry<Env, string>(getSentryConfig, {
       parse(message.body),
     );
 
-    if (batch.queue === "alveus-donations") {
+    if (batch.queue.endsWith("donations")) {
       await api.donations.createDonations.mutate({ donations });
       await env.PIXELS_QUEUE.sendBatch(batch.messages);
       return;
     }
 
-    if (batch.queue === "alveus-pixels") {
+    if (batch.queue.endsWith("pixels")) {
       const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
       await manager.process(donations);
       return;
