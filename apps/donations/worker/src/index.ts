@@ -1,13 +1,13 @@
 import type { AppRouter } from "@alveusgg/alveusgg-website";
 import type { Donation } from "@alveusgg/donations-core";
+import * as Sentry from "@sentry/cloudflare";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import superjson, { parse } from "superjson";
-import * as Sentry from "@sentry/cloudflare";
-import { forwardWithoutRoutePrefix } from "./utils/url";
-import { getSentryConfig } from "./utils/sentry";
 import { setSentryTagsMiddleware } from "./utils/middleware";
+import { getSentryConfig } from "./utils/sentry";
+import { forwardWithoutRoutePrefix } from "./utils/url";
 
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
@@ -29,10 +29,8 @@ app.all("/pixels/*", async (c) => {
   return await manager.fetch(request);
 });
 
-export default Sentry.withSentry<Env>(getSentryConfig, {
+export default Sentry.withSentry<Env, string>(getSentryConfig, {
   fetch: app.fetch,
-  // @ts-expect-error somewhere batch is getting typed as `MessageBatch<unknown>`
-  // instead of `MessageBatch<string>`
   queue: async (batch, env) => {
     const headers: Record<string, string> = {};
     if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {

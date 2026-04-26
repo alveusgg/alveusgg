@@ -9,14 +9,18 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/update-donations-worker.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    name: Deploy (${{ env.ALVEUS_ENVIROMENT }})
+    name: Deploy (${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }})
+    environment: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
     runs-on: ubuntu-latest
-    environment: ${{ env.ALVEUS_ENVIRONMENT }}
-    if: github.repository == 'alveusgg/alveusgg`
+    if: github.repository == 'alveusgg/alveusgg'
     timeout-minutes: 10
     env:
       ALVEUS_ENVIRONMENT: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
