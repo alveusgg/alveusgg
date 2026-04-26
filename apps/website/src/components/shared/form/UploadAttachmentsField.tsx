@@ -15,6 +15,7 @@ import {
   getFileEndingForImageMimeType,
   getImageMimeType,
   isImageMimeType,
+  normalizeFileName,
 } from "@/utils/files";
 import { imageConverter } from "@/utils/image-converter";
 import {
@@ -181,22 +182,6 @@ async function handleImageResize(
     extractColor: resized.extractColor,
     fileToUpload: new File([resized.blob], fileName, { type }),
   };
-}
-
-function normalizeFileName(fileName: string, maxLength = 30) {
-  const lastDotIndex = fileName.lastIndexOf(".");
-  const hasExtension = lastDotIndex !== -1;
-  const extension = hasExtension ? fileName.substring(lastDotIndex) : "";
-  const nameWithoutExtension = hasExtension
-    ? fileName.substring(0, lastDotIndex)
-    : fileName;
-  // Normalize to NFKD, remove diacritics, then filter safe chars
-  const normalized = nameWithoutExtension
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "");
-  const safeName =
-    normalized.replace(/[^a-zA-Z0-9-_]/g, "").substring(0, maxLength) || "file";
-  return `${safeName}${extension}`;
 }
 
 export const UploadAttachmentsField = ({
@@ -380,7 +365,7 @@ export const UploadAttachmentsField = ({
           type="button"
           className={isDragging ? "bg-red-300" : defaultButtonClasses}
           onClick={onFileUpload}
-          {...dragProps}
+          {...(disabled ? {} : dragProps)}
           disabled={disabled}
         >
           <IconUploadFiles className="size-5" />

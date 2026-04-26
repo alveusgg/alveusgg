@@ -373,6 +373,10 @@ export async function getUserPosts(authorUserId: string, postId?: string) {
   });
 }
 
+export async function getUserPost(authorUserId: string, postId: string) {
+  return getUserPosts(authorUserId, postId).then((posts) => posts[0] ?? null);
+}
+
 export async function getPostsCount() {
   return prisma.showAndTellEntry.count({
     where: getPostFilter("approved"),
