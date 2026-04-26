@@ -198,11 +198,11 @@
             "binding": "DEAD_LETTER_QUEUE",
           },
           {
-            "queue": "alveus-pixels",
+            "queue": "alveus-preview-pixels",
             "binding": "PIXELS_QUEUE",
           },
           {
-            "queue": "alveus-pixels-dead-letter",
+            "queue": "alveus-preview-pixels-dead-letter",
             "binding": "PIXELS_DEAD_LETTER_QUEUE",
           },
         ],
@@ -214,8 +214,8 @@
             "max_batch_timeout": 5,
           },
           {
-            "queue": "alveus-pixels",
-            "dead_letter_queue": "alveus-pixels-dead-letter",
+            "queue": "alveus-preview-pixels",
+            "dead_letter_queue": "alveus-preview-pixels-dead-letter",
             "max_batch_size": 50,
             "max_batch_timeout": 5,
           },
