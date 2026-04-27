@@ -50,6 +50,7 @@ jobs:
         working-directory: apps/donations/worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: pnpm exec wrangler deploy --env=$ALVEUS_ENVIRONMENT --outdir dist --var SENTRY_DSN:$SENTRY_DSN --var SENTRY_RELEASE:${{ github.sha }} --keep-vars true
 
