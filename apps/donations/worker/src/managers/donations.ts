@@ -1,9 +1,9 @@
 import { Providers } from "@alveusgg/donations-core";
 import { DurableObject } from "cloudflare:workers";
 
+import * as Sentry from "@sentry/cloudflare";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import * as Sentry from "@sentry/cloudflare";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
 import {
@@ -12,8 +12,8 @@ import {
   DurableObjectDonationStorage,
 } from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
-import { getSentryConfig } from "../utils/sentry";
 import { setSentryTagsMiddleware } from "../utils/middleware";
+import { getSentryConfig } from "../utils/sentry";
 
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
@@ -25,7 +25,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(logger())
-      .use(setSentryTagsMiddleware)
+      .use(setSentryTagsMiddleware())
       .use(async (c, next) => {
         if (!this.ready) {
           this.ready = this.init();

@@ -39,6 +39,14 @@
         "queue": "alveus-donations-dead-letter",
         "binding": "DEAD_LETTER_QUEUE",
       },
+      {
+        "queue": "alveus-pixels",
+        "binding": "PIXELS_QUEUE",
+      },
+      {
+        "queue": "alveus-pixels-dead-letter",
+        "binding": "PIXELS_DEAD_LETTER_QUEUE",
+      },
     ],
     "consumers": [
       {
@@ -47,37 +55,26 @@
         "max_batch_size": 50,
         "max_batch_timeout": 1,
       },
+      {
+        "queue": "alveus-pixels",
+        "dead_letter_queue": "alveus-pixels-dead-letter",
+        "max_batch_size": 50,
+        "max_batch_timeout": 1,
+      },
     ],
   },
   "observability": {
-    "enabled": true,
-  },
-  "vars": {
-    "SANDBOX": "true",
-    "SITE_URL": "https://preview.alveus.gg",
-    "SELF_URL": "http://localhost:8787",
-    "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
-    "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-    "MURAL_ID": "two",
-    "GRID_URL": "http://localhost:8787/pixels/example-grid",
-    "SHARED_KEY": "",
-    "OPTIONAL_VERCEL_PROTECTION_BYPASS": "",
-    "TWITCH_SUBSCRIPTION_SECRET": "",
+    "logs": {
+      "enabled": true,
+    },
+    "traces": {
+      "enabled": true,
+    },
   },
 
   "env": {
     "production": {
       "route": "https://donation-manager.workers.alveussanctuary.org",
-
-      "vars": {
-        "SANDBOX": "false",
-        "SITE_URL": "https://www.alveussanctuary.org",
-        "SELF_URL": "https://donation-manager.workers.alveussanctuary.org",
-        "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
-        "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-        "MURAL_ID": "two",
-      },
-
       "migrations": [
         {
           "new_sqlite_classes": [
@@ -110,6 +107,14 @@
             "queue": "alveus-donations-dead-letter",
             "binding": "DEAD_LETTER_QUEUE",
           },
+          {
+            "queue": "alveus-pixels",
+            "binding": "PIXELS_QUEUE",
+          },
+          {
+            "queue": "alveus-pixels-dead-letter",
+            "binding": "PIXELS_DEAD_LETTER_QUEUE",
+          },
         ],
         "consumers": [
           {
@@ -119,20 +124,18 @@
             "max_batch_timeout": 1,
             "max_concurrency": 1,
           },
+          {
+            "queue": "alveus-pixels",
+            "dead_letter_queue": "alveus-pixels-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 1,
+            "max_concurrency": 1,
+          },
         ],
       },
     },
     "preview": {
       "route": "https://donation-manager.preview.workers.alveussanctuary.org",
-
-      "vars": {
-        "SANDBOX": "true",
-        "SITE_URL": "https://preview.alveus.gg",
-        "SELF_URL": "https://donation-manager.preview.workers.alveussanctuary.org",
-        "TWITCH_CHARITY_NAME": "Example Charity",
-        "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
-        "MURAL_ID": "two",
-      },
 
       "migrations": [
         {
@@ -166,11 +169,25 @@
             "queue": "alveus-preview-donations-dead-letter",
             "binding": "DEAD_LETTER_QUEUE",
           },
+          {
+            "queue": "alveus-preview-pixels",
+            "binding": "PIXELS_QUEUE",
+          },
+          {
+            "queue": "alveus-preview-pixels-dead-letter",
+            "binding": "PIXELS_DEAD_LETTER_QUEUE",
+          },
         ],
         "consumers": [
           {
             "queue": "alveus-preview-donations",
             "dead_letter_queue": "alveus-preview-donations-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 5,
+          },
+          {
+            "queue": "alveus-preview-pixels",
+            "dead_letter_queue": "alveus-preview-pixels-dead-letter",
             "max_batch_size": 50,
             "max_batch_timeout": 5,
           },

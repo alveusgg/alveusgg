@@ -2,10 +2,10 @@ import type { Donation, DonationAlert, Pixel } from "@alveusgg/donations-core";
 import { DurableObject } from "cloudflare:workers";
 
 import type { AppRouter } from "@alveusgg/alveusgg-website";
+import * as Sentry from "@sentry/cloudflare";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import * as Sentry from "@sentry/cloudflare";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
@@ -54,7 +54,7 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(cors())
-      .use(setSentryTagsMiddleware)
+      .use(setSentryTagsMiddleware())
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
