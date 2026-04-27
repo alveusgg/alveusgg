@@ -6,6 +6,7 @@ import insidecrate from "@/assets/presets/serval/insidecrate.png";
 import left from "@/assets/presets/serval/left.png";
 import leftplatform from "@/assets/presets/serval/leftplatform.png";
 import leftplatformb from "@/assets/presets/serval/leftplatformb.png";
+import leftplatformf from "@/assets/presets/serval/leftplatformf.png";
 import leftwide from "@/assets/presets/serval/leftwide.png";
 import log from "@/assets/presets/serval/log.png";
 import middleplatform from "@/assets/presets/serval/middleplatform.png";
@@ -60,14 +61,20 @@ const servalPresets: Record<string, Preset> = {
   leftplatform: {
     description: "leftplatform",
     image: leftplatform,
-    position: { pan: -142.9, tilt: -21.44, zoom: 1001 },
-    // modified: 2026-04-02T12:31:22.255Z
+    position: { pan: -143.16, tilt: -20.28, zoom: 577 },
+    // modified: 2026-04-26T14:37:07.296Z
   },
   leftplatformb: {
     description: "leftplatformb",
     image: leftplatformb,
     position: { pan: -144.16, tilt: -31.46, zoom: 1529 },
     // modified: 2026-04-08T14:49:40.363Z
+  },
+  leftplatformf: {
+    description: "leftplatformf",
+    image: leftplatformf,
+    position: { pan: -148.46, tilt: -20.61, zoom: 1255 },
+    // modified: 2026-04-26T14:38:58.746Z
   },
   leftwide: {
     description: "leftwide",
