@@ -12,6 +12,7 @@ import {
   notificationCategories,
 } from "@/data/notifications";
 
+import getDiscordTimestamp from "@/utils/discord-timestamp";
 import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
@@ -203,6 +204,8 @@ async function sendDiscordNotifications({
   expiresAt,
   linkUrl,
   imageUrl,
+  scheduledStartAt,
+  scheduledEndAt,
 }: Notification) {
   let webhookUrls: string[] = [];
   let toEveryone = false;
@@ -215,7 +218,18 @@ async function sendDiscordNotifications({
     case "announcements":
       webhookUrls =
         env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT || webhookUrls;
-      toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT;
+      toEveryone = false;
+      title = `Announcement: ${title}`;
+      if (scheduledStartAt) {
+        title += ` – ${getDiscordTimestamp(scheduledStartAt)}`;
+        if (scheduledEndAt) {
+          title += ` - ${getDiscordTimestamp(scheduledEndAt)}`;
+        }
+      }
+      if (linkUrl) {
+        message += ` @ ${linkUrl}`;
+      }
+      linkUrl = null;
       break;
     default:
   }

@@ -8,6 +8,7 @@ import {
   type CommandHandler,
 } from "@/bot/commands/shared/command";
 import { createOptions } from "@/bot/commands/shared/options";
+import { inputValueDatetimeLocalToUtc } from "@/utils/datetime-local";
 
 const defaultNotificationTitle = "Live Now";
 
@@ -295,6 +296,12 @@ export async function createNotificationCommands() {
       isPush: pendingNotification.isPush,
       imageUrl: pendingNotification.imageUrl,
       vodUrl: pendingNotification.vodUrl,
+      scheduledStartAt:
+        pendingNotification.start &&
+        inputValueDatetimeLocalToUtc(pendingNotification.start),
+      scheduledEndAt:
+        pendingNotification.end &&
+        inputValueDatetimeLocalToUtc(pendingNotification.end),
     })
       .then(() => {
         reply("poggSpin sent notification");
