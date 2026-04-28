@@ -1238,6 +1238,11 @@ const commands = {
       ],
     ],
   },
+  nextclip: {
+    description: "Move to the next clip in the BRB screen with clips",
+    category: "Overlays",
+    args: [],
+  },
   showchat: {
     description: "Show Twitch chat overlay (if enabled in the scene)",
     category: "Overlays",
