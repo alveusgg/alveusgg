@@ -28,8 +28,6 @@ const icons = {
   youtube: IconYouTube,
 } as const satisfies Record<SocialKey, IconComponent>;
 
-export const getSocialIcon = (key: SocialKey) => icons[key];
-
 export type SocialLinkWithIcon = SocialLink & {
   icon: IconComponent;
 };
@@ -40,7 +38,7 @@ const socialsLinks: Record<SocialKey, SocialLinkWithIcon> =
       key,
       {
         ...social,
-        icon: getSocialIcon(key),
+        icon: icons[key],
       },
     ]),
   );

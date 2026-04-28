@@ -23,7 +23,7 @@ export type UtilityNavItem = SocialLinkWithIcon & {
 const linkEntries = typeSafeObjectEntries(socialsLinks);
 
 const utilityNavStructure: UtilityNavItem[] = linkEntries
-  .filter(([, { isLiveStream }]) => !isLiveStream)
+  .filter(([, { live }]) => !live)
   .map(([key, value]) => ({
     key,
     rel: "noreferrer me",
@@ -31,7 +31,7 @@ const utilityNavStructure: UtilityNavItem[] = linkEntries
   }));
 
 const liveNavStructure: UtilityNavItem[] = linkEntries
-  .filter(([, { isLiveStream }]) => isLiveStream)
+  .filter(([, { live }]) => live)
   .map(([key, value]) => ({
     key,
     rel: "noreferrer me",
@@ -65,7 +65,7 @@ export const UtilityMenu = ({ mode }: { mode: "desktop" | "mobile" }) => (
     </ul>
     <Divider className="max-sm:hidden" />
     <div className="-my-0.5 flex flex-row items-center gap-0.5 rounded-xl bg-black/30 p-0.5 ring-2 ring-black/10 backdrop-blur-sm">
-      <div className="inline-flex items-center gap-0.5 rounded-sm pr-1 pl-2 text-xs font-bold text-white md:gap-1">
+      <div className="inline-flex items-center gap-0.5 rounded-sm pr-1 pl-3 text-xs font-bold text-white md:gap-1">
         <span className="relative inline-flex size-2">
           <span className="absolute inline-flex size-full animate-live-pulse rounded-full bg-current ring-1 ring-current"></span>
           <span className="absolute inline-flex size-full rounded-full bg-current"></span>

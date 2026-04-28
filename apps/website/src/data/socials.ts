@@ -1,7 +1,7 @@
 export type SocialLink = {
   link: string;
   title: string;
-  isLiveStream: boolean;
+  live: boolean;
 };
 
 export type SocialKey = keyof typeof socials;
@@ -10,37 +10,37 @@ const socials = {
   twitch: {
     link: "https://twitch.tv/alveussanctuary",
     title: "Twitch.tv",
-    isLiveStream: true,
+    live: true,
   },
   instagram: {
     link: "https://www.instagram.com/alveussanctuary",
     title: "Instagram",
-    isLiveStream: false,
+    live: false,
   },
   twitter: {
     link: "https://x.com/AlveusSanctuary",
     title: "X (Twitter)",
-    isLiveStream: false,
+    live: false,
   },
   facebook: {
     link: "https://www.facebook.com/AlveusSanctuary",
     title: "Facebook",
-    isLiveStream: false,
+    live: false,
   },
   tiktok: {
     link: "https://www.tiktok.com/@alveussanctuary",
     title: "TikTok",
-    isLiveStream: false,
+    live: false,
   },
   snapchat: {
     link: "https://www.snapchat.com/@alveussanctuary",
     title: "Snapchat",
-    isLiveStream: false,
+    live: false,
   },
   youtube: {
     link: "https://www.youtube.com/AlveusSanctuary",
     title: "YouTube",
-    isLiveStream: true,
+    live: true,
   },
 } as const satisfies Record<string, SocialLink>;
 

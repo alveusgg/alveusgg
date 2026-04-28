@@ -7,7 +7,7 @@ export const ProfileInfoImage = () => {
   const user = sessionData?.user;
 
   if (!user?.image) {
-    return;
+    return <div className="size-8 rounded-full bg-gray-600"></div>;
   }
 
   return (
@@ -33,11 +33,15 @@ export const ProfileInfo = ({ full = false }) => {
   return (
     <div
       className={classes(
-        "flex items-center gap-8",
+        "flex min-w-8 items-center gap-8",
         full && "w-full min-w-max justify-between",
       )}
     >
-      {full && <span>{user.name}</span>}
+      {full ? (
+        <span>{user.name}</span>
+      ) : (
+        <span className="sr-only">{user.name}</span>
+      )}
       <ProfileInfoImage />
     </div>
   );

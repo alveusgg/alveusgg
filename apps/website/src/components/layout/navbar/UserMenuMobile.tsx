@@ -10,14 +10,18 @@ import {
 } from "@/components/layout/navbar/NavLink";
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 
-const UserMenuMobile = () => {
-  const { data: sessionData } = useSession();
+import IconLoading from "@/icons/IconLoading";
 
-  const user = sessionData?.user;
-  const showAdminLink =
-    user &&
-    (user.isSuperUser ||
-      checkRolesGivePermission(user.roles, permissions.viewDashboard));
+const UserMenuMobile = () => {
+  const { data: sessionData, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <li className={`${navLinkClassesSub} w-full text-left`}>
+        <IconLoading />
+      </li>
+    );
+  }
 
   if (!sessionData) {
     return (
@@ -34,6 +38,12 @@ const UserMenuMobile = () => {
       </li>
     );
   }
+
+  const { user } = sessionData;
+  const showAdminLink =
+    user &&
+    (user.isSuperUser ||
+      checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
   return (
     <>

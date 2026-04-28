@@ -16,38 +16,49 @@ import {
 } from "@/components/layout/navbar/ProfileInfo";
 import { utilityLinkClasses } from "@/components/layout/navbar/UtilityMenu";
 
+import IconLoading from "@/icons/IconLoading";
 import IconSignIn from "@/icons/IconSignIn";
 
 const UserMenuDesktop = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
 
-  const user = sessionData?.user;
+  if (status === "loading") {
+    return (
+      <div
+        className={classes(
+          "mx-1 min-w-10 animate-delayed-fade-in items-center p-2",
+        )}
+      >
+        <IconLoading />
+      </div>
+    );
+  }
+
+  if (!sessionData) {
+    return (
+      <button
+        className={classes(utilityLinkClasses, "mx-1 min-w-8")}
+        type="button"
+        onClick={() => signIn("twitch")}
+        title="Sign in"
+      >
+        <span className="sr-only">Sign in</span>
+        <IconSignIn size={20} className="m-0.5" />
+      </button>
+    );
+  }
+
+  const { user } = sessionData;
   const showAdminLink =
     user &&
     (user.isSuperUser ||
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
-  if (!sessionData) {
-    return (
-      <div>
-        <button
-          className={utilityLinkClasses}
-          type="button"
-          onClick={() => signIn("twitch")}
-          title="Sign in"
-        >
-          <span className="sr-only">Sign in</span>
-          <IconSignIn size={20} className="m-0.5" />
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <Menu as="div" className="relative flex h-full items-center">
+    <Menu as="div" className="relative mx-1 flex h-full min-w-10 items-center">
       <MenuButton
         as="button"
-        className="mx-3 cursor-pointer appearance-none rounded-full select-none"
+        className="cursor-pointer appearance-none rounded-full px-1 select-none"
       >
         <span className="sr-only">Open user menu</span>
         <ProfileInfoImage />
