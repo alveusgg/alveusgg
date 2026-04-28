@@ -57,8 +57,8 @@ const foxPresets: Record<string, Preset> = {
   backrightcorner: {
     description: "backrightcorner",
     image: backrightcorner,
-    position: { pan: 10.75, tilt: -2.05, zoom: 1451 },
-    // modified: 2026-04-18T13:58:25.737Z
+    position: { pan: 13.91, tilt: -2.75, zoom: 3994 },
+    // modified: 2026-04-27T11:58:37.670Z
   },
   bed: {
     description: "bed",
