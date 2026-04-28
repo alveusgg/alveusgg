@@ -104,7 +104,7 @@ export const mainNavStructure: NavStructure = {
     title: "About",
     groups: {
       alveus: {
-        title: "Organisation",
+        title: "Organization",
         links: {
           alveus: {
             title: "About Alveus",
