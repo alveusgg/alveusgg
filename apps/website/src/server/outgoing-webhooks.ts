@@ -261,7 +261,6 @@ export async function triggerPlainDiscordChannelWebhook({
   };
 
   const url = new URL(webhookUrl);
-  url.searchParams.set("wait", "true");
 
   return triggerOutgoingWebhook({
     url: url.toString(),

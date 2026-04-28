@@ -28,3 +28,27 @@ export const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
   });
 };
+
+function normalizeFileNamePart(str: string) {
+  return str
+    .normalize("NFKD") // Normalize to NFKD
+    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .toLowerCase()
+    .replace(/[^a-z0-9-_]/g, "");
+}
+
+export function normalizeFileName(fileName: string, maxLength = 30) {
+  const lastDotIndex = fileName.lastIndexOf(".");
+  const hasExtension = lastDotIndex !== -1;
+  const extension = hasExtension && fileName.substring(lastDotIndex);
+  const nameWithoutExtension = hasExtension
+    ? fileName.substring(0, lastDotIndex)
+    : fileName;
+  const safeName = normalizeFileNamePart(nameWithoutExtension).substring(
+    0,
+    maxLength,
+  );
+  const safeExtension =
+    extension && normalizeFileNamePart(extension).substring(0, 4);
+  return `${safeName || "file"}${safeExtension ? `.${safeExtension}` : ""}`;
+}

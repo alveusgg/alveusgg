@@ -2,13 +2,18 @@ import type { Donation, DonationAlert, Pixel } from "@alveusgg/donations-core";
 import { DurableObject } from "cloudflare:workers";
 
 import type { AppRouter } from "@alveusgg/alveusgg-website";
+import * as Sentry from "@sentry/cloudflare";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
-import { createSharedKeyMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
+import { getSentryConfig } from "../utils/sentry";
 
 interface PixelsManagerState {
   pixels: Pixel[];
@@ -22,7 +27,7 @@ const Grid = z.object({
 });
 type Grid = z.infer<typeof Grid>;
 
-export class PixelsManagerDurableObject extends DurableObject<Env> {
+class PixelsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private startup?: Promise<void>;
   private provider?: SyncProvider<PixelsManagerState>;
@@ -49,6 +54,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(cors())
+      .use(setSentryTagsMiddleware())
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
@@ -73,6 +79,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           return c.json({ success: true });
         } catch (error) {
           console.error(error);
+          Sentry.captureException(error);
           return c.json(
             { error: "Failed to resync pixels", success: false },
             500,
@@ -258,6 +265,12 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     return this.router.fetch(request);
   }
 }
+
+export const PixelsManagerDurableObject =
+  Sentry.instrumentDurableObjectWithSentry(
+    getSentryConfig,
+    PixelsManagerDurableObjectBase,
+  );
 
 function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
   const totalPossibleSquares = grid.columns * grid.rows;

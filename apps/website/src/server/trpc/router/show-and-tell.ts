@@ -9,6 +9,7 @@ import {
   getMapFeatures,
   getPublicPostById,
   getPublicPosts,
+  getUserPost,
   getUserPosts,
   getVolunteeringMinutes,
   showAndTellCreateInputSchema,
@@ -82,10 +83,10 @@ export const showAndTellRouter = router({
 
   update: protectedProcedure
     .input(showAndTellUpdateInputSchema)
-    .mutation(
-      async ({ ctx, input }) =>
-        await updatePost(ctx.res, input, ctx.session.user.id),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      await updatePost(ctx.res, input, ctx.session.user.id);
+      return getUserPost(ctx.session.user.id, input.id);
+    }),
 
   getMyEntries: protectedProcedure.query(({ ctx }) =>
     getUserPosts(ctx.session.user.id),
@@ -93,18 +94,12 @@ export const showAndTellRouter = router({
 
   getMyEntry: protectedProcedure
     .input(z.cuid())
-    .query(({ ctx, input }) =>
-      getUserPosts(ctx.session.user.id, input).then(
-        (posts) => posts[0] ?? null,
-      ),
-    ),
+    .query(({ ctx, input }) => getUserPost(ctx.session.user.id, input)),
 
   delete: protectedProcedure
     .input(z.cuid())
     .mutation(async ({ ctx, input }) => {
-      const post = await getUserPosts(ctx.session.user.id, input).then(
-        (posts) => posts[0] ?? null,
-      );
+      const post = await getUserPost(ctx.session.user.id, input);
       if (!post) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }

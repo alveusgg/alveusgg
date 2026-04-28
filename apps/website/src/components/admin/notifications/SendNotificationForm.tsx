@@ -193,6 +193,7 @@ export function SendNotificationForm() {
                         id: props.fileReference.id,
                       })
                     }
+                    disabled={props.disabled}
                   >
                     <IconTrash className="size-5" />
                     Remove
