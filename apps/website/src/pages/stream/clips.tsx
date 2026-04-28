@@ -79,16 +79,34 @@ export const getStaticProps: GetStaticProps<{
     }
 
     // Get clips within the last year, older than a week, with at least 100 views
+    // And get clips beyond a year that have at least 2000 views
     const start = new Date();
     start.setFullYear(start.getFullYear() - 1);
     const end = new Date();
     end.setDate(end.getDate() - 7);
-    const clips = await getTwitchClips(
+    const recentClips = await getTwitchClips(
       twitchChannel.broadcasterAccount.access_token,
       channels.alveus.id,
       start,
       end,
       100,
+    );
+    const olderClips = await getTwitchClips(
+      twitchChannel.broadcasterAccount.access_token,
+      channels.alveus.id,
+      new Date(0),
+      start,
+      2000,
+    );
+    const { clips } = recentClips.concat(olderClips).reduce(
+      ({ clips, ids }, clip) => {
+        if (!ids.has(clip.id)) {
+          ids.add(clip.id);
+          clips.push(clip);
+        }
+        return { clips, ids };
+      },
+      { clips: [] as Clip[], ids: new Set<string>() },
     );
     console.log(`Fetched ${clips.length} clips`);
 
