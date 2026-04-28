@@ -72,16 +72,20 @@ export const Dropdown = ({
             <h3 className="mx-2 mb-1 block border-b border-alveus-green-600 pt-1 text-sm text-alveus-green-400">
               {group.title}
             </h3>
-            <div className="flex flex-col gap-0.5">
+            <ul className="flex flex-col gap-0.5">
               <DropdownLinks links={group.links} active={active} />
-            </div>
+            </ul>
           </div>
         ))}
       </div>
     );
   }
 
-  return <DropdownLinks links={dropdown.links} active={active} />;
+  return (
+    <ul className="contents">
+      <DropdownLinks links={dropdown.links} active={active} />
+    </ul>
+  );
 };
 
 export const DropdownMenuItems = ({
