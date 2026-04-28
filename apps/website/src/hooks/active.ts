@@ -19,7 +19,8 @@ export const useActivePath = (href: LinkProps["href"], exact = false) => {
 };
 
 const flatNavStructure = Object.values(mainNavStructure)
-  .flatMap((item) => ("dropdown" in item ? Object.values(item.dropdown) : item))
+  .flatMap((item) => ("groups" in item ? Object.values(item.groups) : item))
+  .flatMap((item) => ("links" in item ? Object.values(item.links) : item))
   .map((item) => item.link);
 
 export const useActiveNav = () => {

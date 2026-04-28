@@ -1,108 +1,98 @@
 import { DisclosureButton, DisclosurePanel } from "@headlessui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { Fragment } from "react";
 
-import { mainNavStructure } from "@/data/navigation";
-import { checkRolesGivePermission, permissions } from "@/data/permissions";
+import {
+  type NavStructureDropdown,
+  type NavStructureLink,
+  mainNavStructure,
+} from "@/data/navigation";
 
 import { useActiveNav } from "@/hooks/active";
 
-import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
+import UserMenuMobile from "@/components/layout/navbar/UserMenuMobile";
+import { UtilityMenu } from "@/components/layout/navbar/UtilityMenu";
 
-import { NavLinkSub, navLinkClassesSub } from "./NavLink";
+import { NavLinkSub } from "./NavLink";
+
+function Link({ link, active }: { link: NavStructureLink; active: string }) {
+  return (
+    <DisclosureButton
+      as={NavLinkSub}
+      href={link.link}
+      active={active === link.link}
+      external={link.external}
+      className="w-full"
+    >
+      {link.title}
+    </DisclosureButton>
+  );
+}
+
+const MobileMenuSubSection = ({
+  data,
+  active,
+}: {
+  data: NavStructureDropdown;
+  active: string;
+}) => {
+  if ("groups" in data) {
+    return (
+      <ul className="ml-5 border-l border-white/30 pl-0.5">
+        {Object.entries(data.groups).map(([key, group]) => (
+          <li key={key}>
+            <p className="mt-3 px-3 text-sm opacity-80">{group.title}</p>
+            <ul className="ml-2">
+              {Object.entries(group.links).map(([key, link]) => (
+                <li key={key}>
+                  <Link link={link} active={active} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return (
+    <ul className="ml-5 border-l border-white/30 pl-0.5">
+      {Object.entries(data.links).map(([key, link]) => (
+        <li key={key}>
+          <Link link={link} active={active} />
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 export function MobileMenu() {
-  const { data: sessionData } = useSession();
   const active = useActiveNav();
-
-  const user = sessionData?.user;
-  const showAdminLink =
-    user &&
-    (user.isSuperUser ||
-      checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
   return (
     <DisclosurePanel>
       <div className="space-y-1 p-2 pb-4 lg:hidden">
+        <div className="flex w-full justify-center pb-2">
+          <UtilityMenu mode="mobile" />
+        </div>
+
         <ul className="flex flex-col">
-          {Object.entries(mainNavStructure).map(([key, link]) => (
-            <li key={key}>
-              {"link" in link ? (
-                <DisclosureButton
-                  as={NavLinkSub}
-                  href={link.link}
-                  active={active === link.link}
-                  external={link.external}
-                  className="w-full"
-                >
-                  {link.title}
-                </DisclosureButton>
-              ) : (
-                <>
-                  <p className="px-5 py-3 opacity-80">{link.title}</p>
-                  <ul className="ml-4">
-                    {Object.entries(link.dropdown).map(([key, link]) => (
-                      <li key={key}>
-                        <DisclosureButton
-                          as={NavLinkSub}
-                          href={link.link}
-                          active={active === link.link}
-                          external={link.external}
-                          className="w-full"
-                        >
-                          {link.title}
-                        </DisclosureButton>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </li>
-          ))}
-
-          {/* User menu */}
-          {sessionData ? (
-            <>
-              {showAdminLink && (
-                <li>
-                  <div className="my-3 w-full border-t opacity-30"></div>
-
-                  <DisclosureButton as={NavLinkSub} href="/admin/dashboard">
-                    Admin
-                  </DisclosureButton>
+          {Object.entries(mainNavStructure).map(([key, link]) => {
+            if ("link" in link) {
+              return (
+                <li key={key}>
+                  <Link link={link} active={active} />
                 </li>
-              )}
-              <li>
-                <div className="my-3 w-full border-t opacity-30"></div>
+              );
+            }
 
-                <div className="px-5 py-2">
-                  <ProfileInfo full />
-                </div>
-
-                <DisclosureButton as={Fragment}>
-                  <button
-                    className={`${navLinkClassesSub} w-full text-left`}
-                    type="button"
-                    onClick={() => signOut()}
-                  >
-                    Log Out
-                  </button>
-                </DisclosureButton>
+            return (
+              <li key={key}>
+                <p className="px-5 pt-4 pb-1 opacity-80">{link.title}</p>
+                <MobileMenuSubSection data={link} active={active} />
               </li>
-            </>
-          ) : (
-            <li>
-              <DisclosureButton as={Fragment}>
-                <button
-                  className={`${navLinkClassesSub} w-full text-left`}
-                  type="button"
-                  onClick={() => signIn("twitch")}
-                >
-                  Sign In
-                </button>
-              </DisclosureButton>
-            </li>
-          )}
+            );
+          })}
+
+          <UserMenuMobile />
         </ul>
       </div>
     </DisclosurePanel>

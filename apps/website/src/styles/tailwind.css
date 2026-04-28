@@ -42,6 +42,37 @@
       scale: 1.025;
     }
   }
+
+  --animate-live-pulse: live-pulse 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  --shadow-live:
+    0 0 0 1px rgb(255 255 255 / 0.22), 0 0 10px rgb(239 68 68 / 0.35);
+
+  @keyframes live-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.32;
+    }
+
+    65% {
+      transform: scale(1.85);
+      opacity: 0;
+    }
+  }
+
+  @keyframes delayed-fade-in {
+    0% {
+      opacity: 0;
+    }
+    80% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  --animate-delayed-fade-in: delayed-fade-in 2s ease-in-out forwards;
 }
 
 @layer utilities {
@@ -131,7 +162,6 @@
 @utility scrollbar-none {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
-
   &::-webkit-scrollbar {
     /* Safari and Chrome */
     width: 0;

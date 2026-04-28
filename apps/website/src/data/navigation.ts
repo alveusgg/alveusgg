@@ -1,13 +1,5 @@
-import {
-  typeSafeObjectEntries,
-  typeSafeObjectFromEntries,
-  typeSafeObjectKeys,
-} from "@/utils/helpers";
+import { typeSafeObjectFromEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
-
-import socials from "@/components/shared/data/socials";
-
-import IconAmazon from "@/icons/IconAmazon";
 
 import murals from "./murals";
 
@@ -17,12 +9,17 @@ export type NavStructureLink = {
   external?: boolean;
 };
 
-export type NavStructureDropdown = {
+export type NavStructureLinks = {
   title: string;
-  dropdown: {
-    [key: string]: NavStructureLink;
-  };
+  links: Record<string, NavStructureLink>;
 };
+
+type NavStructureGroups = {
+  title: string;
+  groups: Record<string, NavStructureLinks>;
+};
+
+export type NavStructureDropdown = NavStructureGroups | NavStructureLinks;
 
 export type NavStructure = {
   [key: string]: NavStructureLink | NavStructureDropdown;
@@ -39,7 +36,7 @@ export const mainNavStructure: NavStructure = {
   },
   institute: {
     title: "Institute",
-    dropdown: {
+    links: {
       institute: {
         title: "Research & Recovery",
         link: "/institute",
@@ -57,74 +54,99 @@ export const mainNavStructure: NavStructure = {
   },
   explore: {
     title: "Explore",
-    dropdown: {
-      live: {
-        title: "Live Cams",
-        link: "/live",
-        external: true,
+    groups: {
+      content: {
+        title: "Content",
+        links: {
+          updates: {
+            title: "Schedule & Updates",
+            link: "/updates",
+          },
+          collaborations: {
+            title: "Collaborations",
+            link: "/collaborations",
+          },
+        },
       },
-      updates: {
-        title: "Schedule & Updates",
-        link: "/updates",
+      series: {
+        title: "Series",
+        links: {
+          animalQuest: {
+            title: "Animal Quest",
+            link: "/animal-quest",
+          },
+          showAndTell: {
+            title: "Show & Tell",
+            link: "/show-and-tell",
+          },
+          bookClub: {
+            title: "Alveus Book Club",
+            link: "/book-club",
+          },
+        },
       },
-      animalQuest: {
-        title: "Animal Quest",
-        link: "/animal-quest",
-      },
-      collaborations: {
-        title: "Collaborations",
-        link: "/collaborations",
-      },
-      showAndTell: {
-        title: "Show & Tell",
-        link: "/show-and-tell",
-      },
-      bookClub: {
-        title: "Alveus Book Club",
-        link: "/book-club",
-      },
-      foundAnimal: {
-        title: "Found a Wild Animal?",
-        link: "/help/found-animal",
-      },
-      reportNeglectSurrender: {
-        title: "Neglect & Surrender Guide",
-        link: "/help/report-neglect-surrender",
+      help: {
+        title: "Help",
+        links: {
+          foundAnimal: {
+            title: "Found a Wild Animal?",
+            link: "/help/found-animal",
+          },
+          reportNeglectSurrender: {
+            title: "Neglect & Surrender Guide",
+            link: "/help/report-neglect-surrender",
+          },
+        },
       },
     },
   },
   about: {
     title: "About",
-    dropdown: {
+    groups: {
       alveus: {
-        title: "About Alveus",
-        link: "/about",
+        title: "Organisation",
+        links: {
+          alveus: {
+            title: "About Alveus",
+            link: "/about",
+          },
+          staff: {
+            title: "Alveus Team",
+            link: "/about/team",
+          },
+          annualReports: {
+            title: "Annual Reports",
+            link: "/about/annual-reports",
+          },
+        },
       },
-      staff: {
-        title: "Alveus Team",
-        link: "/about/team",
+      impact: {
+        title: "Work",
+        links: {
+          ngoCollabs: {
+            title: "NGO Collaborations",
+            link: "/about/orgs",
+          },
+          events: {
+            title: "Fundraising Events",
+            link: "/about/events",
+          },
+        },
       },
-      ngoCollabs: {
-        title: "NGO Collaborations",
-        link: "/about/orgs",
-      },
-      events: {
-        title: "Fundraising Events",
-        link: "/about/events",
-      },
-      annualReports: {
-        title: "Annual Reports",
-        link: "/about/annual-reports",
-      },
-      tech: {
-        title: "Tech at Alveus",
-        link: "/about/tech",
+      info: {
+        title: "Info",
+        links: {
+          tech: {
+            title: "Tech at Alveus",
+            link: "/about/tech",
+          },
+        },
       },
     },
   },
   shop: {
     title: "Shop",
-    dropdown: {
+    links: {
       apparel: {
         title: "Apparel",
         link: "/apparel",
@@ -141,22 +163,4 @@ export const mainNavStructure: NavStructure = {
     title: "Donate",
     link: "/donate",
   },
-};
-
-export const utilityNavStructure = {
-  amazon: {
-    link: "/wishlist",
-    title: "Amazon Wishlist",
-    icon: IconAmazon,
-    rel: "noreferrer",
-  },
-  ...typeSafeObjectFromEntries(
-    typeSafeObjectEntries(socials).map(([key, value]) => [
-      key,
-      {
-        ...value,
-        rel: "noreferrer me",
-      },
-    ]),
-  ),
 };
