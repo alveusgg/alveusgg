@@ -66,18 +66,18 @@ export const Dropdown = ({
 }) => {
   if ("groups" in dropdown) {
     return (
-      <div className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-3">
         {Object.entries(dropdown.groups).map(([key, group]) => (
-          <div key={key}>
-            <h3 className="mx-2 mb-1 block border-b border-alveus-green-600 pt-1 text-sm text-alveus-green-400">
+          <li key={key}>
+            <p className="mx-2 mb-1 block border-b border-alveus-green-600 pt-1 text-sm text-alveus-green-400">
               {group.title}
-            </h3>
+            </p>
             <ul className="flex flex-col gap-0.5">
               <DropdownLinks links={group.links} active={active} />
             </ul>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 
