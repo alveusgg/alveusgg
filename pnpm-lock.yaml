@@ -142,8 +142,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@sentry/cloudflare':
-        specifier: ^10.49.0
-        version: 10.49.0
+        specifier: ^10.50.0
+        version: 10.50.0
       '@trpc/client':
         specifier: ^11.9.0
         version: 11.9.0(@trpc/server@11.9.0)(typescript@6.0.3)
@@ -151,8 +151,8 @@ importers:
         specifier: ^11.9.0
         version: 11.9.0(typescript@6.0.3)
       hono:
-        specifier: ^4.12.14
-        version: 4.12.14
+        specifier: ^4.12.15
+        version: 4.12.15
       superjson:
         specifier: ^2.2.6
         version: 2.2.6
@@ -290,8 +290,8 @@ importers:
         specifier: ^6.7.0
         version: 6.7.0
       dompurify:
-        specifier: ^3.4.0
-        version: 3.4.0
+        specifier: ^3.4.1
+        version: 3.4.1
       fast-xml-parser:
         specifier: ^5.7.1
         version: 5.7.2
@@ -341,8 +341,8 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2
       partysocket:
-        specifier: ^1.1.16
-        version: 1.1.16(react@19.2.5)
+        specifier: ^1.1.18
+        version: 1.1.18(react@19.2.5)
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -2410,8 +2410,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@sentry/cloudflare@10.49.0':
-    resolution: {integrity: sha512-kHNIwJ6SX39R5TRoW/Bf25rgrBwXBbD44fEK9+hkJ3IdGBLktXG2+T7mNGjpvR98TWxQDhcvs8WLfFw/SsDGrA==}
+  '@sentry/cloudflare@10.50.0':
+    resolution: {integrity: sha512-fgPp2aVdCcHKzgoWwZDFbP/DwjsPwXMQFHCKeeE4jp6r4i0HoRGbaP7z1KlIGGrw12KM2i9rvQfKsaZlhHc0gQ==}
     engines: {node: '>=18'}
     peerDependencies:
       '@cloudflare/workers-types': ^4.x
@@ -2419,8 +2419,8 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
-  '@sentry/core@10.49.0':
-    resolution: {integrity: sha512-UaFeum3LUM1mB0d67jvKnqId1yWQjyqmaDV6kWngG03x+jqXb08tJdGpSoxjXZe13jFBbiBL/wKDDYIK7rCK4g==}
+  '@sentry/core@10.50.0':
+    resolution: {integrity: sha512-J4A+vzUO3adl0TkFCjaN1+4miamrjHiEIYuLHiuu1lmAjq5WIVw32ObvAh4yMwNtxyaEMosTrrh5M6f12XSJFg==}
     engines: {node: '>=18'}
 
   '@sindresorhus/is@7.2.0':
@@ -3902,8 +3902,8 @@ packages:
     resolution: {integrity: sha512-gYzvtM72ZtxQO0T048kd6HWSbbGCNOUwcnfQ01cqIJ4X2IYKFFHZ5mKvrQETcFXxsRObZulDaKmy//R7TPtsBg==}
     engines: {node: '>=20.19.0'}
 
-  dompurify@3.4.0:
-    resolution: {integrity: sha512-nolgK9JcaUXMSmW+j1yaSvaEaoXYHwWyGJlkoCTghc97KgGDDSnpoU/PlEnw63Ah+TGKFOyY+X5LnxaWbCSfXg==}
+  dompurify@3.4.1:
+    resolution: {integrity: sha512-JahakDAIg1gyOm7dlgWSDjV4n7Ip2PKR55NIT6jrMfIgLFgWo81vdr1/QGqWtFNRqXP9UV71oVePtjqS2ebnPw==}
 
   domutils@4.0.2:
     resolution: {integrity: sha512-qI4JLRKnSzqFqr7hAlS5xQDusBCjKSEG4t4+7aNrIQMHBcsC2TGEhuyABJdYkgSewL57PNLYEiibY2iPKhKpaA==}
@@ -4406,10 +4406,6 @@ packages:
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
-
-  hono@4.12.14:
-    resolution: {integrity: sha512-am5zfg3yu6sqn5yjKBNqhnTX7Cv+m00ox+7jbaKkrLMRJ4rAdldd1xPd/JzbBWspqaQv6RSTrgFN95EsfhC+7w==}
-    engines: {node: '>=16.9.0'}
 
   hono@4.12.15:
     resolution: {integrity: sha512-qM0jDhFEaCBb4TxoW7f53Qrpv9RBiayUHo0S52JudprkhvpjIrGoU1mnnr29Fvd1U335ZFPZQY1wlkqgfGXyLg==}
@@ -5275,8 +5271,8 @@ packages:
   parse5@8.0.0:
     resolution: {integrity: sha512-9m4m5GSgXjL4AjumKzq1Fgfp3Z8rsvjRNbnkVwfu2ImRqE5D0LnY2QfDen18FSY9C573YU5XxSapdHZTZ2WolA==}
 
-  partysocket@1.1.16:
-    resolution: {integrity: sha512-d7xFv+ZC7x0p/DAHWJ5FhxQhimIx+ucyZY+kxL0cKddLBmK9c4p2tEA/L+dOOrWm6EYrRwrBjKQV0uSzOY9x1w==}
+  partysocket@1.1.18:
+    resolution: {integrity: sha512-SyuvH9VavWOSa14v6dYdp3yfSUDII4BQB1+TkGOFBkjfZKjnDBiba4fhdhwBlqGBkqw4ea3gTA1DYhSffX24Wg==}
     peerDependencies:
       react: '>=17'
     peerDependenciesMeta:
@@ -8365,12 +8361,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.60.2':
     optional: true
 
-  '@sentry/cloudflare@10.49.0':
+  '@sentry/cloudflare@10.50.0':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@sentry/core': 10.49.0
+      '@sentry/core': 10.50.0
 
-  '@sentry/core@10.49.0': {}
+  '@sentry/core@10.50.0': {}
 
   '@sindresorhus/is@7.2.0': {}
 
@@ -9965,7 +9961,7 @@ snapshots:
     dependencies:
       domelementtype: 3.0.0
 
-  dompurify@3.4.0:
+  dompurify@3.4.1:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -10653,8 +10649,6 @@ snapshots:
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
-
-  hono@4.12.14: {}
 
   hono@4.12.15: {}
 
@@ -11697,7 +11691,7 @@ snapshots:
     dependencies:
       entities: 6.0.1
 
-  partysocket@1.1.16(react@19.2.5):
+  partysocket@1.1.18(react@19.2.5):
     dependencies:
       event-target-polyfill: 0.0.4
     optionalDependencies:
