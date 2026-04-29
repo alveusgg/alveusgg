@@ -4,7 +4,7 @@ import { type FormEvent, useCallback } from "react";
 import type { Form } from "@alveusgg/database";
 
 import { getCountryName } from "@/utils/countries";
-import { calcFormConfig } from "@/utils/forms";
+import { DEFAULT_SUBMIT_BUTTON_TEXT, calcFormConfig } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
 
 import Heading from "@/components/content/Heading";
@@ -230,7 +230,7 @@ export const EntryForm = ({
 
             <div className="mt-7">
               <Button type="submit" disabled={enterForm.isPending}>
-                {config.submitButtonText || "Enter to Win"}
+                {config.submitButtonText || DEFAULT_SUBMIT_BUTTON_TEXT}
               </Button>
             </div>
           </Section>
