@@ -81,7 +81,10 @@ const DonatePage: NextPage = () => {
           {!consent.neon && <Donate type="direct" />}
 
           <Consent item="donation widget" consent="neon">
-            <NeonDonateEmbed className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none" />
+            <NeonDonateEmbed
+              form="general"
+              className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none"
+            />
           </Consent>
         </div>
 
