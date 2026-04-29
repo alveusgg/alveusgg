@@ -278,8 +278,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.4)(react@19.2.5)
       '@vercel/functions':
-        specifier: ^3.4.3
-        version: 3.4.3(@aws-sdk/credential-provider-web-identity@3.972.35)
+        specifier: ^3.4.4
+        version: 3.4.4(@aws-sdk/credential-provider-web-identity@3.972.35)
       '@xyflow/react':
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.5)(react@19.2.5)
@@ -3316,8 +3316,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@3.4.3':
-    resolution: {integrity: sha512-kA14KIUVgAY6VXbhZ5jjY+s0883cV3cZqIU3WhrSRxuJ9KvxatMjtmzl0K23HK59oOUjYl7HaE/eYMmhmqpZzw==}
+  '@vercel/functions@3.4.4':
+    resolution: {integrity: sha512-mdmCTMxAUTT5GMSs/iS4EuovzoofXNbb44/iPFwlgqulnJg3FEf6Sk46kLlZL4zuTTJQPT5YPTdBgZVlYZ5Azg==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -3325,8 +3325,8 @@ packages:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
 
-  '@vercel/oidc@3.2.0':
-    resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
+  '@vercel/oidc@3.2.1':
+    resolution: {integrity: sha512-UUqZ2y+VXHgVH1Luoo+477/NcrO4X+ln38U70ldRgGiWJAuHhtjTm7cCAnyLkl2feg7ZmTBK3F1kvJKFEQc01w==}
     engines: {node: '>= 20'}
 
   '@vitest/expect@4.1.5':
@@ -9355,13 +9355,13 @@ snapshots:
       next: 16.2.4(@babel/core@7.28.5)(@opentelemetry/api@1.9.1)(react-dom@19.2.5)(react@19.2.5)
       react: 19.2.5
 
-  '@vercel/functions@3.4.3(@aws-sdk/credential-provider-web-identity@3.972.35)':
+  '@vercel/functions@3.4.4(@aws-sdk/credential-provider-web-identity@3.972.35)':
     dependencies:
-      '@vercel/oidc': 3.2.0
+      '@vercel/oidc': 3.2.1
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.35
 
-  '@vercel/oidc@3.2.0': {}
+  '@vercel/oidc@3.2.1': {}
 
   '@vitest/expect@4.1.5':
     dependencies:
