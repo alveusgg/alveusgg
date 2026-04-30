@@ -36,8 +36,8 @@ const gardenPresets: Record<string, Preset> = {
   barn2: {
     description: "Barn 2",
     image: barn2,
-    position: { pan: -135.55, tilt: -8.55, zoom: 3424 },
-    // modified: 2025-10-09T11:10:30.308Z
+    position: { pan: -135.38, tilt: -9.03, zoom: 3798 },
+    // modified: 2026-04-29T15:06:55.825Z
   },
   bughotel: {
     description: "Bug Hotel",
@@ -60,8 +60,8 @@ const gardenPresets: Record<string, Preset> = {
   pasturebrush: {
     description: "Pasture Brush",
     image: pasturebrush,
-    position: { pan: -133.27, tilt: -10.64, zoom: 1048 },
-    // modified: 2025-10-09T11:10:30.316Z
+    position: { pan: -133.21, tilt: -11.39, zoom: 1048 },
+    // modified: 2026-04-29T14:01:54.742Z
   },
   pasturegrove: {
     description: "Pasture Grove",
