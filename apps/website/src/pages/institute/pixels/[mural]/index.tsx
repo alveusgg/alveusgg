@@ -12,6 +12,7 @@ import { PixelProvider } from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
+import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -237,16 +238,10 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
 
         <div className="flex flex-col gap-8">
           {mural.type === "live" && (
-            <Box dark>
-              <Heading level={2} className="text-xl">
-                Unlock a Pixel on the Mural
-              </Heading>
-              <p>
-                Donations for the {mural.name} are temporarily paused while the
-                annual Alveus Art Auction stream is live. Check back after the
-                stream to donate and unlock your pixel on the mural!
-              </p>
-            </Box>
+            <>
+              <Donate type="twitch" highlight />
+              <Donate type="paypal" link="/paypal/pixels" />
+            </>
           )}
 
           <Box dark>
