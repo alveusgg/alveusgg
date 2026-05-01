@@ -44,11 +44,16 @@ export class NeonDonationProvider implements DonationProvider {
         env.NEON_DONATION_DISPLAY_NAME_CUSTOM_FIELD_ID,
     };
 
-    await setupWebhook(
-      `${env.SELF_URL}/donations/${this.name}/live`,
-      "CREATE_DONATION",
-      options,
-    );
+    try {
+      await setupWebhook(
+        `${env.SELF_URL}/donations/${this.name}/live`,
+        "CREATE_DONATION",
+        options,
+      );
+    } catch (e) {
+      console.error("Failed to set up Neon webhook", e);
+      throw e;
+    }
 
     return new NeonDonationProvider(options, service);
   }
@@ -68,13 +73,21 @@ export class NeonDonationProvider implements DonationProvider {
 
     const { data } = payload;
 
-    const account = await getAccount(this.options, data.accountId);
-    if (!account) {
-      return new Response(
-        "Failed to fetch account data for this donation. Rejecting.",
-        { status: 400 },
-      );
+    const accountRes = await getAccount(this.options, data.accountId);
+    if (!accountRes.ok) {
+      if (accountRes.errorType === "request")
+        return new Response(
+          "Failed to fetch account data for this donation. Rejecting.",
+          { status: 400 },
+        );
+
+      // TODO: Should this retry when the API is temporarily unavailable?
+      return new Response("Failed to fetch account data for this donation.", {
+        status: 500,
+      });
     }
+
+    const account = accountRes.data;
     const displayName = this.extractDisplayName(data, account);
 
     const donation = {

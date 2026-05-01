@@ -57,8 +57,8 @@ export async function setupWebhook(
 ) {
   const existingWebhooks = await getWebhooks(options);
   const webhookSetUp =
-    existingWebhooks &&
-    existingWebhooks.some((webhook) =>
+    existingWebhooks.ok &&
+    existingWebhooks.data.some((webhook) =>
       isMatchingWebhookSubscription(webhook, trigger, url, options),
     );
 
