@@ -59,6 +59,36 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   const isAdminPopout =
     pathname.startsWith("/admin/") && pathname.match(/\/popout\/?$/) !== null;
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      // Prevent NeonDonateEmbed from using document.write() and breaking React
+      // React + Next.js don't need this, so we safely make it a global no-op
+      document.write = () => {};
+
+      // Also stop scrollToTop requests from the NeonDonateEmbed to actually
+      // scroll the page as it does so disruptively, hurting UI.
+      const preventScrollToEventsFromNeon = (event: MessageEvent) => {
+        if (
+          event.origin === "https://alveussanctuary.app.neoncrm.com" &&
+          event.data.type === "scrollToTop"
+        ) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+        }
+      };
+
+      window.addEventListener("message", preventScrollToEventsFromNeon, true);
+
+      return () => {
+        window.removeEventListener(
+          "message",
+          preventScrollToEventsFromNeon,
+          true,
+        );
+      };
+    }
+  }, []);
+
   if (isStream) {
     return (
       <>

@@ -10,8 +10,8 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Markdown from "@/components/content/Markdown";
 import Meta from "@/components/content/Meta";
+import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import Section from "@/components/content/Section";
-import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -71,17 +71,20 @@ const DonatePage: NextPage = () => {
         <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {types.map(
             (key) =>
-              key !== "givingBlock" && (
+              key !== "direct" && (
                 <Donate key={key} type={key} highlight={key === "twitch"} />
               ),
           )}
         </div>
 
         <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
-          {!consent.givingBlock && <Donate type="givingBlock" />}
+          {!consent.neon && <Donate type="direct" />}
 
-          <Consent item="donation widget" consent="givingBlock">
-            <TheGivingBlockEmbed className="flex w-full justify-center" />
+          <Consent item="donation widget" consent="neon">
+            <NeonDonateEmbed
+              form="general"
+              className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none"
+            />
           </Consent>
         </div>
 

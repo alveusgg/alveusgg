@@ -10,12 +10,13 @@ import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 import { PixelProvider } from "@/hooks/pixels";
 
+import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
-import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
+import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import Section from "@/components/content/Section";
 import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import PixelsDescription from "@/components/institute/PixelsDescription";
@@ -238,13 +239,21 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
 
         <div className="flex flex-col gap-8">
           {mural.type === "live" && (
-            <>
-              <Donate type="twitch" highlight />
-              <Donate type="paypal" link="/paypal/pixels" />
-            </>
+            <Consent item="donation widget" consent="neon">
+              <Box dark className="w-full">
+                <Heading level={2} className="text-center text-xl">
+                  Unlock a Pixel on the Mural
+                </Heading>
+
+                <NeonDonateEmbed
+                  form="arri"
+                  className="-mx-8 -mt-4 -mb-8 *:w-full *:[&_iframe]:outline-none"
+                />
+              </Box>
+            </Consent>
           )}
 
-          <Box dark>
+          <Box dark className="w-full">
             <PixelsDescription className="text-center text-2xl" />
 
             <Heading level={2} className="mt-8 text-xl">
