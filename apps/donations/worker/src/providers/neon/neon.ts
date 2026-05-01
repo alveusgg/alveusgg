@@ -104,7 +104,7 @@ export class NeonDonationProvider implements DonationProvider {
         neonFundId: data.fund.id ?? undefined,
         neonFundName: data.fund.name ?? undefined,
       },
-      amount: data.amount * 100,
+      amount: toCents(data.amount),
       receivedAt: new Date(data.timestamps.createdDateTime),
       donatedBy: {
         primary: "displayName",
@@ -180,3 +180,6 @@ export class NeonDonationProvider implements DonationProvider {
     return "Anonymous";
   }
 }
+
+const toCents = (val: number): number =>
+  Number.parseInt(val.toFixed(2).replace(".", ""), 10);
