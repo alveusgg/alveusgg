@@ -1,4 +1,3 @@
-import { basicAuth } from "hono/basic-auth";
 import type { NeonDonation, Providers } from "@alveusgg/donations-core";
 import { type AccountResponse, getAccount } from "@alveusgg/neon-crm-api";
 import { type Options, envToOptions } from "@alveusgg/neon-crm-api/env";
@@ -9,6 +8,7 @@ import {
 } from "@alveusgg/neon-crm-api/webhooks";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
+import timingSafeCompareString from "../../utils/timing-safe-compare-string";
 
 type NeonDonationProviderOptions = Options & {
   donationDisplayNameCustomFieldId?: string;
@@ -16,7 +16,6 @@ type NeonDonationProviderOptions = Options & {
 
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
-  middleware;
 
   constructor(
     private options: NeonDonationProviderOptions,
@@ -27,11 +26,6 @@ export class NeonDonationProvider implements DonationProvider {
         "Neon donation providers require basic auth credentials. Please provide basicAuthUsername and basicAuthPassword .",
       );
     }
-
-    this.middleware = basicAuth({
-      username: options.basicAuthUsername,
-      password: options.basicAuthPassword,
-    });
   }
 
   static async init(
@@ -63,6 +57,17 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   async handle(request: Request): Promise<Response> {
+    const expectedAuth = btoa(
+      `${this.options.basicAuthUsername}:${this.options.basicAuthPassword}`,
+    );
+    const authHeader = request.headers.get("authorization");
+    if (
+      !authHeader ||
+      !timingSafeCompareString(authHeader, `Basic ${expectedAuth}`)
+    ) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const body = await request.json();
     const payload = await parseDonationWebhook(this.options, body);
     if (!payload) {
@@ -81,7 +86,6 @@ export class NeonDonationProvider implements DonationProvider {
           { status: 400 },
         );
 
-      // TODO: Should this retry when the API is temporarily unavailable?
       return new Response("Failed to fetch account data for this donation.", {
         status: 500,
       });

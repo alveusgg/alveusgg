@@ -16,12 +16,6 @@ import { TwitchDonationProvider } from "../providers/twitch/twitch";
 import { setSentryTagsMiddleware } from "../utils/middleware";
 import { getSentryConfig } from "../utils/sentry";
 
-declare module "hono" {
-  interface ContextVariableMap {
-    donationProvider: DonationProvider;
-  }
-}
-
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private providers?: Partial<Record<Providers, DonationProvider>>;
@@ -40,11 +34,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         await this.ready;
         return next();
       })
-      .use("/:providerId/live", async (c, next) => {
-        if (c.req.method !== "POST") {
-          return next();
-        }
-
+      .post("/:providerId/live", async (c) => {
         if (!this.providers) {
           throw new Error(
             "This should be impossible. Init is called in prior middleware.",
@@ -55,18 +45,13 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         if (!providerId.success) {
           return new Response("Invalid provider ID", { status: 400 });
         }
-        const provider = this.providers[providerId.data];
 
+        const provider = this.providers[providerId.data];
         if (!provider) {
           return new Response("Provider not found", { status: 404 });
         }
 
-        c.set("donationProvider", provider);
-
-        return provider.middleware ? provider.middleware(c, next) : next();
-      })
-      .post("/:providerId/live", async (c) => {
-        return c.get("donationProvider").handle(c.req.raw);
+        return provider.handle(c.req.raw);
       });
   }
 
