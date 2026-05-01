@@ -85,14 +85,19 @@ const defaultConsent = Object.freeze(
 export const consentExplainer =
   "may set cookies on your device, or store your IP address, to personalise content and analyze traffic";
 
-const isPartialConsent = (val: unknown): val is Partial<Consent> =>
-  typeof val === "object" &&
-  val !== null &&
-  Object.entries(val).every(
-    ([k, v]) =>
+const safePartialConsent = (val: unknown): Partial<Consent> => {
+  if (typeof val !== "object" || val === null) return {};
+
+  return Object.entries(val).reduce((acc, [k, v]) => {
+    if (
       Object.prototype.hasOwnProperty.call(consentData, k) &&
-      typeof v === "boolean",
-  );
+      typeof v === "boolean"
+    ) {
+      return { ...acc, [k]: v };
+    }
+    return acc;
+  }, {} as Partial<Consent>);
+};
 
 type ConsentContext = Readonly<{
   consent: Consent;
@@ -326,9 +331,9 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const raw = localStorage.getItem("consent");
     if (raw) {
-      const parsed = safeJSONParse(raw);
-      if (isPartialConsent(parsed)) {
-        setConsent((prev: Consent) => Object.freeze({ ...prev, ...parsed }));
+      const partial = safePartialConsent(safeJSONParse(raw));
+      if (Object.keys(partial).length) {
+        setConsent((prev: Consent) => Object.freeze({ ...prev, ...partial }));
         setInteracted(true);
         setLoaded(true);
         return;
