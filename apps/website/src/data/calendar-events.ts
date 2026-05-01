@@ -156,7 +156,7 @@ export const regularEventsWeekly = [
         "Join Maya as she reviews this week's community submissions for Show and Tell.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 13, minute: 0 },
+      startTime: { hour: 13, minute: 30 },
     },
   ],
   // Saturday
