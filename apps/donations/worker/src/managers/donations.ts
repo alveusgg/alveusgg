@@ -18,7 +18,7 @@ import { getSentryConfig } from "../utils/sentry";
 
 declare module "hono" {
   interface ContextVariableMap {
-    doantionProvider: DonationProvider;
+    donationProvider: DonationProvider;
   }
 }
 
@@ -61,12 +61,12 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
           return new Response("Provider not found", { status: 404 });
         }
 
-        c.set("doantionProvider", provider);
+        c.set("donationProvider", provider);
 
         return provider.middleware ? provider.middleware(c, next) : next();
       })
       .post("/:providerId/live", async (c) => {
-        return c.get("doantionProvider").handle(c.req.raw);
+        return c.get("donationProvider").handle(c.req.raw);
       });
   }
 
