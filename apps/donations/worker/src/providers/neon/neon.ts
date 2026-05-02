@@ -103,6 +103,7 @@ export class NeonDonationProvider implements DonationProvider {
         neonCampaignName: data.campaign.name ?? undefined,
         neonFundId: data.fund.id ?? undefined,
         neonFundName: data.fund.name ?? undefined,
+        neonAccountId: data.accountId ?? undefined,
       },
       amount: toCents(data.amount),
       receivedAt: new Date(),
