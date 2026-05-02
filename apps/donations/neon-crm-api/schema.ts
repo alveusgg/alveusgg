@@ -297,7 +297,7 @@ const SharedAccountData = z.object({
   accountCurrentMembershipStatus: z.string().nullable(),
   generosityIndicator: GenerosityIndicator.nullable(),
   sendTextOptIn: z.boolean(),
-  smsNumber: z.string(),
+  smsNumber: z.string().nullable(),
   restrictFromWindfallSync: z.boolean(),
 });
 
