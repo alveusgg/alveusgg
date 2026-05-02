@@ -10,6 +10,7 @@ import den1l from "@/assets/presets/wolf/den1l.png";
 import den1r from "@/assets/presets/wolf/den1r.png";
 import den1t from "@/assets/presets/wolf/den1t.png";
 import den1tr from "@/assets/presets/wolf/den1tr.png";
+import den1tree from "@/assets/presets/wolf/den1tree.png";
 import den1tz from "@/assets/presets/wolf/den1tz.png";
 import den2 from "@/assets/presets/wolf/den2.png";
 import den2b from "@/assets/presets/wolf/den2b.png";
@@ -137,6 +138,12 @@ const wolfPresets: Record<string, Preset> = {
     image: den1tr,
     position: { pan: 89.7, tilt: 1, zoom: 2099 },
     // modified: 2026-04-16T15:18:17.267Z
+  },
+  den1tree: {
+    description: "den1tree",
+    image: den1tree,
+    position: { pan: 100.27, tilt: -4.67, zoom: 1008 },
+    // modified: 2026-05-01T14:45:44.848Z
   },
   den1tz: {
     description: "Den 1 top zoomed",
