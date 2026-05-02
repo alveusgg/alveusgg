@@ -20,6 +20,7 @@ const apiHeaders = ({
   organizationId,
   apiKey,
 }: Pick<Options, "organizationId" | "apiKey">) => ({
+  "NEON-API-VERSION": "2.11",
   authorization: `Basic ${btoa(`${organizationId}:${apiKey}`)}`,
   accept: "application/json",
 });
