@@ -4,11 +4,11 @@ import {
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
-import { createWebhook, getWebhooks } from "./index.js";
+import { createWebhook, fixTimestampsTimezone, getWebhooks } from "./index.js";
 
 export type { DonationWebhookPayload } from "./schema.js";
 
-type WebhookOptions = Pick<Options, "organizationId">;
+type WebhookOptions = Pick<Options, "organizationId" | "localTimezone">;
 
 type WebhookTypeSchemas = (typeof WebhookPayload.def.options)[number];
 
@@ -31,6 +31,11 @@ export const parseWebhook = async <Schema extends WebhookTypeSchemas>(
     );
     return false;
   }
+
+  payload.data.data.timestamps = fixTimestampsTimezone(
+    payload.data.data.timestamps,
+    options.localTimezone,
+  );
 
   return payload.data;
 };

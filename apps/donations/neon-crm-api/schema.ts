@@ -152,6 +152,7 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
+export type Timestamps = z.output<typeof Timestamps>;
 const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,

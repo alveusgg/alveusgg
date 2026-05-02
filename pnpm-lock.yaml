@@ -135,6 +135,9 @@ importers:
 
   apps/donations/neon-crm-api:
     dependencies:
+      luxon:
+        specifier: ^3.7.2
+        version: 3.7.2
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -142,6 +145,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.2
+      '@types/luxon':
+        specifier: ^3.7.1
+        version: 3.7.1
       '@types/node':
         specifier: ^24.12.0
         version: 24.12.2

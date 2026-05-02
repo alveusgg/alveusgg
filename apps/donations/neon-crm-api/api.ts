@@ -1,7 +1,10 @@
 import type { z, ZodError, ZodType } from "zod";
 import type { Options as AllOptions } from "./env.js";
 
-export type Options = Pick<AllOptions, "organizationId" | "apiKey" | "baseUrl">;
+export type Options = Pick<
+  AllOptions,
+  "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
+>;
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
