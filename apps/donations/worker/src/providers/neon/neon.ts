@@ -107,7 +107,7 @@ export class NeonDonationProvider implements DonationProvider {
       },
       amount: toCents(data.amount),
       receivedAt: new Date(),
-      donatedAt: new Date(data.timestamps.createdDateTime),
+      donatedAt: data.timestamps.createdDateTime,
       donatedBy: {
         primary: "displayName",
         displayName: displayName,
