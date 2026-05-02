@@ -9,6 +9,7 @@ export const serverEnv = {
   NEON_CRM_API_KEY: z.string(),
   NEON_CRM_WEBHOOK_USERNAME: z.string().optional(),
   NEON_CRM_WEBHOOK_PASSWORD: z.string().optional(),
+  NEON_CRM_LOCAL_TIMEZONE: z.string().default("America/Chicago"),
 } as const;
 
 export type Env = z.output<typeof _EnvSchema>;
@@ -23,6 +24,7 @@ export const envToOptions = (env: Env) =>
     organizationId: env.NEON_CRM_ORG_ID,
     basicAuthUsername: env.NEON_CRM_WEBHOOK_USERNAME,
     basicAuthPassword: env.NEON_CRM_WEBHOOK_PASSWORD,
+    localTimezone: env.NEON_CRM_LOCAL_TIMEZONE,
   }) as const;
 
 export const buildBasicAuth = (

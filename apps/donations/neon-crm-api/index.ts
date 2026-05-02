@@ -1,4 +1,7 @@
+import { DateTime } from "luxon";
+
 import {
+  type Timestamps,
   type CreateWebhookInput,
   type RecordId,
   type UpdateCustomFieldInput,
@@ -19,6 +22,27 @@ export {
   WebhooksResponse,
 } from "./schema.js";
 
+const fixTimestampTimezone = (dateTime: Date, zone: string): Date =>
+  DateTime.fromISO(dateTime.toISOString().replace("Z", ""), {
+    zone,
+  }).toJSDate();
+
+/**
+ * WORKAROUND HOTFIX: Neon One API mislabels local time as UTC ('Z').
+ * Remove this logic when they fix the timezone in their API response.
+ */
+export const fixTimestampsTimezone = (
+  timestamps: Timestamps,
+  zone: string,
+) => ({
+  ...timestamps,
+  createdDateTime: fixTimestampTimezone(timestamps.createdDateTime, zone),
+  lastModifiedDateTime: fixTimestampTimezone(
+    timestamps.lastModifiedDateTime,
+    zone,
+  ),
+});
+
 export const updateCustomField = (
   options: Options,
   id: RecordId,
@@ -28,8 +52,28 @@ export const updateCustomField = (
 export const getCustomField = (options: Options, id: RecordId) =>
   fetchWithSchema(options, url`customFields/${id}`, CustomFieldResponse);
 
-export const getAccount = (options: Options, id: RecordId) =>
-  fetchWithSchema(options, url`accounts/${id}`, AccountResponse);
+export const getAccount = async (options: Options, id: RecordId) => {
+  const account = await fetchWithSchema(
+    options,
+    url`accounts/${id}`,
+    AccountResponse,
+  );
+  if (account.ok) {
+    if (account.data.companyAccount) {
+      account.data.companyAccount.timestamps = fixTimestampsTimezone(
+        account.data.companyAccount.timestamps,
+        options.localTimezone,
+      );
+    }
+    if (account.data.individualAccount) {
+      account.data.individualAccount.timestamps = fixTimestampsTimezone(
+        account.data.individualAccount.timestamps,
+        options.localTimezone,
+      );
+    }
+  }
+  return account;
+};
 
 export const getWebhook = (options: Options, id: RecordId) =>
   fetchWithSchema(options, url`webhooks/${id}`, WebhookResponse);

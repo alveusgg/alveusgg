@@ -1,7 +1,10 @@
 import type { z, ZodError, ZodType } from "zod";
 import type { Options as AllOptions } from "./env.js";
 
-export type Options = Pick<AllOptions, "organizationId" | "apiKey" | "baseUrl">;
+export type Options = Pick<
+  AllOptions,
+  "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
+>;
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -20,6 +23,7 @@ const apiHeaders = ({
   organizationId,
   apiKey,
 }: Pick<Options, "organizationId" | "apiKey">) => ({
+  "NEON-API-VERSION": "2.11",
   authorization: `Basic ${btoa(`${organizationId}:${apiKey}`)}`,
   accept: "application/json",
 });

@@ -40,7 +40,7 @@ export class NeonDonationProvider implements DonationProvider {
 
     try {
       await setupWebhook(
-        `${env.SELF_URL}/donations/${this.name}/live`,
+        `${env.SELF_URL}/donations/neon/live`,
         "CREATE_DONATION",
         options,
       );
@@ -103,12 +103,18 @@ export class NeonDonationProvider implements DonationProvider {
         neonCampaignName: data.campaign.name ?? undefined,
         neonFundId: data.fund.id ?? undefined,
         neonFundName: data.fund.name ?? undefined,
+        neonAccountId: data.accountId ?? undefined,
       },
       amount: toCents(data.amount),
-      receivedAt: new Date(data.timestamps.createdDateTime),
+      receivedAt: new Date(),
+      donatedAt: data.timestamps.createdDateTime,
       donatedBy: {
         primary: "displayName",
         displayName: displayName,
+        email:
+          account.individualAccount?.primaryContact.email1 ??
+          account.companyAccount?.primaryContact.email1 ??
+          undefined,
         firstName:
           account.individualAccount?.primaryContact.firstName ?? undefined,
         lastName:

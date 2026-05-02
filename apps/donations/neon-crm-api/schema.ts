@@ -152,6 +152,7 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
+export type Timestamps = z.output<typeof Timestamps>;
 const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
@@ -162,7 +163,7 @@ const Timestamps = z.object({
 const webhookPayloadBase = {
   eventTimestamp: DateTimeSchema,
   organizationId: z.string(),
-  customParameters: z.record(z.string(), z.string()).optional(),
+  customParameters: z.record(z.string(), z.string()).nullable().optional(),
 };
 
 export type DonationWebhookPayload = z.output<typeof DonationWebhookPayload>;
@@ -226,14 +227,9 @@ const Address = AddressBase.extend({
 });
 
 const DateOfBirth = z.object({
-  day: z.coerce.number().int().min(1).max(31).nullable(),
-  month: z.coerce.number().int().min(1).max(12).nullable(),
-  year: z.coerce
-    .number()
-    .int()
-    .min(1900)
-    .max(new Date().getFullYear())
-    .nullable(),
+  day: z.coerce.number().int().nullable(),
+  month: z.coerce.number().int().nullable(),
+  year: z.coerce.number().int().nullable(),
 });
 
 const Contact = z.object({
@@ -302,7 +298,7 @@ const SharedAccountData = z.object({
   accountCurrentMembershipStatus: z.string().nullable(),
   generosityIndicator: GenerosityIndicator.nullable(),
   sendTextOptIn: z.boolean(),
-  smsNumber: z.string(),
+  smsNumber: z.string().nullable(),
   restrictFromWindfallSync: z.boolean(),
 });
 
