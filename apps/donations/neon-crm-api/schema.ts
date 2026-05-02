@@ -226,14 +226,9 @@ const Address = AddressBase.extend({
 });
 
 const DateOfBirth = z.object({
-  day: z.coerce.number().int().min(1).max(31).nullable(),
-  month: z.coerce.number().int().min(1).max(12).nullable(),
-  year: z.coerce
-    .number()
-    .int()
-    .min(1900)
-    .max(new Date().getFullYear())
-    .nullable(),
+  day: z.coerce.number().int().nullable(),
+  month: z.coerce.number().int().nullable(),
+  year: z.coerce.number().int().nullable(),
 });
 
 const Contact = z.object({
