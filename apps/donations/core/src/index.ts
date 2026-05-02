@@ -12,6 +12,7 @@ const OptionalDonatorSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   username: z.string().optional(),
+  displayName: z.string().optional(),
 });
 
 const DonatorEmailPrimary = OptionalDonatorSchema.extend({
@@ -31,16 +32,26 @@ const DonatorUsernamePrimary = OptionalDonatorSchema.extend({
   primary: z.literal("username"),
   username: z.string(),
 });
+const DonatorDisplayNamePrimary = OptionalDonatorSchema.extend({
+  primary: z.literal("displayName"),
+  displayName: z.string(),
+});
 
 export const DonatorSchema = z.union([
   DonatorEmailPrimary,
   DonatorFirstNamePrimary,
   DonatorLastNamePrimary,
   DonatorUsernamePrimary,
+  DonatorDisplayNamePrimary,
 ]);
 export type Donator = z.infer<typeof DonatorSchema>;
 
-export const Providers = z.literal(["twitch", "paypal", "thegivingblock"]);
+export const Providers = z.literal([
+  "twitch",
+  "paypal",
+  "thegivingblock",
+  "neon",
+]);
 export type Providers = z.infer<typeof Providers>;
 
 export const CoreDonationSchema = z.object({
@@ -92,10 +103,24 @@ export const PaypalDonationSchema = CoreDonationSchema.extend({
 });
 export type PaypalDonation = z.infer<typeof PaypalDonationSchema>;
 
+const NeonDonationMetadataSchema = z.object({
+  neonCampaignId: z.string().optional(),
+  neonCampaignName: z.string().optional(),
+  neonFundId: z.string().optional(),
+  neonFundName: z.string().optional(),
+});
+
+export const NeonDonationSchema = CoreDonationSchema.extend({
+  provider: z.literal("neon"),
+  providerMetadata: NeonDonationMetadataSchema,
+});
+export type NeonDonation = z.infer<typeof NeonDonationSchema>;
+
 export const DonationSchema = z.discriminatedUnion("provider", [
   TwitchDonationSchema,
   PaypalDonationSchema,
   TheGivingBlockDonationSchema,
+  NeonDonationSchema,
 ]);
 
 export type Donation = z.infer<typeof DonationSchema>;

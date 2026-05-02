@@ -27,6 +27,7 @@
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@alveusgg/neon-crm-api": "workspace:*",
     "@sentry/cloudflare": "^10.50.0",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",

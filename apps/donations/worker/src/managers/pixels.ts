@@ -159,6 +159,18 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
     }
   }
 
+  private filterDonation(donation: Donation) {
+    switch (donation.provider) {
+      case "neon":
+        return (
+          donation.providerMetadata.neonCampaignId ===
+          this.env.NEON_PIXEL_CAMPAIGN_ID
+        );
+      default:
+        return true;
+    }
+  }
+
   async process(donations: Donation[]) {
     await this.ctx.blockConcurrencyWhile(async () => {
       await this.ready();
@@ -173,6 +185,10 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
       // New pixels
       const pixels: Record<string, Pixel[]> = {};
       for (const donation of donations) {
+        if (!this.filterDonation(donation)) {
+          continue;
+        }
+
         // Use the primary property of the donatedBy object to get the identifier or default to "Anonymous"
         let identifier =
           donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";

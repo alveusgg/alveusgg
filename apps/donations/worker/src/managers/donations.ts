@@ -6,6 +6,7 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
+import { NeonDonationProvider } from "../providers/neon/neon";
 import {
   createIfNotExistsDonationsTable,
   createIfNotExistsProviderMetadataTable,
@@ -33,7 +34,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         await this.ready;
         return next();
       })
-      .post("/:providerId/live", (c) => {
+      .post("/:providerId/live", async (c) => {
         if (!this.providers) {
           throw new Error(
             "This should be impossible. Init is called in prior middleware.",
@@ -44,8 +45,8 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         if (!providerId.success) {
           return new Response("Invalid provider ID", { status: 400 });
         }
-        const provider = this.providers[providerId.data];
 
+        const provider = this.providers[providerId.data];
         if (!provider) {
           return new Response("Provider not found", { status: 404 });
         }
@@ -63,14 +64,16 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
       this.env.DONATION_QUEUE,
     );
 
-    const [twitchProvider, paypalProvider] = await Promise.all([
+    const [twitchProvider, paypalProvider, neonProvider] = await Promise.all([
       TwitchDonationProvider.init(storage, this.env),
       PaypalDonationProvider.init(storage, this.env),
+      NeonDonationProvider.init(storage, this.env),
     ]);
 
     this.providers = {
       twitch: twitchProvider,
       paypal: paypalProvider,
+      neon: neonProvider,
     };
   }
 
