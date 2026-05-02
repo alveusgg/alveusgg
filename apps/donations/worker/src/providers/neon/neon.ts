@@ -40,7 +40,7 @@ export class NeonDonationProvider implements DonationProvider {
 
     try {
       await setupWebhook(
-        `${env.SELF_URL}/donations/${this.name}/live`,
+        `${env.SELF_URL}/donations/neon/live`,
         "CREATE_DONATION",
         options,
       );

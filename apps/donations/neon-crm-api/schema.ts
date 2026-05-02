@@ -162,7 +162,7 @@ const Timestamps = z.object({
 const webhookPayloadBase = {
   eventTimestamp: DateTimeSchema,
   organizationId: z.string(),
-  customParameters: z.record(z.string(), z.string()).optional(),
+  customParameters: z.record(z.string(), z.string()).nullable().optional(),
 };
 
 export type DonationWebhookPayload = z.output<typeof DonationWebhookPayload>;
