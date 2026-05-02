@@ -105,10 +105,15 @@ export class NeonDonationProvider implements DonationProvider {
         neonFundName: data.fund.name ?? undefined,
       },
       amount: toCents(data.amount),
-      receivedAt: new Date(data.timestamps.createdDateTime),
+      receivedAt: new Date(),
+      donatedAt: new Date(data.timestamps.createdDateTime),
       donatedBy: {
         primary: "displayName",
         displayName: displayName,
+        email:
+          account.individualAccount?.primaryContact.email1 ??
+          account.companyAccount?.primaryContact.email1 ??
+          undefined,
         firstName:
           account.individualAccount?.primaryContact.firstName ?? undefined,
         lastName:
