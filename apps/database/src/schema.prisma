@@ -49,8 +49,9 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  twitchChannelBroadcaster TwitchChannel[] @relation("BroadcasterAccount")
-  twitchChannelModerator   TwitchChannel[] @relation("ModeratorAccount")
+  twitchChannelBroadcaster TwitchChannel[]       @relation("BroadcasterAccount")
+  twitchCharityCampaigns   TwitchCharityCampaign[]
+  twitchChannelModerator   TwitchChannel[]       @relation("ModeratorAccount")
 
   @@unique([provider, providerAccountId])
   @@index([userId], name: "Account_userId")
@@ -491,6 +492,17 @@ model Donation {
   pixels Pixel[]
 
   @@index([receivedAt(sort: Desc)], name: "Donation_recent")
+}
+
+model TwitchCharityCampaign {
+  id                String   @id
+  broadcasterUserId String
+  accountId         String?
+
+  account Account? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+
+  @@index([broadcasterUserId])
+  @@index([accountId])
 }
 
 model Pixel {

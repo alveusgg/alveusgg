@@ -19,7 +19,6 @@ import {
 } from "@/server/trpc/trpc";
 
 import { permissions } from "@/data/permissions";
-import { channels } from "@/data/twitch";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),
@@ -167,17 +166,26 @@ export const adminTwitchRouter = router({
         secret: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
-      const supportedChannels = [
-        channels.alveusgg.id,
-        channels.maya.id,
-        channels.alveus.id,
-      ];
+    .mutation(async ({ ctx, input }) => {
+      const accounts = await ctx.prisma.account.findMany({
+        where: {
+          provider: "twitch",
+          scope: {
+            contains: "channel:read:charity",
+          },
+          twitchCharityCampaigns: {
+            some: {},
+          },
+        },
+        select: {
+          providerAccountId: true,
+        },
+      });
 
-      for (const channel of supportedChannels) {
+      for (const account of accounts) {
         try {
           await setupWebhookSubscriptionForBroadcaster(
-            channel,
+            account.providerAccountId,
             input.event.type,
             input.event.version,
             input.url,
@@ -185,7 +193,7 @@ export const adminTwitchRouter = router({
           );
         } catch {
           console.error(
-            `Failed to setup webhook subscription for channel ${channel}`,
+            `Failed to setup webhook subscription for broadcaster ${account.providerAccountId}`,
           );
         }
       }

@@ -12,16 +12,22 @@ import {
   DurableObjectDonationStorage,
 } from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
-import { setSentryTagsMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
 import { getSentryConfig } from "../utils/sentry";
 
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private providers?: Partial<Record<Providers, DonationProvider>>;
   private ready?: Promise<void>;
+  private storage?: DurableObjectDonationStorage;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
+
+    const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
       .use(logger())
@@ -32,6 +38,25 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         }
         await this.ready;
         return next();
+      })
+      .post("/resubscribe", sharedKeyMiddleware, async (c) => {
+        try {
+          await this.ctx.blockConcurrencyWhile(async () => {
+            await this.resubscribe();
+          });
+
+          return c.json({ success: true });
+        } catch (error) {
+          console.error(error);
+          Sentry.captureException(error);
+          return c.json(
+            {
+              error: "Failed to resubscribe donations providers",
+              success: false,
+            },
+            500,
+          );
+        }
       })
       .post("/:providerId/live", (c) => {
         if (!this.providers) {
@@ -58,10 +83,19 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     await createIfNotExistsDonationsTable(this.ctx.storage.sql);
     await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
 
-    const storage = new DurableObjectDonationStorage(
+    this.storage = new DurableObjectDonationStorage(
       this.ctx,
       this.env.DONATION_QUEUE,
     );
+
+    await this.initProviders();
+  }
+
+  private async initProviders() {
+    const storage = this.storage;
+    if (!storage) {
+      throw new Error("Donation storage not initialized");
+    }
 
     const [twitchProvider, paypalProvider] = await Promise.all([
       TwitchDonationProvider.init(storage, this.env),
@@ -72,6 +106,15 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
       twitch: twitchProvider,
       paypal: paypalProvider,
     };
+  }
+
+  private async resubscribe() {
+    const twitchProvider = this.providers?.twitch;
+    if (twitchProvider instanceof TwitchDonationProvider) {
+      await twitchProvider.clear();
+    }
+
+    await this.initProviders();
   }
 
   fetch(request: Request): Response | Promise<Response> {

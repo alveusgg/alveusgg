@@ -41,6 +41,7 @@ export const scopeGroups = {
     "channel:manage:schedule",
   ],
   chat: ["user:write:chat"],
+  charity: ["channel:read:charity"],
 } as const satisfies Record<string, Scope[]>;
 
 export type ScopeGroup = keyof typeof scopeGroups;

@@ -267,6 +267,47 @@ const usersResponseSchema = z.object({
   ),
 });
 
+const charityCampaignResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+      broadcaster_id: z.string(),
+      charity_name: z.string(),
+      started_at: z.string().optional(),
+    }),
+  ),
+});
+
+export async function getActiveCharityCampaign(
+  userAccessToken: string,
+  broadcasterUserId: string,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/charity/campaigns?${new URLSearchParams({
+      broadcaster_id: broadcasterUserId,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  if (response.status === 401 || response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get charity campaign!");
+  }
+
+  const data = await charityCampaignResponseSchema.parseAsync(json);
+  return data.data[0] ?? null;
+}
+
 export async function getUserByName(userName: string) {
   const response = await fetch(
     `https://api.twitch.tv/helix/users?${new URLSearchParams({
