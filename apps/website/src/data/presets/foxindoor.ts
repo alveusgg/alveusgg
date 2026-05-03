@@ -63,8 +63,8 @@ const foxindoorPresets: Record<string, Preset> = {
   rightplatform: {
     description: "rightplatform",
     image: rightplatform,
-    position: { pan: 132.8, tilt: -3.66, zoom: 7731 },
-    // modified: 2026-04-17T00:40:56.071Z
+    position: { pan: 125.67, tilt: 9.83, zoom: 7731 },
+    // modified: 2026-05-02T12:49:52.446Z
   },
   window: {
     description: "window",
