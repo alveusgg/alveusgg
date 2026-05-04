@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
@@ -17,6 +17,17 @@ const notificationClasses =
 
 export function RecentNotifications({ tags }: { tags: Array<string> }) {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 250);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [search]);
 
   return (
     <>
@@ -36,6 +47,7 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onBlur={(e) => setDebouncedSearch(e.target.value)}
             placeholder="Search notifications"
             aria-label="Search notifications"
             className="min-w-0 bg-transparent text-sm outline-none placeholder:text-inherit not-focus:placeholder-shown:cursor-pointer focus:placeholder:text-alveus-green-800/50"
@@ -43,7 +55,7 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
         </label>
       </div>
 
-      <RecentNotificationsList tags={tags} search={search} />
+      <RecentNotificationsList tags={tags} search={debouncedSearch} />
     </>
   );
 }
