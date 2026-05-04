@@ -31,7 +31,7 @@ export async function getRecentNotificationsForTags({
           }
         : {}),
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: take + 1,
     cursor: cursor ? { id: cursor } : undefined,
   });
