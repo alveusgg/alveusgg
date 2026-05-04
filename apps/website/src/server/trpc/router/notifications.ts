@@ -12,6 +12,7 @@ export const notificationsRouter = router({
       z.object({
         tags: z.array(z.string()),
         cursor: z.cuid().nullish(),
+        search: z.string().max(100).default(""),
       }),
     )
     .query(async ({ input }) =>
@@ -19,6 +20,7 @@ export const notificationsRouter = router({
         tags: input.tags,
         take: 9,
         cursor: input.cursor || undefined,
+        search: input.search,
       }),
     ),
 

@@ -132,9 +132,6 @@ const UpdatesPage: NextPage = () => {
           </section>
 
           <section>
-            <Heading level={3} id="recent" link>
-              Recent Notifications
-            </Heading>
             <RecentNotifications tags={notificationTags} />
           </section>
 
