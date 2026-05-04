@@ -153,7 +153,7 @@ const CustomFieldData = z.union([
 ]);
 
 export type Timestamps = z.output<typeof Timestamps>;
-const Timestamps = z.object({
+export const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
   lastModifiedBy: z.string(),

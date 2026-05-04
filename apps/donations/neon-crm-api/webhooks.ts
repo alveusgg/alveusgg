@@ -4,7 +4,8 @@ import {
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
-import { createWebhook, fixTimestampsTimezone, getWebhooks } from "./index.js";
+import { createWebhook, getWebhooks } from "./index.js";
+import { fixTimestampsTimezone } from "./utils";
 
 export type { DonationWebhookPayload } from "./schema.js";
 

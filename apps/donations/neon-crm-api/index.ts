@@ -1,7 +1,4 @@
-import { DateTime } from "luxon";
-
 import {
-  type Timestamps,
   type CreateWebhookInput,
   type RecordId,
   type UpdateCustomFieldInput,
@@ -12,6 +9,7 @@ import {
   WebhooksResponse,
 } from "./schema.js";
 import { type Options, url, fetchOk, fetchWithSchema } from "./api.js";
+import { fixTimestampsTimezone } from "./utils";
 
 export {
   type RecordId,
@@ -21,27 +19,6 @@ export {
   WebhookResponse,
   WebhooksResponse,
 } from "./schema.js";
-
-const fixTimestampTimezone = (dateTime: Date, zone: string): Date =>
-  DateTime.fromISO(dateTime.toISOString().replace("Z", ""), {
-    zone,
-  }).toJSDate();
-
-/**
- * WORKAROUND HOTFIX: Neon One API mislabels local time as UTC ('Z').
- * Remove this logic when they fix the timezone in their API response.
- */
-export const fixTimestampsTimezone = (
-  timestamps: Timestamps,
-  zone: string,
-) => ({
-  ...timestamps,
-  createdDateTime: fixTimestampTimezone(timestamps.createdDateTime, zone),
-  lastModifiedDateTime: fixTimestampTimezone(
-    timestamps.lastModifiedDateTime,
-    zone,
-  ),
-});
 
 export const updateCustomField = (
   options: Options,
