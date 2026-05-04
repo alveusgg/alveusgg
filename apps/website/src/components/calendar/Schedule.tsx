@@ -46,7 +46,7 @@ const webcalUrls = typeSafeObjectKeys(channels)
     {} as Record<string, string>,
   );
 
-const selectionButtonClasses =
+export const selectionButtonClasses =
   "flex items-center gap-2 p-1 text-sm leading-none text-alveus-green-500 transition-colors hover:text-alveus-green-800";
 
 export function Schedule({ onLoad }: { onLoad?: () => void }) {
