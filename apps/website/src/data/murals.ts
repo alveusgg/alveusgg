@@ -1,3 +1,6 @@
+type DateTimeIso =
+  `${number}-${number}-${number}T${number}:${number}:${number}Z`;
+
 interface Grid {
   columns: number;
   rows: number;
@@ -8,11 +11,13 @@ interface Grid {
 interface CoreMural {
   name: string;
   description: string;
+  startedAt: DateTimeIso;
 }
 
 interface StaticMural extends CoreMural {
   type: "static";
   grid: Promise<Grid>;
+  endedAt: DateTimeIso;
 }
 
 interface LiveMural extends CoreMural {
@@ -32,12 +37,15 @@ const murals = {
     get grid() {
       return (gridCache["one"] ??= import("@/data/pixel-project-grid.json"));
     },
+    startedAt: "2025-10-19T20:44:29Z",
+    endedAt: "2025-10-22T22:02:31Z",
   },
   two: {
     name: "Pixel Project 2",
     description:
       "We're bringing the Pixel Project back with a brand new mural! If you didn't get a chance to claim a pixel the first time around, we need your help to unlock another 10,000 pixels to further support the Alveus Research & Recovery Institute.",
     type: "live",
+    startedAt: "2025-11-02T12:21:51Z",
   },
 } satisfies Record<string, Mural>;
 
