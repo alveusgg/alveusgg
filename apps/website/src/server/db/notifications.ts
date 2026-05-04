@@ -5,15 +5,44 @@ import { env } from "@/env";
 export async function getRecentNotificationsForTags({
   tags,
   take,
+  cursor,
+  search,
 }: {
   tags: string[];
   take: number;
+  cursor?: string;
+  search?: string;
 }) {
-  return prisma.notification.findMany({
-    where: { tag: { in: tags }, canceledAt: null },
-    orderBy: { createdAt: "desc" },
-    take,
+  // VODs are only stored for 60 days, so we have no reason to ever allow access to older notifications
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+  const trimmedSearch = search?.trim();
+
+  const items = await prisma.notification.findMany({
+    where: {
+      tag: { in: tags },
+      canceledAt: null,
+      createdAt: { gte: sixtyDaysAgo },
+      ...(trimmedSearch
+        ? {
+            OR: [
+              { title: { contains: trimmedSearch } },
+              { message: { contains: trimmedSearch } },
+            ],
+          }
+        : {}),
+    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: take + 1,
+    cursor: cursor ? { id: cursor } : undefined,
   });
+
+  let nextCursor: typeof cursor | undefined = undefined;
+  if (items.length > take) {
+    const nextItem = items.pop();
+    nextCursor = nextItem?.id || undefined;
+  }
+
+  return { items, nextCursor };
 }
 
 export async function getActiveAnnouncements() {
