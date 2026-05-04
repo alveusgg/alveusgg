@@ -34,7 +34,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         await this.ready;
         return next();
       })
-      .post("/:providerId/live", async (c) => {
+      .post("/:providerId/live", (c) => {
         if (!this.providers) {
           throw new Error(
             "This should be impossible. Init is called in prior middleware.",

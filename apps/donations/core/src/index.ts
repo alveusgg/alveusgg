@@ -108,6 +108,7 @@ const NeonDonationMetadataSchema = z.object({
   neonCampaignName: z.string().optional(),
   neonFundId: z.string().optional(),
   neonFundName: z.string().optional(),
+  neonAccountId: z.string().optional(),
 });
 
 export const NeonDonationSchema = CoreDonationSchema.extend({

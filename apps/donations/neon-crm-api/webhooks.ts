@@ -5,10 +5,11 @@ import {
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
 import { createWebhook, getWebhooks } from "./index.js";
+import { fixTimestampsTimezone } from "./utils";
 
 export type { DonationWebhookPayload } from "./schema.js";
 
-type WebhookOptions = Pick<Options, "organizationId">;
+type WebhookOptions = Pick<Options, "organizationId" | "localTimezone">;
 
 type WebhookTypeSchemas = (typeof WebhookPayload.def.options)[number];
 
@@ -32,6 +33,11 @@ export const parseWebhook = async <Schema extends WebhookTypeSchemas>(
     return false;
   }
 
+  payload.data.data.timestamps = fixTimestampsTimezone(
+    payload.data.data.timestamps,
+    options.localTimezone,
+  );
+
   return payload.data;
 };
 
@@ -40,15 +46,24 @@ export const parseDonationWebhook = async (
   body: unknown,
 ) => parseWebhook(options, body, DonationWebhookPayload);
 
-const isMatchingWebhookSubscription = (
-  webhook: WebhookResponse,
-  trigger: WebhookResponse["trigger"],
-  url: string,
-  options: Pick<Options, "basicAuthUsername">,
+const cleanSearchParams = (
+  urlString: string,
+  paramsToExclude: string[] = [],
+) => {
+  const url = new URL(urlString);
+  const params = url.searchParams;
+  paramsToExclude.forEach((param) => params.delete(param));
+  params.sort();
+  return `${url.origin + url.pathname}?${params.toString()}`;
+};
+
+const isSameUrlWithoutQuery = (
+  a: string,
+  b: string,
+  paramsToExclude: string[] = [],
 ) =>
-  webhook.url === url &&
-  webhook.trigger === trigger &&
-  webhook.httpBasic.userName === options.basicAuthUsername;
+  cleanSearchParams(a, paramsToExclude) ===
+  cleanSearchParams(b, paramsToExclude);
 
 export async function setupWebhook(
   url: string,
@@ -58,19 +73,32 @@ export async function setupWebhook(
   const existingWebhooks = await getWebhooks(options);
   const webhookSetUp =
     existingWebhooks.ok &&
-    existingWebhooks.data.some((webhook) =>
-      isMatchingWebhookSubscription(webhook, trigger, url, options),
+    existingWebhooks.data.some(
+      (webhook) =>
+        isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
+        webhook.trigger === trigger &&
+        webhook.httpBasic.userName === options.basicAuthUsername,
     );
 
   if (webhookSetUp) {
     return;
   }
 
+  const uuid = crypto.randomUUID();
+  const urlWithUuid = new URL(url);
+  urlWithUuid.searchParams.set("uuid", uuid);
+
   const created = await createWebhook(options, {
-    name: url,
-    url,
+    name: `alveusgg-donations-${uuid}`,
+    url: String(urlWithUuid),
     trigger,
     httpBasic: buildBasicAuth(options),
+    customParameters: [
+      {
+        name: "uuid",
+        value: uuid,
+      },
+    ],
   });
   if (!created) {
     throw new Error("Failed to create Neon webhook");
