@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import type { Notification } from "@alveusgg/database";
@@ -21,6 +22,11 @@ export function NotificationEntry({
   notification: Notification;
   inline?: boolean;
 }) {
+  const [showImage, setShowImage] = useState(!!notification.imageUrl);
+  useEffect(() => {
+    setShowImage(!!notification.imageUrl);
+  }, [notification.imageUrl]);
+
   const showVod = !!getNotificationVod(notification);
 
   const content = (
@@ -31,16 +37,16 @@ export function NotificationEntry({
           inline ? "my-auto w-32" : "mb-2 w-full",
         )}
       >
-        {notification.imageUrl ? (
-          <ErrorBoundary
-            fallback={<NotificationIcon notification={notification} />}
-          >
+        {showImage && notification.imageUrl ? (
+          // Use an error boundary to catch errors from non-permitted remote image patterns
+          <ErrorBoundary onError={() => setShowImage(false)} fallback={null}>
             <Image
               src={notification.imageUrl}
               alt=""
               width={512}
               height={288}
               className="aspect-video w-full object-cover"
+              onError={() => setShowImage(false)}
             />
           </ErrorBoundary>
         ) : (
