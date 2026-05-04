@@ -18,7 +18,7 @@ export const notificationsRouter = router({
     .query(async ({ input }) =>
       getRecentNotificationsForTags({
         tags: input.tags,
-        take: 9,
+        take: 10,
         cursor: input.cursor || undefined,
         search: input.search,
       }),

@@ -81,6 +81,11 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
       },
+      // S3 - Regular Streams
+      {
+        protocol: "https",
+        hostname: "files.alveus.site",
+      },
       // S3 - File Storage
       s3Pattern,
     ],

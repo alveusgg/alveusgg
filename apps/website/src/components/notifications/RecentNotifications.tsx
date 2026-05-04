@@ -13,7 +13,7 @@ import { selectionButtonClasses } from "../calendar/Schedule";
 import Button from "../content/Button";
 
 const notificationClasses =
-  "flex items-center gap-3 rounded-xl bg-alveus-green/30 px-4 py-2 transition-all hover:scale-102 hover:bg-alveus-green/40";
+  "rounded-xl bg-alveus-green/30 p-2 transition-all hover:scale-102 hover:bg-alveus-green/40";
 
 export function RecentNotifications({ tags }: { tags: Array<string> }) {
   const [search, setSearch] = useState("");
@@ -76,14 +76,14 @@ function RecentNotificationsList({
 
   return (
     <>
-      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-2 lg:grid-cols-5">
         {recentNotifications.isPending
-          ? Array.from({ length: 9 }).map((_, i) => (
+          ? Array.from({ length: 10 }).map((_, i) => (
               <li
                 key={i}
                 className={classes(notificationClasses, "animate-pulse")}
               >
-                <div className="h-22" />
+                <div className="h-64" />
               </li>
             ))
           : recentNotifications.data?.pages.map((page, i) => (
