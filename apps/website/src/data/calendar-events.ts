@@ -123,8 +123,9 @@ export const regularEventsWeekly = [
   [
     mayaStream,
     {
-      title: "Dan Stream",
-      description: "Join Dan as he gets work done around the sanctuary.",
+      title: "Kayla Stream",
+      description:
+        "Join Kayla as she covers educational topics and answers all your questions.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
