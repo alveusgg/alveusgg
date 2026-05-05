@@ -66,6 +66,7 @@ import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sketch from "@/assets/collaborations/sketch.png";
+import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
 import stableRonaldo from "@/assets/collaborations/stable-ronaldo.png";
 import steak from "@/assets/collaborations/steak.png";
@@ -99,6 +100,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Smosh",
+      link: "https://www.youtube.com/@smoshpit",
+      date: new Date("2026-05-05"),
+      videoId: "FtGGTno038k",
+      creators: [
+        {
+          name: "Smosh Pit",
+          image: smoshPit,
+          popularity: 9_350_000, // YouTube subscribers, 2026-05-05
+        },
+      ],
+    },
     {
       name: "Marlon",
       link: "https://www.twitch.tv/marlon",
