@@ -123,8 +123,9 @@ export const regularEventsWeekly = [
   [
     mayaStream,
     {
-      title: "Dan Stream",
-      description: "Join Dan as he gets work done around the sanctuary.",
+      title: "Kayla Stream",
+      description:
+        "Join Kayla as she covers educational topics and answers all your questions.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
@@ -141,8 +142,9 @@ export const regularEventsWeekly = [
   // Thursday
   [
     {
-      title: "Lukas Stream",
-      description: "Join Lukas as he gets work done around the sanctuary.",
+      title: "FAID Stream",
+      description:
+        "Join the Facilities and Infrastructure Department as they get work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
@@ -160,15 +162,7 @@ export const regularEventsWeekly = [
     },
   ],
   // Saturday
-  [
-    {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 13, minute: 0 },
-    },
-  ],
+  [],
   // Sunday
   [],
 ] as RegularEvent[][];
