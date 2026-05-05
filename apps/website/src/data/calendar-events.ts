@@ -162,15 +162,7 @@ export const regularEventsWeekly = [
     },
   ],
   // Saturday
-  [
-    {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 13, minute: 0 },
-    },
-  ],
+  [],
   // Sunday
   [],
 ] as RegularEvent[][];
