@@ -142,8 +142,9 @@ export const regularEventsWeekly = [
   // Thursday
   [
     {
-      title: "Lukas Stream",
-      description: "Join Lukas as he gets work done around the sanctuary.",
+      title: "FAID Stream",
+      description:
+        "Join the Facilities and Infrastructure Department as they gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
