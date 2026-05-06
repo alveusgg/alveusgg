@@ -140,6 +140,68 @@ const grid: Record<Layout, Grid> = {
   },
 };
 
+const SlotOneTextOverlay: React.FC<{
+  showDisclaimer: boolean;
+  showText: boolean;
+  text: string;
+  layout: Layout;
+}> = ({ showDisclaimer, showText, text, layout }) => {
+  const deconflictingPadding = classes(
+    // Don't overlap socials info with text
+    (layout === "fullscreen" ||
+      layout === "pipbr" ||
+      layout.startsWith("pipt")) &&
+      "pl-80",
+    // Don't overlap sub count with text
+    (layout === "fullscreen" ||
+      layout === "pipbl" ||
+      layout.startsWith("pipt")) &&
+      "pr-80",
+  );
+
+  if (!showText && !showDisclaimer) {
+    return <></>;
+  }
+
+  return (
+    <div
+      className={classes(
+        "absolute inset-x-0 bottom-0",
+        // Don't overlap PiP borders with text
+        layout === "pipbl" && "left-1/3",
+        layout === "pipbr" && "right-1/3",
+      )}
+    >
+      {showDisclaimer && (
+        <Text
+          className={classes(
+            "p-8 text-4xl",
+            // When we have a fullscreen slot, center the text
+            (layout === "fullscreen" || layout.startsWith("pip")) &&
+              "pb-2 text-center",
+
+            // Only add deconflicting padding when it is at the bottom
+            !showText && deconflictingPadding,
+          )}
+        >
+          {disclaimerText}
+        </Text>
+      )}
+
+      {showText && (
+        <Text
+          className={classes(
+            "bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md",
+            deconflictingPadding,
+          )}
+        >
+          {text}
+        </Text>
+      )}
+    </div>
+  );
+};
+
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
   const { query } = useRouter();
@@ -316,53 +378,13 @@ const OverlayPage: NextPage = () => {
                 />
               )}
 
-              {index === 0 && !hide.has("disclaimer") && disclaimer && (
-                <Text
-                  className={classes(
-                    "absolute inset-x-0 bottom-0 p-8 text-4xl",
-                    // Don't overlap PiP borders with text
-                    layout === "pipbl" && "left-1/3",
-                    layout === "pipbr" && "right-1/3",
-                    // Don't overlap socials info with text
-                    (layout === "fullscreen" ||
-                      layout === "pipbr" ||
-                      layout.startsWith("pipt")) &&
-                      "pl-80",
-                    // Don't overlap sub count with text
-                    (layout === "fullscreen" ||
-                      layout === "pipbl" ||
-                      layout.startsWith("pipt")) &&
-                      "pr-80",
-                    // When we have a fullscreen slot, center the text
-                    (layout === "fullscreen" || layout.startsWith("pip")) &&
-                      "pb-2 text-center",
-                  )}
-                >
-                  {disclaimerText}
-                </Text>
-              )}
-
-              {index === 0 && !hide.has("text") && text && (
-                <Text
-                  className={classes(
-                    "absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md",
-                    // Don't overlap PiP borders with text
-                    layout === "pipbl" && "left-1/3",
-                    layout === "pipbr" && "right-1/3",
-                    // Don't overlap socials info with text
-                    (layout === "fullscreen" ||
-                      layout === "pipbr" ||
-                      layout.startsWith("pipt")) &&
-                      "pl-80",
-                    // Don't overlap sub count with text
-                    (layout === "fullscreen" ||
-                      layout === "pipbl" ||
-                      layout.startsWith("pipt")) &&
-                      "pr-80",
-                  )}
-                >
-                  {text}
-                </Text>
+              {index === 0 && (
+                <SlotOneTextOverlay
+                  showText={!hide.has("text") && !!text}
+                  text={text}
+                  showDisclaimer={!hide.has("disclaimer") && disclaimer}
+                  layout={layout}
+                />
               )}
             </div>
           ))}
