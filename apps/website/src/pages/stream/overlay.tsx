@@ -140,12 +140,11 @@ const grid: Record<Layout, Grid> = {
   },
 };
 
-const SlotOneTextOverlay: React.FC<{
-  showDisclaimer: boolean;
-  showText: boolean;
-  text: string;
+const OverlayText: React.FC<{
+  disclaimer: boolean;
+  text: string | undefined;
   layout: Layout;
-}> = ({ showDisclaimer, showText, text, layout }) => {
+}> = ({ disclaimer, text, layout }) => {
   const deconflictingPadding = classes(
     // Don't overlap socials info with text
     (layout === "fullscreen" ||
@@ -159,8 +158,8 @@ const SlotOneTextOverlay: React.FC<{
       "pr-80",
   );
 
-  if (!showText && !showDisclaimer) {
-    return <></>;
+  if (!disclaimer && !text) {
+    return null;
   }
 
   return (
@@ -172,7 +171,7 @@ const SlotOneTextOverlay: React.FC<{
         layout === "pipbr" && "right-1/3",
       )}
     >
-      {showDisclaimer && (
+      {disclaimer && (
         <Text
           className={classes(
             "p-8 text-4xl",
@@ -181,14 +180,14 @@ const SlotOneTextOverlay: React.FC<{
               "pb-2 text-center",
 
             // Only add deconflicting padding when it is at the bottom
-            !showText && deconflictingPadding,
+            !text && deconflictingPadding,
           )}
         >
           {disclaimerText}
         </Text>
       )}
 
-      {showText && (
+      {text && (
         <Text
           className={classes(
             "bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md",
@@ -379,10 +378,9 @@ const OverlayPage: NextPage = () => {
               )}
 
               {index === 0 && (
-                <SlotOneTextOverlay
-                  showText={!hide.has("text") && !!text}
-                  text={text}
-                  showDisclaimer={!hide.has("disclaimer") && disclaimer}
+                <OverlayText
+                  disclaimer={!hide.has("disclaimer") && disclaimer}
+                  text={(!hide.has("text") && text) || undefined}
                   layout={layout}
                 />
               )}
