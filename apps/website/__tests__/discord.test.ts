@@ -60,3 +60,14 @@ test("full stop false", async () => {
 
   expect(res).toEqual(expected);
 });
+
+test("wrapping url inside masked markdown link", async () => {
+  const example =
+    "Read this @ [google.com](https://google.com/search?q=alveus)";
+  const expected =
+    "Read this @ [google.com](<https://google.com/search?q=alveus>)";
+
+  const res = escapeLinksForDiscord(example);
+
+  expect(res).toEqual(expected);
+});

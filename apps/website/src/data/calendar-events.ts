@@ -2,6 +2,8 @@ import { type DateObjectUnits } from "luxon";
 
 import { type CalendarEvent } from "@alveusgg/database";
 
+import { getLinkDisplayText } from "@/utils/link-display";
+
 type StandardCategory = {
   name: string;
   color: string;
@@ -87,7 +89,7 @@ export const getFormattedTitle = (
   const title = length ? truncate(event.title, length) : event.title;
   return channel && new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
     ? title
-    : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
+    : `${title} @ ${getLinkDisplayText(event.link)}`;
 };
 
 type RegularEvent = Pick<

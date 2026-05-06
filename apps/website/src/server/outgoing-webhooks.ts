@@ -2,6 +2,8 @@ import { type OutgoingWebhook, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import { getLinkDisplayText } from "@/utils/link-display";
+
 export type OutgoingWebhookType = "form-entry" | "unknown";
 
 type OutgoingWebhookData = Pick<
@@ -178,6 +180,7 @@ export async function triggerDiscordChannelWebhook({
   contentTitle,
   contentMessage,
   contentLink,
+  contentLinkLabel,
   imageUrl,
   botName: username = env.DISCORD_CHANNEL_WEBHOOK_NAME,
   expiresAt,
@@ -187,18 +190,19 @@ export async function triggerDiscordChannelWebhook({
   contentTitle?: string;
   contentMessage?: string;
   contentLink?: string;
+  contentLinkLabel?: string;
   imageUrl?: string;
   botName?: string;
   expiresAt?: Date;
   toEveryone?: boolean;
 }) {
+  const displayLink = getLinkDisplayText(contentLinkLabel || contentLink || "");
+
   const embed = {
     title: contentTitle || "Notification",
     description: (
       (contentMessage || "") +
-      (contentLink
-        ? `\n[${contentLink.replace(/^https?:\/\/(www\.)?/, "")}](${contentLink})`
-        : "")
+      (contentLink ? `\n[${displayLink}](${contentLink})` : "")
     ).trim(),
     color: 0x636a60,
     url: contentLink,
