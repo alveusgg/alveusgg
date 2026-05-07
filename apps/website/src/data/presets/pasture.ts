@@ -166,8 +166,8 @@ const pasturePresets: Record<string, Preset> = {
   feederstatus: {
     description: "Feeder status window",
     image: feederstatus,
-    position: { pan: 74.91, tilt: -5.02, zoom: 9392 },
-    // modified: 2025-10-09T11:10:30.084Z
+    position: { pan: 75, tilt: -5.64, zoom: 9351 },
+    // modified: 2026-05-06T17:04:59.985Z
   },
   feedstall: {
     description: "Feed Stall",
