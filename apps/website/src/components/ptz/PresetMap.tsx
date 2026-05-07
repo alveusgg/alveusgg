@@ -7,8 +7,8 @@ import {
 } from "@xyflow/react";
 import { useCallback, useMemo } from "react";
 
-import { type Camera } from "@/data/tech/cameras";
-import { type Preset } from "@/data/tech/cameras.types";
+import type { Camera } from "@/data/tech/cameras";
+import type { Preset, PresetEntry } from "@/data/tech/cameras.types";
 
 import { classes } from "@/utils/classes";
 
@@ -19,7 +19,7 @@ import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import "@xyflow/react/dist/style.css";
 
-type PresetEntry = readonly [string, Preset];
+import { homePreset, wrapPreset } from "@/utils/sort-presets";
 
 type PresetMapNodeData = {
   camera: Camera;
@@ -115,31 +115,22 @@ const PresetMap = ({
   const mapNodes = useMemo(() => {
     if (!presets.length) return [];
 
-    const homePreset =
-      presets.find(([name]) => name.toLowerCase() === "home") || presets[0];
-    const homePan = homePreset?.[1].position.pan ?? 0;
-    const wrapPan = (pan: number) => {
-      const leftLimit = homePan - 180;
-      const rightLimit = leftLimit + 360;
-      if (pan < leftLimit) return pan + 360;
-      if (pan > rightLimit) return pan - 360;
-      return pan;
-    };
+    const home = homePreset(presets);
+    const wrapped = presets.map(wrapPreset(home));
 
-    const tilts = presets.map(([, preset]) => preset.position.tilt);
-    const tiltLow = Math.min(...tilts);
-    const tiltHigh = Math.max(...tilts);
+    const tilts = wrapped.map(([, preset]) => preset.position.tilt);
     const tiltPadding = 2;
-    const tiltMin = tiltLow - tiltPadding;
-    const tiltMax = tiltHigh + tiltPadding;
+    const tiltMin = Math.min(...tilts) - tiltPadding;
+    const tiltMax = Math.max(...tilts) + tiltPadding;
     const tiltRange = Math.max(tiltMax - tiltMin, 1);
 
-    const width = 1000;
-    const height = 700;
+    const width = 3000;
+    const height = 1000;
 
-    return presets.map(([name, preset]) => {
-      const wrappedPan = wrapPan(preset.position.pan);
-      const x = ((wrappedPan - (homePan - 180)) / 360) * width;
+    return wrapped.map(([name, preset]) => {
+      const x =
+        ((preset.position.pan - ((home?.[1].position.pan ?? 0) - 180)) / 360) *
+        width;
       const y = (1 - (preset.position.tilt - tiltMin) / tiltRange) * height;
 
       return {
@@ -167,8 +158,8 @@ const PresetMap = ({
         nodes={mapNodes}
         edges={[]}
         nodeTypes={mapNodeTypes}
-        minZoom={0.5}
-        maxZoom={50}
+        minZoom={0.25}
+        maxZoom={25}
         fitView
         proOptions={{ hideAttribution: true }}
       >

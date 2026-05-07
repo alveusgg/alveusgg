@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import {
-  type Preset,
+  type PresetEntry,
   isCameraMulti,
   isCameraPTZ,
 } from "@/data/tech/cameras.types";
@@ -27,7 +27,6 @@ import IconMenu from "@/icons/IconMenu";
 import IconZoomIn from "@/icons/IconZoomIn";
 import IconZoomOut from "@/icons/IconZoomOut";
 
-type PresetEntry = readonly [string, Preset];
 type PresetView = "list" | "map";
 
 const PresetToolsTab = ({
