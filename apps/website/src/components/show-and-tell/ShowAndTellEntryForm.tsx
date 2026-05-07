@@ -673,7 +673,7 @@ export function ShowAndTellEntryForm({
               name="pronouns"
               autoComplete="pronouns"
               minLength={1}
-              maxLength={100}
+              maxLength={25}
               defaultValue={entry?.pronouns || undefined}
               placeholder="What are your preferred pronouns? (e.g. she/her, he/him, they/them)"
               onChange={markAsChanged}
