@@ -450,6 +450,7 @@ export function ShowAndTellEntryForm({
 
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
+      pronouns: (formData.get("pronouns") as string | null) || null,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
       attachments: [],
@@ -664,6 +665,17 @@ export function ShowAndTellEntryForm({
               maxLength={100}
               defaultValue={entry?.displayName || undefined}
               placeholder="What should we call you?"
+              onChange={markAsChanged}
+            />
+            <TextField
+              label="Preferred Pronouns (optional)"
+              isRequired={false}
+              name="pronouns"
+              autoComplete="pronouns"
+              minLength={1}
+              maxLength={100}
+              defaultValue={entry?.pronouns || undefined}
+              placeholder="What are your preferred pronouns? (e.g. she/her, he/him, they/them)"
               onChange={markAsChanged}
             />
           </Fieldset>
