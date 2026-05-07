@@ -33,7 +33,7 @@ const PresetCard = ({
         src={image}
         alt=""
         width={300}
-        className="aspect-video w-full object-cover"
+        className="aspect-video w-full bg-alveus-green object-cover"
       />
       {command && (
         <RunCommandButton
