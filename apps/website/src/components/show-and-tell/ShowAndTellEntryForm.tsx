@@ -448,9 +448,11 @@ export function ShowAndTellEntryForm({
       dominantColor = [r, g, b].join();
     }
 
+    const pronouns = (formData.get("pronouns") as string | null)?.trim();
+
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
-      pronouns: (formData.get("pronouns") as string | null) || null,
+      pronouns: pronouns || null,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
       attachments: [],
