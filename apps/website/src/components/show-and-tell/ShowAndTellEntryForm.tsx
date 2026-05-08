@@ -671,9 +671,7 @@ export function ShowAndTellEntryForm({
             />
             <TextField
               label="Preferred Pronouns (optional)"
-              autoComplete="off"
               name="pronouns"
-              autoComplete="pronouns"
               minLength={1}
               maxLength={25}
               defaultValue={entry?.pronouns || undefined}
