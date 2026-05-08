@@ -1,3 +1,4 @@
+import cratef from "@/assets/presets/serval/cratef.png";
 import cratel from "@/assets/presets/serval/cratel.png";
 import door from "@/assets/presets/serval/door.png";
 import down from "@/assets/presets/serval/down.png";
@@ -18,6 +19,9 @@ import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
 import rightwide from "@/assets/presets/serval/rightwide.png";
 import sand from "@/assets/presets/serval/sand.png";
 import tub from "@/assets/presets/serval/tub.png";
+import waterl from "@/assets/presets/serval/waterl.png";
+import waterr from "@/assets/presets/serval/waterr.png";
+import wide from "@/assets/presets/serval/wide.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -27,6 +31,12 @@ const servalPresets: Record<string, Preset> = {
     image: home,
     position: { pan: -88.51, tilt: -18.05, zoom: 1 },
     // modified: 2026-04-02T12:27:39.327Z
+  },
+  cratef: {
+    description: "cratef",
+    image: cratef,
+    position: { pan: -61.22, tilt: -38.17, zoom: 1 },
+    // modified: 2026-05-07T14:52:00.462Z
   },
   cratel: {
     description: "cratel",
@@ -141,6 +151,24 @@ const servalPresets: Record<string, Preset> = {
     image: tub,
     position: { pan: -141.53, tilt: -43.78, zoom: 89 },
     // modified: 2026-04-03T16:40:45.015Z
+  },
+  waterl: {
+    description: "waterl",
+    image: waterl,
+    position: { pan: -112.61, tilt: -23.28, zoom: 628 },
+    // modified: 2026-05-07T14:48:34.453Z
+  },
+  waterr: {
+    description: "waterr",
+    image: waterr,
+    position: { pan: -73.31, tilt: -21.83, zoom: 628 },
+    // modified: 2026-05-07T14:49:48.287Z
+  },
+  wide: {
+    description: "wide",
+    image: wide,
+    position: { pan: -90.01, tilt: -32.42, zoom: 1 },
+    // modified: 2026-05-07T14:51:04.549Z
   },
 };
 
