@@ -180,7 +180,12 @@ const showAndTellSharedInputSchema = z.object({
     .regex(/^\d{1,3},\d{1,3},\d{1,3}$/)
     .refine((val) => val.split(",").every((num) => Number(num) < 256))
     .nullable(),
-  pronouns: z.string().max(25).nullable(),
+  pronouns: z
+    .string()
+    .trim()
+    .max(25)
+    .transform((val) => (val === "" ? null : val))
+    .nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
