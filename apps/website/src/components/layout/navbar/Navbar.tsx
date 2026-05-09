@@ -1,6 +1,7 @@
 import { Disclosure, DisclosureButton } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
@@ -10,6 +11,12 @@ import IconMenu from "@/icons/IconMenu";
 import IconX from "@/icons/IconX";
 
 import logoImage from "@/assets/logo.png";
+
+export type NavbarProps = {
+  onMobileMenuOpenChange?: (open: boolean) => void;
+  /** Solid nav background on large screens (e.g. fixed site header over content). */
+  siteChromeFixed?: boolean;
+};
 
 const MobileMenuToggle = ({ open }: { open: boolean }) => (
   <div className="flex items-center lg:hidden">
@@ -43,30 +50,53 @@ const Logo = () => (
   </Link>
 );
 
-export const Navbar = () => {
+function NavbarFrame({
+  open,
+  onMobileMenuOpenChange,
+}: {
+  open: boolean;
+  onMobileMenuOpenChange?: (open: boolean) => void;
+}) {
+  useEffect(() => {
+    onMobileMenuOpenChange?.(open);
+  }, [open, onMobileMenuOpenChange]);
+
   return (
-    <Disclosure
-      as="header"
-      className="relative z-50 bg-alveus-green-900 text-white lg:bg-transparent"
-    >
+    <>
+      <h2 className="sr-only">Page header</h2>
+
+      <div className="container mx-auto flex gap-4 p-2">
+        <Logo />
+        <DesktopMenu />
+
+        <div className="flex grow items-center justify-center text-center lg:hidden">
+          <Link href="/" className="font-serif text-3xl font-bold">
+            Alveus Sanctuary
+          </Link>
+        </div>
+        <MobileMenuToggle open={open} />
+      </div>
+
+      <MobileMenu />
+    </>
+  );
+}
+
+export const Navbar = ({
+  onMobileMenuOpenChange,
+  siteChromeFixed = false,
+}: NavbarProps) => {
+  const disclosureClass = siteChromeFixed
+    ? "relative z-50 bg-alveus-green-900 text-white"
+    : "relative z-50 bg-alveus-green-900 text-white lg:bg-transparent";
+
+  return (
+    <Disclosure as="header" className={disclosureClass}>
       {({ open }) => (
-        <>
-          <h2 className="sr-only">Page header</h2>
-
-          <div className="container mx-auto flex gap-4 p-2">
-            <Logo />
-            <DesktopMenu />
-
-            <div className="flex grow items-center justify-center text-center lg:hidden">
-              <Link href="/" className="font-serif text-3xl font-bold">
-                Alveus Sanctuary
-              </Link>
-            </div>
-            <MobileMenuToggle open={open} />
-          </div>
-
-          <MobileMenu />
-        </>
+        <NavbarFrame
+          open={open}
+          onMobileMenuOpenChange={onMobileMenuOpenChange}
+        />
       )}
     </Disclosure>
   );
