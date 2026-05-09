@@ -14,8 +14,6 @@ import logoImage from "@/assets/logo.png";
 
 export type NavbarProps = {
   onMobileMenuOpenChange?: (open: boolean) => void;
-  /** Solid nav background on large screens (e.g. fixed site header over content). */
-  siteChromeFixed?: boolean;
 };
 
 const MobileMenuToggle = ({ open }: { open: boolean }) => (
@@ -82,16 +80,12 @@ function NavbarFrame({
   );
 }
 
-export const Navbar = ({
-  onMobileMenuOpenChange,
-  siteChromeFixed = false,
-}: NavbarProps) => {
-  const disclosureClass = siteChromeFixed
-    ? "relative z-50 bg-alveus-green-900 text-white"
-    : "relative z-50 bg-alveus-green-900 text-white lg:bg-transparent";
-
+export const Navbar = ({ onMobileMenuOpenChange }: NavbarProps) => {
   return (
-    <Disclosure as="header" className={disclosureClass}>
+    <Disclosure
+      as="header"
+      className="relative z-50 bg-alveus-green-900 text-white lg:bg-transparent"
+    >
       {({ open }) => (
         <NavbarFrame
           open={open}

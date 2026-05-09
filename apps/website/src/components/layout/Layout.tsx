@@ -6,8 +6,7 @@ import globalPromotion from "@/data/env/global-promotion";
 
 import { classes } from "@/utils/classes";
 
-import { useHomeNavSolidChrome } from "@/hooks/use-home-nav-solid-chrome";
-import { useSiteHeaderScroll } from "@/hooks/use-site-header-scroll";
+import { useSiteHeader } from "@/hooks/use-site-header";
 
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -22,12 +21,9 @@ type LayoutProps = {
   children?: ReactNode;
 };
 
-const TOP_LEVEL_HOME = "/";
-
 const Layout = ({ children }: LayoutProps) => {
   const { pathname } = useRouter();
   const isAdminPage = pathname.startsWith("/admin");
-  const isHomePage = pathname === TOP_LEVEL_HOME;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [headerShellNode, setHeaderShellNode] = useState<HTMLDivElement | null>(
     null,
@@ -37,16 +33,13 @@ const Layout = ({ children }: LayoutProps) => {
     setHeaderShellNode(node);
   }, []);
 
-  const homeNavSolid = useHomeNavSolidChrome(isHomePage && !isAdminPage);
-
-  const { headerVisible, headerHeight } = useSiteHeaderScroll({
+  const { headerVisible, headerHeight, solidChrome } = useSiteHeader({
     enabled: !isAdminPage,
+    pathname,
     mobileMenuOpen,
     headerElement: headerShellNode,
     resetKey: pathname,
   });
-
-  const publicSolidChrome = !isHomePage || homeNavSolid;
 
   const topHat = useMemo(
     () =>
@@ -81,17 +74,14 @@ const Layout = ({ children }: LayoutProps) => {
         ref={headerShellRef}
         className={classes(
           "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out motion-reduce:duration-150 motion-reduce:ease-linear",
-          publicSolidChrome && "bg-alveus-green-900",
+          solidChrome && "bg-alveus-green-900",
           headerVisible
-            ? classes("translate-y-0", publicSolidChrome && "shadow-md")
+            ? classes("translate-y-0", solidChrome && "shadow-md")
             : "-translate-y-full shadow-none",
         )}
       >
         {topHatSection}
-        <Navbar
-          onMobileMenuOpenChange={setMobileMenuOpen}
-          siteChromeFixed={publicSolidChrome}
-        />
+        <Navbar onMobileMenuOpenChange={setMobileMenuOpen} />
       </div>
       <div className="shrink-0" style={{ height: headerHeight }} aria-hidden />
     </>

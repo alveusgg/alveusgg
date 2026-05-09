@@ -1,4 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+import { getTransparentNavAnchorId } from "@/data/site-header-hero";
 
 const NEAR_TOP_PX = 16;
 const SCROLL_DOWN_THRESHOLD = 10;
@@ -6,8 +8,9 @@ const SCROLL_UP_THRESHOLD = 8;
 
 const SITE_HEADER_INSET_VAR = "--site-header-sticky-inset";
 
-type UseSiteHeaderScrollOptions = {
+type UseSiteHeaderOptions = {
   enabled: boolean;
+  pathname: string;
   /** When false, header stays visible (no hide-on-scroll-down). */
   autoHideEnabled?: boolean;
   mobileMenuOpen: boolean;
@@ -16,13 +19,20 @@ type UseSiteHeaderScrollOptions = {
   resetKey: string;
 };
 
-export function useSiteHeaderScroll({
+export function useSiteHeader({
   enabled,
+  pathname,
   autoHideEnabled = true,
   mobileMenuOpen,
   headerElement,
   resetKey,
-}: UseSiteHeaderScrollOptions) {
+}: UseSiteHeaderOptions) {
+  const heroAnchorId = useMemo(
+    () => (enabled ? getTransparentNavAnchorId(pathname) : undefined),
+    [enabled, pathname],
+  );
+
+  const [solidChrome, setSolidChrome] = useState(() => heroAnchorId == null);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
   const lastScrollY = useRef(0);
@@ -52,6 +62,40 @@ export function useSiteHeaderScroll({
   useEffect(() => {
     setHeaderVisible(true);
   }, [resetKey]);
+
+  useEffect(() => {
+    if (!enabled || heroAnchorId == null) {
+      setSolidChrome(true);
+      return;
+    }
+
+    const measure = () => {
+      const el = document.getElementById(heroAnchorId);
+      if (!el) {
+        setSolidChrome(false);
+        return;
+      }
+      setSolidChrome(el.getBoundingClientRect().top <= 0);
+    };
+
+    measure();
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+
+    const el = document.getElementById(heroAnchorId);
+    const ro =
+      el &&
+      new ResizeObserver(() => {
+        measure();
+      });
+    if (el && ro) ro.observe(el);
+
+    return () => {
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+      ro?.disconnect();
+    };
+  }, [enabled, heroAnchorId, resetKey]);
 
   useLayoutEffect(() => {
     if (!enabled || !headerElement) {
@@ -140,5 +184,5 @@ export function useSiteHeaderScroll({
     };
   }, [enabled, autoHideEnabled]);
 
-  return { headerVisible, headerHeight };
+  return { headerVisible, headerHeight, solidChrome };
 }
