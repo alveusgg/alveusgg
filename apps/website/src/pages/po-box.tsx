@@ -15,8 +15,6 @@ const POBoxPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {/* Grow the last section to cover the page */}
       <Section
         className="flex min-h-[85vh] grow"

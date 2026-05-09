@@ -811,8 +811,6 @@ const AboutAlveusPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <Section
         dark
         className="py-8"

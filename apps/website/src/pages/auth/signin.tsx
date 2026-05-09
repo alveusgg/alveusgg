@@ -116,8 +116,6 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
         />
 
         {/* Nav background */}
-        <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
         {/* Grow the last section to cover the page */}
         <Section className="grow">
           <div className="mx-auto w-full max-w-md">
@@ -174,8 +172,6 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
       <Meta title="Sign In" description="Sign in to your account." />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {/* Grow the last section to cover the page */}
       <Section className="grow">
         <Heading className="my-3 text-3xl">Sign in</Heading>
