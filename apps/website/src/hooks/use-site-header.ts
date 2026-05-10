@@ -1,101 +1,43 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-
-import { getTransparentNavAnchorId } from "@/data/site-header-hero";
-
-const NEAR_TOP_PX = 16;
-const SCROLL_DOWN_THRESHOLD = 10;
-const SCROLL_UP_THRESHOLD = 8;
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const SITE_HEADER_INSET_VAR = "--site-header-sticky-inset";
+const SUBNAV_SELECTOR = "[data-site-subnav]";
 
 type UseSiteHeaderOptions = {
   enabled: boolean;
-  pathname: string;
-  /** When false, header stays visible (no hide-on-scroll-down). */
-  autoHideEnabled?: boolean;
   mobileMenuOpen: boolean;
   headerElement: HTMLElement | null;
-  /** Reset header to visible when this changes (e.g. route). */
-  resetKey: string;
 };
 
+const getScrollY = () =>
+  window.scrollY ||
+  document.documentElement.scrollTop ||
+  document.body.scrollTop ||
+  0;
+
+/**
+ * Drives the public-site header chrome:
+ * - `headerVisible` flips false on downward scroll, true on upward / at top /
+ *   while the mobile menu is open / on pages that render a sticky subnav.
+ * - `headerHeight` mirrors the rendered header so the layout can reserve space.
+ * - `scrolled` is true once the page has moved away from the very top.
+ *
+ * Pages with a sticky subnav (marked `[data-site-subnav]`) opt out of
+ * hide-on-scroll so the subnav doesn't visually detach from the header. The
+ * current header inset is exposed as a CSS variable
+ * (`--site-header-sticky-inset`) for those subnavs to consume as their `top`.
+ */
 export function useSiteHeader({
   enabled,
-  pathname,
-  autoHideEnabled = true,
   mobileMenuOpen,
   headerElement,
-  resetKey,
 }: UseSiteHeaderOptions) {
-  const heroAnchorId = useMemo(
-    () => (enabled ? getTransparentNavAnchorId(pathname) : undefined),
-    [enabled, pathname],
-  );
-
-  const [solidChrome, setSolidChrome] = useState(() => heroAnchorId == null);
+  const [scrolled, setScrolled] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
   const lastScrollY = useRef(0);
   const rafId = useRef<number | null>(null);
-  const mobileOpenRef = useRef(mobileMenuOpen);
-  const enabledRef = useRef(enabled);
-  const autoHideRef = useRef(autoHideEnabled);
-
-  useEffect(() => {
-    mobileOpenRef.current = mobileMenuOpen;
-  }, [mobileMenuOpen]);
-
-  useEffect(() => {
-    enabledRef.current = enabled;
-  }, [enabled]);
-
-  useEffect(() => {
-    autoHideRef.current = autoHideEnabled;
-  }, [autoHideEnabled]);
-
-  useEffect(() => {
-    if (enabled && !autoHideEnabled) {
-      setHeaderVisible(true);
-    }
-  }, [enabled, autoHideEnabled]);
-
-  useEffect(() => {
-    setHeaderVisible(true);
-  }, [resetKey]);
-
-  useEffect(() => {
-    if (!enabled || heroAnchorId == null) {
-      setSolidChrome(true);
-      return;
-    }
-
-    const measure = () => {
-      const el = document.getElementById(heroAnchorId);
-      if (!el) {
-        setSolidChrome(false);
-        return;
-      }
-      setSolidChrome(el.getBoundingClientRect().top <= 0);
-    };
-
-    measure();
-    window.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-
-    const el = document.getElementById(heroAnchorId);
-    const ro =
-      el &&
-      new ResizeObserver(() => {
-        measure();
-      });
-    if (el && ro) ro.observe(el);
-
-    return () => {
-      window.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-      ro?.disconnect();
-    };
-  }, [enabled, heroAnchorId, resetKey]);
+  const hasSubnavRef = useRef(false);
 
   useLayoutEffect(() => {
     if (!enabled || !headerElement) {
@@ -109,22 +51,39 @@ export function useSiteHeader({
       setHeaderHeight(headerElement.offsetHeight);
     });
     observer.observe(headerElement);
-
     return () => observer.disconnect();
   }, [enabled, headerElement]);
 
-  useEffect(() => {
+  // Track sticky-subnav presence in a ref so the scroll listener doesn't have
+  // to re-subscribe each time it changes. When a subnav appears we also force
+  // the header back into view so the two never visually separate.
+  useLayoutEffect(() => {
     if (!enabled) {
-      document.documentElement.style.removeProperty(SITE_HEADER_INSET_VAR);
-      return () => {
-        document.documentElement.style.removeProperty(SITE_HEADER_INSET_VAR);
-      };
+      hasSubnavRef.current = false;
+      return;
     }
 
-    const insetPx =
-      headerVisible || mobileMenuOpen ? `${headerHeight}px` : "0px";
-    document.documentElement.style.setProperty(SITE_HEADER_INSET_VAR, insetPx);
+    const measure = () => {
+      const present = document.querySelector(SUBNAV_SELECTOR) != null;
+      hasSubnavRef.current = present;
+      if (present) setHeaderVisible(true);
+    };
 
+    measure();
+
+    const observer = new MutationObserver(measure);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [enabled]);
+
+  useLayoutEffect(() => {
+    if (!enabled) {
+      document.documentElement.style.removeProperty(SITE_HEADER_INSET_VAR);
+      return;
+    }
+
+    const inset = headerVisible || mobileMenuOpen ? `${headerHeight}px` : "0px";
+    document.documentElement.style.setProperty(SITE_HEADER_INSET_VAR, inset);
     return () => {
       document.documentElement.style.removeProperty(SITE_HEADER_INSET_VAR);
     };
@@ -132,11 +91,9 @@ export function useSiteHeader({
 
   useEffect(() => {
     if (!enabled) {
-      lastScrollY.current =
-        window.scrollY ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop ||
-        0;
+      setScrolled(false);
+      setHeaderVisible(true);
+      lastScrollY.current = 0;
       return;
     }
 
@@ -144,35 +101,26 @@ export function useSiteHeader({
       if (rafId.current != null) return;
       rafId.current = window.requestAnimationFrame(() => {
         rafId.current = null;
-        if (!enabledRef.current) return;
 
-        const y =
-          window.scrollY ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop ||
-          0;
+        const y = getScrollY();
+        setScrolled(y > 0);
 
-        if (mobileOpenRef.current || y < NEAR_TOP_PX || !autoHideRef.current) {
+        if (mobileMenuOpen || hasSubnavRef.current || y <= 0) {
           setHeaderVisible(true);
           lastScrollY.current = y;
           return;
         }
 
         const delta = y - lastScrollY.current;
-        if (delta > SCROLL_DOWN_THRESHOLD) {
-          setHeaderVisible(false);
-        } else if (delta < -SCROLL_UP_THRESHOLD) {
-          setHeaderVisible(true);
-        }
+        if (delta > 0) setHeaderVisible(false);
+        else if (delta < 0) setHeaderVisible(true);
         lastScrollY.current = y;
       });
     };
 
-    lastScrollY.current =
-      window.scrollY ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      0;
+    lastScrollY.current = getScrollY();
+    setScrolled(lastScrollY.current > 0);
+    setHeaderVisible(true);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -182,7 +130,7 @@ export function useSiteHeader({
         rafId.current = null;
       }
     };
-  }, [enabled, autoHideEnabled]);
+  }, [enabled, mobileMenuOpen]);
 
-  return { headerVisible, headerHeight, solidChrome };
+  return { headerVisible, headerHeight, scrolled };
 }

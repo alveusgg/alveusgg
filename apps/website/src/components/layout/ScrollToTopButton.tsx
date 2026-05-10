@@ -1,20 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { classes } from "@/utils/classes";
 
 import IconChevronUp from "@/icons/IconChevronUp";
 
 const SCROLL_SHOW_PX = 360;
-const SCROLL_TO_TOP_DURATION_MS = 750;
-
-/** Cubic ease-out; rAF scroll works when `behavior: smooth` is ignored (some browsers / OS settings). */
-function easeOutCubic(t: number) {
-  return 1 - (1 - t) ** 3;
-}
 
 export function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
-  const scrollAnimFrame = useRef<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -26,44 +19,8 @@ export function ScrollToTopButton() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(
-    () => () => {
-      if (scrollAnimFrame.current != null) {
-        cancelAnimationFrame(scrollAnimFrame.current);
-      }
-    },
-    [],
-  );
-
   const scrollToTop = useCallback(() => {
-    if (scrollAnimFrame.current != null) {
-      cancelAnimationFrame(scrollAnimFrame.current);
-      scrollAnimFrame.current = null;
-    }
-
-    const el = document.scrollingElement ?? document.documentElement;
-    const startY = window.scrollY || el.scrollTop;
-    if (startY <= 0) return;
-
-    const prefersReducedMotion =
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-    const duration = prefersReducedMotion ? 200 : SCROLL_TO_TOP_DURATION_MS;
-
-    const t0 = performance.now();
-
-    const step = (now: number) => {
-      const t = Math.min(1, (now - t0) / duration);
-      const y = Math.max(0, Math.round(startY * (1 - easeOutCubic(t))));
-      window.scrollTo(0, y);
-      if (t < 1) {
-        scrollAnimFrame.current = requestAnimationFrame(step);
-      } else {
-        scrollAnimFrame.current = null;
-        window.scrollTo(0, 0);
-      }
-    };
-
-    scrollAnimFrame.current = requestAnimationFrame(step);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (

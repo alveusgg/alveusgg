@@ -54,6 +54,7 @@ const SubNavInner = ({ links, className }: SubNavProps) => {
 
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav
+    data-site-subnav
     className={classes(
       "sticky inset-x-0 top-[var(--site-header-sticky-inset,0px)] bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl",
       className,

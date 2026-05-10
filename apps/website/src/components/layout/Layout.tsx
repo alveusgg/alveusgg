@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 
 import globalPromotion from "@/data/env/global-promotion";
 
@@ -21,6 +21,8 @@ type LayoutProps = {
   children?: ReactNode;
 };
 
+const HERO_PATHS = new Set(["/", "/institute"]);
+
 const Layout = ({ children }: LayoutProps) => {
   const { pathname } = useRouter();
   const isAdminPage = pathname.startsWith("/admin");
@@ -29,17 +31,13 @@ const Layout = ({ children }: LayoutProps) => {
     null,
   );
 
-  const headerShellRef = useCallback((node: HTMLDivElement | null) => {
-    setHeaderShellNode(node);
-  }, []);
-
-  const { headerVisible, headerHeight, solidChrome } = useSiteHeader({
+  const { headerVisible, headerHeight, scrolled } = useSiteHeader({
     enabled: !isAdminPage,
-    pathname,
     mobileMenuOpen,
     headerElement: headerShellNode,
-    resetKey: pathname,
   });
+  const isHeroPage = HERO_PATHS.has(pathname);
+  const solidChrome = !isHeroPage || scrolled;
 
   const topHat = useMemo(
     () =>
@@ -71,10 +69,13 @@ const Layout = ({ children }: LayoutProps) => {
   ) : (
     <>
       <div
-        ref={headerShellRef}
+        ref={setHeaderShellNode}
         className={classes(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out motion-reduce:duration-150 motion-reduce:ease-linear",
-          solidChrome && "bg-alveus-green-900",
+          "fixed inset-x-0 top-0 z-50 duration-300 ease-in-out motion-reduce:duration-150 motion-reduce:ease-linear",
+          isHeroPage
+            ? "transition-[translate,box-shadow,background-color]"
+            : "transition-[translate,box-shadow]",
+          solidChrome ? "bg-alveus-green-900" : "bg-transparent",
           headerVisible
             ? classes("translate-y-0", solidChrome && "shadow-md")
             : "-translate-y-full shadow-none",
@@ -83,7 +84,11 @@ const Layout = ({ children }: LayoutProps) => {
         {topHatSection}
         <Navbar onMobileMenuOpenChange={setMobileMenuOpen} />
       </div>
-      <div className="shrink-0" style={{ height: headerHeight }} aria-hidden />
+      <div
+        className={classes("shrink-0", !isHeroPage && "bg-alveus-green-900")}
+        style={{ height: headerHeight }}
+        aria-hidden
+      />
     </>
   );
 
