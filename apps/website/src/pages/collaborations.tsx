@@ -419,7 +419,6 @@ const CollaborationsPage: NextPage = () => {
         description="We work with other content creators to educate our combined audiences, introducing them to the educational ambassadors at Alveus and their conservation missions."
       />
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafLeftImage3}

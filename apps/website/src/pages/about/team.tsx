@@ -236,7 +236,6 @@ const AboutTeamPage: NextPage = () => {
         />
       </Meta>
 
-      {/* Nav background */}
       <Section dark className="py-8">
         <Heading className="my-0">Alveus Team</Heading>
       </Section>

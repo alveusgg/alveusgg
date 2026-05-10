@@ -79,7 +79,6 @@ const NotificationPage: NextPage<
         description={notification.message}
       />
 
-      {/* Nav background */}
       <Section dark className="py-8">
         <Heading className="flex items-center justify-center gap-4">
           {notification.title || "Notification"}

@@ -82,7 +82,6 @@ const NotFound: NextPage = () => {
         description="The page you are looking could not be found."
       />
 
-      {/* Nav background */}
       <Section dark className="py-8">
         <Heading className="text-center">404 - Page Not Found</Heading>
       </Section>

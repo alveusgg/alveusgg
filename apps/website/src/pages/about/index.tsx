@@ -810,7 +810,6 @@ const AboutAlveusPage: NextPage = () => {
         description="Alveus is a nonprofit organization founded by Maya Higa that functions as a wildlife sanctuary and as a virtual education center facility to provide permanent homes to non-releasable animal ambassadors."
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-8"

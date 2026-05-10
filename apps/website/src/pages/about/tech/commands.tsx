@@ -46,7 +46,6 @@ const AboutTechCommandsPage: NextPage = () => {
         description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing members of the community to control the live cameras on stream."
       />
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafRightImage1}

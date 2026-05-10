@@ -25,7 +25,6 @@ const DonatePage: NextPage = () => {
         description="Help Alveus carry on its mission to inspire online audiences to engage in conservation efforts while providing high-quality animal care to our ambassadors."
       />
 
-      {/* Nav background */}
       <Section dark>
         <Heading>Donate</Heading>
         <p className="text-lg">

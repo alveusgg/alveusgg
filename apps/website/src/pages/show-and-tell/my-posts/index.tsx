@@ -44,7 +44,6 @@ const MyShowAndTellEntriesPage: NextPage = () => {
         image={showAndTellHeader.src}
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-12"

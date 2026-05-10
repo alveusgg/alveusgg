@@ -15,7 +15,6 @@ const PrivacyPolicyPage: NextPage = () => {
         noindex
       />
 
-      {/* Nav background */}
       {/* Grow the last section to cover the page */}
       <Section className="grow">
         <Markdown content={privacyPolicy} />

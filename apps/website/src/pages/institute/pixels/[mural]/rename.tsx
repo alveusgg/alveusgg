@@ -43,7 +43,6 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
         noindex
       />
 
-      {/* Nav background */}
       <Section
         dark
         containerClassName="flex flex-col gap-4 lg:flex-row lg:gap-8 items-start lg:items-center"

@@ -47,7 +47,6 @@ const AdminPreviewShowAndTellPage: NextPage<
     <>
       <Meta title="Preview Submission - Show and Tell" />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-12"

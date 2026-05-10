@@ -167,7 +167,6 @@ const GiveAnHourPage: NextPage<
         image={giveAnHourPoster.src}
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-8 lg:py-24"

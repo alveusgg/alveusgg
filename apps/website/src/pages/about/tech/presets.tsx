@@ -138,7 +138,6 @@ const AboutTechPresetsPage: NextPage = () => {
         description="Control the cameras on the Alveus Sanctuary livestream by loading preset positions. Preview all the available camera presets and run chat commands directly from this page to change the camera views."
       />
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafLeftImage1}

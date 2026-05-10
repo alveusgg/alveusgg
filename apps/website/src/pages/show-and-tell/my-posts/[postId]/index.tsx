@@ -32,7 +32,6 @@ const EditShowAndTellPage: NextPage = () => {
         image={showAndTellHeader.src}
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-12"

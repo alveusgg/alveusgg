@@ -297,7 +297,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         />
       </Meta>
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafLeftImage1}

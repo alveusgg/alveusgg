@@ -9,7 +9,6 @@ const UserUnauthorizedPage: NextPage = () => {
     <>
       <Meta title="Unauthorized" noindex />
 
-      {/* Nav background */}
       <Section className="grow">
         <Heading className="my-3 text-3xl text-red-500">Unauthorized</Heading>
         <p className="my-3 text-xl">

@@ -424,7 +424,6 @@ const AboutOrgsPage: NextPage = () => {
         description="Beyond our educational collaborations with content creators, Maya Higa and Alveus Sanctuary collaborate with various organizations to further our mission of conservation and education."
       />
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafRightImage1}

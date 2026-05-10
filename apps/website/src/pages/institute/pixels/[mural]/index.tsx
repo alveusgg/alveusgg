@@ -141,7 +141,6 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
         )}
       </Meta>
 
-      {/* Nav background */}
       <Section
         dark
         containerClassName="flex flex-col gap-4 lg:flex-row lg:gap-8 items-start lg:items-center"

@@ -20,7 +20,6 @@ const AnnualReportsPage: NextPage = () => {
         description="Read through the reports published each year on the current status of Alveus and its mission."
       />
 
-      {/* Nav background */}
       <Section dark>
         <Heading>Annual Reports</Heading>
         <p>

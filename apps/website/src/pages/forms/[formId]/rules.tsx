@@ -60,7 +60,6 @@ const FormPage: NextPage<FormPageProps> = ({ form, rules }) => {
         noindex
       />
 
-      {/* Nav background */}
       {/* Grow the last section to cover the page */}
       <Section className="grow">
         <header>

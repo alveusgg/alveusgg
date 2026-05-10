@@ -115,7 +115,6 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
           description={`Sign in to authorize ${props.thirdPartyClient.name} to access your Alveus Sanctuary account.`}
         />
 
-        {/* Nav background */}
         {/* Grow the last section to cover the page */}
         <Section className="grow">
           <div className="mx-auto w-full max-w-md">
@@ -171,7 +170,6 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
     <>
       <Meta title="Sign In" description="Sign in to your account." />
 
-      {/* Nav background */}
       {/* Grow the last section to cover the page */}
       <Section className="grow">
         <Heading className="my-3 text-3xl">Sign in</Heading>

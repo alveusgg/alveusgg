@@ -147,7 +147,6 @@ const EventsPage: NextPage = () => {
         />
       </Meta>
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafRightImage1}

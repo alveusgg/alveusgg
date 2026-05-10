@@ -161,7 +161,6 @@ const VotePage: NextPage = () => {
         description="Our ambassadors can't vote, but you can! Get ready to vote by checking your voting information, previewing your ballot, and understanding the issues."
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-8"

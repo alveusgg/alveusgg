@@ -71,7 +71,6 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
         image={showAndTellHeader.src}
       />
 
-      {/* Nav background */}
       <Section
         dark
         className="py-0"

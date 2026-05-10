@@ -62,7 +62,6 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         description={`Read through the ${report.year} Annual Report published by Alveus Sanctuary.`}
       />
 
-      {/* Nav background */}
       <Section
         dark
         containerClassName="flex flex-wrap gap-4 justify-between items-center"

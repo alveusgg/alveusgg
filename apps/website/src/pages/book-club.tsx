@@ -249,7 +249,6 @@ const BookClubPage: NextPage = () => {
         />
       </Meta>
 
-      {/* Nav background */}
       <div className="relative">
         <Image
           src={leafLeftImage3}
