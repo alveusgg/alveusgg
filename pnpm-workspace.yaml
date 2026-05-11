@@ -17,29 +17,27 @@ publicHoistPattern:
   - "@trivago/prettier-plugin-sort-imports"
   - "prettier-plugin-tailwindcss"
 
-onlyBuiltDependencies:
-  - "@ffmpeg-installer/darwin-arm64"
-  - "@ffmpeg-installer/darwin-x64"
-  - "@ffmpeg-installer/linux-arm64"
-  - "@ffmpeg-installer/linux-arm"
-  - "@ffmpeg-installer/linux-ia32"
-  - "@ffmpeg-installer/linux-x64"
-  - "@ffmpeg-installer/win32-ia32"
-  - "@ffmpeg-installer/win32-x64"
-  - "@ffprobe-installer/darwin-arm64"
-  - "@ffprobe-installer/darwin-x64"
-  - "@ffprobe-installer/linux-arm64"
-  - "@ffprobe-installer/linux-arm"
-  - "@ffprobe-installer/linux-ia32"
-  - "@ffprobe-installer/linux-x64"
-  - "@ffprobe-installer/win32-ia32"
-  - "@ffprobe-installer/win32-x64"
-  - "@prisma/client"
-  - "@prisma/engines"
-  - "@swc/core"
-  - "@tailwindcss/oxide"
-  - "esbuild"
-  - "prisma"
-  - "sharp"
-  - "unrs-resolver"
-  - "workerd"
+allowBuilds:
+  "@ffmpeg-installer/darwin-arm64": true
+  "@ffmpeg-installer/darwin-x64": true
+  "@ffmpeg-installer/linux-arm64": true
+  "@ffmpeg-installer/linux-arm": true
+  "@ffmpeg-installer/linux-ia32": true
+  "@ffmpeg-installer/linux-x64": true
+  "@ffmpeg-installer/win32-ia32": true
+  "@ffmpeg-installer/win32-x64": true
+  "@ffprobe-installer/darwin-arm64": true
+  "@ffprobe-installer/darwin-x64": true
+  "@ffprobe-installer/linux-arm64": true
+  "@ffprobe-installer/linux-arm": true
+  "@ffprobe-installer/linux-ia32": true
+  "@ffprobe-installer/linux-x64": true
+  "@ffprobe-installer/win32-ia32": true
+  "@ffprobe-installer/win32-x64": true
+  "@prisma/engines": true
+  "@swc/core": true
+  "esbuild": true
+  "prisma": true
+  "sharp": true
+  "unrs-resolver": true
+  "workerd": true
