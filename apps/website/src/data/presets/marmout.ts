@@ -1,4 +1,5 @@
 import basket from "@/assets/presets/marmout/basket.png";
+import blueball from "@/assets/presets/marmout/blueball.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
@@ -24,6 +25,7 @@ import leftshelfr from "@/assets/presets/marmout/leftshelfr.png";
 import nearleftshelf from "@/assets/presets/marmout/nearleftshelf.png";
 import nearlefttop from "@/assets/presets/marmout/nearlefttop.png";
 import nearrightshelves from "@/assets/presets/marmout/nearrightshelves.png";
+import redball from "@/assets/presets/marmout/redball.png";
 import right from "@/assets/presets/marmout/right.png";
 import rightcorner from "@/assets/presets/marmout/rightcorner.png";
 import rightpost from "@/assets/presets/marmout/rightpost.png";
@@ -48,6 +50,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: basket,
     position: { pan: 151.08, tilt: 4.86, zoom: 1291 },
     // modified: 2026-03-02T15:28:06.254Z
+  },
+  blueball: {
+    description: "blueball",
+    image: blueball,
+    position: { pan: 85.66, tilt: -5.3, zoom: 1017 },
+    // modified: 2026-05-11T15:00:47.736Z
   },
   domell: {
     description: "Dome Left Lower",
@@ -192,6 +200,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: nearrightshelves,
     position: { pan: 178.45, tilt: -10.16, zoom: 332 },
     // modified: 2025-11-09T15:53:31.525Z
+  },
+  redball: {
+    description: "redball",
+    image: redball,
+    position: { pan: 90.43, tilt: -7.74, zoom: 1017 },
+    // modified: 2026-05-11T14:59:03.003Z
   },
   right: {
     description: "Right",
