@@ -285,8 +285,8 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4(maplibre-gl@5.24.0)
       '@next/env':
-        specifier: ^16.2.4
-        version: 16.2.4
+        specifier: ^16.2.6
+        version: 16.2.6
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
@@ -324,8 +324,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.6)(react@19.2.5)
       '@vercel/functions':
-        specifier: ^3.5.0
-        version: 3.5.0(@aws-sdk/credential-provider-web-identity@3.972.38)
+        specifier: ^3.5.1
+        version: 3.5.1(@aws-sdk/credential-provider-web-identity@3.972.38)
       '@xyflow/react':
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(react-dom@19.2.5)(react@19.2.5)
@@ -454,8 +454,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       '@next/eslint-plugin-next':
-        specifier: ^16.2.4
-        version: 16.2.4
+        specifier: ^16.2.6
+        version: 16.2.6
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^6.0.2
         version: 6.0.2(prettier@3.8.3)
@@ -1796,14 +1796,11 @@ packages:
   '@next/env@13.5.11':
     resolution: {integrity: sha512-fbb2C7HChgM7CemdCY+y3N1n8pcTKdqtQLbC7/EQtPdLvlMUT9JX/dBYl8MMZAtYG4uVMyPFHXckb68q/NRwqg==}
 
-  '@next/env@16.2.4':
-    resolution: {integrity: sha512-dKkkOzOSwFYe5RX6y26fZgkSpVAlIOJKQHIiydQcrWH6y/97+RceSOAdjZ14Qa3zLduVUy0TXcn+EiM6t4rPgw==}
-
   '@next/env@16.2.6':
     resolution: {integrity: sha512-gd8HoHN4ufj73WmR3JmVolrpJR47ILK6LouP5xElPglaVxir6e1a7VzvTvDWkOoPXT9rkkTzyCxBu4yeZfZwcw==}
 
-  '@next/eslint-plugin-next@16.2.4':
-    resolution: {integrity: sha512-tOX826JJ96gYK/go18sPUgMq9FK1tqxBFfUCEufJb5XIkWFFmpgU7mahJANKGkHs7F41ir3tReJ3Lv5La0RvhA==}
+  '@next/eslint-plugin-next@16.2.6':
+    resolution: {integrity: sha512-Z8l6o4JWKUl755x4R+wogD86KPeU+Ckw4K+SYG4kHeOJtRenDeK+OSbGcqZpDtbwn9DsJVdir2UxmwXuinUbUw==}
 
   '@next/swc-darwin-arm64@16.2.6':
     resolution: {integrity: sha512-ZJGkkcNfYgrrMkqOdZ7zoLa1TOy0qpcMfk/z4Mh/FKUz40gVO+HNQWqmLxf67Z5WB64DRp0dhEbyHfel+6sJUg==}
@@ -3186,8 +3183,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@3.5.0':
-    resolution: {integrity: sha512-+RokZ+4gkYyOsKBuJ29cQ8iSZG123LLJbZfPry20kkTgrN9U0277La4feP4DnWVo3sGoYa4plCEKY9XKUYoX9g==}
+  '@vercel/functions@3.5.1':
+    resolution: {integrity: sha512-ndh5v+uhWqGA8033oD0i0KHvqUHcLlLCOaLOw5L+xx5zVsWUSQcZPKEYk2nm51aisnKhcnTylxnOmhx+w4UCRA==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -3195,8 +3192,8 @@ packages:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
 
-  '@vercel/oidc@3.4.0':
-    resolution: {integrity: sha512-p0sKfHkfRmMaqqDwNL4tjnX9TgRrLMlEtUjIxfrEns8pOxz1R9ztqOVI+ehqiq93/2/HnfPe/UBZkfAZwnx0UA==}
+  '@vercel/oidc@3.4.1':
+    resolution: {integrity: sha512-H6B+/ig/GoahccL3WZjiHayHw1H5KhvTJNceqYulwfK9kkz5iul2hTmYzcJ7tTCQzyd0dutuL9xYFZCyLUqsog==}
     engines: {node: '>= 20'}
 
   '@vitest/expect@4.1.5':
@@ -7723,11 +7720,9 @@ snapshots:
 
   '@next/env@13.5.11': {}
 
-  '@next/env@16.2.4': {}
-
   '@next/env@16.2.6': {}
 
-  '@next/eslint-plugin-next@16.2.4':
+  '@next/eslint-plugin-next@16.2.6':
     dependencies:
       fast-glob: 3.3.1
 
@@ -9039,13 +9034,13 @@ snapshots:
       next: 16.2.6(@babel/core@7.28.5)(@opentelemetry/api@1.9.1)(react-dom@19.2.5)(react@19.2.5)
       react: 19.2.5
 
-  '@vercel/functions@3.5.0(@aws-sdk/credential-provider-web-identity@3.972.38)':
+  '@vercel/functions@3.5.1(@aws-sdk/credential-provider-web-identity@3.972.38)':
     dependencies:
-      '@vercel/oidc': 3.4.0
+      '@vercel/oidc': 3.4.1
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.38
 
-  '@vercel/oidc@3.4.0': {}
+  '@vercel/oidc@3.4.1': {}
 
   '@vitest/expect@4.1.5':
     dependencies:
