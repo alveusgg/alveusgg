@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^24.12.2",
+    "@types/node": "^24.12.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
@@ -21,8 +21,8 @@
     "globals": "^17.6.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.59.1",
-    "wrangler": "^4.87.0"
+    "typescript-eslint": "^8.59.2",
+    "wrangler": "^4.90.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
