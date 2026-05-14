@@ -1,6 +1,7 @@
 import crunchwide from "@/assets/presets/pushpop/crunchwide.png";
 import cubby from "@/assets/presets/pushpop/cubby.png";
 import cubbyl from "@/assets/presets/pushpop/cubbyl.png";
+import cubbyr from "@/assets/presets/pushpop/cubbyr.png";
 import down from "@/assets/presets/pushpop/down.png";
 import downcubby from "@/assets/presets/pushpop/downcubby.png";
 import downl from "@/assets/presets/pushpop/downl.png";
@@ -44,6 +45,12 @@ const pushpopPresets: Record<string, Preset> = {
     image: cubbyl,
     position: { pan: 70.35, tilt: -30.79, zoom: 2370 },
     // modified: 2025-10-09T11:10:30.344Z
+  },
+  cubbyr: {
+    description: "cubbyr",
+    image: cubbyr,
+    position: { pan: 96.3, tilt: -27.13, zoom: 561 },
+    // modified: 2026-05-13T21:52:38.415Z
   },
   down: {
     description: "Down",
