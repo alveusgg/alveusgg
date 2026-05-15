@@ -113,7 +113,7 @@ const Slideshow = ({
       {images.map(({ src, alt, className }, idx) => (
         <div
           className={
-            // eslint-disable-next-line better-tailwindcss/no-unknown-classes, better-tailwindcss/enforce-consistent-line-wrapping -- dynamic class name generated alongside the inline @keyframes above
+            // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
             `absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`
           }
           key={
@@ -154,11 +154,7 @@ const Slideshow = ({
             priority={true}
             loading="eager"
             className={classes(
-              `
-                absolute inset-0 size-full bg-transparent object-cover blur-lg
-                transition-[opacity,visibility] duration-300
-                peer-data-loaded:invisible peer-data-loaded:opacity-0
-              `,
+              `absolute inset-0 size-full bg-transparent object-cover blur-lg transition-[opacity,visibility] duration-300 peer-data-loaded:invisible peer-data-loaded:opacity-0`,
               className,
             )}
             style={{

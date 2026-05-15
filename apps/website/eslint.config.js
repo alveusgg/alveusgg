@@ -104,6 +104,8 @@ export default tseslint.config(
       ...betterTailwindcssPlugin.configs.recommended.rules,
       // Rely on prettier-plugin-tailwindcss for ordering (eslint breaks interpolated classes)
       "better-tailwindcss/enforce-consistent-class-order": "off",
+      // Rely on prettier for line wrapping (the rule and prettier disagree)
+      "better-tailwindcss/enforce-consistent-line-wrapping": "off",
       "better-tailwindcss/no-unknown-classes": [
         "error",
         {
