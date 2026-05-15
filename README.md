@@ -147,8 +147,6 @@ but has only been tested on Vercel (and PlanetScale) for now.
    1. Fill the Prisma section with the database info (DSN)
    2. Fill in the S3 section with your S3-compatible storage info
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
-   - This is required whenever Prisma schema changes are deployed (for example, adding a new column like `pronouns` on `ShowAndTellEntry`).
-   - If this step is skipped, runtime queries can fail with unknown-column errors.
 6. Get your own domain (optional)
 7. Create a Vercel account
 8. Create a new Vercel project with these settings:
