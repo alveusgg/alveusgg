@@ -29,16 +29,10 @@ const Button = ({
     <button
       onClick={onClick}
       className={classes(
-        `
-          my-auto grow px-3 py-2 text-left text-lg font-semibold
-          backdrop-blur-sm
-        `,
+        `my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm`,
         camera === selected
           ? "bg-alveus-green/75 text-white"
-          : `
-            bg-alveus-green-50/75
-            hover:bg-alveus-green-100/90
-          `,
+          : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
       )}
     >
       {cameras[camera].title}
@@ -54,11 +48,7 @@ const Button = ({
           args={[selected.toLowerCase(), camera.toLowerCase()]}
           subOnly
           tooltip={{ text: "Run swap command", offset: 8 }}
-          className="
-            flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan
-            backdrop-blur-sm transition-colors
-            hover:bg-alveus-green-900/90
-          "
+          className="flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan backdrop-blur-sm transition-colors hover:bg-alveus-green-900/90"
         />
       )}
   </div>
@@ -126,16 +116,10 @@ export const CamListFull = ({
         aria-label="Search cameras"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="
-          w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50/75
-          px-2 py-1 font-semibold shadow-md backdrop-blur-sm
-          focus:ring-2 focus:ring-alveus-green focus:outline-none
-        "
+        className="w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
       />
 
-      <div className="
-        scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2
-      ">
+      <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
         {typeSafeObjectEntries(groupedCameras)
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([name, group]) => {
@@ -158,17 +142,10 @@ export const CamListFull = ({
                 <DisclosureButton
                   ref={disclosureRef}
                   className={classes(
-                    `
-                      group flex w-full shrink-0 items-center justify-between
-                      rounded-sm px-3 py-2 text-left text-lg font-semibold
-                      shadow-md backdrop-blur-sm
-                    `,
+                    `group flex w-full shrink-0 items-center justify-between rounded-sm px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm`,
                     cameras[camera].group === name
                       ? "bg-alveus-green/75 text-white"
-                      : `
-                        bg-alveus-green-50/75
-                        hover:bg-alveus-green-100/90
-                      `,
+                      : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
                   )}
                 >
                   <span>
@@ -177,10 +154,7 @@ export const CamListFull = ({
                       {` (${group.length})`}
                     </span>
                   </span>
-                  <IconChevronDown className="
-                    ml-auto size-5
-                    group-data-open:-scale-y-100
-                  " />
+                  <IconChevronDown className="ml-auto size-5 group-data-open:-scale-y-100" />
                 </DisclosureButton>
                 <DisclosurePanel className="ml-4 flex flex-col gap-1">
                   {group.map((item) => (
@@ -196,10 +170,7 @@ export const CamListFull = ({
             );
           })}
 
-        <div className="
-          pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0
-          mask-t-from-25% backdrop-blur-sm
-        " />
+        <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0 mask-t-from-25% backdrop-blur-sm" />
       </div>
     </>
   );
@@ -221,11 +192,7 @@ export const CamListDropdown = ({
       id="camera-select"
       value={camera}
       onChange={(e) => onChange(e.target.value as Camera)}
-      className="
-        w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50 px-3
-        py-2 text-lg font-semibold
-        focus:ring-2 focus:ring-alveus-green focus:outline-none
-      "
+      className="w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
     >
       {typeSafeObjectKeys(cameras).map((camera) => (
         <option key={camera} value={camera}>

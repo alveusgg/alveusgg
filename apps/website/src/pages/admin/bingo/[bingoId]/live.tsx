@@ -278,10 +278,7 @@ const AdminEditBingoPage: NextPage<
                             return (
                               <div
                                 className={classes(
-                                  `
-                                    flex size-4 items-center justify-center
-                                    text-center text-[0.5rem] text-black
-                                  `,
+                                  `flex size-4 items-center justify-center text-center text-[0.5rem] text-black`,
                                   isBingoMatch
                                     ? "bg-red-500"
                                     : isCalled

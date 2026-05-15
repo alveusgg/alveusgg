@@ -55,25 +55,16 @@ const SubNavInner = ({ links, className }: SubNavProps) => {
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav
     className={classes(
-      `
-        sticky inset-x-0 top-0 bg-alveus-green-100/50 text-xl font-bold
-        shadow-md backdrop-blur-2xl
-      `,
+      `sticky inset-x-0 top-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl`,
       className,
     )}
   >
     <div className="container mx-auto px-2 py-1">
       <SubNavInner
         links={links}
-        className="
-          hidden flex-row flex-wrap items-center
-          lg:flex
-        "
+        className="hidden flex-row flex-wrap items-center lg:flex"
       />
-      <Disclosure as="div" className="
-        flex flex-row items-start
-        lg:hidden
-      ">
+      <Disclosure as="div" className="flex flex-row items-start lg:hidden">
         <DisclosurePanel as={Fragment}>
           <SubNavInner links={links} className="flex flex-col" />
         </DisclosurePanel>

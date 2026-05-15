@@ -39,10 +39,7 @@ const Section = ({
     >
       {offsetParent && (
         <div
-          className={`
-            absolute inset-0 -z-10
-            ${opacity}
-          `}
+          className={`absolute inset-0 -z-10 ${opacity}`}
           style={{
             backgroundImage: `url(${texture})`,
             backgroundSize: "32rem",

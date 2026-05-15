@@ -91,21 +91,14 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
           href={`/ambassadors/${camelToKebab(key)}`}
           draggable={false}
           custom
-          className="
-            group
-            hover:text-alveus-green
-          "
+          className="group hover:text-alveus-green"
         >
           <Image
             src={images[0].src}
             alt={images[0].alt}
             draggable={false}
             width={200}
-            className={`
-              mx-auto aspect-square h-auto w-full max-w-40 rounded-xl
-              object-cover
-              ${ambassadorImageHover}
-            `}
+            className={`mx-auto aspect-square h-auto w-full max-w-40 rounded-xl object-cover ${ambassadorImageHover}`}
             style={{ objectPosition: images[0].position }}
           />
           <Heading level={3} className="text-center text-xl transition-colors">
@@ -206,27 +199,16 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </Meta>
 
       {/* Hero, offset to be navbar background */}
-      <div className="
-        relative z-0 flex min-h-[95vh] flex-col
-        lg:-mt-40
-      ">
+      <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
           <Slideshow images={slides} />
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="
-          container mx-auto grid grow auto-rows-auto grid-cols-1 content-center
-          items-center gap-8 p-4 text-white
-          lg:mt-40 lg:pt-8 lg:pb-16
-          xl:grid-cols-2 xl:gap-y-16
-        ">
+        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 content-center items-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:grid-cols-2 xl:gap-y-16">
           <div>
             <Heading className="text-5xl">
-              Educating the <br className="
-                hidden
-                md:block
-              " />
+              Educating the <br className="hidden md:block" />
               World from the Web
             </Heading>
 
@@ -248,20 +230,13 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="
-                aspect-video h-auto w-full max-w-2xl rounded-2xl
-                data-consent:backdrop-blur-md
-                xl:ml-auto
-              "
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-consent:backdrop-blur-md xl:ml-auto"
             >
               <Link
                 href="/live"
                 external
                 custom
-                className="
-                  block size-full rounded-2xl shadow-xl transition
-                  hover:scale-102 hover:shadow-2xl
-                "
+                className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
               >
                 <Twitch
                   channel="alveussanctuary"
@@ -274,11 +249,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           <Box
             dark
-            className="
-              col-span-full flex flex-col gap-x-4 gap-y-8 rounded-2xl
-              bg-alveus-green-900/25 backdrop-blur-sm
-              lg:flex-row
-            "
+            className="col-span-full flex flex-col gap-x-4 gap-y-8 rounded-2xl bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
           >
             <div className="flex grow flex-col items-start gap-4">
               <Heading level={2} className="my-0 text-balance">
@@ -303,28 +274,18 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </div>
             </div>
 
-            <div className="
-              z-0 flex items-center justify-center self-center
-              lg:max-w-lg
-            ">
+            <div className="z-0 flex items-center justify-center self-center lg:max-w-lg">
               <Image
                 src={instituteBuildingHeroImage}
                 width={300}
                 alt="Drawing of the Alveus Research & Recovery Institute building"
-                className="
-                  z-10 mr-[-10%] h-auto w-2/5 rounded-2xl shadow-lg
-                  transition-all
-                  hover:scale-102 hover:shadow-xl
-                "
+                className="z-10 mr-[-10%] h-auto w-2/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
               />
               <Image
                 src={instituteWolvesHeroImage}
                 width={400}
                 alt="Drawing of released wolves walking through the landscape"
-                className="
-                  h-auto w-3/5 rounded-2xl shadow-lg transition-all
-                  hover:scale-102 hover:shadow-xl
-                "
+                className="h-auto w-3/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
               />
             </div>
           </Box>
@@ -332,38 +293,23 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <div className="relative">
-        <div className="
-          pointer-events-none absolute -top-32 right-0 bottom-0 z-10 hidden
-          h-auto w-1/2 max-w-sm overflow-clip select-none
-          lg:block
-          xl:max-w-md
-          2xl:max-w-lg
-        ">
+        <div className="pointer-events-none absolute -top-32 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-sm overflow-clip select-none lg:block xl:max-w-md 2xl:max-w-lg">
           <Image
             src={leafRightImage1}
             alt=""
-            className="
-              absolute -right-32 h-auto max-h-full w-full drop-shadow-md
-            "
+            className="absolute -right-32 h-auto max-h-full w-full drop-shadow-md"
           />
         </div>
 
         <Image
           src={leafLeftImage3}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto
-            w-1/2 max-w-48 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section dark>
           <div className="flex flex-wrap items-center">
-            <div className="
-              basis-full
-              lg:basis-1/2 lg:px-4
-            ">
+            <div className="basis-full lg:basis-1/2 lg:px-4">
               <Heading level={2} id="alveus" link>
                 What is Alveus?
               </Heading>
@@ -393,14 +339,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </Button>
             </div>
 
-            <div className="
-              basis-full pt-8
-              lg:basis-1/2 lg:pt-0 lg:pl-8
-            ">
-              <MayaImage className="
-                mx-auto h-auto w-full max-w-lg
-                lg:ml-0
-              " />
+            <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
+              <MayaImage className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
             </div>
           </div>
         </Section>
@@ -408,11 +348,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
       <Section>
         <div className="flex flex-wrap items-center gap-y-8">
-          <div className="
-            max-w-full basis-full
-            md:max-w-1/2 md:basis-1/2
-            xl:max-w-2/3 xl:basis-2/3
-          ">
+          <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2 xl:max-w-2/3 xl:basis-2/3">
             <div className="flex flex-wrap items-center justify-between">
               <Heading level={2} id="ambassadors" link>
                 Ambassadors:
@@ -420,18 +356,10 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <Link
                 href="/ambassadors"
                 custom
-                className="
-                  group relative inline-block text-lg text-alveus-green-900
-                  uppercase transition-colors
-                  hover:text-alveus-green
-                "
+                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
               >
                 See All
-                <span className="
-                  absolute inset-x-0 bottom-0 block h-0.5 max-w-0
-                  bg-alveus-green transition-all
-                  group-hover:max-w-full
-                " />
+                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
               </Link>
             </div>
 
@@ -443,11 +371,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             />
           </div>
 
-          <div className="
-            basis-full
-            md:basis-1/2 md:px-16
-            xl:basis-1/3
-          ">
+          <div className="basis-full md:basis-1/2 md:px-16 xl:basis-1/3">
             <Heading level={3}>Do you want to support these animals?</Heading>
             <p className="my-4">
               Donations help Alveus carry on its mission to inspire online
@@ -461,11 +385,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
       <Section dark>
         <div className="flex flex-wrap items-center gap-y-8">
-          <div className="
-            basis-full
-            lg:basis-1/3
-            xl:basis-1/2
-          ">
+          <div className="basis-full lg:basis-1/3 xl:basis-1/2">
             <Heading level={2} id="animal-quest" link>
               Animal Quest
             </Heading>
@@ -481,17 +401,10 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
 
           {latestAnimalQuest && (
-            <div className="
-              basis-full
-              lg:basis-2/3 lg:px-16
-              xl:basis-1/2
-            ">
+            <div className="basis-full lg:basis-2/3 lg:px-16 xl:basis-1/2">
               <Heading
                 level={3}
-                className="
-                  my-1 font-sans text-lg font-normal text-alveus-green-100
-                  uppercase
-                "
+                className="my-1 font-sans text-lg font-normal text-alveus-green-100 uppercase"
               >
                 Latest Episode
               </Heading>
@@ -506,35 +419,21 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafRightImage2}
           alt=""
-          className="
-            pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto
-            w-1/2 max-w-40 drop-shadow-md select-none
-            lg:block
-            2xl:-top-52 2xl:max-w-48
-          "
+          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-top-52 2xl:max-w-48"
         />
 
         <Section containerClassName="space-y-8">
-          <div className="
-            grid grid-cols-1 justify-items-start gap-4
-            lg:grid-cols-2 lg:grid-rows-auto-3
-          ">
+          <div className="grid grid-cols-1 justify-items-start gap-4 lg:grid-cols-2 lg:grid-rows-auto-3">
             <Heading
               level={2}
               id="merch"
               link
-              className="
-                my-0 self-baseline
-                lg:col-start-1 lg:row-start-1
-              "
+              className="my-0 self-baseline lg:col-start-1 lg:row-start-1"
             >
               Alveus Merch
             </Heading>
 
-            <div className="
-              space-y-2
-              lg:col-start-1 lg:row-start-2
-            ">
+            <div className="space-y-2 lg:col-start-1 lg:row-start-2">
               <p>
                 Grab yourself some high-quality merch and support Alveus in your
                 home or when you&apos;re out and about!
@@ -551,18 +450,12 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Heading
               level={3}
-              className="
-                my-0 self-baseline text-xl
-                lg:col-start-2 lg:row-start-1
-              "
+              className="my-0 self-baseline text-xl lg:col-start-2 lg:row-start-1"
             >
               + Plushies
             </Heading>
 
-            <div className="
-              space-y-2
-              lg:col-start-2 lg:row-start-2
-            ">
+            <div className="space-y-2 lg:col-start-2 lg:row-start-2">
               <p>
                 Or, have your very own ambassador in your home with our soft and
                 cuddly plushies!
@@ -597,12 +490,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             {videos.map((video) => (
               <div
                 key={video.id}
-                className="
-                  mx-auto flex basis-full flex-col items-center justify-start
-                  p-2
-                  md:basis-1/2
-                  lg:basis-1/4
-                "
+                className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
               >
                 <Heading
                   level={2}
@@ -628,10 +516,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                   />
                 </Link>
 
-                <div className="
-                  order-2 my-1 flex w-full flex-wrap items-center
-                  justify-between px-1
-                ">
+                <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
                   <p className="text-sm/tight text-alveus-green-200">
                     {formatDateTime(video.published, { style: "long" })}
                   </p>
@@ -639,11 +524,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                     href={video.author.uri}
                     external
                     custom
-                    className="
-                      block rounded-full bg-alveus-tan px-2 py-1 text-xs/tight
-                      text-alveus-green-700 transition-colors
-                      hover:bg-alveus-green-800 hover:text-alveus-tan
-                    "
+                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs/tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
                   >
                     {video.author.name}
                   </Link>
@@ -665,12 +546,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto
-            w-1/2 max-w-40 drop-shadow-md select-none
-            lg:block
-            2xl:-bottom-48 2xl:max-w-48
-          "
+          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section dark className="grow bg-alveus-green-900">
@@ -687,18 +563,10 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 custom
                 className="group flex items-center gap-4"
               >
-                <div className="
-                  rounded-2xl bg-alveus-tan p-3 text-alveus-green
-                  transition-colors
-                  group-hover:bg-alveus-green group-hover:text-alveus-tan
-                ">
+                <div className="rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
                   <value.icon size={24} />
                 </div>
-                <p className="
-                  font-serif text-2xl font-bold text-alveus-tan
-                  transition-colors
-                  group-hover:text-alveus-green-500
-                ">
+                <p className="font-serif text-2xl font-bold text-alveus-tan transition-colors group-hover:text-alveus-green-500">
                   {value.title}
                 </p>
               </Link>

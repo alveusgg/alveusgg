@@ -34,14 +34,7 @@ const AnimalQuest = ({
   <Link
     href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
     className={classes(
-      `
-        group relative z-0 flex flex-wrap items-center justify-between gap-x-8
-        gap-y-2 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition
-        hover:scale-102 hover:shadow-2xl
-        sm:flex-nowrap
-        md:flex-wrap
-        xl:flex-nowrap
-      `,
+      `group relative z-0 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap`,
       className,
     )}
     custom
@@ -50,19 +43,13 @@ const AnimalQuest = ({
       src={animalQuestImage}
       alt=""
       width={688}
-      className="
-        absolute inset-0 -z-10 size-full rounded-2xl bg-alveus-tan object-cover
-        opacity-10
-      "
+      className="absolute inset-0 -z-10 size-full rounded-2xl bg-alveus-tan object-cover opacity-10"
     />
 
     <div>
       <Heading
         level={heading}
-        className="
-          text-alveus-green-900 transition-colors
-          group-hover:text-alveus-green-800
-        "
+        className="text-alveus-green-900 transition-colors group-hover:text-alveus-green-800"
       >
         <span className="inline-block">
           <span className="inline-block">Animal Quest</span>{" "}
@@ -87,10 +74,7 @@ const AnimalQuest = ({
 
     <IconYouTube
       size={48}
-      className="
-        shrink-0 text-alveus-green-900 transition-colors
-        group-hover:text-alveus-green-600
-      "
+      className="shrink-0 text-alveus-green-900 transition-colors group-hover:text-alveus-green-600"
     />
   </Link>
 );

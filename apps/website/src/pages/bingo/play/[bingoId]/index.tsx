@@ -164,26 +164,14 @@ const PlayBingoPage = () => {
       <Meta title="Alveus Bingo" description="Alveus Bingo" />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <nav
-        className="
-          sticky inset-x-0 top-0 z-20 flex flex-row items-center justify-center
-          py-4
-        "
+        className="sticky inset-x-0 top-0 z-20 flex flex-row items-center justify-center py-4"
         aria-label="Scroll navigation"
       >
-        <ul className="
-          flex flex-row rounded-2xl bg-white/90 shadow-lg backdrop-blur-md
-          lg:text-lg
-        ">
-          <li className="
-            border-l
-            first:border-l-0
-          ">
+        <ul className="flex flex-row rounded-2xl bg-white/90 shadow-lg backdrop-blur-md lg:text-lg">
+          <li className="border-l first:border-l-0">
             <a
               className="block p-2 px-4"
               href="#bingo"
@@ -194,10 +182,7 @@ const PlayBingoPage = () => {
               Bingo
             </a>
           </li>
-          <li className="
-            border-l
-            first:border-l-0
-          ">
+          <li className="border-l first:border-l-0">
             <a
               className="block p-2 px-4"
               href="#livestream"
@@ -241,20 +226,13 @@ const PlayBingoPage = () => {
               <div
                 className={classes(
                   embedStream ? "bg-alveus-green" : "bg-alveus-green-300",
-                  `
-                    relative inline-flex h-6 w-11 cursor-pointer items-center
-                    rounded-full shadow-inner outline-blue-500 transition-colors
-                    peer-focus:outline
-                  `,
+                  `relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline`,
                 )}
               >
                 <span
                   className={classes(
                     embedStream ? "translate-x-6" : "translate-x-1",
-                    `
-                      inline-block size-4 rounded-full bg-alveus-tan shadow-sm
-                      transition-transform
-                    `,
+                    `inline-block size-4 rounded-full bg-alveus-tan shadow-sm transition-transform`,
                   )}
                 />
               </div>
@@ -281,11 +259,7 @@ const PlayBingoPage = () => {
           <Consent
             item="Maya's stream"
             consent="twitch"
-            className="
-              relative h-[90vh] w-full rounded-2xl bg-alveus-green
-              text-alveus-tan
-              lg:h-[calc(56vw-192px)]
-            "
+            className="relative h-[90vh] w-full rounded-2xl bg-alveus-green text-alveus-tan lg:h-[calc(56vw-192px)]"
           >
             <Twitch channel="maya" className="absolute inset-0 size-full" />
           </Consent>

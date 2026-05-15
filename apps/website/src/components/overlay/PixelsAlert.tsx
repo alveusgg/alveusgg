@@ -192,10 +192,7 @@ function PixelsAlert() {
     <AnimatePresence mode="wait">
       <div
         ref={scope}
-        className="
-          flex h-[300px] w-[400px] flex-col items-center justify-center gap-2
-          text-white text-stroke
-        "
+        className="flex h-[300px] w-[400px] flex-col items-center justify-center gap-2 text-white text-stroke"
       >
         <motion.div
           layout="position"
@@ -236,10 +233,7 @@ function PixelsAlert() {
           </motion.span>
 
           <motion.div
-            className="
-              size-[100px] overflow-hidden rounded-md bg-white p-1 ring
-              ring-black
-            "
+            className="size-[100px] overflow-hidden rounded-md bg-white p-1 ring ring-black"
             ref={pixelRef}
             variants={{
               hidden: { opacity: 0 },

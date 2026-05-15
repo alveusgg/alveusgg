@@ -50,14 +50,9 @@ export function LinkButton({
 }: LinkButtonProps) {
   return (
     <Link
-      className={`
-        ${baseClasses}
-        ${getWidthClasses(width)}
-        ${getSizeClasses(
+      className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
         size,
-      )}
-        ${className}
-      `}
+      )} ${className}`}
       {...props}
     >
       {children}
@@ -88,14 +83,9 @@ export const Button = ({
   return (
     <button
       type={type}
-      className={`
-        ${baseClasses}
-        ${getWidthClasses(width)}
-        ${getSizeClasses(
+      className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
         size,
-      )}
-        ${className}
-      `}
+      )} ${className}`}
       {...buttonProps}
     >
       {children}

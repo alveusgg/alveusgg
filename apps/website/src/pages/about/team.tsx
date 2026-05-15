@@ -30,16 +30,10 @@ const staffWithDepartments = Object.fromEntries(
     {
       ...person,
       title: (
-        <span className="
-          flex flex-col flex-wrap items-baseline
-          lg:flex-row
-        ">
+        <span className="flex flex-col flex-wrap items-baseline lg:flex-row">
           {person.title}
           {!!departments[person.department] && (
-            <span className="
-              font-sans text-base text-alveus-green-600 uppercase
-              lg:ml-auto
-            ">
+            <span className="font-sans text-base text-alveus-green-600 uppercase lg:ml-auto">
               {departments[person.department]}
             </span>
           )}
@@ -243,10 +237,7 @@ const AboutTeamPage: NextPage = () => {
       </Meta>
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section dark className="py-8">
         <Heading className="my-0">Alveus Team</Heading>
@@ -254,9 +245,7 @@ const AboutTeamPage: NextPage = () => {
 
       <SubNav links={sectionLinks} className="z-20" />
 
-      <Section className="
-        bg-alveus-green-100 py-16 text-center text-alveus-green-900
-      ">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
         <Heading level={2} id="staff" link>
           Alveus Staff
         </Heading>
@@ -272,28 +261,18 @@ const AboutTeamPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="
-            pointer-events-none absolute -top-52 -left-8 z-10 hidden h-auto
-            w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute -top-52 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block"
         />
         <Image
           src={leafLeftImage3}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto
-            w-1/2 max-w-48 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section>
           <People people={staffWithDepartments} link />
 
-          <p className="
-            mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg
-          ">
+          <p className="mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
             number of folks who help us out remotely with a variety of tasks,
             from social media management to development.
@@ -304,10 +283,7 @@ const AboutTeamPage: NextPage = () => {
               <div
                 key={key}
                 className={classes(
-                  `
-                    w-full p-4
-                    sm:w-1/2
-                  `,
+                  `w-full p-4 sm:w-1/2`,
                   arr.length === 4 ? "lg:w-1/4" : "lg:w-1/3",
                 )}
               >
@@ -319,9 +295,7 @@ const AboutTeamPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="
-        bg-alveus-green-100 py-16 text-center text-alveus-green-900
-      ">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
         <Heading level={2} id="advisory-board" link>
           Alveus Advisory Board
         </Heading>
@@ -335,20 +309,14 @@ const AboutTeamPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="
-            pointer-events-none absolute right-0 -bottom-20 z-10 hidden h-auto
-            w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute right-0 -bottom-20 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
         <Section>
           <People people={advisors} columns={2} align="center" />
         </Section>
       </div>
 
-      <Section className="
-        bg-alveus-green-100 py-16 text-center text-alveus-green-900
-      ">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
         <Heading level={2} id="board-of-directors" link>
           Alveus Board of Directors
         </Heading>
@@ -362,12 +330,7 @@ const AboutTeamPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="
-            pointer-events-none absolute right-0 -bottom-52 z-10 hidden h-auto
-            w-1/2 max-w-40 drop-shadow-md select-none
-            lg:block
-            2xl:-bottom-64 2xl:max-w-48
-          "
+          className="pointer-events-none absolute right-0 -bottom-52 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Section>
           <People people={directors} columns={2} align="center" />

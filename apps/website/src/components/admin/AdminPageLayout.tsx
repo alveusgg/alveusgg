@@ -34,11 +34,7 @@ const NavLink = (props: NavLinkProps) => {
     <Link
       {...props}
       className={classes(
-        `
-          rounded-2xl px-4 py-2
-          hover:bg-black/30
-          focus:bg-black/30
-        `,
+        `rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30`,
         props.className,
         isActive && "bg-black/20",
       )}
@@ -55,20 +51,13 @@ export const AdminPageLayout = ({
   return (
     <>
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-gray-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-gray-900 lg:block" />
 
       <div
         {...props}
-        className="
-          flex grow flex-col border-b border-black bg-gray-800 text-gray-200
-        "
+        className="flex grow flex-col border-b border-black bg-gray-800 text-gray-200"
       >
-        <h1 className="
-          border-b border-black bg-gray-900 p-4 text-xl font-semibold
-        ">
+        <h1 className="border-b border-black bg-gray-900 p-4 text-xl font-semibold">
           Admin / {title}
         </h1>
         <div className="flex flex-1 flex-row">

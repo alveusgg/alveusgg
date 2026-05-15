@@ -45,33 +45,22 @@ export function AdminShowAndTellEntry({
 
   return (
     <tr className="border-t border-gray-800">
-      <td className={`
-        ${cellClasses}
-      `}>
+      <td className={`${cellClasses}`}>
         <strong>{entry.displayName}</strong>
         <br />
         {entry.user?.name || <em>Anonymous</em>}
       </td>
-      <td className={`
-        ${cellClasses}
-        font-semibold
-      `}>
+      <td className={`${cellClasses} font-semibold`}>
         {entry.title || "n/a"}
       </td>
-      <td className={`
-        ${cellClasses}
-        whitespace-nowrap
-      `}>
+      <td className={`${cellClasses} whitespace-nowrap`}>
         <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
         <br />
         {Number(entry.createdAt) !== Number(entry.updatedAt) && (
           <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
         )}
       </td>
-      <td className={`
-        ${cellClasses}
-        whitespace-nowrap
-      `}>
+      <td className={`${cellClasses} whitespace-nowrap`}>
         {entry.seenOnStreamAt && (
           <Button
             size="small"
@@ -132,10 +121,7 @@ export function AdminShowAndTellEntry({
         )}
         {!entry.seenOnStreamAt && status === "pendingApproval" && "no"}
       </td>
-      <td className={`
-        ${cellClasses}
-        flex flex-col gap-1
-      `}>
+      <td className={`${cellClasses} flex flex-col gap-1`}>
         <LinkButton
           size="small"
           href={`/admin/show-and-tell/review/${entry.id}`}

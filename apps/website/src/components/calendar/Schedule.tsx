@@ -86,19 +86,12 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
   if (!selected) return null;
 
   return (
-    <div className="
-      grid grid-cols-1 gap-x-8 gap-y-2
-      xl:grid-cols-3
-    ">
+    <div className="grid grid-cols-1 gap-x-8 gap-y-2 xl:grid-cols-3">
       <Calendar
         events={eventsWithChildren}
         selectedDateTime={selected}
         onChange={setSelected}
-        className="
-          mt-2
-          md:mt-6
-          xl:col-span-2
-        "
+        className="mt-2 md:mt-6 xl:col-span-2"
         timeZone={timeZone}
         setTimeZone={setTimeZone}
       >
@@ -109,20 +102,14 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
           </p>
 
           <Transition show={events.isPending}>
-            <p className="
-              animate-pulse transition-opacity duration-300
-              data-closed:animate-none data-closed:opacity-0
-            ">
+            <p className="animate-pulse transition-opacity duration-300 data-closed:animate-none data-closed:opacity-0">
               Loading...
             </p>
           </Transition>
         </div>
       </Calendar>
 
-      <div className="
-        flex flex-col gap-4
-        xl:pt-32
-      ">
+      <div className="flex flex-col gap-4 xl:pt-32">
         {typeSafeObjectEntries(groupedCategories).map(([group, grouped]) => (
           <Fragment key={group}>
             <div className="flex flex-col gap-2">
@@ -133,28 +120,19 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
                   <Link
                     custom
                     external
-                    className="
-                      rounded-lg bg-alveus-green px-2 py-1 text-sm
-                      text-alveus-tan transition-colors
-                      hover:bg-alveus-green-800
-                    "
+                    className="rounded-lg bg-alveus-green px-2 py-1 text-sm text-alveus-tan transition-colors hover:bg-alveus-green-800"
                     href={`https://calendar.google.com/calendar/render?cid=${webcalUrls[group]}`}
                   >
                     Add to Google Calendar
                     <IconExternal
                       size="1em"
-                      className="
-                        mr-0.5 -mb-0.5 ml-1 inline-block align-baseline
-                      "
+                      className="mr-0.5 -mb-0.5 ml-1 inline-block align-baseline"
                     />
                   </Link>
                   <input
                     readOnly={true}
                     type="url"
-                    className="
-                      box-content min-w-0 rounded-lg bg-alveus-green-800 p-1
-                      text-center text-sm text-alveus-tan italic outline-hidden
-                    "
+                    className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm text-alveus-tan italic outline-hidden"
                     value={webcalUrls[group]}
                     onClick={(e) =>
                       e.currentTarget.setSelectionRange(
@@ -172,11 +150,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
               )}
             </div>
 
-            <div className="
-              grid grid-cols-1 gap-x-4 gap-y-1
-              md:grid-cols-2
-              xl:grid-cols-1
-            ">
+            <div className="grid grid-cols-1 gap-x-4 gap-y-1 md:grid-cols-2 xl:grid-cols-1">
               {grouped.map((category) => (
                 <label
                   key={category.name}
@@ -200,10 +174,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
                   <div
                     className={classes(
                       category.color,
-                      `
-                        rounded-md border-2 p-1
-                        group-hover:border-black/20
-                      `,
+                      `rounded-md border-2 p-1 group-hover:border-black/20`,
                       categories.has(category.name)
                         ? "border-black/20"
                         : "border-black/10",

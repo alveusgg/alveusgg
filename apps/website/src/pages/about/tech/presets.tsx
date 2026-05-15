@@ -44,10 +44,7 @@ const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
     <div
       className={classes(
-        `
-          box-content flex items-center justify-center rounded-sm border-2
-          border-current p-0.5 font-mono text-sm
-        `,
+        `box-content flex items-center justify-center rounded-sm border-2 border-current p-0.5 font-mono text-sm`,
         className,
       )}
     >
@@ -142,27 +139,17 @@ const AboutTechPresetsPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="
-            pointer-events-none absolute -top-8 right-0 z-10 hidden h-full
-            max-h-80 w-auto -scale-x-100 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-full max-h-80 w-auto -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
-          <div className="
-            w-full
-            lg:w-3/5
-          ">
+          <div className="w-full lg:w-3/5">
             <Heading level={1}>Camera Presets at Alveus</Heading>
             <p className="text-lg text-balance">
               Control the cameras on the livestream by loading preset positions
@@ -180,10 +167,7 @@ const AboutTechPresetsPage: NextPage = () => {
       <div
         className={classes(
           "flex bg-alveus-green py-4",
-          zen ? "fixed inset-0 z-100 h-screen" : `
-            relative
-            lg:h-screen
-          `,
+          zen ? "fixed inset-0 z-100 h-screen" : `relative lg:h-screen`,
         )}
       >
         <Section
@@ -197,27 +181,14 @@ const AboutTechPresetsPage: NextPage = () => {
             <Image
               src={leafLeftImage3}
               alt=""
-              className="
-                pointer-events-none absolute right-0 -bottom-24 z-10 hidden
-                h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none
-                lg:block
-              "
+              className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
             />
           )}
 
-          <div className="
-            scrollbar-none flex h-full max-h-full flex-col overflow-x-hidden
-            overflow-y-auto
-          ">
-            <div className="
-              grid grid-cols-1 gap-x-8 gap-y-4
-              @3xl:grid-cols-5
-            ">
+          <div className="scrollbar-none flex h-full max-h-full flex-col overflow-x-hidden overflow-y-auto">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
               {!zen && (
-                <div className="
-                  grid w-full grid-cols-1 gap-2
-                  @3xl:col-span-3
-                ">
+                <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
                   <p>
                     If you&apos;re subscribed, you can run these commands
                     directly from this page by clicking the{" "}
@@ -236,10 +207,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     as if you had typed it in the chat yourself.
                   </p>
 
-                  <p className="
-                    hidden
-                    lg:block
-                  ">
+                  <p className="hidden lg:block">
                     Next to each camera in the menu you&apos;ll also find a{" "}
                     <span className="font-semibold text-alveus-green">
                       Run swap command{" "}
@@ -257,10 +225,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     </Link>{" "}
                     open in another tab, to see the cameras change as you load
                     presets
-                    <span className="
-                      hidden
-                      lg:inline
-                    ">
+                    <span className="hidden lg:inline">
                       {" "}
                       and swap which cameras are on stream
                     </span>
@@ -272,10 +237,7 @@ const AboutTechPresetsPage: NextPage = () => {
               <div
                 className={classes(
                   "grid w-full grid-cols-1 gap-x-8 gap-y-2",
-                  zen ? `
-                    col-span-full
-                    @3xl:grid-cols-2
-                  ` : "@3xl:col-span-2",
+                  zen ? `col-span-full @3xl:grid-cols-2` : "@3xl:col-span-2",
                 )}
               >
                 <ProvideAuth scopeGroup="chat" className="mb-4" />
@@ -283,10 +245,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 {!subscription.isPaused && (
                   <div
                     className={classes(
-                      `
-                        mb-auto flex items-center justify-between rounded-xl p-3
-                        text-lg text-alveus-tan
-                      `,
+                      `mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan`,
                       subscription.isSuccess &&
                         (subscription.data ? "bg-alveus-green" : "bg-red"),
                       subscription.isLoading && "bg-twitch",
@@ -326,18 +285,11 @@ const AboutTechPresetsPage: NextPage = () => {
                       className={classes(
                         zen
                           ? "order-first row-span-2 grid grid-rows-subgrid"
-                          : `
-                            hidden
-                            lg:contents
-                          `,
+                          : `hidden lg:contents`,
                       )}
                     >
-                      <Field className="
-                        flex flex-wrap items-center justify-between gap-2
-                      ">
-                        <Label className="
-                          flex grow cursor-pointer flex-col leading-tight
-                        ">
+                      <Field className="flex flex-wrap items-center justify-between gap-2">
+                        <Label className="flex grow cursor-pointer flex-col leading-tight">
                           <span>Enable embedded Twitch stream player</span>
                           <span className="text-sm text-alveus-green-400 italic">
                             (also embeds the {channels.alveusgg.username} stream
@@ -350,26 +302,14 @@ const AboutTechPresetsPage: NextPage = () => {
                           onChange={(val) =>
                             setTwitchEmbed(val ? sidebarDefault() : -1)
                           }
-                          className="
-                            group inline-flex h-6 w-11 shrink-0 items-center
-                            rounded-full bg-alveus-green-300 transition-colors
-                            data-checked:bg-alveus-green
-                          "
+                          className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                         >
-                          <span className="
-                            size-4 translate-x-1 rounded-full bg-alveus-tan
-                            transition-transform
-                            group-data-checked:translate-x-6
-                          " />
+                          <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                         </Switch>
                       </Field>
 
-                      <Field className="
-                        flex flex-wrap items-center justify-between gap-2
-                      ">
-                        <Label className="
-                          flex grow cursor-pointer flex-col leading-tight
-                        ">
+                      <Field className="flex flex-wrap items-center justify-between gap-2">
+                        <Label className="flex grow cursor-pointer flex-col leading-tight">
                           <span>Enable zen control mode</span>
                           <span className="text-sm text-alveus-green-400 italic">
                             (hides all other page UI elements)
@@ -379,24 +319,14 @@ const AboutTechPresetsPage: NextPage = () => {
                         <Switch
                           checked={focused}
                           onChange={setFocused}
-                          className="
-                            group inline-flex h-6 w-11 shrink-0 items-center
-                            rounded-full bg-alveus-green-300 transition-colors
-                            data-checked:bg-alveus-green
-                          "
+                          className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                         >
-                          <span className="
-                            size-4 translate-x-1 rounded-full bg-alveus-tan
-                            transition-transform
-                            group-data-checked:translate-x-6
-                          " />
+                          <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                         </Switch>
                       </Field>
                     </div>
 
-                    <Field className="
-                      flex flex-wrap items-center justify-between gap-2
-                    ">
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="flex flex-col leading-tight">
                         <span>Swap camera positions on stream</span>
                         <span className="text-sm text-alveus-green-400 italic">
@@ -437,10 +367,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               }}
                               icon={getPositionIcon(i + 1)}
                               onClick={() => setSelectedPosition(undefined)}
-                              className="
-                                text-highlight
-                                hover:text-black
-                              "
+                              className="text-highlight hover:text-black"
                             />
                           ),
                         )}
@@ -451,22 +378,11 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
             </div>
 
-            <div className="
-              mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6
-              @3xl:grid-cols-3
-              @5xl:grid-cols-4
-            ">
+            <div className="mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
               {/* Camera List */}
-              <div className="
-                col-span-1 space-y-2
-                @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0
-                @3xl:flex-col
-              ">
+              <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col">
                 {/* Mobile: Dropdown */}
-                <div className="
-                  mb-2 block
-                  @3xl:hidden
-                ">
+                <div className="mb-2 block @3xl:hidden">
                   <CamListDropdown
                     camera={selectedCamera}
                     onChange={setSelectedCamera}
@@ -474,17 +390,11 @@ const AboutTechPresetsPage: NextPage = () => {
                 </div>
 
                 {/* Desktop: Button List */}
-                <div className="
-                  relative hidden
-                  @3xl:contents
-                ">
+                <div className="relative hidden @3xl:contents">
                   <Image
                     src={leafRightImage2}
                     alt=""
-                    className="
-                      pointer-events-none absolute top-0 right-0 -z-10 h-96
-                      max-h-full w-auto drop-shadow-md select-none
-                    "
+                    className="pointer-events-none absolute top-0 right-0 -z-10 h-96 max-h-full w-auto drop-shadow-md select-none"
                   />
 
                   <CamListFull
@@ -495,11 +405,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Preset List */}
-              <div className="
-                col-span-1 flex max-h-full min-h-64 flex-col
-                @3xl:sticky @3xl:top-0 @3xl:col-span-2
-                @5xl:col-span-3
-              ">
+              <div className="col-span-1 flex max-h-full min-h-64 flex-col @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
                 {selectedCamera && (
                   <PresetList
                     camera={selectedCamera}
@@ -514,27 +420,17 @@ const AboutTechPresetsPage: NextPage = () => {
         {sidebar && (
           <div className="flex" ref={sidebarContainer}>
             <div
-              className="
-                group flex cursor-ew-resize items-center justify-center px-2
-                py-4 select-none
-              "
+              className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
               onMouseDown={() => {
                 sidebarDrag.current = true;
                 window.document.documentElement.style.cursor = "ew-resize";
                 window.document.body.style.pointerEvents = "none";
               }}
             >
-              <div className="
-                h-1/3 max-h-full w-1 rounded-sm bg-alveus-green-200
-                transition-colors
-                group-hover:bg-alveus-green-400
-                group-active:bg-alveus-green-400
-              " />
+              <div className="h-1/3 max-h-full w-1 rounded-sm bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
-              className="
-                overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan
-              "
+              className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
               style={{ width: twitchEmbed }}
             >
               <Consent item="stream player" consent="twitch" className="h-full">

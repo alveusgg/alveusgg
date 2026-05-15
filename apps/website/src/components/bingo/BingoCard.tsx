@@ -134,18 +134,10 @@ export function BingoCard({
   }, [hasBingo, onBingo]);
 
   return (
-    <div className="
-      flex flex-col items-center justify-stretch gap-4
-      lg:flex-row lg:gap-12
-      xl:gap-24
-    ">
+    <div className="flex flex-col items-center justify-stretch gap-4 lg:flex-row lg:gap-12 xl:gap-24">
       <div className="relative flex w-full max-w-[600px] shrink-0 flex-col">
         <BingoCardGrid
-          className="
-            w-full gap-2 rounded-lg border border-white bg-black/80 p-2 text-lg
-            font-bold tabular-nums shadow-2xl select-none
-            sm:text-4xl
-          "
+          className="w-full gap-2 rounded-lg border border-white bg-black/80 p-2 text-lg font-bold tabular-nums shadow-2xl select-none sm:text-4xl"
           size={size}
           showBingoHeader
           renderCell={(_, rowIndex, columnIndex) => {
@@ -190,24 +182,14 @@ export function BingoCard({
                     }}
                     disabled={!isSelectable}
                     className={classes(
-                      `
-                        flex w-full transform items-center justify-center
-                        rounded-sm transition-all
-                      `,
+                      `flex w-full transform items-center justify-center rounded-sm transition-all`,
                       isBingoMatch
                         ? "bg-red-500"
                         : isSelected
                           ? "bg-green-800 text-white"
                           : isSelectable
-                            ? `
-                              bg-green-100
-                              hover:scale-105 hover:bg-green-200 hover:shadow-lg
-                              lg:bg-green-50
-                            `
-                            : `
-                              bg-white
-                              hover:scale-95 hover:bg-gray-200
-                            `,
+                            ? `bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50`
+                            : `bg-white hover:scale-95 hover:bg-gray-200`,
                     )}
                   >
                     {cellValue}
@@ -219,25 +201,15 @@ export function BingoCard({
         />
 
         {hasBingo && (
-          <div className="
-            absolute inset-0 flex items-center justify-center rounded-lg
-            bg-black/10
-          ">
-            <div className="
-              rounded-xl border border-white/50 bg-red-700 px-6 py-4 text-5xl
-              font-bold text-yellow-600 drop-shadow-xl
-            ">
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/10">
+            <div className="rounded-xl border border-white/50 bg-red-700 px-6 py-4 text-5xl font-bold text-yellow-600 drop-shadow-xl">
               BINGO!
             </div>
           </div>
         )}
       </div>
 
-      <div className="
-        flex flex-col gap-2 text-center text-lg
-        lg:justify-center lg:text-left lg:text-xl
-        2xl:text-2xl
-      ">
+      <div className="flex flex-col gap-2 text-center text-lg lg:justify-center lg:text-left lg:text-xl 2xl:text-2xl">
         <div className="text-balance">
           You have a bingo card with 5&times;5 random numbers. During the game,
           numbers will be drawn and you can mark them on your card. Your goal is
@@ -245,20 +217,14 @@ export function BingoCard({
           a free space. You don&apos;t need to mark it.
         </div>
 
-        <strong className="
-          lg:mt-6
-          xl:mt-12
-        ">Drawn numbers:</strong>
+        <strong className="lg:mt-6 xl:mt-12">Drawn numbers:</strong>
 
         <div className="block text-balance">
           {selectableValues?.length
             ? selectableValues.map((value) => (
                 <div
                   key={value}
-                  className="
-                    m-1 inline-flex min-w-8 items-center justify-center
-                    rounded-full bg-white p-2 leading-none
-                  "
+                  className="m-1 inline-flex min-w-8 items-center justify-center rounded-full bg-white p-2 leading-none"
                 >
                   <span>{value}</span>
                 </div>

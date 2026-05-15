@@ -113,10 +113,7 @@ const AnimalQuestItems = ({
     {name && (
       <Heading
         level={2}
-        className="
-          mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl
-          text-alveus-green-800
-        "
+        className="mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -130,21 +127,11 @@ const AnimalQuestItems = ({
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="
-            flex basis-full items-center gap-4 py-8
-            md:px-8
-            lg:gap-8
-            xl:basis-1/2
-          "
+          className="flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
           <Link
             href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-            className="
-              group relative order-last shrink-0 rounded-full bg-alveus-tan
-              transition-transform
-              hover:scale-102
-              lg:order-first
-            "
+            className="group relative order-last shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
             custom
           >
             {(() => {
@@ -159,13 +146,7 @@ const AnimalQuestItems = ({
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    `
-                      hidden size-24 rounded-full object-cover shadow-sm
-                      transition-shadow
-                      group-hover:shadow-md
-                      min-[430px]:block
-                      md:size-32
-                    `,
+                    `hidden size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:size-32`,
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
@@ -184,13 +165,7 @@ const AnimalQuestItems = ({
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="
-                      absolute -right-2 -bottom-2 hidden size-12 rounded-full
-                      object-cover
-                      shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)]
-                      min-[430px]:block
-                      md:size-16
-                    "
+                    className="absolute -right-2 -bottom-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -206,13 +181,7 @@ const AnimalQuestItems = ({
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="
-                      absolute -bottom-2 -left-2 hidden size-12 rounded-full
-                      object-cover
-                      shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)]
-                      min-[430px]:block
-                      md:size-16
-                    "
+                    className="absolute -bottom-2 -left-2 hidden size-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -223,10 +192,7 @@ const AnimalQuestItems = ({
           <div className="grow">
             <Link
               href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-              className="
-                group flex items-start justify-between gap-x-8 transition-colors
-                hover:text-alveus-green-600
-              "
+              className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
               custom
             >
               <Heading
@@ -238,20 +204,14 @@ const AnimalQuestItems = ({
                   <IconYouTube size={24} className="lg:hidden" />
                   Episode {episode.episode}:{" "}
                 </span>
-                <span className="
-                  block
-                  group-hover:underline
-                ">
+                <span className="block group-hover:underline">
                   {episode.edition}
                 </span>
               </Heading>
 
               <IconYouTube
                 size={48}
-                className="
-                  mt-6 hidden shrink-0
-                  lg:block
-                "
+                className="mt-6 hidden shrink-0 lg:block"
               />
             </Link>
             <p className="text-lg">
@@ -320,20 +280,13 @@ const AnimalQuestPage: NextPage = () => {
       </Meta>
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="relative">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto
-            w-1/2 max-w-36 -scale-y-100 rotate-20 drop-shadow-md select-none
-            lg:block
-          "
+          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 -scale-y-100 rotate-20 drop-shadow-md select-none lg:block"
         />
 
         <Section
@@ -341,10 +294,7 @@ const AnimalQuestPage: NextPage = () => {
           className="py-0"
           containerClassName="flex flex-wrap-reverse items-center justify-between"
         >
-          <div className="
-            w-full pt-4 pb-16
-            md:w-3/5 md:py-24
-          ">
+          <div className="w-full pt-4 pb-16 md:w-3/5 md:py-24">
             <Heading>Animal Quest</Heading>
             <p className="text-lg">
               Learn about the ambassadors at Alveus through Animal Quest, a
@@ -358,10 +308,7 @@ const AnimalQuestPage: NextPage = () => {
             src={animalQuestLogo}
             width={576}
             alt=""
-            className="
-              mx-auto w-full max-w-xl p-4 pt-8
-              md:mx-0 md:w-2/5 md:pt-4
-            "
+            className="mx-auto w-full max-w-xl p-4 pt-8 md:mx-0 md:w-2/5 md:pt-4"
           />
         </Section>
       </div>
@@ -375,35 +322,19 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto
-            w-1/2 max-w-40 drop-shadow-md select-none
-            lg:block
-            2xl:-bottom-48 2xl:max-w-48
-          "
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="
-            pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto
-            w-1/2 max-w-40 drop-shadow-md select-none
-            lg:block
-            2xl:-bottom-64 2xl:max-w-48
-          "
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow pt-8">
           <div
             className={classes(
-              `
-                flex flex-col items-center justify-end gap-4
-                md:flex-row
-              `,
-              Array.isArray(result) ? "mb-4" : `
-                -mb-4
-                md:-mb-12
-              `,
+              `flex flex-col items-center justify-end gap-4 md:flex-row`,
+              Array.isArray(result) ? "mb-4" : `-mb-4 md:-mb-12`,
             )}
           >
             <Select

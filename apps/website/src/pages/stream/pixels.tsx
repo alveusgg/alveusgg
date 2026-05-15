@@ -42,9 +42,7 @@ const PixelsPage: NextPage = () => {
 
   if (mode === "leaderboard") {
     return (
-      <div className="
-        p-2 text-xl font-bold text-ellipsis text-white tabular-nums text-stroke
-      ">
+      <div className="p-2 text-xl font-bold text-ellipsis text-white tabular-nums text-stroke">
         <PixelLeaderboard muralId={mural} />
       </div>
     );
@@ -86,10 +84,7 @@ const PixelsPage: NextPage = () => {
       >
         <div
           className={classes(
-            `
-              @container-size row-span-1 row-start-3 flex flex-col justify-end
-              gap-1
-            `,
+            `@container-size row-span-1 row-start-3 flex flex-col justify-end gap-1`,
             mode === "corner"
               ? "col-span-2 col-start-2 items-end"
               : "col-span-full items-center",
@@ -108,10 +103,7 @@ const PixelsPage: NextPage = () => {
                   : `min(100cqw, calc(${PIXEL_GRID_WIDTH / PIXEL_GRID_HEIGHT} * (100cqh - 1lh - var(--spacing))))`,
             }}
           >
-            <p className="
-              min-w-0 shrink overflow-hidden px-1 font-bold text-ellipsis
-              text-white tabular-nums text-stroke
-            ">
+            <p className="min-w-0 shrink overflow-hidden px-1 font-bold text-ellipsis text-white tabular-nums text-stroke">
               {query.text ??
                 "Donate $100 or more to unlock a !pixel and support the Alveus Research & Recovery !institute."}
             </p>

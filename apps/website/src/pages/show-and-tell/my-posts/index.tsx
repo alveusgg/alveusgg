@@ -45,20 +45,14 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section
         dark
         className="py-12"
         containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="
-          w-full grow
-          lg:w-auto
-        ">
+        <div className="w-full grow lg:w-auto">
           <Heading level={1}>Show and Tell: Your Posts</Heading>
           <p className="text-lg">
             {session?.status === "authenticated" ? "View" : "Sign in and view"}{" "}
@@ -106,38 +100,23 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                     <tr>
                       <th
                         scope="col"
-                        className={`
-                          ${cellClasses}
-                          w-[150px] p-2 text-left
-                        `}
+                        className={`${cellClasses} w-[150px] p-2 text-left`}
                       >
                         Image
                       </th>
                       <th
                         scope="col"
-                        className={`
-                          ${cellClasses}
-                          w-2/5 text-left
-                        `}
+                        className={`${cellClasses} w-2/5 text-left`}
                       >
                         Title
                       </th>
-                      <th scope="col" className={`
-                        ${cellClasses}
-                        text-left
-                      `}>
+                      <th scope="col" className={`${cellClasses} text-left`}>
                         Status
                       </th>
-                      <th scope="col" className={`
-                        ${cellClasses}
-                        text-left
-                      `}>
+                      <th scope="col" className={`${cellClasses} text-left`}>
                         Created / Updated
                       </th>
-                      <th scope="col" className={`
-                        ${cellClasses}
-                        text-left
-                      `}>
+                      <th scope="col" className={`${cellClasses} text-left`}>
                         Actions
                       </th>
                     </tr>
@@ -162,10 +141,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               />
                             )}
                           </td>
-                          <td className={`
-                            ${cellClasses}
-                            w-2/5
-                          `}>
+                          <td className={`${cellClasses} w-2/5`}>
                             {entry.title}
                           </td>
                           <td className={cellClasses}>
@@ -199,11 +175,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               )}
                           </td>
                           <td
-                            className={`
-                              ${cellClasses}
-                              flex flex-col flex-wrap gap-1
-                              md:flex-row
-                            `}
+                            className={`${cellClasses} flex flex-col flex-wrap gap-1 md:flex-row`}
                           >
                             <LinkButton
                               width="auto"

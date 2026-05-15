@@ -18,33 +18,14 @@ const buttonClassNames = ({
   filled?: boolean;
 }) =>
   classes(
-    `
-      rounded-3xl border-2 transition-colors
-      disabled:cursor-not-allowed disabled:opacity-50
-    `,
+    `rounded-3xl border-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50`,
     dark
       ? filled
-        ? `
-          border-alveus-tan bg-alveus-tan text-alveus-green
-          hover:not-disabled:border-alveus-tan hover:not-disabled:bg-transparent
-          hover:not-disabled:text-alveus-tan
-        `
-        : `
-          border-alveus-tan bg-transparent text-alveus-tan
-          hover:not-disabled:border-alveus-tan hover:not-disabled:bg-alveus-tan
-          hover:not-disabled:text-alveus-green
-        `
+        ? `border-alveus-tan bg-alveus-tan text-alveus-green hover:not-disabled:border-alveus-tan hover:not-disabled:bg-transparent hover:not-disabled:text-alveus-tan`
+        : `border-alveus-tan bg-transparent text-alveus-tan hover:not-disabled:border-alveus-tan hover:not-disabled:bg-alveus-tan hover:not-disabled:text-alveus-green`
       : filled
-        ? `
-          border-alveus-green bg-alveus-green text-alveus-tan
-          hover:not-disabled:border-alveus-green
-          hover:not-disabled:bg-transparent hover:not-disabled:text-alveus-green
-        `
-        : `
-          border-alveus-green bg-transparent text-alveus-green
-          hover:not-disabled:border-alveus-green
-          hover:not-disabled:bg-alveus-green hover:not-disabled:text-alveus-tan
-        `,
+        ? `border-alveus-green bg-alveus-green text-alveus-tan hover:not-disabled:border-alveus-green hover:not-disabled:bg-transparent hover:not-disabled:text-alveus-green`
+        : `border-alveus-green bg-transparent text-alveus-green hover:not-disabled:border-alveus-green hover:not-disabled:bg-alveus-green hover:not-disabled:text-alveus-tan`,
     !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
       "text-lg",
     !/(^|\s)((inline-)?(block|flex|grid|table)|inline|contents)(\s|$)/.test(

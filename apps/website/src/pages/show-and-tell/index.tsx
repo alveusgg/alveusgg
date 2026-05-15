@@ -387,20 +387,14 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section
         dark
         className="py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="
-          w-full pt-8 pb-4
-          md:w-3/5 md:py-20
-        ">
+        <div className="w-full pt-8 pb-4 md:w-3/5 md:py-20">
           <Heading>Show and Tell</Heading>
           <p className="text-lg">
             See what the Alveus community has been up to as they share their
@@ -417,30 +411,16 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           src={showAndTellPeepo}
           width={448}
           alt=""
-          className="
-            mx-auto w-1/2 max-w-md p-4 pb-16
-            md:mx-0 md:w-1/4 md:pb-4
-          "
+          className="mx-auto w-1/2 max-w-md p-4 pb-16 md:mx-0 md:w-1/4 md:pb-4"
         />
       </Section>
 
-      <Section className="
-        py-6
-        md:py-12
-      ">
-        <div className="
-          grid w-full grid-cols-4 grid-rows-auto-3 gap-4
-          md:grid-cols-6 md:grid-rows-auto-2
-        ">
+      <Section className="py-6 md:py-12">
+        <div className="grid w-full grid-cols-4 grid-rows-auto-3 gap-4 md:grid-cols-6 md:grid-rows-auto-2">
           <Box
             className={classes(
               bentoBoxClasses,
-              `
-                col-span-4 col-start-1 row-start-3 p-0 text-lg
-                transition-transform duration-200
-                hover:scale-102
-                md:col-span-2 md:row-span-2
-              `,
+              `col-span-4 col-start-1 row-start-3 p-0 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2`,
             )}
           >
             <NextLink
@@ -449,24 +429,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             >
               <Image
                 src={mapImage}
-                className="
-                  col-start-1 row-start-1 h-full max-h-24 rounded-xl
-                  object-cover transition-opacity duration-200
-                  group-hover:opacity-90
-                  md:max-h-full
-                "
+                className="col-start-1 row-start-1 h-full max-h-24 rounded-xl object-cover transition-opacity duration-200 group-hover:opacity-90 md:max-h-full"
                 alt=""
               />
-              <div className="
-                relative col-start-1 row-start-1 flex flex-col items-end
-                justify-end
-              ">
-                <div className="
-                  z-10 flex items-center justify-end gap-2 rounded-tl-xl
-                  bg-alveus-green-600 p-2 px-4 text-right text-white
-                  transition-colors
-                  group-hover:bg-alveus-green-700
-                ">
+              <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
+                <div className="z-10 flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white transition-colors group-hover:bg-alveus-green-700">
                   Community map
                   <IconArrowRight className="size-8" />
                 </div>
@@ -476,40 +443,28 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <Box
             dark
-            className={classes(bentoBoxClasses, `
-              items-center p-2
-              md:text-lg
-            `)}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconUserGroup className="size-10" />
             {usersCountFmt} members
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, `
-              items-center p-2
-              md:text-lg
-            `)}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconPencil className="size-10" />
             {totalPostsCountFmt} posts
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, `
-              items-center p-2
-              md:text-lg
-            `)}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconMapPin className="size-10" />
             {uniqueLocationsCountFmt} locations
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, `
-              items-center p-2
-              md:text-lg
-            `)}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries
@@ -519,16 +474,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(
               bentoBoxClasses,
-              `
-                col-start-1 col-end-5 row-start-2 p-4
-                md:col-start-3 md:col-end-7
-              `,
+              `col-start-1 col-end-5 row-start-2 p-4 md:col-start-3 md:col-end-7`,
             )}
           >
-            <p className="
-              text-left
-              md:text-center
-            ">
+            <p className="text-left md:text-center">
               We&apos;re tracking hours spent as part of the Alveus
               community&apos;s effort to{" "}
               <Link
@@ -556,10 +505,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? `
-                fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto
-                bg-black p-5
-              `
+              ? ` fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5`
               : "gap-20 bg-white/0")
           }
           onKeyDown={handleArrowKeys}
@@ -600,9 +546,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
               {hasPrevEntry && (
                 <button
-                  className="
-                    group fixed top-0 left-5 z-20 h-[3em] w-[calc(80%-2em)]
-                  "
+                  className="group fixed top-0 left-5 z-20 h-[3em] w-[calc(80%-2em)]"
                   type="button"
                   onClick={scrollToPrev}
                 >
@@ -622,10 +566,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 </button>
               )}
 
-              <div className="
-                fixed top-[20px] right-[20px] z-20 ml-auto flex
-                w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green
-              ">
+              <div className="fixed top-[20px] right-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
                 <div className="flex flex-row items-center gap-1">
                   <Heading level={1} className="pt-3">
                     Show and Tell
@@ -634,17 +575,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                     src={alveusLogo}
                     alt=""
                     height={120}
-                    className="
-                      -mt-1 h-10 w-auto
-                      lg:mt-6 lg:h-28
-                    "
+                    className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
                   />
                 </div>
-                <p className="
-                  text-sm
-                  lg:text-base
-                  xl:text-lg
-                ">
+                <p className="text-sm lg:text-base xl:text-lg">
                   Has stream helped you become more environmentally conscious?
                   Please share with the community any of your conservation or
                   wildlife-related activities.
@@ -654,10 +588,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </>
           )}
 
-          <div className="
-            sticky right-[20px] bottom-[20px] z-20 ml-auto flex w-fit flex-col
-            gap-2 select-none
-          ">
+          <div className="sticky right-[20px] bottom-[20px] z-20 ml-auto flex w-fit flex-col gap-2 select-none">
             {isPresentationView && currentPostAuthor && (
               <p className="max-w-40 text-lg text-alveus-green-300">
                 by {currentPostAuthor}
@@ -690,10 +621,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </div>
 
             <Button
-              className="
-                hidden bg-white shadow-lg
-                lg:flex
-              "
+              className="hidden bg-white shadow-lg lg:flex"
               onClick={handleTogglePresentationView}
             >
               {isPresentationView ? (
@@ -716,10 +644,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <IconPencil className="size-5" />
               <span>
                 Submit
-                <span className="
-                  hidden
-                  lg:inline
-                "> Post</span>
+                <span className="hidden lg:inline"> Post</span>
               </span>
             </LinkButton>
           </div>

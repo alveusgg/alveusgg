@@ -32,37 +32,26 @@ export function ImageUploadFilePreview({
         src={src}
         alt=""
         className={classes(
-          `
-            absolute inset-0 size-full object-contain object-center
-            transition-opacity
-          `,
+          `absolute inset-0 size-full object-contain object-center transition-opacity`,
           fadeOutImage && "opacity-50",
         )}
       />
       {fileReference.status === "upload.done" && (
         <div className="absolute inset-0 flex items-end text-black">
-          <div className="
-            m-px flex items-center gap-0.5 rounded-lg bg-green px-1 py-0.5
-            text-xs
-          ">
+          <div className="m-px flex items-center gap-0.5 rounded-lg bg-green px-1 py-0.5 text-xs">
             <IconCheck size={12} />
             Uploaded
           </div>
         </div>
       )}
       {fileReference.status === "upload.pending" && (
-        <div className="
-          absolute inset-0 flex flex-col items-center justify-center text-black
-        ">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-black">
           <IconLoading size={24} />
           <span>Uploading</span>
         </div>
       )}
       {fileReference.status === "upload.failed" && (
-        <div className="
-          absolute inset-0 flex flex-col items-center justify-center bg-red/20
-          text-black
-        ">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-red/20 text-black">
           <IconWarningTriangle className="size-5" />
           <span>Failed</span>
         </div>
@@ -86,11 +75,7 @@ export function ImageUploadAttachment({
       <div className="size-32">
         <Button
           onClick={onClick}
-          className="
-            relative h-full overflow-hidden rounded-lg bg-gray-200
-            transition-transform
-            hover:scale-105
-          "
+          className="relative h-full overflow-hidden rounded-lg bg-gray-200 transition-transform hover:scale-105"
         >
           <ImageUploadFilePreview fileReference={fileReference} />
         </Button>

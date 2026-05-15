@@ -52,12 +52,7 @@ const PresetCard = ({
           args={command.args}
           subOnly
           tooltip={{ offset: 8 }}
-          className="
-            absolute inset-0 flex items-center justify-center
-            text-alveus-green-100 opacity-25 transition-all
-            hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100
-            [&>svg]:size-12
-          "
+          className="absolute inset-0 flex items-center justify-center text-alveus-green-100 opacity-25 transition-all hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100 [&>svg]:size-12"
         />
       )}
     </div>
@@ -118,10 +113,7 @@ const PresetTools = ({
               icon={IconZoomOut}
             />
 
-            <div className="
-              pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm
-              bg-alveus-green-400
-            " />
+            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
 
             <RunCommandButton
               command="ptzzoom"
@@ -138,12 +130,7 @@ const PresetTools = ({
           aria-label="Search presets"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
-          className="
-            grow rounded-sm border border-alveus-green-200 bg-alveus-green-50/75
-            px-2 py-1 font-semibold shadow-md
-            focus:ring-2 focus:ring-alveus-green focus:outline-none
-            focus:ring-inset
-          "
+          className="grow rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
         />
       </>
     )}
@@ -182,11 +169,7 @@ const PresetList = ({
       />
 
       <div className="scrollbar-none shrink grow overflow-y-auto">
-        <div className="
-          mt-3 grid grid-cols-2 gap-4
-          @3xl:grid-cols-3
-          @5xl:grid-cols-4
-        ">
+        <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
           {sortedPresets
             .filter(
               ([name, preset]) =>
@@ -219,10 +202,7 @@ const PresetList = ({
           )}
         </div>
 
-        <div className="
-          pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25%
-          backdrop-blur-sm
-        " />
+        <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
       </div>
     </>
   );

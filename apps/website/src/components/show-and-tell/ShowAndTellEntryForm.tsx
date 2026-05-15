@@ -147,16 +147,10 @@ function ImageAttachment({
       <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
         <DisclosureButton
           className={classes(
-            `
-              group flex w-full items-center justify-between text-left
-              text-gray-500
-            `,
+            `group flex w-full items-center justify-between text-left text-gray-500`,
             hasAlt
               ? "pointer-events-none"
-              : `
-                transition-colors
-                hover:text-gray-700
-              `,
+              : `transition-colors hover:text-gray-700`,
           )}
           disabled={hasAlt}
         >
@@ -165,10 +159,7 @@ function ImageAttachment({
           </strong>
 
           <IconChevronDown
-            className="
-              box-content shrink-0 p-1 transition-transform
-              group-data-open:-scale-y-100
-            "
+            className="box-content shrink-0 p-1 transition-transform group-data-open:-scale-y-100"
             size={24}
           />
         </DisclosureButton>
@@ -661,10 +652,7 @@ export function ShowAndTellEntryForm({
         <MessageBox variant="success">{successMessage}</MessageBox>
       )}
 
-      <div className="
-        flex flex-col gap-5
-        lg:flex-row lg:gap-20
-      ">
+      <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
         <div className="flex flex-3 flex-col gap-5">
           <Fieldset legend="About you">
             <TextField
@@ -726,10 +714,7 @@ export function ShowAndTellEntryForm({
               disabled={isMutationPending}
             />
 
-            <ul className="
-              mt-4 flex flex-col gap-2
-              lg:mt-8
-            ">
+            <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
               {attachments.map((att, idx) => {
                 const buttons = (
                   <div className="flex justify-end gap-2">
@@ -786,24 +771,16 @@ export function ShowAndTellEntryForm({
                   return (
                     <li
                       key={att.url}
-                      className="
-                        flex flex-col gap-2 rounded-lg bg-white p-4 shadow-lg
-                      "
+                      className="flex flex-col gap-2 rounded-lg bg-white p-4 shadow-lg"
                     >
                       <Link
                         href={att.url}
                         external
                         className="group flex items-center"
                       >
-                        <div className="
-                          relative mr-5 size-32 rounded-lg bg-gray-200
-                          text-alveus-green-900 transition-transform
-                          group-hover:scale-105
-                        ">
+                        <div className="relative mr-5 size-32 rounded-lg bg-gray-200 text-alveus-green-900 transition-transform group-hover:scale-105">
                           <VideoPlatformIcon
-                            className="
-                              absolute top-1/2 left-1/2 size-12 -translate-1/2
-                            "
+                            className="absolute top-1/2 left-1/2 size-12 -translate-1/2"
                             platform={parseVideoUrl(att.url)?.platform}
                           />
                         </div>
@@ -862,10 +839,7 @@ export function ShowAndTellEntryForm({
         {action === "review" && (
           <>
             <Fieldset legend="Moderator Notes">
-              <div className="
-                flex flex-col gap-5
-                lg:flex-row lg:gap-20
-              ">
+              <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
                 <RichTextField
                   label="Private Note (only visible in review mode)"
                   name="notePrivate"

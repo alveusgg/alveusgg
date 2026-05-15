@@ -205,10 +205,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="
-            max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan
-            px-4 shadow-2xl
-          ">
+          <DialogPanel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
             <DialogTitle
               as={Heading}
               level={2}
@@ -225,10 +222,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               <button
                 type="button"
                 onClick={close}
-                className="
-                  -mr-2 shrink-0 p-2 transition-colors
-                  hover:text-alveus-green
-                "
+                className="-mr-2 shrink-0 p-2 transition-colors hover:text-alveus-green"
                 title="Close"
               >
                 <IconX />
@@ -259,17 +253,9 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
                   <Switch
                     checked={consent[key]}
                     onChange={(val) => update({ [key]: val })}
-                    className="
-                      group inline-flex h-6 w-11 items-center rounded-full
-                      bg-alveus-green-300 transition-colors
-                      data-checked:bg-alveus-green
-                    "
+                    className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                   >
-                    <span className="
-                      size-4 translate-x-1 rounded-full bg-alveus-tan
-                      transition-transform
-                      group-data-checked:translate-x-6
-                    " />
+                    <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                   </Switch>
                 </Field>
               ))}
@@ -284,18 +270,10 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               .
             </p>
 
-            <div className="
-              sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4
-            ">
-              <div className="
-                pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6
-                bg-linear-to-b from-alveus-tan/0 to-alveus-tan
-              " />
+            <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
+              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-linear-to-b from-alveus-tan/0 to-alveus-tan" />
 
-              <div className="
-                flex flex-wrap gap-2
-                sm:flex-nowrap
-              ">
+              <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {hasInteracted && (
                   <ConsentButton onClick={reset} disabled={!interacted}>
                     Reset consent
@@ -318,32 +296,20 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
 
       <button
         type="button"
-        className="
-          group fixed bottom-4 left-4 flex size-12 items-center justify-center
-          rounded-full bg-alveus-tan shadow-sm transition-shadow
-          hover:shadow-lg
-          lg:z-50
-        "
+        className="group fixed bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-alveus-tan shadow-sm transition-shadow hover:shadow-lg lg:z-50"
         onClick={() => setOpen(true)}
         title="Manage consent"
       >
         <div
           className={classes(
             hasConsented && "bg-alveus-green-300",
-            `
-              relative inline-flex h-4 w-8 items-center rounded-full border-2
-              border-alveus-green transition-colors
-              group-hover:bg-alveus-green
-            `,
+            `relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green`,
           )}
         >
           <span
             className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              `
-                inline-block size-4 rounded-full border-2 border-alveus-green
-                bg-alveus-tan transition-transform
-              `,
+              `inline-block size-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform`,
             )}
           />
         </div>

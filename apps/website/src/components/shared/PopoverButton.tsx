@@ -28,10 +28,7 @@ export function PopoverButton({
               className={
                 open
                   ? defaultButtonClasses
-                  : `
-                    bg-gray-700/10
-                    hover:bg-gray-700/20
-                  `
+                  : `bg-gray-700/10 hover:bg-gray-700/20`
               }
             >
               {label}
@@ -39,9 +36,7 @@ export function PopoverButton({
           </PopoverButtonHeadless>
 
           <PopoverPanel
-            className="
-              z-20 mt-0.5 rounded-sm bg-gray-800 p-2 text-white shadow-xl
-            "
+            className="z-20 mt-0.5 rounded-sm bg-gray-800 p-2 text-white shadow-xl"
             anchor="bottom end"
             modal={false}
           >

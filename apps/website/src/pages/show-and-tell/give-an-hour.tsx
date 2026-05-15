@@ -94,19 +94,14 @@ const Card = ({
   number?: number;
   children: React.ReactNode;
 }) => (
-  <div className="
-    flex h-full gap-6 rounded-xl bg-white/75 p-6 shadow-lg backdrop-blur-sm
-  ">
+  <div className="flex h-full gap-6 rounded-xl bg-white/75 p-6 shadow-lg backdrop-blur-sm">
     <div
       className={classes(
         "flex shrink-0 flex-col items-center justify-between gap-4",
         number === undefined && "md:order-last",
       )}
     >
-      <Image src={image} alt="" className="
-        w-24
-        md:w-32
-      " />
+      <Image src={image} alt="" className="w-24 md:w-32" />
 
       {number !== undefined && (
         <p className="text-5xl font-bold text-alveus-green opacity-50">
@@ -173,23 +168,14 @@ const GiveAnHourPage: NextPage<
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section
         dark
-        className="
-          py-8
-          lg:py-24
-        "
+        className="py-8 lg:py-24"
         containerClassName="flex flex-wrap items-center lg:flex-nowrap gap-16"
       >
-        <div className="
-          flex w-full grow flex-col
-          lg:max-w-2/3
-        ">
+        <div className="flex w-full grow flex-col lg:max-w-2/3">
           <Heading>
             Give an Hour for Earth
             {wwf && <span className="text-alveus-green-50"> {wwf.year}</span>}
@@ -247,10 +233,7 @@ const GiveAnHourPage: NextPage<
             />
           </div>
 
-          <IconPlus className="
-            mx-2 my-auto size-8 shrink-0 text-alveus-green-50
-            sm:mx-4
-          " />
+          <IconPlus className="mx-2 my-auto size-8 shrink-0 text-alveus-green-50 sm:mx-4" />
 
           <div className="w-full max-w-48 rounded-xl bg-white shadow-lg">
             <Image
@@ -283,10 +266,7 @@ const GiveAnHourPage: NextPage<
           Actions You Can Take
         </Heading>
 
-        <div className="
-          my-8 grid grid-cols-1 gap-4
-          lg:grid-cols-2 lg:gap-8
-        ">
+        <div className="my-8 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
           <Card
             heading="Food"
             id="actions:food"
@@ -305,11 +285,7 @@ const GiveAnHourPage: NextPage<
             <Image
               src={leafRightImage2}
               alt=""
-              className="
-                pointer-events-none absolute right-0 -bottom-14 -z-10 h-auto
-                w-1/2 max-w-48 drop-shadow-md select-none
-                lg:right-auto lg:-bottom-32 lg:-left-20 lg:max-w-40
-              "
+              className="pointer-events-none absolute right-0 -bottom-14 -z-10 h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:right-auto lg:-bottom-32 lg:-left-20 lg:max-w-40"
             />
 
             <Card
@@ -359,11 +335,7 @@ const GiveAnHourPage: NextPage<
             <Image
               src={leafLeftImage3}
               alt=""
-              className="
-                pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2
-                max-w-48 -scale-100 drop-shadow-md select-none
-                lg:-right-32 lg:max-w-40 lg:scale-x-100
-              "
+              className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-48 -scale-100 drop-shadow-md select-none lg:-right-32 lg:max-w-40 lg:scale-x-100"
             />
 
             <Card
@@ -432,10 +404,7 @@ const GiveAnHourPage: NextPage<
       {/* Grow the last section to cover the page */}
       <Section className="grow">
         <div className="flex flex-wrap items-center justify-between">
-          <div className="
-            w-full py-8
-            md:w-3/5
-          ">
+          <div className="w-full py-8 md:w-3/5">
             <Heading level={2} id="share-your-activities" link>
               Share Your Activities
             </Heading>
@@ -458,19 +427,12 @@ const GiveAnHourPage: NextPage<
             src={showAndTellPeepo}
             width={448}
             alt=""
-            className="
-              mx-auto w-full max-w-md p-4
-              md:mx-0 md:w-2/5
-            "
+            className="mx-auto w-full max-w-md p-4 md:mx-0 md:w-2/5"
           />
         </div>
 
         <div className="flex flex-wrap items-start justify-between py-8">
-          <div className="
-            w-full
-            lg:sticky lg:top-0 lg:w-1/2 lg:pl-8
-            xl:w-3/5
-          ">
+          <div className="w-full lg:sticky lg:top-0 lg:w-1/2 lg:pl-8 xl:w-3/5">
             <Heading level={2} id="wwf-give-an-hour" link>
               WWF&apos;s Give an Hour for Earth
             </Heading>
@@ -491,11 +453,7 @@ const GiveAnHourPage: NextPage<
             {wwf?.cta && <p className="mt-2 text-lg">{wwf.cta(false)}</p>}
           </div>
 
-          <div className="
-            flex w-full flex-col divide-y divide-alveus-green/25
-            lg:order-first lg:w-1/2
-            xl:w-2/5
-          ">
+          <div className="flex w-full flex-col divide-y divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
             {wwfGiveAnHourCampaigns.map(({ start, end }) => {
               const year = start.split("-")[0]!;
               return (

@@ -300,37 +300,19 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
-        <div className="
-          flex aspect-video h-full max-w-full items-center justify-center
-        ">
-          <div className="
-            relative flex aspect-video w-full items-center justify-center
-          ">
-            <div className="
-              absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg
-            " />
+        <div className="flex aspect-video h-full max-w-full items-center justify-center">
+          <div className="relative flex aspect-video w-full items-center justify-center">
+            <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
             <Transition show={!!title}>
               {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
-              <div className="
-                absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full
-                rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity
-                data-closed:opacity-0
-                data-enter:duration-700
-                data-leave:duration-0
-              ">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
                 <p className="text-center text-3xl font-bold">{title}</p>
               </div>
             </Transition>
 
             <Transition show={details === "overlay"}>
-              <div className="
-                absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2
-                text-white backdrop-blur-sm transition-opacity
-                data-closed:opacity-0
-                data-enter:duration-700
-                data-leave:duration-300
-              ">
+              <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-300">
                 <h1 className="text-5xl">
                   {clip.title}
                   <span className="ml-1 text-4xl">
@@ -358,14 +340,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Transition show={details === "below"}>
               {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
-              <div className="
-                absolute -bottom-4 left-0 flex translate-y-full items-center
-                gap-2 rounded-lg bg-black/25 px-2 py-1 text-white
-                transition-opacity
-                data-closed:opacity-0
-                data-enter:duration-700
-                data-leave:duration-0
-              ">
+              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
                 <p className="text-lg">{clip.title}</p>
                 <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
                 <p>

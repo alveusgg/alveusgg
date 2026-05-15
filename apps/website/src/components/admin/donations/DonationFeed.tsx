@@ -92,9 +92,7 @@ export function DonationFeed() {
 
   return (
     <div className="w-full tabular-nums">
-      <div className="
-        flex w-full flex-row items-center gap-2 border-y border-gray-400 px-2
-      ">
+      <div className="flex w-full flex-row items-center gap-2 border-y border-gray-400 px-2">
         <div className="grow text-center">
           {newestMuralId ? (
             <PixelProvider muralId={newestMuralId}>
@@ -107,10 +105,7 @@ export function DonationFeed() {
           <summary className="cursor-pointer p-2 text-center text-lg font-bold">
             <IconFunnel />
           </summary>
-          <div className="
-            absolute top-full right-0 z-10 flex w-64 flex-col gap-2 rounded-sm
-            border border-gray-400 bg-white p-4 text-black shadow-lg
-          ">
+          <div className="absolute top-full right-0 z-10 flex w-64 flex-col gap-2 rounded-sm border border-gray-400 bg-white p-4 text-black shadow-lg">
             <form>
               <input
                 type="checkbox"
@@ -152,9 +147,7 @@ export function DonationFeed() {
           if (i > 0 && donation.id === lastShownDonation?.id) {
             return (
               <Fragment key={donation.id}>
-                <div className="
-                  bg-gray-600 p-1 text-center text-sm text-white italic
-                ">
+                <div className="bg-gray-600 p-1 text-center text-sm text-white italic">
                   <div>– Seen before –</div>
                 </div>
                 {item}

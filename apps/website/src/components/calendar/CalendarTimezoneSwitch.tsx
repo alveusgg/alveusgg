@@ -28,29 +28,17 @@ export const CalendarTimezoneSwitchButton = ({
     value={label}
     aria-checked={isSelected}
     className={classes(
-      `
-        relative flex items-center justify-center gap-2 rounded-full border
-        border-alveus-green-900 p-1 text-sm text-alveus-green-900
-        transition-colors
-        hover:bg-alveus-green-800 hover:text-alveus-tan
-        max-[420px]:p-0 max-[420px]:text-xs
-      `,
+      `relative flex items-center justify-center gap-2 rounded-full border border-alveus-green-900 p-1 text-sm text-alveus-green-900 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan max-[420px]:p-0 max-[420px]:text-xs`,
       isSelected ? "bg-alveus-green-900 text-alveus-tan" : "bg-alveus-tan",
       className,
     )}
     onClick={onClick}
   >
-    <span className="
-      mr-4 ml-5
-      min-[420px]:mr-6 min-[420px]:ml-7
-    ">{label}</span>
+    <span className="mr-4 ml-5 min-[420px]:mr-6 min-[420px]:ml-7">{label}</span>
     <IconCheck
       role="presentation"
       className={classes(
-        `
-          not-sr-only absolute top-1/2 left-1 w-3 -translate-y-1/2
-          min-[420px]:left-2 min-[420px]:w-5
-        `,
+        `not-sr-only absolute top-1/2 left-1 w-3 -translate-y-1/2 min-[420px]:left-2 min-[420px]:w-5`,
         !isSelected && "invisible",
       )}
     />

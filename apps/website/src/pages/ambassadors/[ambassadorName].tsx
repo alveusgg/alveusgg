@@ -97,24 +97,14 @@ const getStats = (ambassador: Ambassador): Stats => {
     {
       title: "Species Lifespan",
       value: (
-        <div className="
-          flex flex-col flex-nowrap gap-x-4 gap-y-2
-          md:flex-row md:items-center
-          lg:flex-col lg:items-start
-          xl:flex-row xl:items-center
-        ">
+        <div className="flex flex-col flex-nowrap gap-x-4 gap-y-2 md:flex-row md:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center">
           <p>
             Wild:{" "}
             {typeof species.lifespan.wild === "string"
               ? species.lifespan.wild
               : `${stringifyLifespan(species.lifespan.wild)} years`}
           </p>
-          <div className="
-            hidden h-4 w-px bg-alveus-green opacity-75
-            md:block
-            lg:hidden
-            xl:block
-          " />
+          <div className="hidden h-4 w-px bg-alveus-green opacity-75 md:block lg:hidden xl:block" />
           <p>
             Captivity:{" "}
             {typeof species.lifespan.captivity === "string"
@@ -251,10 +241,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   src={image.src}
                   alt={image.alt}
                   quality={90}
-                  className="
-                    my-auto h-auto max-h-full w-full rounded-xl
-                    bg-alveus-green-800 shadow-xl
-                  "
+                  className="my-auto h-auto max-h-full w-full rounded-xl bg-alveus-green-800 shadow-xl"
                   style={{
                     aspectRatio: `${image.src.width} / ${image.src.height}`,
                   }}
@@ -290,10 +277,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 src={image.src}
                 alt={image.alt}
                 width={300}
-                className="
-                  group/trigger-hover:scale-102 group/trigger-hover:shadow-xs
-                  aspect-square h-auto w-full rounded-xl object-cover transition
-                "
+                className="group/trigger-hover:scale-102 group/trigger-hover:shadow-xs aspect-square h-auto w-full rounded-xl object-cover transition"
                 style={{ objectPosition: image.position }}
                 draggable={false}
               />
@@ -330,10 +314,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {ambassador.retired && (
         <Section dark className="py-4">
@@ -352,37 +333,22 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
       <div className="relative">
         <Section
-          className="
-            min-h-[85vh] pt-64
-            lg:pt-0
-          "
+          className="min-h-[85vh] pt-64 lg:pt-0"
           containerClassName="flex flex-wrap"
         >
-          <div className="
-            absolute inset-x-0 top-0 h-64 w-full
-            lg:bottom-0 lg:h-full lg:w-1/2
-          ">
+          <div className="absolute inset-x-0 top-0 h-64 w-full lg:bottom-0 lg:h-full lg:w-1/2">
             <Image
               src={images[0].src}
               alt={images[0].alt}
               placeholder="blur"
-              className="
-                absolute inset-x-0 top-0 size-full object-cover
-                lg:sticky lg:h-screen lg:max-h-full
-              "
+              className="absolute inset-x-0 top-0 size-full object-cover lg:sticky lg:h-screen lg:max-h-full"
               style={{ objectPosition: images[0].position }}
             />
           </div>
 
-          <div className="
-            basis-full
-            lg:basis-1/2
-          " />
+          <div className="basis-full lg:basis-1/2" />
 
-          <div className="
-            flex basis-full flex-col py-4
-            lg:max-w-1/2 lg:basis-1/2 lg:px-8 lg:pt-8
-          ">
+          <div className="flex basis-full flex-col py-4 lg:max-w-1/2 lg:basis-1/2 lg:px-8 lg:pt-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
             {!!ambassador.alternate.length && (
               <p className="-mt-1 mb-2 text-lg text-alveus-green-700 italic">
@@ -401,11 +367,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 ))}
             </div>
 
-            <dl className="
-              mb-4 grid grid-cols-1 gap-4
-              sm:grid-cols-auto-2
-              lg:grid-cols-auto-2
-            ">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">
               {stats.map((item) => {
                 const nested = Array.isArray(item);
                 const items = nested ? item : [item];
@@ -415,12 +377,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     className={classes(
                       "contents",
                       nested &&
-                        `
-                          col-span-full grid-cols-auto-4 gap-4
-                          md:grid
-                          lg:contents
-                          xl:grid
-                        `,
+                        `col-span-full grid-cols-auto-4 gap-4 md:grid lg:contents xl:grid`,
                     )}
                   >
                     {items.map(({ title, value }, idx) => (
@@ -430,11 +387,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                             "col-span-full h-px bg-alveus-green opacity-10",
                             nested &&
                               idx % 2 !== 0 &&
-                              `
-                                md:hidden
-                                lg:block
-                                xl:hidden
-                              `,
+                              `md:hidden lg:block xl:hidden`,
                           )}
                         />
                         <dt className="self-center text-2xl font-bold">
@@ -472,10 +425,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     key={aq.episode}
                     episode={aq}
                     ambassador={ambassadorKey}
-                    className="
-                      mt-2
-                      hover:translate-y-1
-                    "
+                    className="mt-2 hover:translate-y-1"
                   />
                 ))}
               </Box>
@@ -516,11 +466,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     src={merchImage.src}
                     width={512}
                     alt={`${ambassador.name} Plush`}
-                    className="
-                      h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl
-                      transition
-                      group-hover:scale-102 group-hover:shadow-2xl
-                    "
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
                   />
                 </Link>
               ) : (
@@ -529,19 +475,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     src={merchImage.src}
                     width={512}
                     alt={`${ambassador.name} Plush`}
-                    className="
-                      h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl
-                      transition
-                      group-hover:scale-102 group-hover:shadow-2xl
-                    "
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
                   />
-                  <div className="
-                    absolute inset-0 flex flex-col items-center justify-center
-                    gap-4 rounded-2xl bg-alveus-tan/75 font-bold
-                    text-alveus-green-800 opacity-0 transition
-                    group-hover:scale-102 group-hover:opacity-100
-                    group-hover:backdrop-blur-xs
-                  ">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:scale-102 group-hover:opacity-100 group-hover:backdrop-blur-xs">
                     <p className="text-3xl">Coming Soon</p>
                     <p className="text-2xl">{ambassador.plush.soon}</p>
                   </div>
@@ -567,12 +503,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             {ambassador.clips.map(({ id, caption }) => (
               <div
                 key={id}
-                className="
-                  mx-auto flex basis-full flex-col items-center justify-start
-                  py-8
-                  md:px-8
-                  lg:basis-1/2
-                "
+                className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
               >
                 <Link
                   href={`https://www.youtube.com/watch?v=${id}`}

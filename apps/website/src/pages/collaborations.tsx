@@ -158,10 +158,7 @@ const Creators = ({ className }: { className?: string }) => {
     <div className={classes("flex justify-center", className)}>
       <div className="relative isolate max-w-full">
         <ul
-          className="
-            group/creators scrollbar-none flex max-w-full cursor-grab flex-row
-            gap-y-4 overflow-x-auto pt-6 pr-8 pb-2 pl-12
-          "
+          className="group/creators scrollbar-none flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pt-6 pr-8 pb-2 pl-12"
           onMouseDown={drag}
           onScroll={onScroll}
           ref={ref}
@@ -175,11 +172,7 @@ const Creators = ({ className }: { className?: string }) => {
                 href={`#${slug}`}
                 title={name}
                 custom
-                className="
-                  group/creator -ml-6 block cursor-pointer rounded-full
-                  transition-all duration-75 select-none
-                  hover:-mt-4 hover:scale-105 hover:px-4 hover:pb-4
-                "
+                className="group/creator -ml-6 block cursor-pointer rounded-full transition-all duration-75 select-none hover:-mt-4 hover:scale-105 hover:px-4 hover:pb-4"
                 onClick={(e) => {
                   e.preventDefault();
                   history.pushState(null, "", `#${slug}`);
@@ -189,23 +182,11 @@ const Creators = ({ className }: { className?: string }) => {
                 }}
                 draggable={false}
               >
-                <div className="
-                  size-20 rounded-full border-4 border-alveus-green
-                  bg-alveus-green-800
-                ">
+                <div className="size-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
                   <Image
                     src={image}
                     alt=""
-                    className="
-                      size-full rounded-full object-cover shadow-md
-                      transition-all duration-75
-                      group-hover/creator:shadow-lg
-                      group-hover/creator:brightness-105!
-                      group-hover/creator:contrast-115
-                      group-hover/creator:saturate-110!
-                      group-has-[:hover]/creators:brightness-75
-                      group-has-[:hover]/creators:saturate-50
-                    "
+                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:brightness-105! group-hover/creator:contrast-115 group-hover/creator:saturate-110! group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
@@ -215,17 +196,11 @@ const Creators = ({ className }: { className?: string }) => {
         </ul>
 
         <div
-          className="
-            pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-l
-            from-transparent to-alveus-green
-          "
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-l from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
         <div
-          className="
-            pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-r
-            from-transparent to-alveus-green
-          "
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-r from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
 
@@ -252,9 +227,7 @@ const Creators = ({ className }: { className?: string }) => {
                   });
                 }}
               >
-                <div className="
-                  size-3 rounded-full bg-alveus-green-300 shadow-xs
-                " />
+                <div className="size-3 rounded-full bg-alveus-green-300 shadow-xs" />
               </button>
             ))}
 
@@ -263,10 +236,7 @@ const Creators = ({ className }: { className?: string }) => {
                 "absolute inset-y-0 z-10 m-1 h-3 rounded-full shadow-xs",
                 bar.width === dots
                   ? "pointer-events-none"
-                  : `
-                    cursor-grab select-none
-                    hover:bg-alveus-green-800
-                  `,
+                  : `cursor-grab select-none hover:bg-alveus-green-800`,
                 barDragging
                   ? "bg-alveus-green-800 transition-[background]"
                   : "bg-alveus-green-900 transition-[background,left]",
@@ -344,11 +314,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            `
-              mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl
-              text-alveus-green-800
-              [&>a]:flex [&>a]:items-end [&>a]:justify-between
-            `,
+            `mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between`,
             index === 0 ? "mt-0" : "mt-8",
           )}
           id={`${option}:${group}`}
@@ -363,18 +329,11 @@ const CollaborationItems = ({
         {items.map((collaboration) => (
           <div
             key={collaboration.slug}
-            className="
-              mx-auto flex basis-full flex-col items-center justify-start py-8
-              md:px-8
-              lg:basis-1/2
-            "
+            className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
           >
             <Heading
               level={2}
-              className="
-                flex flex-wrap items-end justify-center gap-x-8 gap-y-2
-                text-center
-              "
+              className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
               id={collaboration.slug}
             >
               {collaboration.link !== null ? (
@@ -461,28 +420,18 @@ const CollaborationsPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="
-        -mt-40 hidden h-40 bg-alveus-green-900
-        lg:block
-      " />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="relative">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="
-            pointer-events-none absolute right-0 -bottom-16 z-30 hidden h-auto
-            w-1/2 max-w-48 -scale-x-100 select-none
-            lg:block
-          "
+          className="pointer-events-none absolute right-0 -bottom-16 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section dark className="pt-24 pb-12">
           <div className="flex flex-wrap items-end">
-            <div className="
-              w-full
-              lg:w-2/3
-            ">
+            <div className="w-full lg:w-2/3">
               <Heading>Our Collaborations</Heading>
 
               <p className="text-lg text-balance">
@@ -505,10 +454,7 @@ const CollaborationsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="
-              w-full
-              lg:w-1/3 lg:pl-2
-            ">
+            <div className="w-full lg:w-1/3 lg:pl-2">
               <p className="text-lg text-balance">
                 We also collaborate with various organizations to amplify their
                 efforts and share their important work with our audience,
@@ -535,22 +481,12 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="
-            pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto
-            w-1/2 max-w-40 select-none
-            lg:block
-            2xl:-bottom-48 2xl:max-w-48
-          "
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="
-            pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto
-            w-1/2 max-w-40 select-none
-            lg:block
-            2xl:-bottom-64 2xl:max-w-48
-          "
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow">
