@@ -4,6 +4,9 @@ import { fileURLToPath } from "node:url";
 import eslint from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettiereslint from "eslint-config-prettier";
+import betterTailwindcssPlugin from "eslint-plugin-better-tailwindcss";
+import { getDefaultSelectors } from "eslint-plugin-better-tailwindcss/defaults";
+import { SelectorKind } from "eslint-plugin-better-tailwindcss/types";
 import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
@@ -79,10 +82,28 @@ export default tseslint.config(
     ...prettiereslint,
   },
   {
-    name: "tailwindcss/custom",
+    name: "better-tailwindcss/recommended",
+    files: ["**/*.{js,jsx,cjs,mjs,ts,tsx}"],
+    plugins: {
+      "better-tailwindcss": betterTailwindcssPlugin,
+    },
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/styles/tailwind.css",
+        selectors: [
+          ...getDefaultSelectors(),
+          {
+            kind: SelectorKind.Callee,
+            name: "^classes$",
+            match: [{ type: "strings" }],
+          },
+        ],
+      },
+    },
     rules: {
-      // Rely on prettier for ordering (eslint breaks interpolated classes)
-      "tailwindcss/classnames-order": "off",
+      ...betterTailwindcssPlugin.configs.recommended.rules,
+      // Rely on prettier-plugin-tailwindcss for ordering (eslint breaks interpolated classes)
+      "better-tailwindcss/enforce-consistent-class-order": "off",
     },
   },
   {
