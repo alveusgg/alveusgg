@@ -15,6 +15,7 @@ import pen1shelter from "@/assets/presets/emu/pen1shelter.png";
 import pen2left from "@/assets/presets/emu/pen2left.png";
 import pen2middleish from "@/assets/presets/emu/pen2middleish.png";
 import pen2right from "@/assets/presets/emu/pen2right.png";
+import sleep from "@/assets/presets/emu/sleep.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -120,6 +121,12 @@ const emuPresets: Record<string, Preset> = {
     image: pen2right,
     position: { pan: 99.54, tilt: -3.02, zoom: 1 },
     // modified: 2025-10-09T11:10:30.324Z
+  },
+  sleep: {
+    description: "sleep",
+    image: sleep,
+    position: { pan: 165.04, tilt: -2.58, zoom: 763 },
+    // modified: 2026-05-12T00:28:31.906Z
   },
 };
 

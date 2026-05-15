@@ -214,8 +214,11 @@ const AboutTechPresetsPage: NextPage = () => {
                       <IconVideoCamera className="mb-0.5 inline-block size-4" />
                     </span>{" "}
                     button if the camera is in the same enclosure as the
-                    currently selected camera, allowing you to swap which camera
-                    is shown on stream if you&apos;re subscribed.
+                    currently selected camera. If you&apos;re subscribed, this
+                    lets you swap which of the two cameras is shown &mdash; you
+                    can only swap to a camera if the enclosure is already on
+                    stream. Ask a moderator in chat if you wish for a new
+                    enclosure to be swapped in.
                   </p>
 
                   <p>

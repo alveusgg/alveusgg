@@ -22,16 +22,16 @@
     "luxon": "^3.7.2",
     "read-pkg": "^10.1.0",
     "tsx": "^4.21.0",
-    "zod": "^4.4.2"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^24.12.2",
+    "@types/node": "^24.12.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.16.2",
-    "typescript-eslint": "^8.59.1"
+    "typescript-eslint": "^8.59.2"
   },
   "scripts": {
     "start": "tsx --env-file=.env src/server.ts",
