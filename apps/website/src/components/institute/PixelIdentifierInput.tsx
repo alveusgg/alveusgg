@@ -62,7 +62,10 @@ export function PixelIdentifierInput({
         inputMode="text"
         disabled={isDisabled}
         className={classes(
-          "block min-h-[calc(2lh+2*var(--sizing))] w-full resize-y overflow-hidden rounded border border-gray-300 p-2",
+          `
+            block min-h-[calc(2lh+2*var(--sizing))] w-full resize-y
+            overflow-hidden rounded-sm border border-gray-300 p-2
+          `,
           isDisabled
             ? "cursor-not-allowed bg-gray-100 text-gray-500"
             : "bg-white",

@@ -20,7 +20,10 @@ function NumberButton(
   return (
     <button
       className={classes(
-        "m-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-700 text-lg text-white",
+        `
+          m-1 flex size-8 shrink-0 items-center justify-center rounded-full
+          bg-gray-700 text-lg text-white
+        `,
         props.isDisabled ? "cursor-not-allowed opacity-50" : "",
       )}
       {...buttonProps}
@@ -96,7 +99,11 @@ export function NumberField(props: NumberFieldProps) {
         {props.showButtons && (
           <NumberButton {...decrementButtonProps}>-</NumberButton>
         )}
-        <div className="flex w-full items-center justify-center rounded-xs border border-gray-700 bg-white text-gray-500 focus-within:outline">
+        <div className="
+          flex w-full items-center justify-center rounded-xs border
+          border-gray-700 bg-white text-gray-500
+          focus-within:outline
+        ">
           <div className="contents" onClick={focusInput}>
             {props.prefix}
             <input

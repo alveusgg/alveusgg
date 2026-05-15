@@ -14,7 +14,7 @@ const Crunch = ({
       <Video
         sources={crunch.sources}
         poster={crunch.poster}
-        className="h-full w-full object-contain"
+        className="size-full object-contain"
         width={1920}
         height={1080}
         autoPlay

@@ -154,7 +154,10 @@ const PixelsSearch = ({
       className={classes(
         "flex flex-col",
         fullscreen
-          ? "fixed inset-0 isolate z-100 h-screen w-screen touch-none gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+          ? `
+            fixed inset-0 isolate z-100 h-screen w-screen touch-none gap-4
+            bg-alveus-green-900 p-4 ring-8 ring-alveus-green
+          `
           : "gap-8",
         className,
       )}
@@ -172,7 +175,11 @@ const PixelsSearch = ({
           )}
           className={classes(
             fullscreen &&
-              "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",
+              `
+                scrollbar-none aspect-[unset]! h-full! touch-pan-x
+                justify-start! overflow-x-scroll rounded-lg bg-alveus-green
+                shadow-xl ring-4 ring-alveus-green
+              `,
           )}
           canvasClassName={classes(
             "rounded-lg",
@@ -183,7 +190,10 @@ const PixelsSearch = ({
       </div>
 
       {fullscreen && (
-        <div className="relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3 backdrop-blur-xs">
+        <div className="
+          relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3
+          backdrop-blur-xs
+        ">
           <input
             type="range"
             min="0"
@@ -191,7 +201,17 @@ const PixelsSearch = ({
             step="0.001"
             value={scrollProgress}
             onChange={handleScrollbarChange}
-            className="h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
+            className="
+              h-3 w-full cursor-grab appearance-none rounded-full
+              bg-alveus-green-800 shadow-inner
+              active:cursor-grabbing
+              slider-thumb:size-6 slider-thumb:appearance-none
+              slider-thumb:rounded-md slider-thumb:border-0
+              slider-thumb:bg-alveus-tan slider-thumb:shadow-lg
+              slider-thumb:transition-transform
+              slider-thumb:hover:scale-110
+              slider-thumb:active:scale-95
+            "
             title="Scroll horizontally"
           />
         </div>
@@ -200,7 +220,10 @@ const PixelsSearch = ({
       <Box
         dark
         className={classes(
-          "z-10 flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs",
+          `
+            z-10 flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0
+            backdrop-blur-xs
+          `,
           fullscreen && "max-md:mb-4",
         )}
       >
@@ -208,7 +231,11 @@ const PixelsSearch = ({
           type="button"
           onClick={() => setSearch("")}
           title="Clear search"
-          className="peer absolute inset-y-0 left-0 z-20 rounded-xl p-3 transition-colors hover:bg-alveus-green disabled:pointer-events-none"
+          className="
+            peer absolute inset-y-0 left-0 z-20 rounded-xl p-3 transition-colors
+            hover:bg-alveus-green
+            disabled:pointer-events-none
+          "
           disabled={!search.length}
         >
           {search.length ? (
@@ -223,16 +250,30 @@ const PixelsSearch = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for pixels by Twitch username or donation email..."
-          className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
+          className="
+            shrink grow rounded-xl py-3 pl-10 font-mono text-xs
+            transition-[padding] outline-none
+            peer-hover:pl-12
+            placeholder:text-alveus-tan/75
+            sm:text-sm
+          "
         />
 
         <Transition show={!!search.trim()}>
           <p
             className={classes(
-              "shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2",
+              `
+                shrink-0 text-sm tabular-nums opacity-75 transition-all
+                data-closed:opacity-0
+                max-md:absolute max-md:top-full max-md:left-2
+                md:my-auto md:pl-2
+              `,
               fullscreen
                 ? "text-alveus-tan"
-                : "text-alveus-green md:text-alveus-tan",
+                : `
+                  text-alveus-green
+                  md:text-alveus-tan
+                `,
             )}
           >
             {`Found ${filtered.toLocaleString()} ${pluralize("pixel", filtered)}`}

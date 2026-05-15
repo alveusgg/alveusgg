@@ -101,19 +101,32 @@ const FoundAnimalPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-72 drop-shadow-md select-none lg:block xl:hidden 2xl:block"
+          className="
+            pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2
+            max-w-72 drop-shadow-md select-none
+            lg:block
+            xl:hidden
+            2xl:block
+          "
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto
+            w-1/2 max-w-40 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section
@@ -123,11 +136,22 @@ const FoundAnimalPage: NextPage = () => {
           <Image
             src={leafLeftImage1}
             alt=""
-            className="pointer-events-none absolute top-[40vh] left-0 -z-10 h-auto w-1/2 max-w-40 drop-shadow-md select-none"
+            className="
+              pointer-events-none absolute top-[40vh] left-0 -z-10 h-auto w-1/2
+              max-w-40 drop-shadow-md select-none
+            "
           />
 
-          <div className="mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col overflow-hidden rounded-xl border border-alveus-green bg-alveus-tan/75 shadow-lg backdrop-blur-sm xl:mx-0">
-            <div className="shrink-0 grow-0 border-b border-alveus-green bg-alveus-green-50/75 p-4 text-alveus-green-800">
+          <div className="
+            mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col
+            overflow-hidden rounded-xl border border-alveus-green
+            bg-alveus-tan/75 shadow-lg backdrop-blur-sm
+            xl:mx-0
+          ">
+            <div className="
+              shrink-0 grow-0 border-b border-alveus-green bg-alveus-green-50/75
+              p-4 text-alveus-green-800
+            ">
               <Heading>Found a Wild Animal?</Heading>
               <p>
                 Use this interactive tool to get guidance on how to help a wild
@@ -156,7 +180,10 @@ const FoundAnimalPage: NextPage = () => {
               ))}
 
               {!!loading && (
-                <p className="self-start rounded-sm bg-alveus-tan-50 px-2 py-1 font-extrabold text-alveus-green-700">
+                <p className="
+                  self-start rounded-sm bg-alveus-tan-50 px-2 py-1
+                  font-extrabold text-alveus-green-700
+                ">
                   <span className="animate-pulse">. . .</span>
                 </p>
               )}
@@ -166,7 +193,12 @@ const FoundAnimalPage: NextPage = () => {
                   flow.options.map((option, index) => (
                     <li key={index}>
                       <button
-                        className="rounded-2xl border border-alveus-green bg-alveus-green px-4 py-1 text-lg text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green disabled:cursor-not-allowed disabled:opacity-50"
+                        className="
+                          rounded-2xl border border-alveus-green bg-alveus-green
+                          px-4 py-1 text-lg text-alveus-tan transition-colors
+                          hover:bg-alveus-tan hover:text-alveus-green
+                          disabled:cursor-not-allowed disabled:opacity-50
+                        "
                         onClick={() => click(option)}
                         disabled={!!loading}
                         type="button"
@@ -182,7 +214,10 @@ const FoundAnimalPage: NextPage = () => {
                   <button
                     className={classes(
                       !flow.options && "mt-2 self-center py-1",
-                      "px-2 text-alveus-green-400 transition-colors hover:text-alveus-green-800",
+                      `
+                        px-2 text-alveus-green-400 transition-colors
+                        hover:text-alveus-green-800
+                      `,
                     )}
                     onClick={reset}
                     type="button"
@@ -194,7 +229,11 @@ const FoundAnimalPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="flex max-w-3xl shrink grow flex-col justify-evenly gap-8 xl:max-w-xl 2xl:max-w-3xl">
+          <div className="
+            flex max-w-3xl shrink grow flex-col justify-evenly gap-8
+            xl:max-w-xl
+            2xl:max-w-3xl
+          ">
             <div>
               <Heading level={2}>Finding a Wildlife Rehabilitator</Heading>
               <p className="mb-8 text-xl">

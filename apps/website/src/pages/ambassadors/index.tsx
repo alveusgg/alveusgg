@@ -135,16 +135,25 @@ const AmbassadorItem = ({
           alt={images[0].alt}
           placeholder="blur"
           width={700}
-          className={`aspect-4/3 h-auto w-full rounded-xl object-cover ${ambassadorImageHover}`}
+          className={`
+            aspect-4/3 h-auto w-full rounded-xl object-cover
+            ${ambassadorImageHover}
+          `}
           style={{ objectPosition: images[0].position }}
         />
         <Heading
           level={level}
-          className="mt-2 mb-0 text-center transition-colors group-hover:text-alveus-green-700"
+          className="
+            mt-2 mb-0 text-center transition-colors
+            group-hover:text-alveus-green-700
+          "
         >
           {data.name}
         </Heading>
-        <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
+        <p className="
+          text-center text-xl text-alveus-green-700 transition-colors
+          group-hover:text-alveus-green-400
+        ">
           {species.name}
         </p>
       </Link>
@@ -166,7 +175,11 @@ const AmbassadorItems = ({
       {name && (
         <Heading
           level={2}
-          className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between"
+          className="
+            mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl
+            text-alveus-green-800
+            [&>a]:flex [&>a]:items-end [&>a]:justify-between
+          "
           id={`${option}:${group}`}
           link
         >
@@ -177,7 +190,12 @@ const AmbassadorItems = ({
       <div
         ref={ref}
         className={classes(
-          "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+          `
+            grid gap-8
+            sm:grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+          `,
           group && "xl:grid-cols-5",
         )}
       >
@@ -227,22 +245,36 @@ const AmbassadorsPage: NextPage = () => {
       </Meta>
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <div className="relative">
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-4 z-30 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute right-0 -bottom-4 z-30 hidden h-auto
+            w-1/2 max-w-xs drop-shadow-md select-none
+            lg:block
+          "
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto w-1/2 max-w-32 -scale-y-100 rotate-45 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto
+            w-1/2 max-w-32 -scale-y-100 rotate-45 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section dark className="py-24">
-          <div className="w-full lg:w-3/5">
+          <div className="
+            w-full
+            lg:w-3/5
+          ">
             <Heading>Alveus Ambassadors</Heading>
             <p className="text-lg">
               Each and every ambassador at Alveus plays an important role as a
@@ -265,18 +297,30 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="
+            pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto
+            w-1/2 max-w-40 drop-shadow-md select-none
+            lg:block
+            2xl:-bottom-64 2xl:max-w-48
+          "
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto
+            w-1/2 max-w-48 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section className="grow pt-8">
           <div
             className={classes(
-              "flex flex-col items-center justify-between gap-4 md:flex-row",
+              `
+                flex flex-col items-center justify-between gap-4
+                md:flex-row
+              `,
               Array.isArray(result) ? "mb-4" : "-mb-6",
             )}
           >

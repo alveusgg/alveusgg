@@ -195,7 +195,10 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
-            className="group text-center transition-colors hover:text-alveus-green"
+            className="
+              group text-center transition-colors
+              hover:text-alveus-green
+            "
             custom
           >
             <Image
@@ -203,7 +206,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               alt={images[0].alt}
               draggable={false}
               width={430}
-              className={`mx-auto aspect-square h-auto w-full max-w-2/3 rounded-2xl object-cover ${ambassadorImageHover}`}
+              className={`
+                mx-auto aspect-square h-auto w-full max-w-2/3 rounded-2xl
+                object-cover
+                ${ambassadorImageHover}
+              `}
               style={{ objectPosition: images[0].position }}
             />
             <Heading level={3} className="mt-4 mb-0 text-2xl">
@@ -298,13 +305,20 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       </Meta>
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto
+            w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section dark className="pt-4">
@@ -327,7 +341,10 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             />
           </Box>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between lg:flex-nowrap">
+          <div className="
+            mt-4 flex flex-wrap items-center justify-between
+            lg:flex-nowrap
+          ">
             <div className="flex flex-wrap items-start gap-x-8 gap-y-2 py-4">
               <h2 className="sr-only">Episode Information</h2>
 
@@ -408,7 +425,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto
+            w-1/2 max-w-48 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section>
@@ -429,7 +450,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       </div>
 
       <Section dark>
-        <div className="flex flex-row flex-wrap items-center justify-evenly gap-4">
+        <div className="
+          flex flex-row flex-wrap items-center justify-evenly gap-4
+        ">
           <p className="text-xl">
             Learn about more of our ambassadors and their species in other
             episodes of Animal Quest.
@@ -446,12 +469,20 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto
+            w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none
+            lg:block
+          "
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto
+            w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section className="grow">
@@ -461,7 +492,10 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Consent
             item="episode presentation"
             consent="prezi"
-            className="aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
+            className="
+              aspect-video h-auto w-full rounded-2xl bg-alveus-green
+              text-alveus-tan
+            "
           >
             <iframe
               src={getPreziEmbed(episode.prezi)}

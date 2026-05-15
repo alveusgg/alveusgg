@@ -243,7 +243,10 @@ const PixelsInternal = ({
           width={PIXEL_GRID_WIDTH * PIXEL_SIZE}
           height={PIXEL_GRID_HEIGHT * PIXEL_SIZE}
           className={classes(
-            "pointer-events-none absolute inset-0 block size-full transition-[background-color]",
+            `
+              pointer-events-none absolute inset-0 block size-full
+              transition-[background-color]
+            `,
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
@@ -253,9 +256,14 @@ const PixelsInternal = ({
 
         <div
           ref={highlightTooltipRef}
-          className="pointer-events-none absolute z-40 opacity-0 ring-2 ring-highlight"
+          className="
+            pointer-events-none absolute z-40 opacity-0 ring-2 ring-highlight
+          "
         >
-          <div className="absolute mx-2 flex flex-col gap-2 rounded bg-alveus-green/75 p-2 text-sm leading-tight whitespace-nowrap text-alveus-tan backdrop-blur-sm">
+          <div className="
+            absolute mx-2 flex flex-col gap-2 rounded-sm bg-alveus-green/75 p-2
+            text-sm/tight whitespace-nowrap text-alveus-tan backdrop-blur-sm
+          ">
             <p
               ref={highlightGridRefRef}
               className="font-mono text-xs opacity-75"
@@ -266,7 +274,10 @@ const PixelsInternal = ({
 
         <IconLoading
           className={classes(
-            "pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity",
+            `
+              pointer-events-none absolute top-1/2 left-1/2 -translate-1/2
+              transition-opacity
+            `,
             pixels && "opacity-0",
           )}
         />

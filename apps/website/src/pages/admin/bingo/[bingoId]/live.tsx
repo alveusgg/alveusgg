@@ -89,7 +89,7 @@ function BallGroup({
                 size="small"
                 className={classes(
                   defaultButtonClasses,
-                  "aspect-square min-w-[3rem]",
+                  "aspect-square min-w-12",
                   calledValues.includes(ball) ? "bg-green-600" : "bg-gray-800",
                 )}
                 onClick={() => {
@@ -278,7 +278,10 @@ const AdminEditBingoPage: NextPage<
                             return (
                               <div
                                 className={classes(
-                                  "flex h-4 w-4 items-center justify-center text-center text-[0.5rem] text-black",
+                                  `
+                                    flex size-4 items-center justify-center
+                                    text-center text-[0.5rem] text-black
+                                  `,
                                   isBingoMatch
                                     ? "bg-red-500"
                                     : isCalled

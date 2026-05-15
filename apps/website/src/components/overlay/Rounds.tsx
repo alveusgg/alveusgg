@@ -153,7 +153,10 @@ const Check = ({
         />
 
         {check.status && (
-          <IconCheckFancy className="absolute top-1/2 left-1/2 size-18 -translate-1/2 text-green-400 saturate-250" />
+          <IconCheckFancy className="
+            absolute top-1/2 left-1/2 size-18 -translate-1/2 text-green-400
+            saturate-250
+          " />
         )}
       </div>
       <span className="h-1.5 w-3 rounded-xs bg-white" />
@@ -245,7 +248,7 @@ const Rounds = ({
       <Video
         sources={background.sources}
         poster={background.poster}
-        className="absolute inset-0 h-full w-full object-cover object-top-left"
+        className="absolute inset-0 size-full object-cover object-top-left"
         width={1920}
         height={1080}
         autoPlay
@@ -255,7 +258,10 @@ const Rounds = ({
         disablePictureInPicture
       />
 
-      <div className="absolute inset-y-0 left-0 flex h-full origin-center animate-wiggle-slow flex-col items-start justify-center px-16">
+      <div className="
+        absolute inset-y-0 left-0 flex h-full origin-center animate-wiggle-slow
+        flex-col items-start justify-center px-16
+      ">
         <style
           dangerouslySetInnerHTML={{
             __html: [
@@ -269,7 +275,11 @@ const Rounds = ({
           <Check
             key={`${check.name}-${idx}`}
             check={check}
-            className={classes(`checks-${id}-item`, idx % 2 !== 0 && "ml-32")}
+            className={classes(
+              // eslint-disable-next-line better-tailwindcss/no-unknown-classes, better-tailwindcss/enforce-consistent-line-wrapping -- dynamic class name generated alongside the inline @keyframes above
+              `checks-${id}-item`,
+              idx % 2 !== 0 && "ml-32",
+            )}
             style={{
               animationDelay: `${idx * animation.duration.item}ms`,
             }}

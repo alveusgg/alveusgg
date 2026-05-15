@@ -18,7 +18,9 @@ const Scopes = ({ scopes }: { scopes: string[] }) => (
     {scopes.map((scope) => (
       <li
         key={scope}
-        className="rounded-md bg-alveus-green px-1.5 py-0.5 text-sm leading-tight text-alveus-tan"
+        className="
+          rounded-md bg-alveus-green px-1.5 py-0.5 text-sm/tight text-alveus-tan
+        "
         title={scope}
       >
         {isScope(scope) ? scopeLabels[scope] : scope}
@@ -55,7 +57,10 @@ const LoginWithExtraScopes = ({
     <div className={classes("flex flex-col gap-4", className)}>
       {!!missingScopes.length && (
         <Button
-          className="bg-twitch text-white transition-[filter] hover:brightness-110"
+          className="
+            bg-twitch text-white transition-[filter]
+            hover:brightness-110
+          "
           onClick={() =>
             signIn(
               "twitch",

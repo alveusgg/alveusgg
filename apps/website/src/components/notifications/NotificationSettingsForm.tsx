@@ -70,7 +70,7 @@ export function NotificationSettingsForm({
         "pb-2 transition-opacity " +
         (enableSettings
           ? ""
-          : "pointer-none cursor-default opacity-50 select-none")
+          : "pointer-events-none cursor-default opacity-50 select-none")
       }
     >
       <fieldset className="mx-2 space-y-1">

@@ -142,7 +142,10 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
       </Meta>
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <Section
         dark
@@ -173,7 +176,10 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             src={leafRightImage2}
             alt=""
             className={classes(
-              "pointer-events-none absolute bottom-0 -z-10 h-3/4 max-h-64 w-auto drop-shadow-md select-none",
+              `
+                pointer-events-none absolute bottom-0 -z-10 h-3/4 max-h-64
+                w-auto drop-shadow-md select-none
+              `,
               idx % 2 === 0
                 ? "left-full -translate-x-2 -scale-x-100"
                 : "right-full translate-x-2",
@@ -183,7 +189,10 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             src={leafLeftImage3}
             alt=""
             className={classes(
-              "pointer-events-none absolute top-full -z-10 h-2/5 max-h-48 w-auto -translate-y-1/3 drop-shadow-md select-none",
+              `
+                pointer-events-none absolute top-full -z-10 h-2/5 max-h-48
+                w-auto -translate-y-1/3 drop-shadow-md select-none
+              `,
               idx % 2 === 0
                 ? "left-0 -translate-x-2/5 -scale-x-100"
                 : "right-0 translate-x-2/5",
@@ -191,11 +200,18 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
           />
         </PixelsSearch>
 
-        <div className="relative pb-8 max-lg:order-last xl:col-span-2">
+        <div className="
+          relative pb-8
+          max-lg:order-last
+          xl:col-span-2
+        ">
           <Image
             src={leafLeftImage2}
             alt=""
-            className="pointer-events-none absolute right-0 -bottom-12 z-10 h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none"
+            className="
+              pointer-events-none absolute right-0 -bottom-12 z-10 h-auto w-1/2
+              max-w-40 -scale-x-100 drop-shadow-md select-none
+            "
           />
 
           <Box dark className="flex flex-col items-start gap-4">

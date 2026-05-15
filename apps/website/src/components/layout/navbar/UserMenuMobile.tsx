@@ -17,7 +17,10 @@ const UserMenuMobile = () => {
 
   if (status === "loading") {
     return (
-      <li className={`${navLinkClassesSub} w-full text-left`}>
+      <li className={`
+        ${navLinkClassesSub}
+        w-full text-left
+      `}>
         <IconLoading />
       </li>
     );
@@ -28,7 +31,10 @@ const UserMenuMobile = () => {
       <li>
         <DisclosureButton as={Fragment}>
           <button
-            className={`${navLinkClassesSub} w-full text-left`}
+            className={`
+              ${navLinkClassesSub}
+              w-full text-left
+            `}
             type="button"
             onClick={() => signIn("twitch")}
           >
@@ -66,7 +72,10 @@ const UserMenuMobile = () => {
 
         <DisclosureButton as={Fragment}>
           <button
-            className={`${navLinkClassesSub} w-full text-left`}
+            className={`
+              ${navLinkClassesSub}
+              w-full text-left
+            `}
             type="button"
             onClick={() => signOut()}
           >

@@ -4,7 +4,10 @@ const Document = () => {
   return (
     <Html
       lang="en"
-      className="bg-gradient-to-b from-alveus-green-900 from-45% to-gray-800 to-55% bg-fixed"
+      className="
+        bg-linear-to-b from-alveus-green-900 from-45% to-gray-800 to-55%
+        bg-fixed
+      "
     >
       <Head />
       <body>

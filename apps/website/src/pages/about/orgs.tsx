@@ -268,7 +268,12 @@ const Org = ({
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+          className="
+            pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto
+            w-1/2 max-w-24 -scale-x-100 drop-shadow-md select-none
+            lg:block
+            2xl:-bottom-24 2xl:max-w-32
+          "
         />
       )}
 
@@ -276,7 +281,11 @@ const Org = ({
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-20 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute right-0 -bottom-20 z-30 hidden h-auto
+            w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none
+            lg:block
+          "
         />
       )}
 
@@ -284,7 +293,11 @@ const Org = ({
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-30 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-20 left-0 z-30 hidden h-auto
+            w-1/2 max-w-48 drop-shadow-md select-none
+            lg:block
+          "
         />
       )}
 
@@ -292,7 +305,12 @@ const Org = ({
         <Image
           src={leafRightImage3}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-30 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:max-w-40"
+          className="
+            pointer-events-none absolute right-0 -bottom-24 z-30 hidden h-auto
+            w-1/2 max-w-32 drop-shadow-md select-none
+            lg:block
+            2xl:max-w-40
+          "
         />
       )}
 
@@ -300,7 +318,12 @@ const Org = ({
         <Image
           src={leafLeftImage4}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+          className="
+            pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto
+            w-1/2 max-w-24 drop-shadow-md select-none
+            lg:block
+            2xl:-bottom-24 2xl:max-w-32
+          "
         />
       )}
 
@@ -308,7 +331,12 @@ const Org = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
+          className="
+            pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto
+            w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none
+            lg:block
+            2xl:-bottom-48 2xl:max-w-40
+          "
         />
       )}
 
@@ -318,7 +346,10 @@ const Org = ({
       >
         <div
           className={classes(
-            "grid grid-cols-1 gap-4 lg:grid-cols-2",
+            `
+              grid grid-cols-1 gap-4
+              lg:grid-cols-2
+            `,
             (videos.length === 3 || videos.length > 4) && "xl:grid-cols-3",
           )}
         >
@@ -360,7 +391,10 @@ const Org = ({
                       "order-last font-sans text-2xl",
                       isYouTube
                         ? "text-center"
-                        : "grow lg:order-first lg:text-right",
+                        : `
+                          grow
+                          lg:order-first lg:text-right
+                        `,
                     )}
                   >
                     {video.title}
@@ -399,7 +433,11 @@ const Org = ({
                 </div>
 
                 {!isYouTube && (
-                  <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
+                  <div className="
+                    mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs
+                    bg-alveus-green-300
+                    lg:block
+                  " />
                 )}
               </div>
             );
@@ -425,17 +463,28 @@ const AboutOrgsPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <div className="relative">
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block xl:max-w-sm"
+          className="
+            pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2
+            max-w-xs drop-shadow-md select-none
+            lg:block
+            xl:max-w-sm
+          "
         />
 
         <Section dark>
-          <div className="w-full lg:w-4/5 lg:py-8">
+          <div className="
+            w-full
+            lg:w-4/5 lg:py-8
+          ">
             <Heading>Collaborating with Organizations</Heading>
 
             <p className="text-lg text-balance">
@@ -458,7 +507,10 @@ const AboutOrgsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section dark className="grow bg-alveus-green-900">
-        <div className="w-full lg:w-4/5">
+        <div className="
+          w-full
+          lg:w-4/5
+        ">
           <Heading id="work-with-us" level={2} link>
             Work with us
           </Heading>

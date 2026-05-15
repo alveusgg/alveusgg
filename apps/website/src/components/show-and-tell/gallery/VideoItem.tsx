@@ -66,10 +66,20 @@ export const VideoItemPreview = ({
     content = (
       <div
         className={classes(
-          "flex w-fit flex-col items-center justify-center rounded-lg text-center text-black transition group-hover/trigger:scale-102",
+          `
+            flex w-fit flex-col items-center justify-center rounded-lg
+            text-center text-black transition
+            group-hover/trigger:scale-102
+          `,
           preview
-            ? "gap-2 bg-white p-4 shadow-xl group-hover/trigger:shadow-2xl"
-            : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg group-hover/trigger:shadow-xl",
+            ? `
+              gap-2 bg-white p-4 shadow-xl
+              group-hover/trigger:shadow-2xl
+            `
+            : `
+              gap-0.5 bg-white/60 p-2 text-sm shadow-lg
+              group-hover/trigger:shadow-xl
+            `,
         )}
       >
         <Icon size={20} />
@@ -92,7 +102,10 @@ export const VideoItemPreview = ({
         lightbox(videoAttachment.id);
       }}
       draggable={false}
-      className="group/trigger pointer-events-auto flex cursor-pointer items-center justify-center select-none"
+      className="
+        group/trigger pointer-events-auto flex cursor-pointer items-center
+        justify-center select-none
+      "
       custom
     >
       {content}

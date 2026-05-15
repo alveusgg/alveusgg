@@ -29,7 +29,7 @@ const Progress = ({
     <div
       className={classes(
         barClasses,
-        "bg-alveus-tan bg-gradient-to-r from-blue-800 to-green-600",
+        "bg-alveus-tan bg-linear-to-r from-blue-800 to-green-600",
         progress === 0 ? "opacity-0" : "animate-pulse-slow",
       )}
       style={{ width: `${progress}%` }}

@@ -104,6 +104,18 @@ export default tseslint.config(
       ...betterTailwindcssPlugin.configs.recommended.rules,
       // Rely on prettier-plugin-tailwindcss for ordering (eslint breaks interpolated classes)
       "better-tailwindcss/enforce-consistent-class-order": "off",
+      "better-tailwindcss/no-unknown-classes": [
+        "error",
+        {
+          // Custom component classes defined in src/styles/tailwind.css
+          ignore: [
+            "^alveus-ugc$",
+            "^alveus-community-map$",
+            "^alveus-rte$",
+            "^html:transparent$",
+          ],
+        },
+      ],
     },
   },
   {

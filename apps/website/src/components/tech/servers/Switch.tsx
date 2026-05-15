@@ -23,7 +23,7 @@ const Ports = ({
     {Array.from({ length: count }).map((_, i) => (
       <div
         className={classes(
-          "relative aspect-[3/2] w-[2.85cqw] rounded-xs bg-gray-900",
+          "relative aspect-3/2 w-[2.85cqw] rounded-xs bg-gray-900",
           // Each block of 8 ports has a gap to the right, except the last one
           (i + 1) % (rows === 1 ? 8 : 16) === 0 &&
             i !== count - 1 &&
@@ -32,12 +32,23 @@ const Ports = ({
           rows === 2 && i === count - 1 && i % 2 === 0 && "row-start-2",
           // RJ45 ports have yellow/green connectivity indicators
           type === "rj45" &&
-            "before:absolute before:top-0 before:left-0 before:aspect-[3/2] before:w-1/4 before:rounded-xs before:bg-yellow-500/50 before:content-['']",
+            `
+              before:absolute before:top-0 before:left-0 before:aspect-3/2
+              before:w-1/4 before:rounded-xs before:bg-yellow-500/50
+              before:content-['']
+            `,
           type === "rj45" &&
-            "after:absolute after:top-0 after:right-0 after:aspect-[3/2] after:w-1/4 after:rounded-xs after:bg-green-500/50 after:content-['']",
+            `
+              after:absolute after:top-0 after:right-0 after:aspect-3/2
+              after:w-1/4 after:rounded-xs after:bg-green-500/50
+              after:content-['']
+            `,
           // SFP ports have a white connectivity indicator
           type === "sfp" &&
-            "after:absolute after:aspect-square after:w-1/5 after:rounded-xs after:bg-white/50 after:content-['']",
+            `
+              after:absolute after:aspect-square after:w-1/5 after:rounded-xs
+              after:bg-white/50 after:content-['']
+            `,
           type === "sfp" &&
             rows === 1 &&
             "after:-top-1/2 after:left-1/2 after:-translate-x-1/2",
@@ -72,18 +83,32 @@ const Switch = ({
   <Server size={1} title={title}>
     <div className="flex h-full justify-between gap-[2cqw]">
       {screen && (
-        <div className="relative my-auto aspect-square w-1/15 shrink-0 rounded-sm bg-blue-900">
-          <div className="absolute inset-y-0 left-1/2 h-full w-px -translate-x-1/2 bg-blue-500" />
-          <div className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-blue-500" />
-          <div className="absolute top-1/2 left-1/2 size-2/5 -translate-1/2 rounded-full bg-blue-900 ring-1 ring-blue-500" />
-          <div className="absolute top-1/2 left-1/2 size-1/5 -translate-1/2 rounded-full bg-white/75" />
+        <div className="
+          relative my-auto aspect-square w-1/15 shrink-0 rounded-sm bg-blue-900
+        ">
+          <div className="
+            absolute inset-y-0 left-1/2 h-full w-px -translate-x-1/2 bg-blue-500
+          " />
+          <div className="
+            absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-blue-500
+          " />
+          <div className="
+            absolute top-1/2 left-1/2 size-2/5 -translate-1/2 rounded-full
+            bg-blue-900 ring-1 ring-blue-500
+          " />
+          <div className="
+            absolute top-1/2 left-1/2 size-1/5 -translate-1/2 rounded-full
+            bg-white/75
+          " />
         </div>
       )}
 
       <div className="flex grow flex-col gap-[0.25cqw]">
         <div className="flex gap-[0.25cqw]">
           {!screen && (
-            <div className="h-[0.5cqw] w-[calc((1/15*100%)+2cqw)] rounded-sm bg-blue-500" />
+            <div className="
+              h-[0.5cqw] w-[calc((1/15*100%)+2cqw)] rounded-sm bg-blue-500
+            " />
           )}
           {Array.from({ length: 5 }).map((_, i) => (
             <div className="h-[0.5cqw] grow rounded-sm bg-gray-900" key={i} />
@@ -100,11 +125,17 @@ const Switch = ({
             >
               {Array.from({ length: drives }).map((_, i) => (
                 <div
-                  className="relative aspect-[5/1] h-[4.5cqw] rounded-sm border-[0.25cqw] border-gray-600"
+                  className="
+                    relative aspect-5/1 h-[4.5cqw] rounded-sm border-[0.25cqw]
+                    border-gray-600
+                  "
                   key={i}
                 >
                   <div className="h-full w-[0.25cqw] bg-gray-600" />
-                  <div className="absolute top-1/2 right-1/15 aspect-square h-1/6 -translate-y-1/2 rounded-full bg-white/75" />
+                  <div className="
+                    absolute top-1/2 right-1/15 aspect-square h-1/6
+                    -translate-y-1/2 rounded-full bg-white/75
+                  " />
                 </div>
               ))}
             </div>

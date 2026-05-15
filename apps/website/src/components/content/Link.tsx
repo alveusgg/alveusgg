@@ -27,8 +27,14 @@ const Link = ({
         !custom && "underline transition-colors",
         !custom &&
           (dark
-            ? "text-red-200 hover:text-blue-200"
-            : "text-red-600 hover:text-blue-600"),
+            ? `
+              text-red-200
+              hover:text-blue-200
+            `
+            : `
+              text-red-600
+              hover:text-blue-600
+            `),
         className,
       ),
     [custom, dark, className],

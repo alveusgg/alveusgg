@@ -72,14 +72,20 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <Section
         dark
         className="py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full pt-8 pb-4 md:w-3/5 md:py-20">
+        <div className="
+          w-full pt-8 pb-4
+          md:w-3/5 md:py-20
+        ">
           <Heading>Show and Tell: Community Map</Heading>
           <p className="text-lg">
             The community shares conservation and wildlife-related activities.
@@ -96,17 +102,31 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
           src={showAndTellPeepo}
           width={448}
           alt=""
-          className="mx-auto w-1/2 max-w-md p-4 pb-16 md:mx-0 md:w-1/4 md:pb-4"
+          className="
+            mx-auto w-1/2 max-w-md p-4 pb-16
+            md:mx-0 md:w-1/4 md:pb-4
+          "
         />
       </Section>
 
-      <Section className="py-6 md:py-12">
-        <div className="mb-6 grid w-full grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+      <Section className="
+        py-6
+        md:py-12
+      ">
+        <div className="
+          mb-6 grid w-full grid-cols-2 gap-4
+          sm:grid-cols-4
+          lg:grid-cols-6
+        ">
           <Box
             dark
             className={classes(
               bentoBoxClasses,
-              "col-span-2 p-0 text-lg transition-transform duration-200 hover:scale-102 xl:col-span-1",
+              `
+                col-span-2 p-0 text-lg transition-transform duration-200
+                hover:scale-102
+                xl:col-span-1
+              `,
             )}
           >
             <NextLink
@@ -121,7 +141,11 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(
               bentoBoxClasses,
-              "items-center p-2 md:text-lg lg:col-start-5",
+              `
+                items-center p-2
+                md:text-lg
+                lg:col-start-5
+              `,
             )}
           >
             <IconMapPin className="size-10" />
@@ -129,7 +153,10 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `
+              items-center p-2
+              md:text-lg
+            `)}
           >
             <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries

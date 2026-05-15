@@ -38,7 +38,11 @@ export const ImageItemPreview = ({
     className="flex items-center justify-center select-none"
     custom
   >
-    <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
+    <figure className="
+      group/carousel-item relative flex items-center justify-center
+      overflow-hidden rounded-lg bg-black text-white shadow-xl transition
+      hover:scale-102 hover:shadow-2xl
+    ">
       <Image
         src={imageAttachment.url}
         width={preview ? 600 : 100}
@@ -55,10 +59,19 @@ export const ImageItemPreview = ({
 
       {preview && imageAttachment.caption && (
         <>
-          <div className="absolute right-0 bottom-0 m-2 flex flex-row items-center gap-1 opacity-100 drop-shadow-lg transition-opacity duration-200 group-hover/carousel-item:opacity-0">
+          <div className="
+            absolute right-0 bottom-0 m-2 flex flex-row items-center gap-1
+            opacity-100 drop-shadow-lg transition-opacity duration-200
+            group-hover/carousel-item:opacity-0
+          ">
             Caption <IconInformationCircle className="size-5" />
           </div>
-          <figcaption className="absolute inset-0 top-auto flex items-center justify-center bg-black/80 p-2 leading-tight opacity-0 transition-opacity duration-200 group-hover/carousel-item:opacity-100">
+          <figcaption className="
+            absolute inset-0 top-auto flex items-center justify-center
+            bg-black/80 p-2 leading-tight opacity-0 transition-opacity
+            duration-200
+            group-hover/carousel-item:opacity-100
+          ">
             {imageAttachment.caption}
           </figcaption>
         </>
@@ -107,11 +120,16 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
   return (
     <div className="flex h-full flex-col select-none">
       <div
-        className="relative mx-auto flex max-h-full min-h-0 max-w-full shrink grow"
+        className="
+          relative mx-auto flex max-h-full min-h-0 max-w-full shrink grow
+        "
         style={{ aspectRatio }}
       >
         <div
-          className="my-auto h-auto max-h-full w-full overflow-hidden rounded-xl shadow-xl"
+          className="
+            my-auto h-auto max-h-full w-full overflow-hidden rounded-xl
+            shadow-xl
+          "
           style={{ aspectRatio }}
         >
           <Image
@@ -126,7 +144,10 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
             quality={90}
             draggable={false}
             className={classes(
-              "size-full bg-alveus-green-800 transition-transform duration-300 ease-out",
+              `
+                size-full bg-alveus-green-800 transition-transform duration-300
+                ease-out
+              `,
               isZoomed
                 ? "scale-200 cursor-zoom-out"
                 : "scale-100 cursor-zoom-in",
@@ -143,15 +164,23 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
         </div>
 
         {state === "loading" && (
-          <IconLoading className="absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan" />
+          <IconLoading className="
+            absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan
+          " />
         )}
         {state === "error" && (
-          <IconX className="absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan" />
+          <IconX className="
+            absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan
+          " />
         )}
       </div>
 
       {imageAttachment.caption && (
-        <p className="my-4 shrink-0 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
+        <p className="
+          my-4 shrink-0 text-center text-balance text-alveus-tan
+          md:mb-0
+          lg:mt-8
+        ">
           {imageAttachment.caption}
         </p>
       )}

@@ -30,17 +30,28 @@ export const StreamablePreview = ({
       alt={alt}
       loading="lazy"
       className={classes(
-        "pointer-events-none bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+        `
+          pointer-events-none bg-alveus-green-800 object-cover shadow-xl
+          transition
+          group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl
+        `,
         !/\brounded-/.test(className || "") && "rounded-2xl",
         className,
       )}
     />
     {icon && (
       <>
-        <div className="absolute inset-0 m-auto box-content aspect-square w-20 rounded-full bg-alveus-green/25 p-0.5 backdrop-blur-sm transition group-hover/trigger:scale-110 group-hover/trigger:bg-alveus-green/50" />
+        <div className="
+          absolute inset-0 m-auto box-content aspect-square w-20 rounded-full
+          bg-alveus-green/25 p-0.5 backdrop-blur-sm transition
+          group-hover/trigger:scale-110 group-hover/trigger:bg-alveus-green/50
+        " />
         <IconStreamable
           size={80}
-          className="absolute inset-0 m-auto text-white drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+          className="
+            absolute inset-0 m-auto text-white drop-shadow-md transition
+            group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl
+          "
         />
       </>
     )}
@@ -65,13 +76,20 @@ export const StreamableEmbed = ({ videoId, caption }: EmbedProps) => (
         allow="fullscreen; encrypted-media"
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
         loading="lazy"
-        className="pointer-events-auto my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green-800 shadow-xl"
+        className="
+          pointer-events-auto my-auto aspect-video h-auto w-full rounded-2xl
+          bg-alveus-green-800 shadow-xl
+        "
         allowFullScreen
       />
     </div>
 
     {caption && (
-      <p className="my-4 text-center text-xl text-balance text-alveus-tan md:mb-0 lg:mt-8">
+      <p className="
+        my-4 text-center text-xl text-balance text-alveus-tan
+        md:mb-0
+        lg:mt-8
+      ">
         {caption}
       </p>
     )}

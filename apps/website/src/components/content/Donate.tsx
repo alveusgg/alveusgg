@@ -81,7 +81,10 @@ const Donate = ({
     <Box
       dark
       className={classes(
-        "group p-0 transition hover:scale-102 hover:shadow-2xl",
+        `
+          group p-0 transition
+          hover:scale-102 hover:shadow-2xl
+        `,
         highlight && "bg-carnival",
       )}
     >
@@ -94,17 +97,33 @@ const Donate = ({
         <div className="mb-2 flex items-center gap-4">
           <div
             className={classes(
-              "relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 transition-colors",
+              `
+                relative block overflow-clip rounded-xl border-2
+                border-alveus-tan bg-alveus-tan p-2 transition-colors
+              `,
               highlight
-                ? "text-carnival group-hover:bg-carnival group-hover:text-alveus-tan"
-                : "text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan",
+                ? `
+                  text-carnival
+                  group-hover:bg-carnival group-hover:text-alveus-tan
+                `
+                : `
+                  text-alveus-green
+                  group-hover:bg-alveus-green group-hover:text-alveus-tan
+                `,
             )}
           >
             <link.icon
               size={24}
-              className="transition-opacity group-hover:opacity-0"
+              className="
+                transition-opacity
+                group-hover:opacity-0
+              "
             />
-            <IconArrowUp className="absolute inset-2 -translate-x-full translate-y-full rotate-45 opacity-0 transition group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100" />
+            <IconArrowUp className="
+              absolute inset-2 -translate-x-full translate-y-full rotate-45
+              opacity-0 transition
+              group-hover:translate-0 group-hover:opacity-100
+            " />
           </div>
           <Heading level={2} className="my-0">
             {link.title}

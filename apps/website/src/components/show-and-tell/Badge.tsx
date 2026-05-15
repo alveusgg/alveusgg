@@ -12,7 +12,7 @@ const BadgeBackground = ({
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={classes(
-      "absolute inset-0 aspect-square h-full w-full drop-shadow-sm",
+      "absolute inset-0 aspect-square size-full drop-shadow-sm",
       dark ? "fill-alveus-tan" : "fill-alveus-green",
       className,
     )}
@@ -32,16 +32,21 @@ export const Badge = ({
   pulse?: boolean;
 }) => {
   return (
-    <div className="flex aspect-square w-20 min-w-20 rotate-12 items-center justify-center">
+    <div className="
+      flex aspect-square w-20 min-w-20 rotate-12 items-center justify-center
+    ">
       {pulse && (
-        <div className="absolute inset-0 size-full scale-75 opacity-25 motion-reduce:hidden">
+        <div className="
+          absolute inset-0 size-full scale-75 opacity-25
+          motion-reduce:hidden
+        ">
           <BadgeBackground dark={dark} className="scale-150 animate-ping" />
         </div>
       )}
       <BadgeBackground dark={dark} />
       <span
         className={classes(
-          "relative w-3/4 text-center text-sm leading-tight",
+          "relative w-3/4 text-center text-sm/tight",
           dark ? "text-alveus-green-900" : "text-alveus-tan",
         )}
       >

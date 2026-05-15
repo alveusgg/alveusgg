@@ -49,7 +49,10 @@ const EventItems = ({
       <Heading
         level={-1}
         className={classes(
-          "alveus-green-800 mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
+          `
+            mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl
+            text-alveus-green-800
+          `,
           index === 0 && "sr-only",
         )}
         id={`${option}:${group}`}
@@ -68,7 +71,10 @@ const EventItems = ({
             idx !== arr.length - 1 && "border-b-2 border-alveus-green-300/15",
           )}
         >
-          <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
+          <div className="
+            mx-auto flex basis-full flex-col px-8
+            lg:basis-1/2
+          ">
             <Heading
               level={2}
               className="my-4 text-center text-4xl"
@@ -86,7 +92,11 @@ const EventItems = ({
               {Object.entries(event.stats).map(([key, stat]) => (
                 <div
                   key={key}
-                  className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
+                  className="
+                    mx-auto basis-full py-2 text-center
+                    sm:basis-1/2
+                    lg:px-2
+                  "
                 >
                   <p className="text-3xl font-bold">{stat.stat}</p>
                   <p className="text-xl text-alveus-green-700">{stat.title}</p>
@@ -97,7 +107,10 @@ const EventItems = ({
 
           <div
             className={classes(
-              "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
+              `
+                mx-auto flex basis-full flex-col px-8
+                lg:basis-1/2
+              `,
               idx % 2 === 0 && "lg:order-first",
             )}
           >
@@ -117,7 +130,9 @@ const EventItems = ({
             </Box>
           </div>
 
-          <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
+          <div className="
+            flex basis-full flex-col gap-3 px-8 text-lg text-gray-600
+          ">
             {event.info}
           </div>
         </div>
@@ -148,22 +163,36 @@ const EventsPage: NextPage = () => {
       </Meta>
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      <div className="
+        -mt-40 hidden h-40 bg-alveus-green-900
+        lg:block
+      " />
 
       <div className="relative">
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2
+            max-w-sm drop-shadow-md select-none
+            lg:block
+          "
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+          className="
+            pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto
+            w-1/2 max-w-48 drop-shadow-md select-none
+            lg:block
+          "
         />
 
         <Section dark className="py-24">
-          <div className="w-full lg:w-3/5">
+          <div className="
+            w-full
+            lg:w-3/5
+          ">
             <Heading>Our Events</Heading>
             <p className="text-lg">
               We host one-off fundraising events to increase awareness of our
@@ -179,12 +208,22 @@ const EventsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
+          className="
+            pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto
+            w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none
+            lg:block
+            2xl:max-w-48
+          "
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="
+            pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto
+            w-1/2 max-w-40 drop-shadow-md select-none
+            lg:block
+            2xl:-bottom-64 2xl:max-w-48
+          "
         />
 
         <Section className="grow">

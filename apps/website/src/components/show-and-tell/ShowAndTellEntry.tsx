@@ -86,15 +86,21 @@ const Header = ({
 
   return (
     <header
-      className={`p-4 px-10 drop-shadow-xl ${
+      className={`
+        p-4 px-10 drop-shadow-xl
+        ${
         isPresentationView ? "" : "text-center"
-      }`}
+      }
+      `}
     >
       <div className="flex items-center justify-end">
         <h2
-          className={`mb-3 grow font-serif ${
+          className={`
+            mb-3 grow font-serif
+            ${
             isPresentationView ? "text-6xl" : "text-4xl"
-          }`}
+          }
+          `}
         >
           {entry.title}
         </h2>
@@ -119,11 +125,13 @@ const Header = ({
       </div>
 
       <p
-        className={` ${
+        className={`
+          ${
           isPresentationView
             ? "text-4xl text-alveus-tan-200"
             : "text-2xl text-alveus-green"
-        }`}
+        }
+        `}
       >
         <span className="mr-1 italic">by </span>
         {entry.displayName}
@@ -147,17 +155,31 @@ const Header = ({
               className={classes(
                 "inline-flex items-center gap-1 text-green-700",
                 isPresentationView
-                  ? "group rounded-full bg-blue-900/95 p-1 text-3xl text-nowrap shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
-                  : "hover:underline focus:underline",
+                  ? `
+                    group rounded-full bg-blue-900/95 p-1 text-3xl text-nowrap
+                    shadow-lg transition-all
+                    hover:scale-102 hover:bg-blue-900 hover:text-green-600
+                    focus:bg-blue-900 focus:text-green-600
+                  `
+                  : `
+                    hover:underline
+                    focus:underline
+                  `,
               )}
               target="_blank"
               custom
             >
               <strong
                 className={classes(
-                  "bg-gradient-to-br to-green-600 bg-clip-text font-bold text-transparent",
+                  `
+                    bg-linear-to-br to-green-600 bg-clip-text font-bold
+                    text-transparent
+                  `,
                   isPresentationView
-                    ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
+                    ? `
+                      from-blue-500 pl-2 leading-none transition-colors
+                      group-hover:from-blue-400 group-hover:to-green-500
+                    `
                     : "from-blue-800",
                 )}
               >
@@ -166,7 +188,7 @@ const Header = ({
               <IconWorld
                 className={classes(
                   "inline-block",
-                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                  isPresentationView ? "size-12" : "size-8",
                 )}
               />
             </Link>
@@ -207,12 +229,19 @@ const Content = ({
     (hasContent || hasNote) && (
       <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-xs">
         <div
-          className={`mx-auto w-fit ${
+          className={`
+            mx-auto w-fit
+            ${
             isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
-          }`}
+          }
+          `}
         >
           {hasContent && (
-            <div className="alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl">
+            <div className="
+              alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto
+              md:text-lg
+              xl:text-2xl
+            ">
               <ErrorBoundary
                 FallbackComponent={Empty}
                 onError={(err) =>
@@ -229,11 +258,17 @@ const Content = ({
 
           {hasNote && (
             <div className="opacity-75">
-              <h3 className="mt-4 -mb-4 text-xs font-bold text-alveus-green-600 uppercase xl:text-sm">
+              <h3 className="
+                mt-4 -mb-4 text-xs font-bold text-alveus-green-600 uppercase
+                xl:text-sm
+              ">
                 Mod Note
               </h3>
 
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+              <div className="
+                alveus-ugc max-w-[1100px] hyphens-auto
+                xl:text-lg
+              ">
                 <ErrorBoundary
                   FallbackComponent={Empty}
                   onError={(err) =>
@@ -284,11 +319,24 @@ export const ShowAndTellEntry = ({
     <article
       key={entry.id}
       className={classes(
-        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-hidden",
+        `
+          relative flex shrink-0 flex-col transition-opacity delay-500
+          duration-500
+          focus:outline-hidden
+        `,
         isPresentationView &&
-          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]",
+          /* eslint-disable better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support */
+          `
+            h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center
+            overflow-hidden bg-alveus-green text-white shadow-xl
+            transition-[background-color,opacity]
+          ` /* eslint-enable better-tailwindcss/no-conflicting-classes */,
         !isPresentationView &&
-          "justify-center border-t border-alveus-green/50 first:border-t-0",
+          `
+            justify-center border-t border-alveus-green/50
+            first:border-t-0
+          `,
+        // eslint-disable-next-line better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support
         withHeight && !isPresentationView && "min-h-[70svh] min-h-[70vh]",
       )}
       onClick={(e) => {
@@ -317,18 +365,27 @@ export const ShowAndTellEntry = ({
             width={1920}
             height={1080}
             draggable={false}
-            className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] object-cover opacity-30 blur-md select-none"
+            className="
+              pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)]
+              object-cover opacity-30 blur-md select-none
+            "
             src={featuredImage.url}
             alt=""
           />
         </div>
       )}
       <div
-        className={`z-10 flex flex-col gap-4 p-4 ${
+        className={`
+          z-10 flex flex-col gap-4 p-4
+          ${
           isPresentationView
-            ? "absolute inset-0 scrollbar-none flex-1 overflow-hidden overflow-y-scroll"
+            ? `
+              absolute inset-0 scrollbar-none flex-1 overflow-hidden
+              overflow-y-scroll
+            `
             : ""
-        }`}
+        }
+        `}
       >
         <Header
           entry={entry}
@@ -342,7 +399,9 @@ export const ShowAndTellEntry = ({
             attachments={entry.attachments}
           />
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 p-4">
+          <div className="
+            flex flex-1 flex-col items-center justify-center gap-2 p-4
+          ">
             <Image
               src={showAndTellPeepo}
               height={384}

@@ -187,7 +187,10 @@ type DayProps = {
 const Day = ({ children, className }: DayProps) => (
   <td
     className={classes(
-      "flex min-h-8 flex-col gap-1 border p-1 transition-colors md:min-h-24",
+      `
+        flex min-h-8 flex-col gap-1 border p-1 transition-colors
+        md:min-h-24
+      `,
       className,
     )}
   >
@@ -260,7 +263,11 @@ export function Calendar({
               // Fade these in with a short delay before starting
               // Delay stops a flash of placeholders if we load quickly
               className={classes(
-                "transition-delay-200 mb-auto block animate-pulse rounded-xs bg-gray-400/50 transition-opacity duration-500 data-[closed]:opacity-0",
+                `
+                  mb-auto block animate-pulse rounded-xs bg-gray-400/50
+                  transition-opacity delay-200 duration-500
+                  data-closed:opacity-0
+                `,
                 // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
                 delay[Math.floor(Math.random() * delay.length)],
                 // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
@@ -316,8 +323,14 @@ export function Calendar({
   const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
   return (
-    <div className={classes("flex flex-col gap-2 md:gap-6", className)}>
-      <div className="flex flex-col gap-4 sm:gap-2">
+    <div className={classes(`
+      flex flex-col gap-2
+      md:gap-6
+    `, className)}>
+      <div className="
+        flex flex-col gap-4
+        sm:gap-2
+      ">
         <div className="flex items-baseline justify-between">
           <p className="text-5xl font-medium">
             {selectedDateTime.setLocale("en-US").monthLong}
@@ -330,7 +343,10 @@ export function Calendar({
             <button
               type="button"
               onClick={() => onChange(selectedDateTime.minus({ month: 1 }))}
-              className="transition-colors hover:text-alveus-green-400"
+              className="
+                transition-colors
+                hover:text-alveus-green-400
+              "
             >
               <IconArrowRight className="size-6 rotate-180" />
             </button>
@@ -343,7 +359,10 @@ export function Calendar({
             <button
               type="button"
               onClick={() => onChange(selectedDateTime.plus({ month: 1 }))}
-              className="transition-colors hover:text-alveus-green-400"
+              className="
+                transition-colors
+                hover:text-alveus-green-400
+              "
             >
               <IconArrowRight className="size-6" />
             </button>
@@ -353,7 +372,11 @@ export function Calendar({
 
       <table
         className={classes(
-          "grid grid-cols-1 overflow-hidden rounded-md border shadow-lg transition-colors md:grid-cols-7",
+          `
+            grid grid-cols-1 overflow-hidden rounded-md border shadow-lg
+            transition-colors
+            md:grid-cols-7
+          `,
           theme.background,
           theme.border,
         )}
@@ -365,7 +388,11 @@ export function Calendar({
               <th
                 key={i}
                 className={classes(
-                  "hidden border px-2 py-1 text-center font-bold uppercase transition-colors md:block",
+                  `
+                    hidden border px-2 py-1 text-center font-bold uppercase
+                    transition-colors
+                    md:block
+                  `,
                   i === 0 && "rounded-tl-sm",
                   i === 6 && "rounded-tr-sm",
                   theme.heading,
@@ -390,10 +417,16 @@ export function Calendar({
                 const firstWk = week === 0;
                 const lastWk = week === weeks - 1;
                 const rounded = classes(
-                  firstWk && date === 1 && "rounded-t-sm md:rounded-none",
+                  firstWk && date === 1 && `
+                    rounded-t-sm
+                    md:rounded-none
+                  `,
                   lastWk &&
                     date === daysInMonth &&
-                    "rounded-b-sm md:rounded-none",
+                    `
+                      rounded-b-sm
+                      md:rounded-none
+                    `,
                   lastWk && i === 0 && "md:rounded-bl-sm",
                   lastWk && i === 6 && "md:rounded-br-sm",
                 );
@@ -404,7 +437,10 @@ export function Calendar({
                     <Day
                       key={date}
                       className={classes(
-                        "hidden bg-black/10 md:block",
+                        `
+                          hidden bg-black/10
+                          md:block
+                        `,
                         theme.border,
                         rounded,
                       )}
@@ -434,18 +470,31 @@ export function Calendar({
                     key={date}
                     className={classes(
                       // On mobile, we'll position absolute the date + day of week
-                      "relative pr-12 md:pr-1",
+                      `
+                        relative pr-12
+                        md:pr-1
+                      `,
                       // On mobile, make the weekends have a darker background
                       (day === 6 || day === 7) &&
-                        "bg-black/15 md:bg-transparent",
+                        `
+                          bg-black/15
+                          md:bg-transparent
+                        `,
                       theme.border,
                       rounded,
                     )}
                   >
-                    <div className="absolute top-0 right-0 mb-auto flex justify-end md:relative">
+                    <div className="
+                      absolute top-0 right-0 mb-auto flex justify-end
+                      md:relative
+                    ">
                       <p
                         className={classes(
-                          "flex gap-1 rounded-bl-lg px-1.5 pt-1.5 pb-1 font-mono text-sm leading-none md:-mt-1 md:-mr-1",
+                          `
+                            flex gap-1 rounded-bl-lg px-1.5 pt-1.5 pb-1
+                            font-mono text-sm leading-none
+                            md:-mt-1 md:-mr-1
+                          `,
                           isPast && "opacity-50",
                           isToday && theme.heading,
                         )}
