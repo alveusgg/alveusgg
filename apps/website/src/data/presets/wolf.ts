@@ -394,8 +394,8 @@ const wolfPresets: Record<string, Preset> = {
   tipt: {
     description: "tipt",
     image: tipt,
-    position: { pan: 118.81, tilt: -5.22, zoom: 819 },
-    // modified: 2026-03-12T15:06:11.956Z
+    position: { pan: 114.77, tilt: -4.58, zoom: 332 },
+    // modified: 2026-05-14T14:43:09.327Z
   },
   trees: {
     description: "middle trees",
