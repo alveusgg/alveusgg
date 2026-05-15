@@ -182,7 +182,7 @@ const FoundAnimalPage: NextPage = () => {
                   <button
                     className={classes(
                       !flow.options && "mt-2 self-center py-1",
-                      "px-2 text-alveus-green-400 transition-colors hover:text-alveus-green-800",
+                      `px-2 text-alveus-green-400 transition-colors hover:text-alveus-green-800`,
                     )}
                     onClick={reset}
                     type="button"

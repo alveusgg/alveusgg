@@ -228,12 +228,12 @@ function PixelsAlert() {
             }}
             initial="hidden"
           >
-            <span className="text-md">x</span>
+            <span className="text-base">x</span>
             <span ref={multiplierTextRef} className="text-xl font-bold" />
           </motion.span>
 
           <motion.div
-            className="h-[100px] w-[100px] overflow-hidden rounded-md bg-white p-1 ring ring-black"
+            className="size-[100px] overflow-hidden rounded-md bg-white p-1 ring ring-black"
             ref={pixelRef}
             variants={{
               hidden: { opacity: 0 },
@@ -253,7 +253,7 @@ function PixelsAlert() {
             </motion.svg>
             <canvas
               ref={pixelImageCanvasRef}
-              className="h-full w-full rounded-sm"
+              className="size-full rounded-sm"
               style={{ imageRendering: "pixelated" }}
               width={PIXEL_SIZE}
               height={PIXEL_SIZE}

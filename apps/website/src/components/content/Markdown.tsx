@@ -10,7 +10,7 @@ import Link from "@/components/content/Link";
 const MarkdownHeading = ({ level, className, children, id }: HeadingProps) => (
   <Heading
     level={level}
-    className={classes(className, "break-words")}
+    className={classes(className, "wrap-break-word")}
     id={id}
     link
   >

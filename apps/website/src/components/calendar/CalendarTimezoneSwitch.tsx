@@ -38,7 +38,7 @@ export const CalendarTimezoneSwitchButton = ({
     <IconCheck
       role="presentation"
       className={classes(
-        "not-sr-only absolute top-1/2 left-1 w-3 -translate-y-1/2 min-[420px]:left-2 min-[420px]:w-5",
+        `not-sr-only absolute top-1/2 left-1 w-3 -translate-y-1/2 min-[420px]:left-2 min-[420px]:w-5`,
         !isSelected && "invisible",
       )}
     />

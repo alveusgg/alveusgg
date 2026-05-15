@@ -25,14 +25,14 @@ const Button = ({
   onClick: () => void;
   selected: Camera;
 }) => (
-  <div className="flex w-full shrink-0 overflow-hidden rounded shadow-md">
+  <div className="flex w-full shrink-0 overflow-hidden rounded-sm shadow-md">
     <button
       onClick={onClick}
       className={classes(
-        "my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
+        `my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm`,
         camera === selected
           ? "bg-alveus-green/75 text-white"
-          : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+          : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
       )}
     >
       {cameras[camera].title}
@@ -116,7 +116,7 @@ export const CamListFull = ({
         aria-label="Search cameras"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+        className="w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
       />
 
       <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
@@ -142,10 +142,10 @@ export const CamListFull = ({
                 <DisclosureButton
                   ref={disclosureRef}
                   className={classes(
-                    "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
+                    `group flex w-full shrink-0 items-center justify-between rounded-sm px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm`,
                     cameras[camera].group === name
                       ? "bg-alveus-green/75 text-white"
-                      : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                      : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
                   )}
                 >
                   <span>
@@ -154,7 +154,7 @@ export const CamListFull = ({
                       {` (${group.length})`}
                     </span>
                   </span>
-                  <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                  <IconChevronDown className="ml-auto size-5 group-data-open:-scale-y-100" />
                 </DisclosureButton>
                 <DisclosurePanel className="ml-4 flex flex-col gap-1">
                   {group.map((item) => (
@@ -192,7 +192,7 @@ export const CamListDropdown = ({
       id="camera-select"
       value={camera}
       onChange={(e) => onChange(e.target.value as Camera)}
-      className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
+      className="w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
     >
       {typeSafeObjectKeys(cameras).map((camera) => (
         <option key={camera} value={camera}>

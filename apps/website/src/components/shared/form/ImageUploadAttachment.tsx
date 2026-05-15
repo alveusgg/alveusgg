@@ -32,7 +32,7 @@ export function ImageUploadFilePreview({
         src={src}
         alt=""
         className={classes(
-          "absolute inset-0 h-full w-full object-contain object-center transition-opacity",
+          `absolute inset-0 size-full object-contain object-center transition-opacity`,
           fadeOutImage && "opacity-50",
         )}
       />

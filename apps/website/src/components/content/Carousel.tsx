@@ -157,7 +157,7 @@ const Carousel = ({
     <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
         className={classes(
-          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
+          `shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0`,
           buttonClassName,
           state === "none" && "hidden",
         )}
@@ -174,7 +174,7 @@ const Carousel = ({
 
       <div
         className={classes(
-          "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
+          `scrollbar-none flex grow snap-x snap-mandatory flex-nowrap overflow-x-auto`,
           wrapperClassName,
           state === "none" ? "justify-evenly" : "cursor-grab",
         )}
@@ -207,7 +207,7 @@ const Carousel = ({
 
       <button
         className={classes(
-          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
+          `shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0`,
           buttonClassName,
           state === "none" && "hidden",
         )}

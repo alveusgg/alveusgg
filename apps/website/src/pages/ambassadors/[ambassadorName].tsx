@@ -377,7 +377,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     className={classes(
                       "contents",
                       nested &&
-                        "col-span-full grid-cols-auto-4 gap-4 md:grid lg:contents xl:grid",
+                        `col-span-full grid-cols-auto-4 gap-4 md:grid lg:contents xl:grid`,
                     )}
                   >
                     {items.map(({ title, value }, idx) => (
@@ -387,7 +387,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                             "col-span-full h-px bg-alveus-green opacity-10",
                             nested &&
                               idx % 2 !== 0 &&
-                              "md:hidden lg:block xl:hidden",
+                              `md:hidden lg:block xl:hidden`,
                           )}
                         />
                         <dt className="self-center text-2xl font-bold">

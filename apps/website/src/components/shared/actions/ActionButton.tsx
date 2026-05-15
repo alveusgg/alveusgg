@@ -27,7 +27,7 @@ const ActionButton = ({
           className || "",
         ) && "inline-block",
         !/\btext-/.test(className || "") &&
-          "text-alveus-green-400 hover:text-black",
+          `text-alveus-green-400 hover:text-black`,
         className,
       )}
       {...ttProps}

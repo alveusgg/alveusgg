@@ -28,7 +28,7 @@ export function PopoverButton({
               className={
                 open
                   ? defaultButtonClasses
-                  : "bg-gray-700/10 hover:bg-gray-700/20"
+                  : `bg-gray-700/10 hover:bg-gray-700/20`
               }
             >
               {label}

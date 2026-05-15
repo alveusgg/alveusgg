@@ -420,7 +420,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           <Box
             className={classes(
               bentoBoxClasses,
-              "col-span-4 col-start-1 row-start-3 p-0 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2",
+              `col-span-4 col-start-1 row-start-3 p-0 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2`,
             )}
           >
             <NextLink
@@ -443,28 +443,28 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconUserGroup className="size-10" />
             {usersCountFmt} members
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconPencil className="size-10" />
             {totalPostsCountFmt} posts
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconMapPin className="size-10" />
             {uniqueLocationsCountFmt} locations
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries
@@ -474,7 +474,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(
               bentoBoxClasses,
-              "col-start-1 col-end-5 row-start-2 p-4 md:col-start-3 md:col-end-7",
+              `col-start-1 col-end-5 row-start-2 p-4 md:col-start-3 md:col-end-7`,
             )}
           >
             <p className="text-left md:text-center">
@@ -505,7 +505,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
+              ? ` fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5`
               : "gap-20 bg-white/0")
           }
           onKeyDown={handleArrowKeys}
@@ -546,7 +546,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
               {hasPrevEntry && (
                 <button
-                  className="group fixed top-0 left-5 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
+                  className="group fixed top-0 left-5 z-20 h-[3em] w-[calc(80%-2em)]"
                   type="button"
                   onClick={scrollToPrev}
                 >
@@ -557,7 +557,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 <button
                   className={
                     "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
-                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
+                    (hasPrevEntry ? "h-[3em]" : "h-[calc(6em-1.25rem)]")
                   }
                   type="button"
                   onClick={scrollToNext}

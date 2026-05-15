@@ -241,7 +241,7 @@ function PixelPreview({
     }
   }, [x, y, update]);
 
-  return <canvas className="h-[200px] w-[200px]" ref={canvas} />;
+  return <canvas className="size-[200px]" ref={canvas} />;
 }
 
 export default PixelPreview;

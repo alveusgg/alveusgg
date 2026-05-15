@@ -126,7 +126,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
             quality={90}
             draggable={false}
             className={classes(
-              "size-full bg-alveus-green-800 transition-transform duration-300 ease-out",
+              `size-full bg-alveus-green-800 transition-transform duration-300 ease-out`,
               isZoomed
                 ? "scale-200 cursor-zoom-out"
                 : "scale-100 cursor-zoom-in",

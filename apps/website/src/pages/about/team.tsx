@@ -283,7 +283,7 @@ const AboutTeamPage: NextPage = () => {
               <div
                 key={key}
                 className={classes(
-                  "w-full p-4 sm:w-1/2",
+                  `w-full p-4 sm:w-1/2`,
                   arr.length === 4 ? "lg:w-1/4" : "lg:w-1/3",
                 )}
               >

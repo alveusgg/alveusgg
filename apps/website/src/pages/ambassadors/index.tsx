@@ -177,7 +177,7 @@ const AmbassadorItems = ({
       <div
         ref={ref}
         className={classes(
-          "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+          `grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4`,
           group && "xl:grid-cols-5",
         )}
       >
@@ -276,7 +276,7 @@ const AmbassadorsPage: NextPage = () => {
         <Section className="grow pt-8">
           <div
             className={classes(
-              "flex flex-col items-center justify-between gap-4 md:flex-row",
+              `flex flex-col items-center justify-between gap-4 md:flex-row`,
               Array.isArray(result) ? "mb-4" : "-mb-6",
             )}
           >

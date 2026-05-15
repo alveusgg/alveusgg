@@ -46,8 +46,8 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
               className={classes(
                 "block rounded-2xl p-3 transition-colors",
                 dark
-                  ? "bg-alveus-tan text-alveus-green hover:bg-alveus-green-800 hover:text-alveus-tan"
-                  : "bg-alveus-green text-alveus-tan hover:bg-alveus-tan hover:text-alveus-green",
+                  ? `bg-alveus-tan text-alveus-green hover:bg-alveus-green-800 hover:text-alveus-tan`
+                  : `bg-alveus-green text-alveus-tan hover:bg-alveus-tan hover:text-alveus-green`,
               )}
               title={item.description}
             >
@@ -61,7 +61,7 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
         readOnly={true}
         type="url"
         className={classes(
-          "m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic outline-hidden",
+          `m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic outline-hidden`,
           dark ? "text-alveus-tan" : "text-alveus-green-600",
         )}
         value={`${getShortBaseUrl()}${path}`}

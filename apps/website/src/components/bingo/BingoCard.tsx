@@ -153,7 +153,7 @@ export function BingoCard({
             return (
               <div
                 className={classes(
-                  "flex h-full w-full rounded-sm",
+                  "flex size-full rounded-sm",
                   isBingoMatch && "ring-4 ring-red-800 ring-offset-0",
                 )}
               >
@@ -163,7 +163,7 @@ export function BingoCard({
                       "flex w-full items-center justify-center rounded-sm",
                       isBingoMatch
                         ? "border-red-600 bg-red-600"
-                        : "text-bold bg-green-800 text-white",
+                        : "bg-green-800 font-bold text-white",
                     )}
                   >
                     Free
@@ -182,14 +182,14 @@ export function BingoCard({
                     }}
                     disabled={!isSelectable}
                     className={classes(
-                      "flex w-full transform items-center justify-center rounded-sm transition-all",
+                      `flex w-full transform items-center justify-center rounded-sm transition-all`,
                       isBingoMatch
                         ? "bg-red-500"
                         : isSelected
                           ? "bg-green-800 text-white"
                           : isSelectable
-                            ? "bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50"
-                            : "bg-white hover:scale-95 hover:bg-gray-200",
+                            ? `bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50`
+                            : `bg-white hover:scale-95 hover:bg-gray-200`,
                     )}
                   >
                     {cellValue}

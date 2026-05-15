@@ -47,7 +47,7 @@ const Storage = ({
       {Array.from({ length: size === 1 ? 4 : 12 }, (_, i) => (
         <div
           key={i}
-          className="flex aspect-[4/1] gap-[0.5cqw] rounded-sm bg-gray-800 p-[0.5cqw]"
+          className="flex aspect-4/1 gap-[0.5cqw] rounded-sm bg-gray-800 p-[0.5cqw]"
         >
           <div className="grow rounded-sm bg-gray-900" />
           <div className="flex w-1/20 flex-col gap-[0.5cqw]">

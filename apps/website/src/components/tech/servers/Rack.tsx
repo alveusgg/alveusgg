@@ -27,7 +27,7 @@ const Rack = ({
       </div>
       <div
         className={classes(
-          "sticky flex flex-col gap-1 py-2 *:drop-shadow-md lg:py-4",
+          `sticky flex flex-col gap-1 py-2 *:drop-shadow-md lg:py-4`,
           sticky === "top" ? "top-0" : "bottom-0",
         )}
       >

@@ -186,7 +186,7 @@ const Creators = ({ className }: { className?: string }) => {
                   <Image
                     src={image}
                     alt=""
-                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:brightness-105! group-hover/creator:contrast-115 group-hover/creator:saturate-110! group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
@@ -196,11 +196,11 @@ const Creators = ({ className }: { className?: string }) => {
         </ul>
 
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-l from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-r from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
 
@@ -236,7 +236,7 @@ const Creators = ({ className }: { className?: string }) => {
                 "absolute inset-y-0 z-10 m-1 h-3 rounded-full shadow-xs",
                 bar.width === dots
                   ? "pointer-events-none"
-                  : "cursor-grab select-none hover:bg-alveus-green-800",
+                  : `cursor-grab select-none hover:bg-alveus-green-800`,
                 barDragging
                   ? "bg-alveus-green-800 transition-[background]"
                   : "bg-alveus-green-900 transition-[background,left]",
@@ -314,7 +314,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
+            `mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between`,
             index === 0 ? "mt-0" : "mt-8",
           )}
           id={`${option}:${group}`}

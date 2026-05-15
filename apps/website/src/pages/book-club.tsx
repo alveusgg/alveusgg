@@ -98,7 +98,7 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-2/3 h-auto w-full overflow-hidden rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      `relative aspect-2/3 h-auto w-full overflow-hidden rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg`,
       className,
     )}
   >
@@ -116,18 +116,18 @@ const Cover = ({
     </div>
 
     {/* Shine (hover) */}
-    <div className="absolute inset-x-0 top-0 z-10 h-64 max-h-full bg-gradient-to-b from-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100" />
+    <div className="absolute inset-x-0 top-0 z-10 h-64 max-h-full bg-linear-to-b from-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100" />
 
     {/* Crease */}
-    <div className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-r from-black/10 via-black/10 to-white/30" />
-    <div className="absolute inset-y-0 left-1.5 w-1.5 bg-gradient-to-r from-white/30 to-white/0" />
-    <div className="absolute inset-y-0 left-2.5 w-1.5 bg-gradient-to-r from-black/0 via-black/10 to-white/10" />
-    <div className="absolute inset-y-0 left-4 w-1.5 bg-gradient-to-r from-white/10 via-white/30 to-white/0" />
+    <div className="absolute inset-y-0 left-0 w-1.5 bg-linear-to-r from-black/10 via-black/10 to-white/30" />
+    <div className="absolute inset-y-0 left-1.5 w-1.5 bg-linear-to-r from-white/30 to-white/0" />
+    <div className="absolute inset-y-0 left-2.5 w-1.5 bg-linear-to-r from-black/0 via-black/10 to-white/10" />
+    <div className="absolute inset-y-0 left-4 w-1.5 bg-linear-to-r from-white/10 via-white/30 to-white/0" />
 
     {/* Edges */}
-    <div className="absolute top-0 right-0 left-5 h-2 bg-gradient-to-b from-white/20 to-white/0" />
-    <div className="absolute right-0 bottom-0 left-5 h-2 bg-gradient-to-t from-white/20 to-white/0" />
-    <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-white/20 to-white/0" />
+    <div className="absolute top-0 right-0 left-5 h-2 bg-linear-to-b from-white/20 to-white/0" />
+    <div className="absolute right-0 bottom-0 left-5 h-2 bg-linear-to-t from-white/20 to-white/0" />
+    <div className="absolute inset-y-0 right-0 w-2 bg-linear-to-l from-white/20 to-white/0" />
 
     {image && (
       <Image
@@ -161,17 +161,17 @@ const Book = ({
     {({ open }) => (
       <>
         <DisclosureButton className="group w-full overflow-visible text-start perspective-normal focus:outline-hidden">
-          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
+          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-open:mb-[-100%] group-data-open:-translate-y-1/4 group-data-open:translate-z-2 group-data-open:scale-70 group-data-open:scale-3d group-data-open:rotate-x-85">
             <Cover
               title={title}
               author={author}
               image={image}
               width={width}
-              className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
+              className="transition-transform duration-1000 group-data-open:translate-x-1 group-data-open:-translate-z-0.5"
             />
             <div
               className={classes(
-                "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
+                `w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-linear-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-open:scale-x-100`,
                 thickness,
                 color,
               )}
@@ -180,7 +180,7 @@ const Book = ({
 
           <Heading
             level={2}
-            className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
+            className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-open:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
             {formatPartialDateString(month)}
@@ -256,7 +256,7 @@ const BookClubPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-10 left-0 z-10 hidden h-auto w-1/2 max-w-36 -scale-y-100 rotate-[20deg] drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute -bottom-10 left-0 z-10 hidden h-auto w-1/2 max-w-36 -scale-y-100 rotate-20 drop-shadow-md select-none lg:block"
         />
 
         <Section

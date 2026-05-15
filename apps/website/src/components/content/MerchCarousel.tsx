@@ -190,8 +190,8 @@ const MerchCarousel = ({
       items={items}
       wrapperClassName="items-center"
       itemClassName={classes(
-        "basis-full p-2 sm:basis-1/2 lg:basis-1/3",
-        more && "xl:basis-1/4 2xl:basis-1/6",
+        `basis-full p-2 sm:basis-1/2 lg:basis-1/3`,
+        more && `xl:basis-1/4 2xl:basis-1/6`,
       )}
     />
   );

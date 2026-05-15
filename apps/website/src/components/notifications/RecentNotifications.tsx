@@ -39,7 +39,7 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
         <label
           className={classes(
             selectionButtonClasses,
-            "rounded-md border border-transparent px-2 py-1 not-has-placeholder-shown:border-alveus-green-700 not-has-placeholder-shown:bg-alveus-tan focus-within:border-alveus-green-700 focus-within:bg-alveus-tan",
+            `rounded-md border border-transparent px-2 py-1 not-has-placeholder-shown:border-alveus-green-700 not-has-placeholder-shown:bg-alveus-tan focus-within:border-alveus-green-700 focus-within:bg-alveus-tan`,
           )}
         >
           <IconSearch size={16} className="shrink-0" />

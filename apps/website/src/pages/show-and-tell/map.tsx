@@ -106,7 +106,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(
               bentoBoxClasses,
-              "col-span-2 p-0 text-lg transition-transform duration-200 hover:scale-102 xl:col-span-1",
+              `col-span-2 p-0 text-lg transition-transform duration-200 hover:scale-102 xl:col-span-1`,
             )}
           >
             <NextLink
@@ -121,7 +121,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(
               bentoBoxClasses,
-              "items-center p-2 md:text-lg lg:col-start-5",
+              `items-center p-2 md:text-lg lg:col-start-5`,
             )}
           >
             <IconMapPin className="size-10" />
@@ -129,7 +129,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
           </Box>
           <Box
             dark
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(bentoBoxClasses, `items-center p-2 md:text-lg`)}
           >
             <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries

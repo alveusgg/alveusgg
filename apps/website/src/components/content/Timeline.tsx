@@ -18,7 +18,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
   <div className="relative z-0 mx-auto max-w-6xl">
     <div
       className={classes(
-        "absolute left-5 -z-10 w-1 -translate-x-1/2 overflow-clip border-x border-alveus-green bg-alveus-green/25 md:left-1/2",
+        `absolute left-5 -z-10 w-1 -translate-x-1/2 overflow-clip border-x border-alveus-green bg-alveus-green/25 md:left-1/2`,
         before || "top-0",
         after || "-bottom-20",
       )}
@@ -36,7 +36,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
           >
             <div
               className={classes(
-                "mt-1 hidden border-y-[1rem] border-solid border-y-transparent md:block",
+                `mt-1 hidden border-y-[1rem] border-solid border-y-transparent md:block`,
                 idx % 2
                   ? "ml-6 border-r-[1rem] border-l-0 border-r-alveus-green"
                   : "mr-6 border-r-0 border-l-[1rem] border-l-alveus-green",
@@ -49,7 +49,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
           </div>
           <div
             className={classes(
-              "hidden basis-1/2 px-4 pt-2 md:block",
+              `hidden basis-1/2 px-4 pt-2 md:block`,
               idx % 2 ? "md:order-first" : "md:order-last",
             )}
           >
@@ -64,7 +64,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
           </div>
           <div
             className={classes(
-              "basis-full px-4 md:basis-1/2",
+              `basis-full px-4 md:basis-1/2`,
               idx % 2 ? "md:order-last" : "md:order-first",
             )}
           >

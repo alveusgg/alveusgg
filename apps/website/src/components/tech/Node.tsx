@@ -91,7 +91,9 @@ const Node = ({
   return (
     <Element
       className={classes(
-        "group flex min-w-0 flex-col rounded-xl border-2 bg-white px-2 py-1 shadow-sm transition-all hover:!min-w-[calc-size(min-content,size))] hover:min-w-min hover:shadow-lg focus:!min-w-[calc-size(min-content,size)] focus:min-w-min focus:shadow-lg",
+        /* eslint-disable better-tailwindcss/no-conflicting-classes -- intentional calc-size() fallback to min-w-min for browsers without calc-size() support */
+        `group flex min-w-0 flex-col rounded-xl border-2 bg-white px-2 py-1 shadow-sm transition-all hover:min-w-[calc-size(min-content,size)]! hover:min-w-min hover:shadow-lg focus:min-w-[calc-size(min-content,size)]! focus:min-w-min focus:shadow-lg`,
+        /* eslint-enable better-tailwindcss/no-conflicting-classes */
         data.container,
         data.url && "cursor-pointer",
       )}
@@ -137,7 +139,7 @@ const Node = ({
         >
           <span
             className={classes(
-              "shrink overflow-hidden text-ellipsis whitespace-nowrap",
+              "shrink truncate",
               data.url && "group-hover:underline",
             )}
           >

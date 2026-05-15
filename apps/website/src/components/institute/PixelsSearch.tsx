@@ -154,7 +154,7 @@ const PixelsSearch = ({
       className={classes(
         "flex flex-col",
         fullscreen
-          ? "fixed inset-0 isolate z-100 h-screen w-screen touch-none gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+          ? `fixed inset-0 isolate z-100 h-screen w-screen touch-none gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green`
           : "gap-8",
         className,
       )}
@@ -172,7 +172,7 @@ const PixelsSearch = ({
           )}
           className={classes(
             fullscreen &&
-              "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",
+              `scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green`,
           )}
           canvasClassName={classes(
             "rounded-lg",
@@ -200,7 +200,7 @@ const PixelsSearch = ({
       <Box
         dark
         className={classes(
-          "z-10 flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs",
+          `z-10 flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs`,
           fullscreen && "max-md:mb-4",
         )}
       >
@@ -229,10 +229,10 @@ const PixelsSearch = ({
         <Transition show={!!search.trim()}>
           <p
             className={classes(
-              "shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2",
+              `shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2`,
               fullscreen
                 ? "text-alveus-tan"
-                : "text-alveus-green md:text-alveus-tan",
+                : `text-alveus-green md:text-alveus-tan`,
             )}
           >
             {`Found ${filtered.toLocaleString()} ${pluralize("pixel", filtered)}`}

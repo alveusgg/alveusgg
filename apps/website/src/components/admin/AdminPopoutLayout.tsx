@@ -34,7 +34,7 @@ function AdminPopoutLayout({
         checkRolesGivePermission(user.roles, needsPermission)));
 
   return (
-    <div className="h-full min-h-screen w-full bg-white text-black dark:bg-gray-900 dark:text-white">
+    <div className="size-full min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white">
       <div className="flex flex-row items-center justify-between p-1">
         <button
           type="button"

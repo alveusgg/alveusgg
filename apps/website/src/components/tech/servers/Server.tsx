@@ -25,7 +25,7 @@ const Front = ({
     <div
       className={classes(
         // Rack width is 19 inches, 1U is 1.75 inches, 2U is 3.5 inches
-        size === 1 ? "aspect-[19/1.75]" : "aspect-[19/3.5]",
+        size === 1 ? "aspect-19/1.75" : "aspect-19/3.5",
         background || "bg-gray-400",
         !empty && "@container flex gap-[0.25cqw] p-[0.25cqw]",
         "w-full rounded-sm",

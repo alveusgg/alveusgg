@@ -44,7 +44,7 @@ const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
     <div
       className={classes(
-        "box-content flex items-center justify-center rounded-sm border-2 border-current p-0.5 font-mono text-sm",
+        `box-content flex items-center justify-center rounded-sm border-2 border-current p-0.5 font-mono text-sm`,
         className,
       )}
     >
@@ -167,7 +167,7 @@ const AboutTechPresetsPage: NextPage = () => {
       <div
         className={classes(
           "flex bg-alveus-green py-4",
-          zen ? "fixed inset-0 z-100 h-screen" : "relative lg:h-screen",
+          zen ? "fixed inset-0 z-100 h-screen" : `relative lg:h-screen`,
         )}
       >
         <Section
@@ -240,7 +240,7 @@ const AboutTechPresetsPage: NextPage = () => {
               <div
                 className={classes(
                   "grid w-full grid-cols-1 gap-x-8 gap-y-2",
-                  zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
+                  zen ? `col-span-full @3xl:grid-cols-2` : "@3xl:col-span-2",
                 )}
               >
                 <ProvideAuth scopeGroup="chat" className="mb-4" />
@@ -248,7 +248,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 {!subscription.isPaused && (
                   <div
                     className={classes(
-                      "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
+                      `mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan`,
                       subscription.isSuccess &&
                         (subscription.data ? "bg-alveus-green" : "bg-red"),
                       subscription.isLoading && "bg-twitch",
@@ -288,7 +288,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       className={classes(
                         zen
                           ? "order-first row-span-2 grid grid-rows-subgrid"
-                          : "hidden lg:contents",
+                          : `hidden lg:contents`,
                       )}
                     >
                       <Field className="flex flex-wrap items-center justify-between gap-2">
@@ -430,7 +430,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 window.document.body.style.pointerEvents = "none";
               }}
             >
-              <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
+              <div className="h-1/3 max-h-full w-1 rounded-sm bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
               className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"

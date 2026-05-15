@@ -33,7 +33,7 @@ export function NotificationEntry({
     <div className={classes("flex", inline ? "gap-2" : "h-full flex-col")}>
       <div
         className={classes(
-          "flex aspect-video shrink-0 items-center justify-center overflow-hidden rounded-lg bg-alveus-green/30",
+          `flex aspect-video shrink-0 items-center justify-center overflow-hidden rounded-lg bg-alveus-green/30`,
           inline ? "my-auto w-32" : "mb-2 w-full",
         )}
       >

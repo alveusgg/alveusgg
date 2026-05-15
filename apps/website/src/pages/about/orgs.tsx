@@ -318,7 +318,7 @@ const Org = ({
       >
         <div
           className={classes(
-            "grid grid-cols-1 gap-4 lg:grid-cols-2",
+            `grid grid-cols-1 gap-4 lg:grid-cols-2`,
             (videos.length === 3 || videos.length > 4) && "xl:grid-cols-3",
           )}
         >
@@ -360,7 +360,7 @@ const Org = ({
                       "order-last font-sans text-2xl",
                       isYouTube
                         ? "text-center"
-                        : "grow lg:order-first lg:text-right",
+                        : `grow lg:order-first lg:text-right`,
                     )}
                   >
                     {video.title}

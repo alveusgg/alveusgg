@@ -28,7 +28,7 @@ function ShareLink({
         target="_blank"
         rel="noopener noreferrer"
         className={classes(
-          "flex gap-1 rounded-lg p-1 text-sm hover:underline",
+          `flex gap-1 rounded-lg p-1 text-sm hover:underline`,
           className,
         )}
         {...attributes}
@@ -109,7 +109,7 @@ export function ShareButton({
           size="small"
           className={classes(
             defaultButtonClasses,
-            "transition-colors hover:bg-gray-900",
+            `transition-colors hover:bg-gray-900`,
             linkCopiedState === "success" && "bg-green-900",
             linkCopiedState === "error" && "bg-red-900",
           )}

@@ -102,7 +102,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
           </p>
 
           <Transition show={events.isPending}>
-            <p className="animate-pulse transition-opacity duration-300 data-[closed]:animate-none data-[closed]:opacity-0">
+            <p className="animate-pulse transition-opacity duration-300 data-closed:animate-none data-closed:opacity-0">
               Loading...
             </p>
           </Transition>
@@ -174,7 +174,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
                   <div
                     className={classes(
                       category.color,
-                      "rounded-md border-2 p-1 group-hover:border-black/20",
+                      `rounded-md border-2 p-1 group-hover:border-black/20`,
                       categories.has(category.name)
                         ? "border-black/20"
                         : "border-black/10",
@@ -182,7 +182,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
                   >
                     <div
                       className={classes(
-                        "h-2 w-2 rounded-full",
+                        "size-2 rounded-full",
                         categories.has(category.name)
                           ? "bg-black/25"
                           : "bg-transparent",

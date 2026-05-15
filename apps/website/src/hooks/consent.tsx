@@ -213,7 +213,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             >
               <div className="my-2 grow">
                 {!hasInteracted && (
-                  <small className="block text-lg leading-snug text-alveus-green">
+                  <small className="block text-lg/snug text-alveus-green">
                     Welcome to Alveus
                   </small>
                 )}
@@ -271,7 +271,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             </p>
 
             <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
-              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
+              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-linear-to-b from-alveus-tan/0 to-alveus-tan" />
 
               <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {hasInteracted && (
@@ -303,13 +303,13 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
         <div
           className={classes(
             hasConsented && "bg-alveus-green-300",
-            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green",
+            `relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green`,
           )}
         >
           <span
             className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
+              `inline-block size-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform`,
             )}
           />
         </div>

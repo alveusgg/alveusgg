@@ -173,7 +173,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             src={leafRightImage2}
             alt=""
             className={classes(
-              "pointer-events-none absolute bottom-0 -z-10 h-3/4 max-h-64 w-auto drop-shadow-md select-none",
+              `pointer-events-none absolute bottom-0 -z-10 h-3/4 max-h-64 w-auto drop-shadow-md select-none`,
               idx % 2 === 0
                 ? "left-full -translate-x-2 -scale-x-100"
                 : "right-full translate-x-2",
@@ -183,7 +183,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             src={leafLeftImage3}
             alt=""
             className={classes(
-              "pointer-events-none absolute top-full -z-10 h-2/5 max-h-48 w-auto -translate-y-1/3 drop-shadow-md select-none",
+              `pointer-events-none absolute top-full -z-10 h-2/5 max-h-48 w-auto -translate-y-1/3 drop-shadow-md select-none`,
               idx % 2 === 0
                 ? "left-0 -translate-x-2/5 -scale-x-100"
                 : "right-0 translate-x-2/5",

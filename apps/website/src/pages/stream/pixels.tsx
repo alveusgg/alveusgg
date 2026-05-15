@@ -84,7 +84,7 @@ const PixelsPage: NextPage = () => {
       >
         <div
           className={classes(
-            "@container-[size] row-span-1 row-start-3 flex flex-col justify-end gap-1",
+            `@container-size row-span-1 row-start-3 flex flex-col justify-end gap-1`,
             mode === "corner"
               ? "col-span-2 col-start-2 items-end"
               : "col-span-full items-center",

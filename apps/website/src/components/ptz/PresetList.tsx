@@ -113,7 +113,7 @@ const PresetTools = ({
               icon={IconZoomOut}
             />
 
-            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
+            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
 
             <RunCommandButton
               command="ptzzoom"
@@ -130,7 +130,7 @@ const PresetTools = ({
           aria-label="Search presets"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
-          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
+          className="grow rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
         />
       </>
     )}
