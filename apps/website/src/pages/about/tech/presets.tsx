@@ -213,8 +213,8 @@ const AboutTechPresetsPage: NextPage = () => {
                       Run swap command{" "}
                       <IconVideoCamera className="mb-0.5 inline-block size-4" />
                     </span>{" "}
-                    button when the camera shares an enclosure with one
-                    that&apos;s already on stream. If you&apos;re subscribed,
+                    button if the camera is in the same enclosure as the
+                    currently selected camera. If you&apos;re subscribed,
                     this lets you swap which of the two cameras is shown &mdash;
                     it cannot bring a camera on stream that isn&apos;t already
                     live. The Home preset and the{" "}
