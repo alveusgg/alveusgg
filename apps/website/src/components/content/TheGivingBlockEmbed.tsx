@@ -37,12 +37,14 @@ const TheGivingBlockEmbed = ({
     div.appendChild(script);
 
     return () => {
-      div.innerHTML = "";
+      div.replaceChildren();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, JSON.stringify(props)]);
 
-  return <div ref={ref} className={className} />;
+  // Reserve the widget's final rendered height up-front to avoid layout shift
+  // once the widget script finishes loading.
+  return <div ref={ref} className={`min-h-[820px] ${className ?? ""}`} />;
 };
 
 export default TheGivingBlockEmbed;

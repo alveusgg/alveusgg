@@ -16,7 +16,7 @@ import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 const DonatePage: NextPage = () => {
-  const { consent } = useConsent();
+  const { consent, loaded } = useConsent();
 
   return (
     <>
@@ -68,7 +68,7 @@ const DonatePage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow" containerClassName="flex flex-wrap">
-        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 lg:min-h-[820px] lg:basis-1/2 lg:px-4">
           {types.map(
             (key) =>
               key !== "givingBlock" && (
@@ -77,8 +77,8 @@ const DonatePage: NextPage = () => {
           )}
         </div>
 
-        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
-          {!consent.givingBlock && <Donate type="givingBlock" />}
+        <div className="flex basis-full flex-col gap-8 py-4 lg:min-h-[820px] lg:basis-1/2 lg:px-4">
+          {loaded && !consent.givingBlock && <Donate type="givingBlock" />}
 
           <Consent item="donation widget" consent="givingBlock">
             <TheGivingBlockEmbed className="flex w-full justify-center" />
