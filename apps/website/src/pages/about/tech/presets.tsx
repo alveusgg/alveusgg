@@ -214,13 +214,15 @@ const AboutTechPresetsPage: NextPage = () => {
                       <IconVideoCamera className="mb-0.5 inline-block size-4" />
                     </span>{" "}
                     button if the camera is in the same enclosure as the
-                    currently selected camera. If you&apos;re subscribed,
-                    this lets you swap which of the two cameras is shown &mdash;
-                    it cannot bring a camera on stream that isn&apos;t already
+                    currently selected camera. If you&apos;re subscribed, this
+                    lets you swap which of the two cameras is shown &mdash; it
+                    cannot bring a camera on stream that isn&apos;t already
                     live. The Home preset and the{" "}
                     <span className="font-mono">!ptzhome</span> command also
                     won&apos;t swap a camera onto stream, so ask a moderator in
-                    you can only swap to a camera if the enclosure is already on stream. Ask a moderator in chat if you wish for a new enclosure to be swapped in.
+                    you can only swap to a camera if the enclosure is already on
+                    stream. Ask a moderator in chat if you wish for a new
+                    enclosure to be swapped in.
                   </p>
 
                   <p>
