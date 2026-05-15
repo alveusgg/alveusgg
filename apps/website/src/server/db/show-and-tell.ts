@@ -184,7 +184,7 @@ const showAndTellSharedInputSchema = z.object({
     .string()
     .trim()
     .max(25)
-    .nullish()
+    .nullable()
     .transform((val) => (val == null || val === "" ? null : val)),
 });
 
