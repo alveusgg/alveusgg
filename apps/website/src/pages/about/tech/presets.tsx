@@ -220,7 +220,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     live. The Home preset and the{" "}
                     <span className="font-mono">!ptzhome</span> command also
                     won&apos;t swap a camera onto stream, so ask a moderator in
-                    chat if you need a different camera activated.
+                    you can only swap to a camera if the enclosure is already on stream. Ask a moderator in chat if you wish for a new enclosure to be swapped in.
                   </p>
 
                   <p>
