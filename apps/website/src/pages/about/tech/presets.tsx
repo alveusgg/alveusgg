@@ -207,15 +207,20 @@ const AboutTechPresetsPage: NextPage = () => {
                     as if you had typed it in the chat yourself.
                   </p>
 
-                  <p className="hidden lg:block">
+                  <p className="lg:block">
                     Next to each camera in the menu you&apos;ll also find a{" "}
                     <span className="font-semibold text-alveus-green">
                       Run swap command{" "}
                       <IconVideoCamera className="mb-0.5 inline-block size-4" />
                     </span>{" "}
-                    button if the camera is in the same enclosure as the
-                    currently selected camera, allowing you to swap which camera
-                    is shown on stream if you&apos;re subscribed.
+                    button when the camera shares an enclosure with one
+                    that&apos;s already on stream. If you&apos;re subscribed,
+                    this lets you swap which of the two cameras is shown &mdash;
+                    it cannot bring a camera on stream that isn&apos;t already
+                    live. The Home preset and the{" "}
+                    <span className="font-mono">!ptzhome</span> command also
+                    won&apos;t swap a camera onto stream, so ask a moderator in
+                    chat if you need a different camera activated.
                   </p>
 
                   <p>
