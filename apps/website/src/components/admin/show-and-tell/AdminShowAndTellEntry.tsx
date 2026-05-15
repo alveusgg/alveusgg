@@ -50,9 +50,7 @@ export function AdminShowAndTellEntry({
         <br />
         {entry.user?.name || <em>Anonymous</em>}
       </td>
-      <td className={`${cellClasses} font-semibold`}>
-        {entry.title || "n/a"}
-      </td>
+      <td className={`${cellClasses} font-semibold`}>{entry.title || "n/a"}</td>
       <td className={`${cellClasses} whitespace-nowrap`}>
         <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
         <br />
