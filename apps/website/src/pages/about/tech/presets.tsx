@@ -207,7 +207,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     as if you had typed it in the chat yourself.
                   </p>
 
-                  <p className="lg:block">
+                  <p className="hidden lg:block">
                     Next to each camera in the menu you&apos;ll also find a{" "}
                     <span className="font-semibold text-alveus-green">
                       Run swap command{" "}
