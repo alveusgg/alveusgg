@@ -670,12 +670,13 @@ export function ShowAndTellEntryForm({
               onChange={markAsChanged}
             />
             <TextField
+              className="max-w-1/2"
               label="Preferred Pronouns (optional)"
               name="pronouns"
               minLength={1}
               maxLength={25}
               defaultValue={entry?.pronouns || undefined}
-              placeholder="What are your preferred pronouns? (e.g. she/her, he/him, they/them)"
+              placeholder="she/her, they/them, etc."
               onChange={markAsChanged}
             />
           </Fieldset>
