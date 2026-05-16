@@ -8,6 +8,7 @@
 # next.js
 /.next/
 /.swc/
+/certificates/
 /out/
 next-env.d.ts
 
