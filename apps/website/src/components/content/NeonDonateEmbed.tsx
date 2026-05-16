@@ -10,10 +10,6 @@ const forms = {
     id: "neon-form-embed-4-container",
     src: "https://alveussanctuary.app.neoncrm.com/forms/share/Rk9STS1FTUJFRFNIQVJJTkctQ09ERTQ=",
   },
-  arri: {
-    id: "neon-form-embed-8-container",
-    src: "https://alveussanctuary.app.neoncrm.com/forms/share/Rk9STS1FTUJFRFNIQVJJTkctQ09ERTg=",
-  },
 } as const satisfies Record<string, FormSettings>;
 
 type Form = keyof typeof forms;
