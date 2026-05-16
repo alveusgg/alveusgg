@@ -127,6 +127,9 @@ const Header = ({
       >
         <span className="mr-1 italic">by </span>
         {entry.displayName}
+        {entry.pronouns && (
+          <span className="ml-1 opacity-75">({entry.pronouns})</span>
+        )}
         {entry.location && (
           <>
             <span className="mr-1 italic"> near </span>

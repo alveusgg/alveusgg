@@ -44,6 +44,7 @@ export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
 const PublicShowAndTellFields = [
   "id",
   "displayName",
+  "pronouns",
   "title",
   "text",
   "createdAt",
@@ -179,6 +180,12 @@ const showAndTellSharedInputSchema = z.object({
     .regex(/^\d{1,3},\d{1,3},\d{1,3}$/)
     .refine((val) => val.split(",").every((num) => Number(num) < 256))
     .nullable(),
+  pronouns: z
+    .string()
+    .trim()
+    .max(25)
+    .nullable()
+    .transform((val) => (val === "" ? null : val)),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -311,6 +318,7 @@ export async function createPost(
         : {}),
       user: authorUserId ? { connect: { id: authorUserId } } : undefined,
       displayName: input.displayName,
+      pronouns: input.pronouns,
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
@@ -526,6 +534,7 @@ export async function updatePost(
     },
     data: {
       displayName: input.displayName,
+      pronouns: input.pronouns,
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
