@@ -100,9 +100,6 @@ const FoundAnimalPage: NextPage = () => {
         description="Walk through a step-by-step guide to understand how to help a wild animal in need."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image

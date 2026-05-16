@@ -284,9 +284,6 @@ const NeglectSurrenderPage: NextPage = () => {
         description="Thank you for caring about animals! We provide guidance on how to report cruelty or rehome a pet."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <div className="relative">
         <Image
           src={leafRightImage1}

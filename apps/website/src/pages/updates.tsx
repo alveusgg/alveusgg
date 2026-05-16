@@ -57,9 +57,6 @@ const UpdatesPage: NextPage = () => {
         description="See upcoming streams in the schedule and stay updated with push notifications"
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <Section
         dark
         className="z-10 py-0"

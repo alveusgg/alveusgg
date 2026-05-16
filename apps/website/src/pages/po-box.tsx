@@ -14,9 +14,6 @@ const POBoxPage: NextPage = () => {
         description="Want to send something to Alveus, perhaps a gift to support the ambassadors? Here's our PO Box."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {/* Grow the last section to cover the page */}
       <Section
         className="flex min-h-[85vh] grow"

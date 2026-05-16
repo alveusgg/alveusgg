@@ -121,9 +121,6 @@ const AboutTechPage: NextPage = () => {
         description="Alveus Sanctuary is a virtual education center, and with that comes the need for a lot of technology to make it all work, from livestream broadcast systems to PTZ cameras and microphones in the ambassador enclosures."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <div className="relative">
         <Image
           src={leafRightImage1}

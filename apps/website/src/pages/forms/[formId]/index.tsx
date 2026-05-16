@@ -73,8 +73,6 @@ const FormPage: NextPage<FormPageProps> = ({ form, ...props }) => (
     />
 
     {/* Nav background */}
-    <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
     {"error" in props ? (
       <>
         {/* Grow the last section to cover the page */}

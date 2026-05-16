@@ -164,10 +164,9 @@ const PlayBingoPage = () => {
       <Meta title="Alveus Bingo" description="Alveus Bingo" />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <nav
-        className="sticky inset-x-0 top-0 z-20 flex flex-row items-center justify-center py-4"
+        data-site-subnav
+        className="sticky inset-x-0 top-[var(--site-header-sticky-inset,0px)] z-20 flex flex-row items-center justify-center py-4"
         aria-label="Scroll navigation"
       >
         <ul className="flex flex-row rounded-2xl bg-white/90 shadow-lg backdrop-blur-md lg:text-lg">
