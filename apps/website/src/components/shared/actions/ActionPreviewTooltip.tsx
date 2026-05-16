@@ -1,5 +1,9 @@
 import type { ReactNode } from "react";
 
+import { classes } from "@/utils/classes";
+
+import { tooltipClasses } from "@/hooks/tooltip";
+
 const ActionPreviewTooltip = ({
   children,
   preview,
@@ -7,7 +11,7 @@ const ActionPreviewTooltip = ({
   children: ReactNode;
   preview: ReactNode;
 }) => (
-  <div className="flex flex-col">
+  <div className={classes("flex flex-col", tooltipClasses)}>
     <span>{children}</span>
     <span className="font-mono text-xs text-alveus-green-300">{preview}</span>
   </div>
