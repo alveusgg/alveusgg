@@ -146,7 +146,7 @@ const AnimalQuestItems = ({
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    `hidden size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:size-32`,
+                    "hidden size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:size-32",
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
@@ -333,8 +333,8 @@ const AnimalQuestPage: NextPage = () => {
         <Section className="grow pt-8">
           <div
             className={classes(
-              `flex flex-col items-center justify-end gap-4 md:flex-row`,
-              Array.isArray(result) ? "mb-4" : `-mb-4 md:-mb-12`,
+              "flex flex-col items-center justify-end gap-4 md:flex-row",
+              Array.isArray(result) ? "mb-4" : "-mb-4 md:-mb-12",
             )}
           >
             <Select

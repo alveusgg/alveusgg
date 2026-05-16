@@ -243,7 +243,7 @@ const PixelsInternal = ({
           width={PIXEL_GRID_WIDTH * PIXEL_SIZE}
           height={PIXEL_GRID_HEIGHT * PIXEL_SIZE}
           className={classes(
-            `pointer-events-none absolute inset-0 block size-full transition-[background-color]`,
+            "pointer-events-none absolute inset-0 block size-full transition-[background-color]",
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
@@ -266,7 +266,7 @@ const PixelsInternal = ({
 
         <IconLoading
           className={classes(
-            `pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity`,
+            "pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity",
             pixels && "opacity-0",
           )}
         />

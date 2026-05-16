@@ -147,10 +147,10 @@ function ImageAttachment({
       <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
         <DisclosureButton
           className={classes(
-            `group flex w-full items-center justify-between text-left text-gray-500`,
+            "group flex w-full items-center justify-between text-left text-gray-500",
             hasAlt
               ? "pointer-events-none"
-              : `transition-colors hover:text-gray-700`,
+              : "transition-colors hover:text-gray-700",
           )}
           disabled={hasAlt}
         >
@@ -558,7 +558,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {

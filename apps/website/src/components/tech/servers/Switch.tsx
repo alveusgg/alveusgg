@@ -32,12 +32,12 @@ const Ports = ({
           rows === 2 && i === count - 1 && i % 2 === 0 && "row-start-2",
           // RJ45 ports have yellow/green connectivity indicators
           type === "rj45" &&
-            `before:absolute before:top-0 before:left-0 before:aspect-3/2 before:w-1/4 before:rounded-xs before:bg-yellow-500/50 before:content-['']`,
+            "before:absolute before:top-0 before:left-0 before:aspect-3/2 before:w-1/4 before:rounded-xs before:bg-yellow-500/50 before:content-['']",
           type === "rj45" &&
-            `after:absolute after:top-0 after:right-0 after:aspect-3/2 after:w-1/4 after:rounded-xs after:bg-green-500/50 after:content-['']`,
+            "after:absolute after:top-0 after:right-0 after:aspect-3/2 after:w-1/4 after:rounded-xs after:bg-green-500/50 after:content-['']",
           // SFP ports have a white connectivity indicator
           type === "sfp" &&
-            `after:absolute after:aspect-square after:w-1/5 after:rounded-xs after:bg-white/50 after:content-['']`,
+            "after:absolute after:aspect-square after:w-1/5 after:rounded-xs after:bg-white/50 after:content-['']",
           type === "sfp" &&
             rows === 1 &&
             "after:-top-1/2 after:left-1/2 after:-translate-x-1/2",

@@ -29,10 +29,10 @@ const Button = ({
     <button
       onClick={onClick}
       className={classes(
-        `my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm`,
+        "my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
         camera === selected
           ? "bg-alveus-green/75 text-white"
-          : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
+          : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
       )}
     >
       {cameras[camera].title}
@@ -142,10 +142,10 @@ export const CamListFull = ({
                 <DisclosureButton
                   ref={disclosureRef}
                   className={classes(
-                    `group flex w-full shrink-0 items-center justify-between rounded-sm px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm`,
+                    "group flex w-full shrink-0 items-center justify-between rounded-sm px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
                     cameras[camera].group === name
                       ? "bg-alveus-green/75 text-white"
-                      : `bg-alveus-green-50/75 hover:bg-alveus-green-100/90`,
+                      : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
                   )}
                 >
                   <span>

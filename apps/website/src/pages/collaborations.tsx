@@ -236,7 +236,7 @@ const Creators = ({ className }: { className?: string }) => {
                 "absolute inset-y-0 z-10 m-1 h-3 rounded-full shadow-xs",
                 bar.width === dots
                   ? "pointer-events-none"
-                  : `cursor-grab select-none hover:bg-alveus-green-800`,
+                  : "cursor-grab select-none hover:bg-alveus-green-800",
                 barDragging
                   ? "bg-alveus-green-800 transition-[background]"
                   : "bg-alveus-green-900 transition-[background,left]",
@@ -314,7 +314,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            `mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between`,
+            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
             index === 0 ? "mt-0" : "mt-8",
           )}
           id={`${option}:${group}`}

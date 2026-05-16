@@ -226,13 +226,13 @@ const PlayBingoPage = () => {
               <div
                 className={classes(
                   embedStream ? "bg-alveus-green" : "bg-alveus-green-300",
-                  `relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline`,
+                  "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
                 )}
               >
                 <span
                   className={classes(
                     embedStream ? "translate-x-6" : "translate-x-1",
-                    `inline-block size-4 rounded-full bg-alveus-tan shadow-sm transition-transform`,
+                    "inline-block size-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
                   )}
                 />
               </div>
@@ -250,7 +250,7 @@ const PlayBingoPage = () => {
             </label>
             <span className="italic">or</span>
 
-            <Link href={`https://www.twitch.tv/maya`} external>
+            <Link href={"https://www.twitch.tv/maya"} external>
               Open in new tab
             </Link>
           </div>

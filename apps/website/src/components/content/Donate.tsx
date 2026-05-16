@@ -81,7 +81,7 @@ const Donate = ({
     <Box
       dark
       className={classes(
-        `group p-0 transition hover:scale-102 hover:shadow-2xl`,
+        "group p-0 transition hover:scale-102 hover:shadow-2xl",
         highlight && "bg-carnival",
       )}
     >
@@ -94,10 +94,10 @@ const Donate = ({
         <div className="mb-2 flex items-center gap-4">
           <div
             className={classes(
-              `relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 transition-colors`,
+              "relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 transition-colors",
               highlight
-                ? `text-carnival group-hover:bg-carnival group-hover:text-alveus-tan`
-                : `text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan`,
+                ? "text-carnival group-hover:bg-carnival group-hover:text-alveus-tan"
+                : "text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan",
             )}
           >
             <link.icon

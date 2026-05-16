@@ -71,7 +71,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
                   alt=""
                   className={classes(
                     imageClasses,
-                    `absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000`,
+                    "absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000",
                   )}
                 />
               </>

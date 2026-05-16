@@ -303,13 +303,13 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
         <div
           className={classes(
             hasConsented && "bg-alveus-green-300",
-            `relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green`,
+            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green",
           )}
         >
           <span
             className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              `inline-block size-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform`,
+              "inline-block size-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
             )}
           />
         </div>

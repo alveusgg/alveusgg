@@ -174,7 +174,7 @@ export function Schedule({ onLoad }: { onLoad?: () => void }) {
                   <div
                     className={classes(
                       category.color,
-                      `rounded-md border-2 p-1 group-hover:border-black/20`,
+                      "rounded-md border-2 p-1 group-hover:border-black/20",
                       categories.has(category.name)
                         ? "border-black/20"
                         : "border-black/10",

@@ -154,7 +154,7 @@ const Slideshow = ({
             priority={true}
             loading="eager"
             className={classes(
-              `absolute inset-0 size-full bg-transparent object-cover blur-lg transition-[opacity,visibility] duration-300 peer-data-loaded:invisible peer-data-loaded:opacity-0`,
+              "absolute inset-0 size-full bg-transparent object-cover blur-lg transition-[opacity,visibility] duration-300 peer-data-loaded:invisible peer-data-loaded:opacity-0",
               className,
             )}
             style={{

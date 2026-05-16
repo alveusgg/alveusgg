@@ -59,7 +59,7 @@ function Badge({
   return (
     <div
       className={classes(
-        `flex flex-row items-center gap-1 rounded-lg px-1 py-0.5 text-sm text-white`,
+        "flex flex-row items-center gap-1 rounded-lg px-1 py-0.5 text-sm text-white",
         className,
       )}
     >
@@ -92,8 +92,8 @@ function DonationFeedItem({
       key={donation.id}
       className={classes(
         "border-b border-gray/50 px-2 py-1",
-        isNow && `text-red-800 dark:text-red-200`,
-        !isNow && isRecent && `text-red-900 dark:text-red-300`,
+        isNow && "text-red-800 dark:text-red-200",
+        !isNow && isRecent && "text-red-900 dark:text-red-300",
       )}
       initial={
         isNow
