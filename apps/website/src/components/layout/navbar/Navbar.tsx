@@ -83,6 +83,27 @@ const Logo = () => (
   </Link>
 );
 
+const NAV_H_MOBILE = 71;
+const NAV_H_DESKTOP = 152;
+
+const useNavHeightVar = (hidden: boolean) => {
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--alveus-nav-h",
+      hidden ? "0px" : `${NAV_H_MOBILE}px`,
+    );
+    root.style.setProperty(
+      "--alveus-nav-h-lg",
+      hidden ? "0px" : `${NAV_H_DESKTOP}px`,
+    );
+    return () => {
+      root.style.removeProperty("--alveus-nav-h");
+      root.style.removeProperty("--alveus-nav-h-lg");
+    };
+  }, [hidden]);
+};
+
 export const Navbar = () => {
   return (
     <Disclosure as="header" className="sticky top-0 z-50">
@@ -93,6 +114,7 @@ export const Navbar = () => {
 
 const NavbarInner = ({ open }: { open: boolean }) => {
   const { hidden, scrolled } = useAutoHideOnScroll(open);
+  useNavHeightVar(hidden);
 
   return (
     <div

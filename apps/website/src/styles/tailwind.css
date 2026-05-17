@@ -77,6 +77,14 @@
 
 @layer utilities {
   html {
+    /* Offset anchor-link landings by the sticky navbar height
+       (set by Navbar.tsx); falls back to 0 on pages without a navbar. */
+    scroll-padding-top: var(--alveus-nav-h, 0px);
+
+    @variant lg {
+      scroll-padding-top: var(--alveus-nav-h-lg, 0px);
+    }
+
     &:has(.html\:transparent) {
       @apply bg-transparent bg-none;
     }
