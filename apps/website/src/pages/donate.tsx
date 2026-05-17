@@ -10,8 +10,8 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Markdown from "@/components/content/Markdown";
 import Meta from "@/components/content/Meta";
+import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import Section from "@/components/content/Section";
-import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -67,25 +67,31 @@ const DonatePage: NextPage = () => {
       )}
 
       {/* Grow the last section to cover the page */}
-      <Section className="grow" containerClassName="flex flex-wrap">
-        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
+      <Section
+        className="grow"
+        containerClassName="grid grid-cols-1 lg:grid-cols-2 gap-8"
+      >
+        <div className="flex flex-col gap-8">
           {types.map(
             (key) =>
-              key !== "givingBlock" && (
+              key !== "direct" && (
                 <Donate key={key} type={key} highlight={key === "twitch"} />
               ),
           )}
         </div>
 
-        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
-          {!consent.givingBlock && <Donate type="givingBlock" />}
+        <div className="order-first flex flex-col gap-8 lg:order-0">
+          {!consent.neon && <Donate type="direct" />}
 
-          <Consent item="donation widget" consent="givingBlock">
-            <TheGivingBlockEmbed className="flex w-full justify-center" />
+          <Consent item="donation widget" consent="neon">
+            <NeonDonateEmbed
+              form="general"
+              className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none"
+            />
           </Consent>
         </div>
 
-        <div className="mt-6 text-sm text-alveus-green">
+        <div className="col-span-full mt-6 text-sm text-alveus-green">
           <p>
             Alveus Sanctuary will honor any of the giving preferences of donors
             for any pre-approved program, or project where possible. In the

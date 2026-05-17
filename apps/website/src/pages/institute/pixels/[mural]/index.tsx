@@ -237,12 +237,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
         </div>
 
         <div className="flex flex-col gap-8">
-          {mural.type === "live" && (
-            <>
-              <Donate type="twitch" highlight />
-              <Donate type="paypal" link="/paypal/pixels" />
-            </>
-          )}
+          {mural.type === "live" && <Donate type="twitch" highlight />}
 
           <Box dark>
             <PixelsDescription className="text-center text-2xl" />
