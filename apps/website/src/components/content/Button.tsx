@@ -18,7 +18,7 @@ const buttonClassNames = ({
   filled?: boolean;
 }) =>
   classes(
-    "rounded-3xl border-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+    "inline-block rounded-3xl border-2 px-4 py-2 text-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50",
     dark
       ? filled
         ? "border-alveus-tan bg-alveus-tan text-alveus-green hover:not-disabled:border-alveus-tan hover:not-disabled:bg-transparent hover:not-disabled:text-alveus-tan"
@@ -26,13 +26,6 @@ const buttonClassNames = ({
       : filled
         ? "border-alveus-green bg-alveus-green text-alveus-tan hover:not-disabled:border-alveus-green hover:not-disabled:bg-transparent hover:not-disabled:text-alveus-green"
         : "border-alveus-green bg-transparent text-alveus-green hover:not-disabled:border-alveus-green hover:not-disabled:bg-alveus-green hover:not-disabled:text-alveus-tan",
-    !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
-      "text-lg",
-    !/(^|\s)((inline-)?(block|flex|grid|table)|inline|contents)(\s|$)/.test(
-      className || "",
-    ) && "inline-block",
-    !/(^|\s)px?-\d+(\s|$)/.test(className || "") && "px-4",
-    !/(^|\s)py?-\d+(\s|$)/.test(className || "") && "py-2",
     className,
   );
 

@@ -81,9 +81,7 @@ export const StreamPreview = ({
       alt={alt}
       loading="lazy"
       className={classes(
-        "pointer-events-none aspect-video w-full bg-alveus-green-800 object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
-        !/\bshadow-/.test(className || "") && "shadow-xl",
-        !/\brounded-/.test(className || "") && "rounded-2xl",
+        "pointer-events-none aspect-video w-full rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
         className,
       )}
     />
@@ -198,8 +196,7 @@ export const StreamEmbed = ({
     <div className="flex h-full flex-col" ref={ref}>
       <div
         className={classes(
-          "relative mx-auto flex aspect-video max-w-full grow overflow-hidden",
-          !/\brounded-/.test(className || "") && "rounded-2xl",
+          "relative mx-auto flex aspect-video max-w-full grow overflow-hidden rounded-2xl",
           className,
         )}
       >

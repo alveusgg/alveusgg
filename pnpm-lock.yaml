@@ -329,6 +329,9 @@ importers:
       '@xyflow/react':
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(react-dom@19.2.6)(react@19.2.6)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       country-list:
         specifier: ^2.4.1
         version: 2.4.1
@@ -440,6 +443,9 @@ importers:
       superjson:
         specifier: ^2.2.6
         version: 2.2.6
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.6.0
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -561,6 +567,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
@@ -5746,6 +5755,9 @@ packages:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
 
+  tailwind-merge@3.6.0:
+    resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
+
   tailwindcss@4.3.0:
     resolution: {integrity: sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==}
 
@@ -6330,8 +6342,9 @@ snapshots:
 
   '@alveusgg/data@0.73.2(tailwindcss@4.3.0)(zod@4.4.3)':
     dependencies:
-      tailwindcss: 4.3.0
       zod: 4.4.3
+    optionalDependencies:
+      tailwindcss: 4.3.0
 
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
@@ -11893,6 +11906,8 @@ snapshots:
   tabbable@6.4.0: {}
 
   tagged-tag@1.0.0: {}
+
+  tailwind-merge@3.6.0: {}
 
   tailwindcss@4.3.0: {}
 
