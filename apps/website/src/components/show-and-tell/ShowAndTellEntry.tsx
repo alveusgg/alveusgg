@@ -212,7 +212,12 @@ const Content = ({
           }`}
         >
           {hasContent && (
-            <div className="alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl">
+            <div
+              className={
+                // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+                "alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl"
+              }
+            >
               <ErrorBoundary
                 FallbackComponent={Empty}
                 onError={(err) =>
@@ -233,7 +238,12 @@ const Content = ({
                 Mod Note
               </h3>
 
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+              <div
+                className={
+                  // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+                  "alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg"
+                }
+              >
                 <ErrorBoundary
                   FallbackComponent={Empty}
                   onError={(err) =>

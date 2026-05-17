@@ -105,18 +105,7 @@ export default tseslint.config(
       "better-tailwindcss/enforce-consistent-class-order": "off",
       // Rely on prettier for line wrapping (the rule and prettier disagree)
       "better-tailwindcss/enforce-consistent-line-wrapping": "off",
-      "better-tailwindcss/no-unknown-classes": [
-        "error",
-        {
-          // Custom component classes defined in src/styles/tailwind.css
-          ignore: [
-            "^alveus-ugc$",
-            "^alveus-community-map$",
-            "^alveus-rte$",
-            "^html:transparent$",
-          ],
-        },
-      ],
+      "better-tailwindcss/no-unknown-classes": "error",
     },
   },
   {
