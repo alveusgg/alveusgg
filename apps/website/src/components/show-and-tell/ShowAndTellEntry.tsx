@@ -286,8 +286,8 @@ export const ShowAndTellEntry = ({
       className={classes(
         "relative flex shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-hidden",
         isPresentationView &&
-          /* eslint-disable better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support */
-          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]" /* eslint-enable better-tailwindcss/no-conflicting-classes */,
+          // eslint-disable-next-line better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support
+          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]",
         !isPresentationView &&
           "justify-center border-t border-alveus-green/50 first:border-t-0",
         // eslint-disable-next-line better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support
