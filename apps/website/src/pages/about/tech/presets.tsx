@@ -430,7 +430,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 window.document.body.style.pointerEvents = "none";
               }}
             >
-              <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
+              <div className="h-1/3 max-h-full w-1 rounded-sm bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
               className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"

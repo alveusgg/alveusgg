@@ -502,12 +502,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
           onScroll={onScroll}
-          className={
-            "scrollbar-none flex flex-col transition-colors duration-200 " +
-            (isPresentationView
+          className={classes(
+            "scrollbar-none flex flex-col transition-colors duration-200",
+            isPresentationView
               ? "fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
-              : "gap-20 bg-white/0")
-          }
+              : "gap-20 bg-white/0",
+          )}
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
@@ -543,10 +543,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           {isPresentationView && (
             <>
-              {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
+              {/* 3em come from (100vh - 6em) / 2 on each article, 1.25rem from the gap-5 on the container */}
               {hasPrevEntry && (
                 <button
-                  className="group fixed top-0 left-5 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
+                  className="group fixed top-0 left-5 z-20 h-[3em] w-[calc(80%-2em)]"
                   type="button"
                   onClick={scrollToPrev}
                 >
@@ -557,7 +557,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 <button
                   className={
                     "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
-                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
+                    (hasPrevEntry ? "h-[3em]" : "h-[calc(6em-1.25rem)]")
                   }
                   type="button"
                   onClick={scrollToNext}

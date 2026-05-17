@@ -107,7 +107,10 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
         {...quillConfig}
         value={value}
         onChange={handleChange}
-        className="alveus-rte bg-white"
+        className={
+          // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+          "alveus-rte bg-white"
+        }
         forwardedRef={(ref) => {
           editorRef.current = ref;
           if (ref) {

@@ -245,7 +245,7 @@ const Rounds = ({
       <Video
         sources={background.sources}
         poster={background.poster}
-        className="absolute inset-0 h-full w-full object-cover object-top-left"
+        className="absolute inset-0 size-full object-cover object-top-left"
         width={1920}
         height={1080}
         autoPlay
@@ -269,7 +269,11 @@ const Rounds = ({
           <Check
             key={`${check.name}-${idx}`}
             check={check}
-            className={classes(`checks-${id}-item`, idx % 2 !== 0 && "ml-32")}
+            className={classes(
+              // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
+              `checks-${id}-item`,
+              idx % 2 !== 0 && "ml-32",
+            )}
             style={{
               animationDelay: `${idx * animation.duration.item}ms`,
             }}

@@ -17,7 +17,7 @@ const imgSrc = (id: string) =>
   });
 
 export const Preview = ({ reelId, alt, className }: PreviewProps) => (
-  <div className="relative aspect-[9/16] h-full">
+  <div className="relative aspect-9/16 h-full">
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img
       src={imgSrc(reelId)}

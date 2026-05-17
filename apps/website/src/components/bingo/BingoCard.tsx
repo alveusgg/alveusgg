@@ -153,7 +153,7 @@ export function BingoCard({
             return (
               <div
                 className={classes(
-                  "flex h-full w-full rounded-sm",
+                  "flex size-full rounded-sm",
                   isBingoMatch && "ring-4 ring-red-800 ring-offset-0",
                 )}
               >
@@ -163,7 +163,7 @@ export function BingoCard({
                       "flex w-full items-center justify-center rounded-sm",
                       isBingoMatch
                         ? "border-red-600 bg-red-600"
-                        : "text-bold bg-green-800 text-white",
+                        : "bg-green-800 font-bold text-white",
                     )}
                   >
                     Free

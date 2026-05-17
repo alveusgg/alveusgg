@@ -230,7 +230,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-[consent]:backdrop-blur-md xl:ml-auto"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-consent:backdrop-blur-md xl:ml-auto"
             >
               <Link
                 href="/live"
@@ -517,14 +517,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 </Link>
 
                 <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
-                  <p className="text-sm leading-tight text-alveus-green-200">
+                  <p className="text-sm/tight text-alveus-green-200">
                     {formatDateTime(video.published, { style: "long" })}
                   </p>
                   <Link
                     href={video.author.uri}
                     external
                     custom
-                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs leading-tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
+                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs/tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
                   >
                     {video.author.name}
                   </Link>
