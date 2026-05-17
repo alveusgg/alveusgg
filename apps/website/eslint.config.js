@@ -83,7 +83,6 @@ export default tseslint.config(
   },
   {
     name: "better-tailwindcss/recommended",
-    files: ["**/*.{js,jsx,cjs,mjs,ts,tsx}"],
     plugins: {
       "better-tailwindcss": betterTailwindcssPlugin,
     },
