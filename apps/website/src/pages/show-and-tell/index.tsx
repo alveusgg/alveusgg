@@ -502,12 +502,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
           onScroll={onScroll}
-          className={
-            "scrollbar-none flex flex-col transition-colors duration-200 " +
-            (isPresentationView
-              ? " fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
-              : "gap-20 bg-white/0")
-          }
+          className={classes(
+            "scrollbar-none flex flex-col transition-colors duration-200",
+            isPresentationView
+              ? "fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
+              : "gap-20 bg-white/0",
+          )}
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >

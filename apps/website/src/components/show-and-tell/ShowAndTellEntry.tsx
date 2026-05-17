@@ -119,11 +119,11 @@ const Header = ({
       </div>
 
       <p
-        className={`${
+        className={classes(
           isPresentationView
             ? "text-4xl text-alveus-tan-200"
-            : "text-2xl text-alveus-green"
-        }`}
+            : "text-2xl text-alveus-green",
+        )}
       >
         <span className="mr-1 italic">by </span>
         {entry.displayName}
