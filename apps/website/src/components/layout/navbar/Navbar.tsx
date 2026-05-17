@@ -1,6 +1,9 @@
 import { Disclosure, DisclosureButton } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { classes } from "@/utils/classes";
 
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
@@ -10,6 +13,43 @@ import IconMenu from "@/icons/IconMenu";
 import IconX from "@/icons/IconX";
 
 import logoImage from "@/assets/logo.png";
+
+const useAutoHideOnScroll = (disabled: boolean) => {
+  const [state, setState] = useState({ hidden: false, scrolled: false });
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    if (disabled) {
+      setState((s) => ({ ...s, hidden: false }));
+      return;
+    }
+
+    lastY.current = window.scrollY;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+      if (Math.abs(delta) < 8) return;
+
+      setState({ hidden: y >= 80 && delta > 0, scrolled: y > 0 });
+      lastY.current = y;
+    };
+
+    const onScroll = () => {
+      frame ||= window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [disabled]);
+
+  return state;
+};
 
 const MobileMenuToggle = ({ open }: { open: boolean }) => (
   <div className="flex items-center lg:hidden">
@@ -45,29 +85,40 @@ const Logo = () => (
 
 export const Navbar = () => {
   return (
-    <Disclosure
-      as="header"
-      className="relative z-50 bg-alveus-green-900 text-white lg:bg-transparent"
-    >
-      {({ open }) => (
-        <>
-          <h2 className="sr-only">Page header</h2>
-
-          <div className="container mx-auto flex gap-4 p-2">
-            <Logo />
-            <DesktopMenu />
-
-            <div className="flex grow items-center justify-center text-center lg:hidden">
-              <Link href="/" className="font-serif text-3xl font-bold">
-                Alveus Sanctuary
-              </Link>
-            </div>
-            <MobileMenuToggle open={open} />
-          </div>
-
-          <MobileMenu />
-        </>
-      )}
+    <Disclosure as="header" className="sticky top-0 z-50">
+      {({ open }) => <NavbarInner open={open} />}
     </Disclosure>
+  );
+};
+
+const NavbarInner = ({ open }: { open: boolean }) => {
+  const { hidden, scrolled } = useAutoHideOnScroll(open);
+
+  return (
+    <div
+      className={classes(
+        "bg-alveus-green-900 text-white transition-transform duration-200 ease-out motion-reduce:transition-none",
+        // Desktop pages (e.g. homepage) bleed hero content under the navbar at
+        // the top, so the background only kicks in once we're scrolled.
+        scrolled || open ? "lg:bg-alveus-green-900" : "lg:bg-transparent",
+        hidden ? "-translate-y-full" : "translate-y-0",
+      )}
+    >
+      <h2 className="sr-only">Page header</h2>
+
+      <div className="container mx-auto flex gap-4 p-2">
+        <Logo />
+        <DesktopMenu />
+
+        <div className="flex grow items-center justify-center text-center lg:hidden">
+          <Link href="/" className="font-serif text-3xl font-bold">
+            Alveus Sanctuary
+          </Link>
+        </div>
+        <MobileMenuToggle open={open} />
+      </div>
+
+      <MobileMenu />
+    </div>
   );
 };
