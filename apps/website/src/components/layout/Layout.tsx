@@ -9,6 +9,7 @@ import Meta from "@/components/content/Meta";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
+import { ScrollToTop } from "./ScrollToTop";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
 
@@ -80,6 +81,7 @@ const Layout = ({ children }: LayoutProps) => {
           {children}
         </main>
         <Footer />
+        <ScrollToTop />
       </div>
     </>
   );
