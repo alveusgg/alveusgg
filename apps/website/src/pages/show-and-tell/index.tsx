@@ -543,7 +543,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           {isPresentationView && (
             <>
-              {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
+              {/* 3em come from (100vh - 6em) / 2 on each article, 1.25rem from the gap-5 on the container */}
               {hasPrevEntry && (
                 <button
                   className="group fixed top-0 left-5 z-20 h-[3em] w-[calc(80%-2em)]"
