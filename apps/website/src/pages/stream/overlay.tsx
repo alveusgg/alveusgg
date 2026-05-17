@@ -350,7 +350,7 @@ const OverlayPage: NextPage = () => {
           {grid[layout].slots.map((slot, index) => (
             <div
               key={`${layout}-${index}`}
-              className="relative h-full w-full"
+              className="relative size-full"
               style={{
                 gridArea: slot,
               }}

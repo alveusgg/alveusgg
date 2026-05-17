@@ -51,7 +51,7 @@ export const TwitchChat = ({
       title={`twitch.tv/${channel} live chat embed`}
       referrerPolicy="no-referrer"
       sandbox="allow-same-origin allow-scripts"
-      className={classes("h-full w-full", className)}
+      className={classes("size-full", className)}
     ></iframe>
   );
 };

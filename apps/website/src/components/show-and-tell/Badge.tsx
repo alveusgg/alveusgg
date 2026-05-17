@@ -12,7 +12,7 @@ const BadgeBackground = ({
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={classes(
-      "absolute inset-0 aspect-square h-full w-full drop-shadow-sm",
+      "absolute inset-0 aspect-square size-full drop-shadow-sm",
       dark ? "fill-alveus-tan" : "fill-alveus-green",
       className,
     )}
@@ -41,7 +41,7 @@ export const Badge = ({
       <BadgeBackground dark={dark} />
       <span
         className={classes(
-          "relative w-3/4 text-center text-sm leading-tight",
+          "relative w-3/4 text-center text-sm/tight",
           dark ? "text-alveus-green-900" : "text-alveus-tan",
         )}
       >

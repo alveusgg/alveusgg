@@ -49,7 +49,7 @@ const EventItems = ({
       <Heading
         level={-1}
         className={classes(
-          "alveus-green-800 mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
+          "mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
           index === 0 && "sr-only",
         )}
         id={`${option}:${group}`}

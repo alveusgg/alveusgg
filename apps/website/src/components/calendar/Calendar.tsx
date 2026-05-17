@@ -260,7 +260,7 @@ export function Calendar({
               // Fade these in with a short delay before starting
               // Delay stops a flash of placeholders if we load quickly
               className={classes(
-                "transition-delay-200 mb-auto block animate-pulse rounded-xs bg-gray-400/50 transition-opacity duration-500 data-[closed]:opacity-0",
+                "mb-auto block animate-pulse rounded-xs bg-gray-400/50 transition-opacity delay-200 duration-500 data-closed:opacity-0",
                 // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness
                 delay[Math.floor(Math.random() * delay.length)],
                 // eslint-disable-next-line react-hooks/purity -- we're in a memo and intentionally want to have randomness

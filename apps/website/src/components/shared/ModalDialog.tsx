@@ -43,7 +43,7 @@ export function ModalDialog({
           >
             <DialogTitle
               as="h3"
-              className="text-lg leading-6 font-medium text-gray-900"
+              className="text-lg/6 font-medium text-gray-900"
             >
               {title}
             </DialogTitle>

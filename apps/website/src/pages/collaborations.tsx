@@ -186,7 +186,7 @@ const Creators = ({ className }: { className?: string }) => {
                   <Image
                     src={image}
                     alt=""
-                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:brightness-105! group-hover/creator:contrast-115 group-hover/creator:saturate-110! group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
@@ -196,11 +196,11 @@ const Creators = ({ className }: { className?: string }) => {
         </ul>
 
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-l from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-r from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
 

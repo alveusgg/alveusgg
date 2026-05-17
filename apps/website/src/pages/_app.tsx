@@ -96,7 +96,12 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
           <meta name="robots" content="noindex" />
         </Head>
         <FontProvider>
-          <div className="html:transparent">
+          <div
+            className={
+              // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+              "html:transparent"
+            }
+          >
             <Component {...pageProps} />
           </div>
         </FontProvider>

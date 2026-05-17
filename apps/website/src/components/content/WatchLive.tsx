@@ -37,19 +37,19 @@ const WatchLive = () => (
         <span className="relative">
           {defaultLink.platform}
 
-          <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover/button:max-w-full group-data-[active]/button:max-w-full group-data-[active]/button:bg-alveus-tan group-data-[active]/button:group-hover/link:bg-alveus-green" />
+          <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover/button:max-w-full group-data-active/button:max-w-full group-data-active/button:bg-alveus-tan group-data-active/button:group-hover/link:bg-alveus-green" />
         </span>
 
         <IconChevronDown
           size={16}
-          className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+          className="translate-y-0.5 transition-transform group-data-active/button:translate-y-1"
         />
       </MenuButton>
 
       <MenuItems
         transition
         anchor="bottom start"
-        className="group/items mt-1.5 -ml-4 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+        className="group/items mt-1.5 -ml-4 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline-1 outline-black/20 transition ease-in-out data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75"
         as="ul"
         modal={false}
       >
@@ -59,7 +59,7 @@ const WatchLive = () => (
               href={link.href}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-sm px-4 py-1 transition-colors group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline hover:bg-alveus-green hover:text-alveus-tan"
+              className="block rounded-sm px-4 py-1 transition-colors group-data-focus/item:outline-blue-500 group-data-focus/item:group-focus-visible/items:outline hover:bg-alveus-green hover:text-alveus-tan"
             >
               {link.platform}
             </a>
