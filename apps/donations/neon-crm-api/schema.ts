@@ -8,8 +8,6 @@ const nameMax = 255;
 
 const Status = z.enum(["ACTIVE", "INACTIVE"]);
 
-const YesNoBoolean = z.enum(["Yes", "No"]).transform((val) => val === "Yes");
-
 const ConsentStatus = z.enum(["GIVEN", "DECLINED", "NOT_ASKED"]);
 
 const DataType = z.enum([
