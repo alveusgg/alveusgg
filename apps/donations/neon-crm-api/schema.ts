@@ -8,8 +8,6 @@ const nameMax = 255;
 
 const Status = z.enum(["ACTIVE", "INACTIVE"]);
 
-const YesNoBoolean = z.enum(["Yes", "No"]).transform((val) => val === "Yes");
-
 const ConsentStatus = z.enum(["GIVEN", "DECLINED", "NOT_ASKED"]);
 
 const DataType = z.enum([
@@ -179,10 +177,14 @@ export const DonationWebhookPayload = z.object({
     fund: IdNamePairBase,
     timestamps: Timestamps,
     date: DateSchema,
-    anonymousType: YesNoBoolean,
+    anonymousType: z
+      .enum(["Yes", "No"])
+      .nullable()
+      .optional()
+      .transform((val) => val === "Yes"),
     donationCustomFields: z.array(CustomFieldData).optional(),
     donorCoveredFeeFlag: z.boolean(),
-    payLater: z.boolean(),
+    payLater: z.boolean().optional().default(false),
   }),
 });
 
