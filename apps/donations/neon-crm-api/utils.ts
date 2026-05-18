@@ -10,8 +10,7 @@ export const fixDateTimezone = (dateTime: Date, zone: string): Date =>
     .toJSDate();
 
 /**
- * WORKAROUND HOTFIX: Neon One API mislabels local time as UTC ('Z').
- * Remove this logic when they fix the timezone in their API response.
+ * WORKAROUND: Neon One API mislabels local time as UTC ('Z').
  */
 export const fixTimestampsTimezone = (
   timestamps: Timestamps,
