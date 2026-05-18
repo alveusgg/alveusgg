@@ -163,8 +163,12 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
     switch (donation.provider) {
       case "neon":
         return (
-          donation.providerMetadata.neonCampaignId ===
-          this.env.NEON_PIXEL_CAMPAIGN_ID
+          (this.env.NEON_PIXEL_CAMPAIGN_ID !== "" &&
+            donation.providerMetadata.neonCampaignId ===
+              this.env.NEON_PIXEL_CAMPAIGN_ID) ||
+          (this.env.NEON_PIXEL_FUND_ID !== "" &&
+            donation.providerMetadata.neonFundId ===
+              this.env.NEON_PIXEL_FUND_ID)
         );
       default:
         return true;
