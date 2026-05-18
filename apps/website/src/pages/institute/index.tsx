@@ -86,7 +86,8 @@ const InstitutePage: NextPage = () => {
 
           <Box
             dark
-            className="mt-auto flex flex-col gap-x-4 gap-y-8 rounded-2xl bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
+            className="mt-auto flex flex-col gap-x-4 gap-y-8 bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
+            roundedClassName="rounded-2xl"
           >
             <div className="flex grow flex-col items-start gap-4">
               <Heading id="pixels" level={2} link className="my-0 text-balance">

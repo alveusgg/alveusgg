@@ -249,7 +249,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           <Box
             dark
-            className="col-span-full flex flex-col gap-x-4 gap-y-8 rounded-2xl bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
+            className="col-span-full flex flex-col gap-x-4 gap-y-8 bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
+            roundedClassName="rounded-2xl"
           >
             <div className="flex grow flex-col items-start gap-4">
               <Heading level={2} className="my-0 text-balance">
