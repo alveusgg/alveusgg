@@ -1,6 +1,5 @@
-import { type ClassValue, clsx } from "clsx";
 import type { CSSProperties } from "react";
-import { extendTailwindMerge } from "tailwind-merge";
+import { type ClassNameValue, extendTailwindMerge } from "tailwind-merge";
 
 import { camelToKebab } from "./string-case";
 
@@ -17,8 +16,8 @@ const twMerge = extendTailwindMerge<"text-stroke" | "animation-delay">({
   },
 });
 
-export function classes(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+export function classes(...inputs: ClassNameValue[]) {
+  return twMerge(...inputs);
 }
 
 export function objToCss(

@@ -329,9 +329,6 @@ importers:
       '@xyflow/react':
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(react-dom@19.2.6)(react@19.2.6)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       country-list:
         specifier: ^2.4.1
         version: 2.4.1
