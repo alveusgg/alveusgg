@@ -52,7 +52,6 @@ import switchpenl from "@/assets/presets/wolf/switchpenl.png";
 import switchpenr from "@/assets/presets/wolf/switchpenr.png";
 import switchramp from "@/assets/presets/wolf/switchramp.png";
 import tip from "@/assets/presets/wolf/tip.png";
-import tipmo from "@/assets/presets/wolf/tipmo.png";
 import tipt from "@/assets/presets/wolf/tipt.png";
 import trees from "@/assets/presets/wolf/trees.png";
 import waterfall from "@/assets/presets/wolf/waterfall.png";
@@ -384,12 +383,6 @@ const wolfPresets: Record<string, Preset> = {
     image: tip,
     position: { pan: 108.07, tilt: -8.85, zoom: 415 },
     // modified: 2025-10-09T11:10:30.192Z
-  },
-  tipmo: {
-    description: "Tip zoomed",
-    image: tipmo,
-    position: { pan: 114.38, tilt: -7.63, zoom: 4843 },
-    // modified: 2025-10-09T11:10:30.172Z
   },
   tipt: {
     description: "tipt",
