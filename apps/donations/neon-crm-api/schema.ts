@@ -179,10 +179,14 @@ export const DonationWebhookPayload = z.object({
     fund: IdNamePairBase,
     timestamps: Timestamps,
     date: DateSchema,
-    anonymousType: YesNoBoolean,
+    anonymousType: z
+      .enum(["Yes", "No"])
+      .nullable()
+      .optional()
+      .transform((val) => val === "Yes"),
     donationCustomFields: z.array(CustomFieldData).optional(),
     donorCoveredFeeFlag: z.boolean(),
-    payLater: z.boolean(),
+    payLater: z.boolean().optional().default(false),
   }),
 });
 
