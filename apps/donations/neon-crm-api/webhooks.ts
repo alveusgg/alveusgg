@@ -5,7 +5,7 @@ import {
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
 import { createWebhook, getWebhooks } from "./index.js";
-import { fixTimestampsTimezone } from "./utils";
+import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
 
 export type { DonationWebhookPayload } from "./schema.js";
 
@@ -45,25 +45,6 @@ export const parseDonationWebhook = async (
   options: WebhookOptions,
   body: unknown,
 ) => parseWebhook(options, body, DonationWebhookPayload);
-
-const cleanSearchParams = (
-  urlString: string,
-  paramsToExclude: string[] = [],
-) => {
-  const url = new URL(urlString);
-  const params = url.searchParams;
-  paramsToExclude.forEach((param) => params.delete(param));
-  params.sort();
-  return `${url.origin + url.pathname}?${params.toString()}`;
-};
-
-const isSameUrlWithoutQuery = (
-  a: string,
-  b: string,
-  paramsToExclude: string[] = [],
-) =>
-  cleanSearchParams(a, paramsToExclude) ===
-  cleanSearchParams(b, paramsToExclude);
 
 export async function setupWebhook(
   url: string,
