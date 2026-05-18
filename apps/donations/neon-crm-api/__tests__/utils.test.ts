@@ -48,6 +48,11 @@ describe("isSameUrlWithoutQuery", () => {
   const b = "https://example.com/api/v1/donations?uuid=456";
   const c = "https://example.com/api/v1/donations?uuid=123&other=value";
 
-  expect(isSameUrlWithoutQuery(a, b, ["uuid"])).toBe(true);
-  expect(isSameUrlWithoutQuery(a, c, ["uuid"])).toBe(false);
+  it("should return true for the same URL without query parameters", () => {
+    expect(isSameUrlWithoutQuery(a, b, ["uuid"])).toBe(true);
+  });
+
+  it("should return false for different URLs with query parameters", () => {
+    expect(isSameUrlWithoutQuery(a, c, ["uuid"])).toBe(false);
+  });
 });
