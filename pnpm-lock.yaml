@@ -324,8 +324,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.6)(react@19.2.6)
       '@vercel/functions':
-        specifier: ^3.5.1
-        version: 3.5.1(@aws-sdk/credential-provider-web-identity@3.972.38)
+        specifier: ^3.6.0
+        version: 3.6.0(@aws-sdk/credential-provider-web-identity@3.972.38)
       '@xyflow/react':
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(react-dom@19.2.6)(react@19.2.6)
@@ -3163,8 +3163,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@3.5.1':
-    resolution: {integrity: sha512-ndh5v+uhWqGA8033oD0i0KHvqUHcLlLCOaLOw5L+xx5zVsWUSQcZPKEYk2nm51aisnKhcnTylxnOmhx+w4UCRA==}
+  '@vercel/functions@3.6.0':
+    resolution: {integrity: sha512-Xj68JYqqJwtqFWJN7EWmFN7MOiUjv5whjw48UEKqQbg8r7hRkhuJhncTU0ba3jJCh/wxEuLWckrtsKcrHQraxw==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -5160,6 +5160,10 @@ packages:
 
   postcss@8.5.14:
     resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.5.15:
+    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres@3.4.7:
@@ -8955,7 +8959,7 @@ snapshots:
       next: 16.2.6(@babel/core@7.28.5)(@opentelemetry/api@1.9.1)(react-dom@19.2.6)(react@19.2.6)
       react: 19.2.6
 
-  '@vercel/functions@3.5.1(@aws-sdk/credential-provider-web-identity@3.972.38)':
+  '@vercel/functions@3.6.0(@aws-sdk/credential-provider-web-identity@3.972.38)':
     dependencies:
       '@vercel/oidc': 3.4.1
     optionalDependencies:
@@ -11282,6 +11286,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  postcss@8.5.15:
+    dependencies:
+      nanoid: 3.3.12
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
   postgres@3.4.7: {}
 
   potpack@2.1.0: {}
@@ -12323,7 +12333,7 @@ snapshots:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.14
+      postcss: 8.5.15
       rollup: 4.60.4
       tinyglobby: 0.2.16
     optionalDependencies:
