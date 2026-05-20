@@ -6319,8 +6319,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.20.0:
-    resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
+  ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -7108,14 +7108,14 @@ snapshots:
 
   '@d-fischer/connection@10.0.1':
     dependencies:
-      '@d-fischer/isomorphic-ws': 7.0.2(ws@8.20.0)
+      '@d-fischer/isomorphic-ws': 7.0.2(ws@8.20.1)
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
       '@types/node': 20.19.41
       '@types/ws': 8.18.1
       tslib: 2.8.1
-      ws: 8.20.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7126,9 +7126,9 @@ snapshots:
 
   '@d-fischer/escape-string-regexp@5.0.0': {}
 
-  '@d-fischer/isomorphic-ws@7.0.2(ws@8.20.0)':
+  '@d-fischer/isomorphic-ws@7.0.2(ws@8.20.1)':
     dependencies:
-      ws: 8.20.0
+      ws: 8.20.1
 
   '@d-fischer/logger@4.2.4':
     dependencies:
@@ -12588,7 +12588,7 @@ snapshots:
 
   ws@8.18.0: {}
 
-  ws@8.20.0: {}
+  ws@8.20.1: {}
 
   xml-js@1.6.11:
     dependencies:
