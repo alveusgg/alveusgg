@@ -21,6 +21,7 @@ import rwatersleep from "@/assets/presets/serval/rwatersleep.png";
 import sand from "@/assets/presets/serval/sand.png";
 import tub from "@/assets/presets/serval/tub.png";
 import tubb from "@/assets/presets/serval/tubb.png";
+import tubr from "@/assets/presets/serval/tubr.png";
 import waterl from "@/assets/presets/serval/waterl.png";
 import waterr from "@/assets/presets/serval/waterr.png";
 import wide from "@/assets/presets/serval/wide.png";
@@ -165,6 +166,12 @@ const servalPresets: Record<string, Preset> = {
     image: tubb,
     position: { pan: -143.88, tilt: -59.94, zoom: 1 },
     // modified: 2026-05-12T22:00:13.110Z
+  },
+  tubr: {
+    description: "tubr",
+    image: tubr,
+    position: { pan: -125.35, tilt: -48.7, zoom: 583 },
+    // modified: 2026-05-19T15:42:52.503Z
   },
   waterl: {
     description: "waterl",
