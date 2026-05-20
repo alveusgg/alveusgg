@@ -1,44 +1,66 @@
-import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 
 import { env } from "@/env";
 
 import { channels } from "@/data/youtube";
 
-const ItemSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  author: z.object({
-    name: z.string(),
-    uri: z.url(),
-  }),
-  published: z.iso.datetime({ offset: true }).transform((x) => new Date(x)),
-});
-
-const FeedSchema = z.object({
-  feed: ItemSchema.extend({
-    entry: z.array(
-      ItemSchema.extend({
-        "media:group": z.object({
-          "media:description": z.string(),
+const PlaylistItemListResponseSchema = z.object({
+  items: z.array(
+    z.object({
+      snippet: z.object({
+        publishedAt: z.coerce.date(),
+        channelId: z.string(),
+        title: z.string(),
+        description: z.string(),
+        channelTitle: z.string(),
+        resourceId: z.object({
+          kind: z.string(),
+          videoId: z.string(),
         }),
       }),
-    ),
-  }),
+    }),
+  ),
 });
 
-const fetchYouTubeFeed = async (type: "channel" | "playlist", id: string) => {
-  const resp = await fetch(
-    `https://www.youtube.com/feeds/videos.xml?${type}_id=${id}`,
+const fetchYouTubePlaylist = async (
+  playlistId: string,
+): Promise<YouTubeVideo[]> => {
+  const apiKey = env.YOUTUBE_API_KEY;
+  if (!apiKey) throw new Error("Missing YouTube API key");
+
+  const requestURL = new URL(
+    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50`,
   );
+  requestURL.searchParams.set("playlistId", playlistId);
+  requestURL.searchParams.set("key", apiKey);
+
+  const resp = await fetch(requestURL);
   if (!resp.ok) {
     throw new Error(`Failed to fetch YouTube feed: ${resp.statusText}`);
   }
 
-  const xml = await resp.text();
-  const parser = new XMLParser();
-  const json = parser.parse(xml);
-  return FeedSchema.parse(json).feed.entry;
+  const json = await resp.json();
+
+  return PlaylistItemListResponseSchema.parse(json).items.map((item) => {
+    const custom = Object.values(channels).find(
+      (channel) => channel.id === item.snippet.channelId,
+    );
+
+    return {
+      id: item.snippet.resourceId.videoId,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      author: {
+        id: item.snippet.channelId,
+        name: custom?.name ?? item.snippet.channelTitle,
+        uri:
+          custom?.uri ??
+          "https://youtube.com/channel/" +
+            encodeURIComponent(item.snippet.channelId),
+      },
+      published: item.snippet.publishedAt,
+    };
+  });
 };
 
 export interface YouTubeVideo {
@@ -55,38 +77,23 @@ export const fetchYouTubeVideosSafe = async (
   if (!channelId.startsWith("UC"))
     throw new Error("Invalid YouTube channel ID");
 
-  const custom = Object.values(channels).find(
-    (channel) => channel.id === channelId,
-  );
-
-  // Get the built-in videos playlist for the channel
-  // This contains only long-form videos, not shorts or live streams (or VoDs)
-  // See https://stackoverflow.com/a/76602819 for other playlist prefixes
-  return fetchYouTubeFeed("playlist", channelId.replace(/^UC/, "UULF"))
-    .then((feed) =>
-      feed
-        .map((entry) => ({
-          id: entry.id.replace(/^yt:video:/, ""),
-          title: entry.title,
-          description: entry["media:group"]["media:description"],
-          author: {
-            id: channelId,
-            name: custom?.name ?? entry.author.name,
-            uri: custom?.uri ?? entry.author.uri,
-          },
-          published: entry.published,
-        }))
+  try {
+    return (
+      // Get the built-in videos playlist for the channel
+      // This contains only long-form videos, not shorts or live streams (or VoDs)
+      // See https://stackoverflow.com/a/76602819 for other playlist prefixes
+      (await fetchYouTubePlaylist(channelId.replace(/^UC/, "UULF")))
         // If a title contains a hashtag, remove it as a precaution
         // We've seen YouTube accidentally include shorts in this playlist
-        .filter((entry) => !/\W#\w/.test(entry.title)),
-    )
-    .catch((error) => {
-      console.error(
-        `Failed to fetch YouTube videos for channel ${channelId}:`,
-        error,
-      );
-      return [];
-    });
+        .filter((entry) => !/\W#\w/.test(entry.title))
+    );
+  } catch (error) {
+    console.error(
+      `Failed to fetch YouTube videos for channel ${channelId}:`,
+      error,
+    );
+    return [];
+  }
 };
 
 const SearchSchema = z.object({
