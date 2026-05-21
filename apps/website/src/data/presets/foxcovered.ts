@@ -73,8 +73,8 @@ const foxcoveredPresets: Record<string, Preset> = {
   platformfl: {
     description: "platformfl",
     image: platformfl,
-    position: { pan: -146.25, tilt: -1.02, zoom: 4039 },
-    // modified: 2026-04-18T13:17:40.010Z
+    position: { pan: -145.14, tilt: -0.87, zoom: 3363 },
+    // modified: 2026-05-20T13:14:30.113Z
   },
   platformfr: {
     description: "platformfr",
