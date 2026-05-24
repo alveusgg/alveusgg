@@ -1,6 +1,7 @@
 import basket from "@/assets/presets/marmout/basket.png";
 import blueball from "@/assets/presets/marmout/blueball.png";
 import bridgeb from "@/assets/presets/marmout/bridgeb.png";
+import bridgem from "@/assets/presets/marmout/bridgem.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
@@ -65,6 +66,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: bridgeb,
     position: { pan: 167.22, tilt: 3.29, zoom: 332 },
     // modified: 2026-05-18T14:34:17.146Z
+  },
+  bridgem: {
+    description: "bridgem",
+    image: bridgem,
+    position: { pan: 159.34, tilt: 7.44, zoom: 664 },
+    // modified: 2026-05-23T17:37:41.860Z
   },
   domell: {
     description: "Dome Left Lower",
