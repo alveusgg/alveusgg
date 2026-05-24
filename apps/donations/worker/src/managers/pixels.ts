@@ -170,9 +170,10 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
             donation.providerMetadata.neonFundId ===
               this.env.NEON_PIXEL_FUND_ID)
         );
-      case "twitch":
-        return false;
       case "paypal":
+        if (!this.env.PAYPAL_PIXEL_CAMPAIGN_ID) return false;
+        return donation.tags.campaign === this.env.PAYPAL_PIXEL_CAMPAIGN_ID;
+      case "twitch":
         return false;
       case "thegivingblock":
         return false;
