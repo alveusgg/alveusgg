@@ -18,11 +18,12 @@ export class DurableObjectDonationStorage implements DonationStorage {
   async add(...donations: Donation[]) {
     const messages: MessageSendRequest<string>[] = [];
     for (const donation of donations) {
-      const exists = doesDonationExist(
+      const reservation = reserveDonation(
         this.ctx.storage.sql,
+        donation.provider,
         donation.providerUniqueId,
       );
-      if (!exists) {
+      if (reservation.new) {
         messages.push({
           body: stringify(donation),
           contentType: "json",
@@ -83,18 +84,29 @@ export async function createIfNotExistsProviderMetadataTable(sql: SqlStorage) {
   `);
 }
 
-function doesDonationExist(sql: SqlStorage, providerUniqueId: string) {
+function reserveDonation(
+  sql: SqlStorage,
+  provider: string,
+  providerUniqueId: string,
+): { new: true; date: string } | { new: false } {
+  const date = new Date().toISOString();
   const cursor = sql.exec(
-    `SELECT date FROM donations WHERE providerUniqueId = ? LIMIT 1`,
+    `
+      INSERT INTO donations (provider, providerUniqueId, date)
+      VALUES (?, ?, ?)
+      ON CONFLICT(providerUniqueId) DO NOTHING
+      RETURNING date
+    `,
+    provider,
     providerUniqueId,
+    date,
   );
 
-  if (cursor.rowsRead === 0) {
-    return false;
+  if (cursor.rowsRead === 1) {
+    const result = cursor.one();
+    return { new: true, date: result.date as string };
   }
-  const result = cursor.one();
-  console.log(
-    `Donation ${providerUniqueId} already exists, it was created at ${result.date}`,
-  );
-  return true;
+
+  console.log(`Donation ${providerUniqueId} already exists`);
+  return { new: false };
 }
