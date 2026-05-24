@@ -84,8 +84,8 @@ const AboutTechPresetsPage: NextPage = () => {
   const [selectedPosition, setSelectedPosition] = useState<number>();
 
   // Allow the sidebar to be resized with a draggable handle
-  const [twitchEmbed, setTwitchEmbed] = useLocalStorage(
-    "presets:twitch-embed",
+  const [sidebar, setSidebar] = useLocalStorage(
+    "presets:sidebar",
     useMemo(
       () =>
         z.number().transform((val) => (val === -1 ? -1 : sidebarClamp(val))),
@@ -103,7 +103,7 @@ const AboutTechPresetsPage: NextPage = () => {
       if (!container) return;
 
       const rect = container.getBoundingClientRect();
-      setTwitchEmbed(sidebarClamp(rect.right - e.clientX));
+      setSidebar(sidebarClamp(rect.right - e.clientX));
     };
 
     const handleMouseUp = () => {
@@ -113,7 +113,7 @@ const AboutTechPresetsPage: NextPage = () => {
     };
 
     const handleResize = () => {
-      setTwitchEmbed((prev) => (prev === -1 ? -1 : sidebarClamp(prev)));
+      setSidebar((prev) => (prev === -1 ? -1 : sidebarClamp(prev)));
     };
     handleResize();
 
@@ -126,10 +126,9 @@ const AboutTechPresetsPage: NextPage = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("resize", handleResize);
     };
-  }, [setTwitchEmbed]);
+  }, [setSidebar]);
 
-  const sidebar =
-    subscription.isSuccess && subscription.data && twitchEmbed !== -1;
+  const split = subscription.isSuccess && subscription.data && sidebar !== -1;
 
   return (
     <>
@@ -173,7 +172,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Section
           className={classes(
             "@container z-10 grow py-0 pt-4",
-            sidebar && "rounded-r-xl",
+            split && "rounded-r-xl",
           )}
           containerClassName="h-full flex flex-col"
         >
@@ -301,9 +300,9 @@ const AboutTechPresetsPage: NextPage = () => {
                         </Label>
 
                         <Switch
-                          checked={twitchEmbed !== -1}
+                          checked={sidebar !== -1}
                           onChange={(val) =>
-                            setTwitchEmbed(val ? sidebarDefault() : -1)
+                            setSidebar(val ? sidebarDefault() : -1)
                           }
                           className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                         >
@@ -420,7 +419,7 @@ const AboutTechPresetsPage: NextPage = () => {
           </div>
         </Section>
 
-        {sidebar && (
+        {split && (
           <div className="flex" ref={sidebarContainer}>
             <div
               className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
@@ -434,7 +433,7 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
             <div
               className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
-              style={{ width: twitchEmbed }}
+              style={{ width: sidebar }}
             >
               <Consent item="stream player" consent="twitch" className="h-full">
                 <Twitch channel="alveussanctuary" />
