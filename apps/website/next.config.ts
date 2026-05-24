@@ -407,6 +407,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/donate/existing",
+      destination: "https://alveussanctuary.app.neoncrm.com",
+      permanent: true,
+    },
+    {
       source: "/github",
       destination: "https://github.com/alveusgg",
       permanent: true,
