@@ -90,7 +90,7 @@ const DonatePage: NextPage = () => {
             />
           </Consent>
 
-          <Link href="/donate/existing" external className="mt-auto text-right">
+          <Link href="/donate/manage" external className="mt-auto text-right">
             Manage your recurring donations and view donation history
           </Link>
         </div>

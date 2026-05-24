@@ -407,7 +407,7 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/donate/existing",
+      source: "/donate/manage",
       destination: "https://alveussanctuary.app.neoncrm.com",
       permanent: true,
     },
