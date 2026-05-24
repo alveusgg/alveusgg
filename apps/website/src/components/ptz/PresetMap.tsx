@@ -3,9 +3,11 @@ import {
   type Node,
   type NodeProps,
   ReactFlow,
+  useNodes,
+  useReactFlow,
   useViewport,
 } from "@xyflow/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import type { Camera } from "@/data/tech/cameras";
 import type { Preset, PresetEntry } from "@/data/tech/cameras.types";
@@ -103,6 +105,22 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
   );
 };
 
+const PresetMapControls = () => {
+  const nodes = useNodes();
+  const { fitView } = useReactFlow();
+
+  const fitKey = useMemo(
+    () => nodes.map((n) => `${n.id}:${n.position.x},${n.position.y}`).join("|"),
+    [nodes],
+  );
+
+  useEffect(() => {
+    fitView();
+  }, [fitView, fitKey]);
+
+  return <Controls showInteractive={false} />;
+};
+
 const PresetMap = ({
   camera,
   presets,
@@ -163,7 +181,7 @@ const PresetMap = ({
         fitView
         proOptions={{ hideAttribution: true }}
       >
-        <Controls showInteractive={false} />
+        <PresetMapControls />
       </ReactFlow>
     </div>
   );
