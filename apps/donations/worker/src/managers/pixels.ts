@@ -159,7 +159,7 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
     }
   }
 
-  private filterDonation(donation: Donation) {
+  private isAValidPixelDonation(donation: Donation) {
     switch (donation.provider) {
       case "neon":
         return (
@@ -170,6 +170,13 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
             donation.providerMetadata.neonFundId ===
               this.env.NEON_PIXEL_FUND_ID)
         );
+      case "paypal":
+        if (!this.env.PAYPAL_PIXEL_CAMPAIGN_ID) return false;
+        return donation.tags.campaign === this.env.PAYPAL_PIXEL_CAMPAIGN_ID;
+      case "twitch":
+        return false;
+      case "thegivingblock":
+        return false;
       default:
         return true;
     }
@@ -189,7 +196,7 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
       // New pixels
       const pixels: Record<string, Pixel[]> = {};
       for (const donation of donations) {
-        if (!this.filterDonation(donation)) {
+        if (!this.isAValidPixelDonation(donation)) {
           continue;
         }
 
