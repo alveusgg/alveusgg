@@ -247,7 +247,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
 
                 <NeonDonateEmbed
                   form="arri"
-                  className="-mx-8 -mt-4 -mb-8 *:w-full *:[&_iframe]:outline-none"
+                  className="-mx-8 -mb-8 *:w-full *:[&_iframe]:outline-none"
                 />
               </Box>
             </Consent>
