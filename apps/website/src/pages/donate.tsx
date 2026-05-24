@@ -89,6 +89,10 @@ const DonatePage: NextPage = () => {
               className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none"
             />
           </Consent>
+
+          <Link href="/donate/manage" external className="mt-auto text-right">
+            Manage your recurring donations and view donation history
+          </Link>
         </div>
 
         <div className="col-span-full mt-6 text-sm text-alveus-green">
