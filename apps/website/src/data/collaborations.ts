@@ -41,6 +41,7 @@ import hyoon from "@/assets/collaborations/hyoon.png";
 import ironmouse from "@/assets/collaborations/ironmouse.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import jackManifold from "@/assets/collaborations/jack-manifold.png";
+import jacksepticeye from "@/assets/collaborations/jacksepticeye.png";
 import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
@@ -100,6 +101,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Jacksepticeye",
+      link: "https://www.youtube.com/@jacksepticeye",
+      date: new Date("2026-05-19"),
+      videoId: "qberatnwFhU",
+      creators: [
+        {
+          name: "Jacksepticeye",
+          image: jacksepticeye,
+          popularity: 31_200_000, // YouTube subscribers, 2026-05-24
+        },
+      ],
+    },
     {
       name: "Smosh",
       link: "https://www.youtube.com/@smoshpit",
