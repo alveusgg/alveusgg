@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
+import { channels as youtubeChannels } from "@/data/youtube";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
@@ -18,7 +19,9 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Select from "@/components/content/Select";
 import Twitch, { TwitchChat } from "@/components/content/Twitch";
+import { YouTubeEmbed } from "@/components/content/YouTube";
 import { CamListDropdown, CamListFull } from "@/components/ptz/CamList";
 import PresetList from "@/components/ptz/PresetList";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
@@ -127,6 +130,13 @@ const AboutTechPresetsPage: NextPage = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [setSidebar]);
+
+  // Allow the stream player to be switched to YouTube instead of Twitch
+  const [embed, setEmbed] = useLocalStorage(
+    "presets:embed",
+    useMemo(() => z.enum(["twitch", "youtube"]), []),
+    "twitch",
+  );
 
   const split = subscription.isSuccess && subscription.data && sidebar !== -1;
 
@@ -292,22 +302,38 @@ const AboutTechPresetsPage: NextPage = () => {
                     >
                       <Field className="flex flex-wrap items-center justify-between gap-2">
                         <Label className="flex grow cursor-pointer flex-col leading-tight">
-                          <span>Enable embedded Twitch stream player</span>
+                          <span>Enable embedded stream player sidebar</span>
                           <span className="text-sm text-alveus-green-400 italic">
-                            (also embeds the {channels.alveusgg.username} stream
-                            chat)
+                            (includes the {channels.alveusgg.username} Twitch
+                            chat for commands)
                           </span>
                         </Label>
 
-                        <Switch
-                          checked={sidebar !== -1}
-                          onChange={(val) =>
-                            setSidebar(val ? sidebarDefault() : -1)
+                        <Select
+                          options={{
+                            hidden: "Hidden",
+                            twitch: "Twitch",
+                            youtube: "YouTube",
+                          }}
+                          value={sidebar === -1 ? "hidden" : embed}
+                          onChange={(val) => {
+                            if (val === "hidden") {
+                              setSidebar(-1);
+                            } else {
+                              setEmbed(val);
+                              if (sidebar === -1) {
+                                setSidebar(sidebarDefault());
+                              }
+                            }
+                          }}
+                          label={
+                            <span className="sr-only">
+                              Sidebar stream source
+                            </span>
                           }
-                          className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                        >
-                          <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                        </Switch>
+                          align="right"
+                          className="shrink-0"
+                        />
                       </Field>
 
                       <Field className="flex flex-wrap items-center justify-between gap-2">
@@ -432,11 +458,34 @@ const AboutTechPresetsPage: NextPage = () => {
               <div className="h-1/3 max-h-full w-1 rounded-sm bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
-              className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
+              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
               style={{ width: sidebar }}
             >
-              <Consent item="stream player" consent="twitch" className="h-full">
-                <Twitch channel="alveussanctuary" />
+              {embed === "twitch" && (
+                <Consent
+                  item="stream player"
+                  consent="twitch"
+                  className="aspect-video"
+                >
+                  <Twitch channel="alveussanctuary" />
+                </Consent>
+              )}
+              {embed === "youtube" && (
+                <Consent
+                  item="stream player"
+                  consent="youtube"
+                  className="aspect-video data-consent:items-stretch"
+                >
+                  <YouTubeEmbed
+                    videoId="live_stream"
+                    videoParams={{
+                      channel: youtubeChannels.alveus.id,
+                      autoplay: "1",
+                    }}
+                  />
+                </Consent>
+              )}
+              <Consent item="stream chat" consent="twitch" className="grow">
                 <TwitchChat channel="alveusgg" dark />
               </Consent>
             </div>
