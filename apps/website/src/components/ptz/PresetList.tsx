@@ -150,7 +150,12 @@ const PresetList = ({
   useEffect(() => {
     // Reset the search presets when the selected camera changes
     setSearch("");
-  }, [camera]);
+
+    // Reset the view to list if a non-PTZ camera is selected
+    if (!isCameraPTZ(cameras[camera])) {
+      setView("list");
+    }
+  }, [camera, setView]);
 
   const sorted = useMemo(
     () =>
