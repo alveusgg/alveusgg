@@ -5,6 +5,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 ## Copy root files
 WORKDIR /app
+COPY ./.npmrc .
 COPY ./package.json .
 COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
