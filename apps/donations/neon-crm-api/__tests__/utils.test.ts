@@ -1,6 +1,10 @@
 import { it, expect, describe } from "vitest";
 
-import { fixDateTimezone, fixTimestampsTimezone } from "../utils";
+import {
+  fixDateTimezone,
+  fixTimestampsTimezone,
+  isSameUrlWithoutQuery,
+} from "../utils";
 import type { Timestamps } from "../schema";
 
 const timezone = "America/Chicago";
@@ -36,5 +40,19 @@ describe("fixTimestampsTimezone", () => {
     );
     expect(fixed.createdBy).toBe("Some Name");
     expect(fixed.lastModifiedBy).toBe("Some other Name");
+  });
+});
+
+describe("isSameUrlWithoutQuery", () => {
+  const a = "https://example.com/api/v1/donations?uuid=123";
+  const b = "https://example.com/api/v1/donations?uuid=456";
+  const c = "https://example.com/api/v1/donations?uuid=123&other=value";
+
+  it("should return true for the same URL without query parameters", () => {
+    expect(isSameUrlWithoutQuery(a, b, ["uuid"])).toBe(true);
+  });
+
+  it("should return false for different URLs with query parameters", () => {
+    expect(isSameUrlWithoutQuery(a, c, ["uuid"])).toBe(false);
   });
 });

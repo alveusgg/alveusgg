@@ -5,6 +5,8 @@ on:
     - cron: "0 * * * *" # hourly
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   sync:
     if: github.repository == 'alveusgg/alveusgg-private'
@@ -14,12 +16,14 @@ jobs:
       - name: Checkout private repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          persist-credentials: true
           ref: ${{ github.ref }}
           token: ${{ secrets.GH_SYNC_TOKEN }}
 
       - name: Fetch public repo and push
+        env:
+          BRANCH: ${{ github.ref_name }}
         run: |
-          BRANCH="${{ github.ref_name }}"
           git remote add upstream https://github.com/alveusgg/alveusgg.git
           git fetch upstream "$BRANCH"
           git push origin "upstream/$BRANCH:$BRANCH"

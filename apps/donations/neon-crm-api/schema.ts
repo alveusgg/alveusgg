@@ -8,8 +8,6 @@ const nameMax = 255;
 
 const Status = z.enum(["ACTIVE", "INACTIVE"]);
 
-const YesNoBoolean = z.enum(["Yes", "No"]).transform((val) => val === "Yes");
-
 const ConsentStatus = z.enum(["GIVEN", "DECLINED", "NOT_ASKED"]);
 
 const DataType = z.enum([
@@ -179,10 +177,14 @@ export const DonationWebhookPayload = z.object({
     fund: IdNamePairBase,
     timestamps: Timestamps,
     date: DateSchema,
-    anonymousType: YesNoBoolean,
+    anonymousType: z
+      .enum(["Yes", "No"])
+      .nullable()
+      .optional()
+      .transform((val) => val === "Yes"),
     donationCustomFields: z.array(CustomFieldData).optional(),
     donorCoveredFeeFlag: z.boolean(),
-    payLater: z.boolean(),
+    payLater: z.boolean().optional().default(false),
   }),
 });
 
@@ -193,10 +195,10 @@ export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
 const AddressBase = z.object({
   addressId: RecordId,
   type: IdNamePair,
-  addressLine1: z.string(),
-  addressLine2: z.string(),
-  addressLine3: z.string(),
-  addressLine4: z.string(),
+  addressLine1: z.string().nullable(),
+  addressLine2: z.string().nullable(),
+  addressLine3: z.string().nullable(),
+  addressLine4: z.string().nullable(),
   city: z.string(),
   stateProvince: CodeNamePair.nullable(),
   country: IdNamePair.nullable(),

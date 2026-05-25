@@ -28,7 +28,7 @@
     "@prisma/client": "^7.8.0"
   },
   "devDependencies": {
-    "@types/node": "^24.12.3",
+    "@types/node": "^24.12.4",
     "dotenv": "^17.4.2",
     "prisma": "^7.8.0",
     "tsdown": "^0.22.0"

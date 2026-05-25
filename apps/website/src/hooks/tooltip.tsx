@@ -5,6 +5,7 @@ import {
   autoUpdate,
   flip,
   offset,
+  safePolygon,
   shift,
   useFloating,
   useFocus,
@@ -13,6 +14,8 @@ import {
   useRole,
 } from "@floating-ui/react";
 import { type ReactNode, useState } from "react";
+
+import { classes } from "@/utils/classes";
 
 type ContentString = {
   content: string;
@@ -28,7 +31,12 @@ export type UseTooltipProps = (ContentString | ContentNode) & {
   force?: boolean;
   placement?: Placement;
   offset?: OffsetOptions;
+  className?: string;
+  interactive?: boolean;
 };
+
+export const tooltipClasses =
+  "rounded-md bg-alveus-green-900 px-1 py-0.5 text-left leading-tight text-nowrap text-white";
 
 const useTooltip = ({
   content,
@@ -36,6 +44,8 @@ const useTooltip = ({
   force,
   placement,
   offset: offsetOpts,
+  className,
+  interactive,
 }: UseTooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,7 +58,10 @@ const useTooltip = ({
   });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
-    useHover(context, { move: false }),
+    useHover(context, {
+      move: false,
+      handleClose: interactive ? safePolygon() : null,
+    }),
     useFocus(context),
     useRole(context, { role: "tooltip" }),
   ]);
@@ -64,7 +77,12 @@ const useTooltip = ({
     force || isOpen ? (
       <FloatingPortal>
         <div
-          className="pointer-events-none z-100 rounded-md bg-alveus-green-900 px-1 py-0.5 text-left leading-tight text-nowrap text-white"
+          className={classes(
+            interactive ? "pointer-events-auto" : "pointer-events-none",
+            !/\bz-\d+\b/.test(className || "") && "z-100",
+            typeof content === "string" && tooltipClasses,
+            className,
+          )}
           // eslint-disable-next-line react-hooks/refs
           ref={refs.setFloating}
           style={floatingStyles}
