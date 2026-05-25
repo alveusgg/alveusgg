@@ -15,9 +15,7 @@ const Progress = ({
   <div
     className={classes(
       "relative my-1 h-10 w-full rounded-full shadow-lg",
-      // add background color if not overwritten via className
-      !/\bbg-/.test(className || "") &&
-        (dark ? "bg-alveus-green-900" : "bg-alveus-green-100"),
+      dark ? "bg-alveus-green-900" : "bg-alveus-green-100",
       className,
     )}
   >

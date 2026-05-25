@@ -23,11 +23,7 @@ const ActionButton = ({
     <button
       onClick={onClick}
       className={classes(
-        !/\b((inline-)?(block|flex|grid|table)|inline|contents)\b/.test(
-          className || "",
-        ) && "inline-block",
-        !/\btext-/.test(className || "") &&
-          "text-alveus-green-400 hover:text-black",
+        "inline-block text-alveus-green-400 hover:text-black",
         className,
       )}
       {...ttProps}

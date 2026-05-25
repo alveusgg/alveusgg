@@ -28,12 +28,10 @@ const Section = ({
     <section
       className={classes(
         offsetParent && "relative z-0",
-        dark ? "text-alveus-tan" : "text-alveus-green-900",
-        // add vertical padding if not overwritten via className
-        !/\bpy-\d+\b/.test(className || "") && "py-16",
-        // add background color if not overwritten via className
-        !/\bbg-/.test(className || "") &&
-          (dark ? "bg-alveus-green" : "bg-alveus-tan"),
+        "py-16",
+        dark
+          ? "bg-alveus-green text-alveus-tan"
+          : "bg-alveus-tan text-alveus-green-900",
         className,
       )}
     >
