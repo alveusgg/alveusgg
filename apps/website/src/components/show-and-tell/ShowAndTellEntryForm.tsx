@@ -448,8 +448,11 @@ export function ShowAndTellEntryForm({
       dominantColor = [r, g, b].join();
     }
 
+    const pronouns = (formData.get("pronouns") as string | null)?.trim();
+
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
+      pronouns: pronouns || null,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
       attachments: [],
@@ -664,6 +667,16 @@ export function ShowAndTellEntryForm({
               maxLength={100}
               defaultValue={entry?.displayName || undefined}
               placeholder="What should we call you?"
+              onChange={markAsChanged}
+            />
+            <TextField
+              className="max-w-1/2"
+              label="Preferred Pronouns (optional)"
+              name="pronouns"
+              minLength={1}
+              maxLength={25}
+              defaultValue={entry?.pronouns || undefined}
+              placeholder="she/her, they/them, etc."
               onChange={markAsChanged}
             />
           </Fieldset>
