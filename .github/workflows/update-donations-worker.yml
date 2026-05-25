@@ -17,6 +17,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   deploy:
     name: Deploy (${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }})
