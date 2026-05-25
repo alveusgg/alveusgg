@@ -3,6 +3,12 @@ services:
     build:
       context: ../..
       dockerfile: apps/chatbot/Dockerfile
+      secrets:
+        - github_token
     restart: always
     environment:
       - CHATBOT_REF_SHA=$CHATBOT_REF_SHA
+
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN
