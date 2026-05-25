@@ -1,41 +1,54 @@
-import type { Preset } from "@/data/tech/cameras.types";
+import type { PresetEntry } from "@/data/tech/cameras.types";
 
-export const sortPresets = (
-  presets: readonly [string, Preset][],
-): readonly [string, Preset][] => {
-  // find a home preset, ideally named home, if not, then the first preset that is zoomed out
-  const homePreset =
-    presets.find(
-      ([name]) => name.toLocaleLowerCase() == "home".toLocaleLowerCase(),
-    ) ||
-    presets.toSorted(([, a], [, b]) => a.position.zoom - b.position.zoom)[0];
+export const homePreset = (
+  presets: readonly PresetEntry[],
+): PresetEntry | undefined =>
+  presets.find(
+    ([name]) => name.toLocaleLowerCase() == "home".toLocaleLowerCase(),
+  ) || presets.toSorted(([, a], [, b]) => a.position.zoom - b.position.zoom)[0];
 
-  // use the home location to create a dividing line for logical left/right
-  // assuming home is the middle, then the far left would be 180 deg to the left
-  // and the right bound would be 180 to the right
-  // therefore preset pan values would need to be wrapped to be within that range for sorting
+export const wrapPreset = (
+  home: PresetEntry | undefined,
+): ((entry: PresetEntry) => PresetEntry) => {
   const wrapPan = (pan: number) => {
-    const leftLimit = (homePreset?.[1].position.pan || 0) - 180;
+    const leftLimit = (home?.[1].position.pan ?? 0) - 180;
     const rightLimit = leftLimit + 360;
-    if (pan < leftLimit) {
-      return pan + 360;
-    }
-    if (pan > rightLimit) {
-      return pan - 360;
-    }
+    if (pan < leftLimit) return pan + 360;
+    if (pan > rightLimit) return pan - 360;
     return pan;
   };
 
-  const sortKeyGenerator = ([name, preset]: [string, Preset]): number => {
+  return ([name, preset]) => [
+    name,
+    {
+      ...preset,
+      position: {
+        pan: wrapPan(preset.position.pan),
+        tilt: preset.position.tilt,
+        zoom: preset.position.zoom,
+      },
+    },
+  ];
+};
+
+export const sortPresets = (
+  presets: readonly PresetEntry[],
+): readonly PresetEntry[] => {
+  const home = homePreset(presets);
+  const wrap = wrapPreset(home);
+
+  const sortKeyGenerator = ([name, preset]: PresetEntry): number => {
     // home preset should always be first
-    if (name === homePreset?.[0]) {
+    if (name === home?.[0]) {
       return -Infinity;
     }
 
+    const [, wrapped] = wrap([name, preset]);
+
     return (
-      wrapPan(preset.position.pan) +
+      wrapped.position.pan +
       // if the preset is a "downward" preset put them at the end of the list
-      (preset.position.tilt < -30 ? 1000 : 0)
+      (wrapped.position.tilt < -30 ? 1000 : 0)
     );
   };
 

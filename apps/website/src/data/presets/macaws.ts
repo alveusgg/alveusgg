@@ -8,6 +8,7 @@ import home from "@/assets/presets/macaws/home.png";
 import leftpole from "@/assets/presets/macaws/leftpole.png";
 import perchbr from "@/assets/presets/macaws/perchbr.png";
 import postmb from "@/assets/presets/macaws/postmb.png";
+import postmbb from "@/assets/presets/macaws/postmbb.png";
 import postmt from "@/assets/presets/macaws/postmt.png";
 import right from "@/assets/presets/macaws/right.png";
 import water from "@/assets/presets/macaws/water.png";
@@ -79,6 +80,12 @@ const macawsPresets: Record<string, Preset> = {
     image: postmb,
     position: { pan: 165.63, tilt: -22.03, zoom: 601 },
     // modified: 2025-10-16T15:12:14.306Z
+  },
+  postmbb: {
+    description: "postmbb",
+    image: postmbb,
+    position: { pan: 165.95, tilt: -26.02, zoom: 963 },
+    // modified: 2026-05-19T00:18:52.025Z
   },
   postmt: {
     description: "postmt",

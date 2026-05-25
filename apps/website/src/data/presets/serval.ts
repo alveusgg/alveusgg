@@ -17,9 +17,11 @@ import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
 import rightwide from "@/assets/presets/serval/rightwide.png";
+import rwatersleep from "@/assets/presets/serval/rwatersleep.png";
 import sand from "@/assets/presets/serval/sand.png";
 import tub from "@/assets/presets/serval/tub.png";
 import tubb from "@/assets/presets/serval/tubb.png";
+import tubr from "@/assets/presets/serval/tubr.png";
 import waterl from "@/assets/presets/serval/waterl.png";
 import waterr from "@/assets/presets/serval/waterr.png";
 import wide from "@/assets/presets/serval/wide.png";
@@ -141,6 +143,12 @@ const servalPresets: Record<string, Preset> = {
     position: { pan: -81.23, tilt: -26.66, zoom: 1 },
     // modified: 2026-04-02T12:29:55.145Z
   },
+  rwatersleep: {
+    description: "rwatersleep",
+    image: rwatersleep,
+    position: { pan: -71.71, tilt: -25.47, zoom: 2154 },
+    // modified: 2026-05-17T00:17:40.636Z
+  },
   sand: {
     description: "sand",
     image: sand,
@@ -158,6 +166,12 @@ const servalPresets: Record<string, Preset> = {
     image: tubb,
     position: { pan: -143.88, tilt: -59.94, zoom: 1 },
     // modified: 2026-05-12T22:00:13.110Z
+  },
+  tubr: {
+    description: "tubr",
+    image: tubr,
+    position: { pan: -125.35, tilt: -48.7, zoom: 583 },
+    // modified: 2026-05-19T15:42:52.503Z
   },
   waterl: {
     description: "waterl",

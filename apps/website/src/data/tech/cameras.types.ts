@@ -6,6 +6,8 @@ export interface Preset {
   position: { pan: number; tilt: number; zoom: number };
 }
 
+export type PresetEntry = readonly [string, Preset];
+
 interface CameraCore {
   title: string;
   group: string;

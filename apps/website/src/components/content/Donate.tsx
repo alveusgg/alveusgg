@@ -102,7 +102,7 @@ const Donate = ({
               size={24}
               className="transition-opacity group-hover:opacity-0"
             />
-            <IconArrowUp className="absolute inset-2 -translate-x-full translate-y-full rotate-45 opacity-0 transition group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100" />
+            <IconArrowUp className="absolute inset-2 -translate-x-full translate-y-full rotate-45 opacity-0 transition group-hover:translate-0 group-hover:opacity-100" />
           </div>
           <Heading level={2} className="my-0">
             {link.title}

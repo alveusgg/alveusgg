@@ -30,8 +30,7 @@ export const StreamablePreview = ({
       alt={alt}
       loading="lazy"
       className={classes(
-        "pointer-events-none bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
-        !/\brounded-/.test(className || "") && "rounded-2xl",
+        "pointer-events-none rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
         className,
       )}
     />

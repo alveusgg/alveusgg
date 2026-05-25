@@ -159,12 +159,12 @@ function ImageAttachment({
           </strong>
 
           <IconChevronDown
-            className="box-content shrink-0 p-1 transition-transform group-data-[open]:-scale-y-100"
+            className="box-content shrink-0 p-1 transition-transform group-data-open:-scale-y-100"
             size={24}
           />
         </DisclosureButton>
 
-        <DisclosurePanel className="rounded bg-gray-100 p-2" static={hasAlt}>
+        <DisclosurePanel className="rounded-sm bg-gray-100 p-2" static={hasAlt}>
           <TextAreaField
             name={`image[${fileReference.id}][alternativeText]`}
             label={
@@ -561,7 +561,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {
@@ -793,7 +793,7 @@ export function ShowAndTellEntryForm({
                       >
                         <div className="relative mr-5 size-32 rounded-lg bg-gray-200 text-alveus-green-900 transition-transform group-hover:scale-105">
                           <VideoPlatformIcon
-                            className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
+                            className="absolute top-1/2 left-1/2 size-12 -translate-1/2"
                             platform={parseVideoUrl(att.url)?.platform}
                           />
                         </div>

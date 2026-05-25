@@ -112,7 +112,10 @@ const Slideshow = ({
       />
       {images.map(({ src, alt, className }, idx) => (
         <div
-          className={`absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`}
+          className={
+            // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
+            `absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`
+          }
           key={
             typeof src === "string"
               ? src

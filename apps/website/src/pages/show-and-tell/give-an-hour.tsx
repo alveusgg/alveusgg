@@ -97,7 +97,7 @@ const Card = ({
   <div className="flex h-full gap-6 rounded-xl bg-white/75 p-6 shadow-lg backdrop-blur-sm">
     <div
       className={classes(
-        "flex flex-shrink-0 flex-col items-center justify-between gap-4",
+        "flex shrink-0 flex-col items-center justify-between gap-4",
         number === undefined && "md:order-last",
       )}
     >
@@ -453,7 +453,7 @@ const GiveAnHourPage: NextPage<
             {wwf?.cta && <p className="mt-2 text-lg">{wwf.cta(false)}</p>}
           </div>
 
-          <div className="flex w-full flex-col divide-y-1 divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
+          <div className="flex w-full flex-col divide-y divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
             {wwfGiveAnHourCampaigns.map(({ start, end }) => {
               const year = start.split("-")[0]!;
               return (
