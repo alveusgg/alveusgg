@@ -25,7 +25,12 @@ COPY ./apps/chatbot/.env .
 
 ## Install dependencies
 RUN npm install -g corepack@latest && corepack enable && corepack install
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter "{.}..."
+RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
+		--mount=type=cache,id=pnpm,target=/pnpm/store \
+    set -eu; \
+		printf "//npm.pkg.github.com/:_authToken=%s\\n" "$(cat /tmp/github_token)" > "$HOME/.npmrc"; \
+    pnpm install --frozen-lockfile --filter "{.}..."; \
+    rm -f "$HOME/.npmrc"
 
 ## Copy code
 COPY ./apps/chatbot/src/ src/
