@@ -13,17 +13,7 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import IconCheck from "@/icons/IconCheck";
 import IconChevronVertical from "@/icons/IconChevronVertical";
 
-type SelectProps = {
-  options: Record<string, string | JSX.Element>;
-  value: string;
-  onChange: (value: string) => void;
-  label?: string | JSX.Element;
-  dark?: boolean;
-  align?: "left" | "right";
-  className?: string;
-};
-
-const Select = ({
+const Select = <T extends string>({
   options,
   value,
   onChange,
@@ -31,7 +21,15 @@ const Select = ({
   dark = false,
   align = "left",
   className,
-}: SelectProps) => {
+}: {
+  options: Record<T, string | JSX.Element>;
+  value: T;
+  onChange: (value: T) => void;
+  label?: string | JSX.Element;
+  dark?: boolean;
+  align?: "left" | "right";
+  className?: string;
+}) => {
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={classes("relative mt-1 flex flex-col", className)}>

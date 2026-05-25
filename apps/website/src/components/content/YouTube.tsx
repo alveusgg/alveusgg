@@ -67,19 +67,20 @@ export const YouTubePreview = ({
 
 type EmbedProps = {
   videoId: string;
+  videoParams?: Record<string, string>;
   caption?: string;
 };
 
-const iframeSrc = (id: string) =>
+const iframeSrc = (id: string, params?: Record<string, string>) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
     id,
-  )}?modestbranding=1&rel=0`;
+  )}?${new URLSearchParams({ ...params, modestbranding: "1", rel: "0" }).toString()}`;
 
-export const YouTubeEmbed = ({ videoId, caption }: EmbedProps) => (
+export const YouTubeEmbed = ({ videoId, videoParams, caption }: EmbedProps) => (
   <div className="flex h-full flex-col">
     <div className="mx-auto flex aspect-video max-w-full grow">
       <iframe
-        src={iframeSrc(videoId)}
+        src={iframeSrc(videoId, videoParams)}
         title="Video embed"
         referrerPolicy="strict-origin-when-cross-origin"
         allow="fullscreen; encrypted-media"
