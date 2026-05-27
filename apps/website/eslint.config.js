@@ -1,6 +1,7 @@
 // @ts-check
 import { fileURLToPath } from "node:url";
 
+import eslintReact from "@eslint-react/eslint-plugin";
 import eslint from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettiereslint from "eslint-config-prettier";
@@ -8,7 +9,6 @@ import betterTailwindcssPlugin from "eslint-plugin-better-tailwindcss";
 import { getDefaultSelectors } from "eslint-plugin-better-tailwindcss/defaults";
 import { SelectorKind } from "eslint-plugin-better-tailwindcss/types";
 import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
-import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint, { configs as tseslintConfigs } from "typescript-eslint";
@@ -48,17 +48,8 @@ export default tseslint.config(
     },
   },
   {
-    name: "react/recommended",
-    ...reactPlugin.configs.flat.recommended,
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
-  },
-  {
-    name: "react/jsx-runtime",
-    ...reactPlugin.configs.flat["jsx-runtime"],
+    name: "@eslint-react/recommended-typescript",
+    ...eslintReact.configs["recommended-typescript"],
   },
   {
     name: "react-hooks/recommended",
@@ -130,7 +121,6 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-      "react/prop-types": "off",
       "react-hooks/set-state-in-effect": "off",
     },
   },
