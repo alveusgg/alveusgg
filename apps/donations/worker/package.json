@@ -21,8 +21,8 @@
     "globals": "^17.6.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.59.3",
-    "wrangler": "^4.92.0"
+    "typescript-eslint": "^8.59.4",
+    "wrangler": "^4.93.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
