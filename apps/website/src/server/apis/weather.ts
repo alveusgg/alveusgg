@@ -84,53 +84,88 @@ export async function getCurrentObservation<T extends boolean>(
         })
       : null;
   const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
+  let lock: string | undefined;
 
-  // Try to get cached weather data from Redis
-  if (redis) {
-    const raw = await redis.get(cache);
-    if (typeof raw === "string") {
-      try {
-        const data = await currentObservationsSchema(imperial).parseAsync(
-          JSON.parse(raw),
-        );
-        return data.observations[0] as CurrentObservation<T>;
-      } catch (err) {
-        console.error("Error parsing cached weather data", err);
-        await redis.del(cache);
+  const cached = async () => {
+    if (redis) {
+      const raw = await redis.get(cache);
+      if (typeof raw === "string") {
+        try {
+          const data = await currentObservationsSchema(imperial).parseAsync(
+            JSON.parse(raw),
+          );
+          return data.observations[0] as CurrentObservation<T>;
+        } catch (err) {
+          console.error("Error parsing cached weather data", err);
+          await redis.del(cache);
+        }
       }
+    }
+  };
+
+  if (redis) {
+    // Try to get cached weather data from Redis
+    const data = await cached();
+    if (data) return data;
+
+    // Attempt to acquire a lock from Redis if there isn't already a lock
+    lock = crypto.randomUUID();
+    const locked = await redis.set(`${cache}:lock`, lock, { nx: true, ex: 60 });
+
+    // If there is already lock in Redis, wait up to 30s for cached data
+    if (locked !== "OK") {
+      lock = undefined;
+      for (let attempt = 0; attempt < 300; attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        const data = await cached();
+        if (data) return data;
+      }
+      throw new Error(
+        "Failed to get weather data from cache after waiting for lock",
+      );
     }
   }
 
   // If we didn't get valid cached data, fetch from the API
-  const response = await fetch(
-    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
-    {
-      headers: {
-        "User-Agent": "alveus.gg",
+  try {
+    const response = await fetch(
+      `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
+      {
+        headers: {
+          "User-Agent": "alveus.gg",
+        },
       },
-    },
-  );
-
-  if (response.status !== 200) {
-    throw new Error(
-      `Error fetching weather data: ${response.status} ${response.statusText}`,
-      { cause: await response.text() },
     );
-  }
 
-  const json = await response.json();
-  const data = await currentObservationsSchema(imperial).parseAsync(json);
+    if (response.status !== 200) {
+      throw new Error(
+        `Error fetching weather data: ${response.status} ${response.statusText}`,
+        { cause: await response.text() },
+      );
+    }
 
-  // If we get valid data from the API, and have Redis available, cache it for 1 minute
-  if (redis) {
-    try {
-      await redis.set(cache, JSON.stringify(json), { ex: 60 });
-    } catch (err) {
-      console.error("Error caching weather data", err);
+    const json = await response.json();
+    const data = await currentObservationsSchema(imperial).parseAsync(json);
+
+    // If we get valid data from the API, and have Redis available, cache it for 1 minute
+    if (redis) {
+      try {
+        await redis.set(cache, JSON.stringify(json), { ex: 60 });
+      } catch (err) {
+        console.error("Error caching weather data", err);
+      }
+    }
+
+    return data.observations[0] as CurrentObservation<T>;
+  } finally {
+    if (redis && lock) {
+      // Release the lock in Redis if we acquired it
+      const owner = await redis.get(`${cache}:lock`);
+      if (owner === lock) {
+        await redis.del(`${cache}:lock`);
+      }
     }
   }
-
-  return data.observations[0] as CurrentObservation<T>;
 }
 
 const getFeelsLike = (
