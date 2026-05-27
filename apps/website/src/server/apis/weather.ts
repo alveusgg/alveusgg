@@ -1,10 +1,11 @@
-import { Redis } from "@upstash/redis";
 import { z } from "zod";
 
 import { env } from "@/env";
 
 import invariant from "@/utils/invariant";
 import { rounded } from "@/utils/math";
+
+import { RedisValueAlreadyExistsError, getRedisOptional } from "../utils/redis";
 
 // https://ibm.co/v2PWSCC
 // https://ibm.co/APICom
@@ -76,24 +77,17 @@ export async function getCurrentObservation<T extends boolean>(
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
   // If we have Redis available, try to cache weather data for 1 minute to reduce API calls
-  const redis =
-    env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
-      ? new Redis({
-          url: env.UPSTASH_REDIS_REST_URL,
-          token: env.UPSTASH_REDIS_REST_TOKEN,
-        })
-      : null;
+  const redis = getRedisOptional();
   const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
   let lock: string | undefined;
 
   const cached = async () => {
     if (redis) {
       const raw = await redis.get(cache);
-      if (typeof raw === "string") {
+      if (raw) {
         try {
-          const data = await currentObservationsSchema(imperial).parseAsync(
-            JSON.parse(raw),
-          );
+          const data =
+            await currentObservationsSchema(imperial).parseAsync(raw);
           return data.observations[0] as CurrentObservation<T>;
         } catch (err) {
           console.error("Error parsing cached weather data", err);
@@ -109,11 +103,15 @@ export async function getCurrentObservation<T extends boolean>(
     if (data) return data;
 
     // Attempt to acquire a lock from Redis if there isn't already a lock
-    lock = crypto.randomUUID();
-    const locked = await redis.set(`${cache}:lock`, lock, { nx: true, ex: 60 });
+    try {
+      lock = crypto.randomUUID();
+      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry: 60 });
+    } catch (err) {
+      if (!(err instanceof RedisValueAlreadyExistsError)) {
+        throw err;
+      }
 
-    // If there is already lock in Redis, wait up to 30s for cached data
-    if (locked !== "OK") {
+      // If there is already lock in Redis, wait up to 30s for cached data
       lock = undefined;
       for (let attempt = 0; attempt < 300; attempt += 1) {
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -150,7 +148,7 @@ export async function getCurrentObservation<T extends boolean>(
     // If we get valid data from the API, and have Redis available, cache it for 1 minute
     if (redis) {
       try {
-        await redis.set(cache, JSON.stringify(json), { ex: 60 });
+        await redis.set(cache, json, { expiry: 60 });
       } catch (err) {
         console.error("Error caching weather data", err);
       }
