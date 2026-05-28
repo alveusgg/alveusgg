@@ -105,7 +105,7 @@
   },
   "devDependencies": {
     "@eslint-react/eslint-plugin": "^5.8.6",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@next/eslint-plugin-next": "^16.2.6",
@@ -122,7 +122,7 @@
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "@types/serviceworker": "^0.0.197",
-    "eslint": "^9.39.2",
+    "eslint": "^10.4.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-better-tailwindcss": "^4.5.0",
