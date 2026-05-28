@@ -51,6 +51,21 @@ export default tseslint.config(
     name: "@eslint-react/recommended-typescript",
     ...eslintReact.configs["recommended-typescript"],
   },
+  // Turn off whole rule categories we don't enforce (naming conventions, DOM
+  // attribute checks, Web API effect-cleanup checks). These are opinions the
+  // previous eslint-plugin-react setup never imposed.
+  {
+    name: "@eslint-react/disable-naming-convention",
+    ...eslintReact.configs["disable-naming-convention"],
+  },
+  {
+    name: "@eslint-react/disable-dom",
+    ...eslintReact.configs["disable-dom"],
+  },
+  {
+    name: "@eslint-react/disable-web-api",
+    ...eslintReact.configs["disable-web-api"],
+  },
   {
     name: "react-hooks/recommended",
     ...hooksPlugin.configs.flat.recommended,
@@ -122,6 +137,20 @@ export default tseslint.config(
         },
       ],
       "react-hooks/set-state-in-effect": "off",
+      // Opinion rules from @eslint-react we don't enforce (the previous
+      // eslint-plugin-react setup didn't have equivalents).
+      "@eslint-react/set-state-in-effect": "off",
+      "@eslint-react/use-state": "off",
+      "@eslint-react/no-use-context": "off",
+      "@eslint-react/no-context-provider": "off",
+      "@eslint-react/no-children-map": "off",
+      "@eslint-react/no-clone-element": "off",
+      "@eslint-react/no-unnecessary-use-prefix": "off",
+      "@eslint-react/purity": "off",
+      // Index keys are only used here for static/fixed-length lists (diagrams,
+      // skeletons, placeholders) where the index is the stable identity; lists
+      // backed by real data already use proper keys.
+      "@eslint-react/no-array-index-key": "off",
     },
   },
   {

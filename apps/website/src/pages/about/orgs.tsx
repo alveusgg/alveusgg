@@ -453,7 +453,7 @@ const AboutOrgsPage: NextPage = () => {
       </div>
 
       {orgs.map((org, idx) => (
-        <Org {...org} key={org.key} idx={idx} />
+        <Org key={org.key} {...org} idx={idx} />
       ))}
 
       {/* Grow the last section to cover the page */}
