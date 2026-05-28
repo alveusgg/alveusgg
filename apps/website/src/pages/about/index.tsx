@@ -995,7 +995,7 @@ const AboutAlveusPage: NextPage = () => {
 
                 {"video" in item ? (
                   <Link
-                    href={videoHref}
+                    href={videoHref!}
                     external
                     onClick={(e) => {
                       e.preventDefault();
