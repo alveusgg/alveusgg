@@ -165,9 +165,13 @@ export async function getCurrentObservation<T extends boolean>(
     // Also, if we acquired the current lock, release it
     // Don't release on error, as to avoid thundering herd issues
     if (lock) {
-      const owner = await redis.get(`${cache}:lock`);
-      if (owner === lock) {
-        await redis.del(`${cache}:lock`);
+      try {
+        const owner = await redis.get(`${cache}:lock`);
+        if (owner === lock) {
+          await redis.del(`${cache}:lock`);
+        }
+      } catch (err) {
+        console.error("Error releasing weather cache lock", err);
       }
     }
   }
