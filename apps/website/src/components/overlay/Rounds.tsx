@@ -58,7 +58,6 @@ const transformChecks = (
 
       return {
         name: check.name,
-        description: `!check ${check.command}`,
         icon,
         status: statuses[check.command] ?? false,
       };
