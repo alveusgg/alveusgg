@@ -78,6 +78,7 @@ export async function getCurrentObservation<T extends boolean>(
 
   // If we have Redis available, try to cache weather data for 1 minute to reduce API calls
   const redis = getRedisOptional();
+  const timeout = 5;
   const expiry = 60;
   const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
   let lock: string | undefined;
@@ -112,10 +113,10 @@ export async function getCurrentObservation<T extends boolean>(
         throw err;
       }
 
-      // If there is already lock in Redis, wait up to 30s for cached data
+      // If there is already lock in Redis, wait up to the timeout for cached data
       lock = undefined;
-      for (let attempt = 0; attempt < 300; attempt += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+      for (let attempt = 0; attempt < timeout * 10; attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000 / 10));
         const data = await cached();
         if (data) return data;
       }
@@ -132,6 +133,7 @@ export async function getCurrentObservation<T extends boolean>(
       headers: {
         "User-Agent": "alveus.gg",
       },
+      signal: AbortSignal.timeout(timeout * 1000),
     },
   );
 
