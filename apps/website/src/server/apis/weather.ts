@@ -78,6 +78,7 @@ export async function getCurrentObservation<T extends boolean>(
 
   // If we have Redis available, try to cache weather data for 1 minute to reduce API calls
   const redis = getRedisOptional();
+  const expiry = 60;
   const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
   let lock: string | undefined;
 
@@ -105,7 +106,7 @@ export async function getCurrentObservation<T extends boolean>(
     // Attempt to acquire a lock from Redis if there isn't already a lock
     try {
       lock = crypto.randomUUID();
-      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry: 60 });
+      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry });
     } catch (err) {
       if (!(err instanceof RedisValueAlreadyExistsError)) {
         throw err;
@@ -125,45 +126,44 @@ export async function getCurrentObservation<T extends boolean>(
   }
 
   // If we didn't get valid cached data, fetch from the API
-  try {
-    const response = await fetch(
-      `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
-      {
-        headers: {
-          "User-Agent": "alveus.gg",
-        },
+  const response = await fetch(
+    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
+    {
+      headers: {
+        "User-Agent": "alveus.gg",
       },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error(
+      `Error fetching weather data: ${response.status} ${response.statusText}`,
+      { cause: await response.text() },
     );
+  }
 
-    if (response.status !== 200) {
-      throw new Error(
-        `Error fetching weather data: ${response.status} ${response.statusText}`,
-        { cause: await response.text() },
-      );
+  const json = await response.json();
+  const data = await currentObservationsSchema(imperial).parseAsync(json);
+
+  // If we get valid data from the API, and have Redis available, cache it
+  if (redis) {
+    try {
+      await redis.set(cache, json, { expiry });
+    } catch (err) {
+      console.error("Error caching weather data", err);
     }
 
-    const json = await response.json();
-    const data = await currentObservationsSchema(imperial).parseAsync(json);
-
-    // If we get valid data from the API, and have Redis available, cache it for 1 minute
-    if (redis) {
-      try {
-        await redis.set(cache, json, { expiry: 60 });
-      } catch (err) {
-        console.error("Error caching weather data", err);
-      }
-    }
-
-    return data.observations[0] as CurrentObservation<T>;
-  } finally {
-    if (redis && lock) {
-      // Release the lock in Redis if we acquired it
+    // Also, if we acquired the current lock, release it
+    // Don't release on error, as to avoid thundering herd issues
+    if (lock) {
       const owner = await redis.get(`${cache}:lock`);
       if (owner === lock) {
         await redis.del(`${cache}:lock`);
       }
     }
   }
+
+  return data.observations[0] as CurrentObservation<T>;
 }
 
 const getFeelsLike = (
