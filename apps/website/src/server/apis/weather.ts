@@ -96,7 +96,11 @@ export async function getCurrentObservation<T extends boolean>(
           return data.observations[0] as CurrentObservation<T>;
         } catch (err) {
           console.error("Error parsing cached weather data", err);
-          await redis.del(cache);
+          try {
+            await redis.del(cache);
+          } catch (delErr) {
+            console.error("Error deleting cached weather data", delErr);
+          }
         }
       }
     }
