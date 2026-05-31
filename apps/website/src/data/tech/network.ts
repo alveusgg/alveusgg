@@ -316,6 +316,40 @@ const data: RootNetworkItem[] = [
                   },
                 ],
               },
+              {
+                type: "accessPoint",
+                name: "HQ Radio",
+                model: "airMAX Lite AP",
+                url: "https://store.ui.com/products/lap-120",
+                connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "accessPoint",
+                    name: "Cabin Radio",
+                    model: "airMAX NanoStation 5AC",
+                    url: "https://store.ui.com/products/ns-5ac",
+                    connection: { type: "wifi" },
+                    links: [
+                      {
+                        type: "switch",
+                        name: "Roof",
+                        model: "Ubiquiti USW-Flex-2.5G-8-PoE",
+                        url: "https://store.ui.com/products/usw-flex-2-5g-8-poe",
+                        connection: { type: "ethernet", location: "wall" },
+                        links: [
+                          {
+                            type: "camera",
+                            name: "Nature",
+                            model: "AXIS Q6358-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6358-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
             ],
           },
           {
@@ -634,8 +668,8 @@ const data: RootNetworkItem[] = [
                   {
                     type: "switch",
                     name: "Marmoset",
-                    model: "Ubiquiti USW-24-PoE",
-                    url: "https://store.ui.com/products/usw-24-poe",
+                    model: "Ubiquiti USW-Pro-24-PoE",
+                    url: "https://store.ui.com/products/usw-pro-24-poe",
                     connection: { type: "ethernet", location: "buried" },
                     links: [
                       {
