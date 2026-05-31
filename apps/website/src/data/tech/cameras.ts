@@ -26,6 +26,7 @@ import marmin from "../presets/marmin";
 import marmmulti from "../presets/marmmulti";
 import marmout from "../presets/marmout";
 import marty from "../presets/marty";
+import nature from "../presets/nature";
 import noodle from "../presets/noodle";
 import pasture from "../presets/pasture";
 import pasturefeeder from "../presets/pasturefeeder";
@@ -77,6 +78,7 @@ const cameras = {
   marmout,
   marmmulti,
   marty,
+  nature,
   noodle,
   littles,
   littlesmulti,
