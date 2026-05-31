@@ -29,6 +29,7 @@ import leftplatform from "@/assets/presets/fox/leftplatform.png";
 import leftplatformb from "@/assets/presets/fox/leftplatformb.png";
 import leftplatformtl from "@/assets/presets/fox/leftplatformtl.png";
 import middleplatform from "@/assets/presets/fox/middleplatform.png";
+import middleplatformb from "@/assets/presets/fox/middleplatformb.png";
 import nearleft from "@/assets/presets/fox/nearleft.png";
 import right from "@/assets/presets/fox/right.png";
 import rightcorner from "@/assets/presets/fox/rightcorner.png";
@@ -228,6 +229,12 @@ const foxPresets: Record<string, Preset> = {
     image: middleplatform,
     position: { pan: -68.97, tilt: -2.24, zoom: 1433 },
     // modified: 2026-04-18T13:48:56.060Z
+  },
+  middleplatformb: {
+    description: "middleplatformb",
+    image: middleplatformb,
+    position: { pan: -68.46, tilt: -3.44, zoom: 3637 },
+    // modified: 2026-05-29T19:39:45.025Z
   },
   nearleft: {
     description: "nearleft",
