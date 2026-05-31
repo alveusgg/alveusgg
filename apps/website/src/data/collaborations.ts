@@ -72,6 +72,7 @@ import squeex from "@/assets/collaborations/squeex.png";
 import stableRonaldo from "@/assets/collaborations/stable-ronaldo.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
+import tedNivison from "@/assets/collaborations/ted-nivison.png";
 import thePrimeagen from "@/assets/collaborations/the-primeagen.png";
 import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import trihex from "@/assets/collaborations/trihex.png";
@@ -102,10 +103,25 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Ted Nivison",
+      link: "https://www.youtube.com/@TedNivison",
+      date: new Date("2026-05-25"),
+      videoId: "FymAIdEYbQY",
+      vodId: "BbI8fAy9BH0",
+      creators: [
+        {
+          name: "Ted Nivison",
+          image: tedNivison,
+          popularity: 2_370_000, // YouTube subscribers, 2026-05-29
+        },
+      ],
+    },
+    {
       name: "Jacksepticeye",
       link: "https://www.youtube.com/@jacksepticeye",
       date: new Date("2026-05-19"),
-      videoId: "qberatnwFhU",
+      videoId: "b6apUuJHU2I",
+      vodId: "qberatnwFhU",
       creators: [
         {
           name: "Jacksepticeye",
