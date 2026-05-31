@@ -189,7 +189,7 @@ const PresetList = ({
           <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
             {sorted.filter(filter ?? (() => true)).map(([name, preset]) => (
               <PresetCard
-                key={name}
+                key={`${camera}-${name}`}
                 title={name}
                 image={preset.image}
                 command={{
