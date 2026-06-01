@@ -49,8 +49,15 @@ export const departments = {
       )
     </>
   ),
-  production: "Production",
-  administration: "Administration",
+  operations: (
+    <>
+      Operations (
+      <abbr title="Operations" className="cursor-help">
+        OPS
+      </abbr>
+      )
+    </>
+  ),
 } as const satisfies Record<string, ReactNode>;
 
 type Department = keyof typeof departments;
@@ -313,7 +320,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-02",
-    department: "production",
+    department: "operations",
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -325,7 +332,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-04",
-    department: "production",
+    department: "operations",
   },
   jacob: {
     image: [jacobIckesImage, jacobIckesFunImage],
@@ -347,7 +354,7 @@ const staff: Record<string, Staff> = {
       </p>
     ),
     joined: "2026-01",
-    department: "administration",
+    department: "operations",
   },
 };
 
