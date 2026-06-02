@@ -712,9 +712,35 @@ const data: RootNetworkItem[] = [
                       {
                         type: "camera",
                         name: "Emu",
+                        model: "AXIS Q6358-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6358-le",
+                        connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Emu Cover",
                         model: "AXIS P5676-LE (PTZ)",
                         url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "switch",
+                        name: "Emu",
+                        model: "Ubiquiti USW-Lite-8-PoE",
+                        url: "https://store.ui.com/products/usw-lite-8-poe",
+                        connection: { type: "ethernet", location: "buried" },
+                        links: [
+                          {
+                            type: "camera",
+                            name: "Emu Pond",
+                            model: "AXIS M2036-LE (Fixed)",
+                            url: "https://www.axis.com/products/axis-m2036-le",
+                            connection: {
+                              type: "ethernet",
+                              location: "buried",
+                            },
+                          },
+                        ],
                       },
                     ],
                   },
