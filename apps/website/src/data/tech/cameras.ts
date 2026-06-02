@@ -10,6 +10,7 @@ import crowin from "../presets/crowin";
 import crowincrowout from "../presets/crowincrowout";
 import crowout from "../presets/crowout";
 import crowoutcrowin from "../presets/crowoutcrowin";
+import emu from "../presets/emu";
 import fox from "../presets/fox";
 import foxcovered from "../presets/foxcovered";
 import foxindoor from "../presets/foxindoor";
@@ -65,6 +66,7 @@ const cameras = {
   crowout,
   crowincrowout,
   crowoutcrowin,
+  emu,
   fox,
   foxcovered,
   foxindoor,
