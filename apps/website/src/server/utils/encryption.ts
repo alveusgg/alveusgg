@@ -122,8 +122,8 @@ export async function decrypt(
       cipherText,
     );
     return decoder.decode(decryptedBuffer);
-  } catch (e) {
-    console.error(e);
-    throw new Error("Could not decrypt"); // Re-throw with a more generic error message to avoid leaking information
+  } catch (cause) {
+    console.error(cause);
+    throw new Error("Could not decrypt", { cause }); // Re-throw with a more generic error message to avoid leaking information
   }
 }

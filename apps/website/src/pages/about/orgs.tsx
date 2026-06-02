@@ -237,12 +237,12 @@ const orgs: Organization[] = [
 ];
 
 const Org = ({
-  key,
+  orgKey,
   title,
   description,
   videos,
   idx,
-}: Organization & { idx: number }) => {
+}: Omit<Organization, "key"> & { orgKey: string; idx: number }) => {
   const [lightboxOpen, setLightboxOpen] = useState<string>();
 
   const lightboxItems = useMemo(
@@ -325,7 +325,7 @@ const Org = ({
           <div
             className={classes("mb-6", videos.length > 1 && "col-span-full")}
           >
-            <Heading id={key} level={2} link className="text-balance">
+            <Heading id={orgKey} level={2} link className="text-balance">
               {title}
             </Heading>
 
@@ -452,8 +452,8 @@ const AboutOrgsPage: NextPage = () => {
         </Section>
       </div>
 
-      {orgs.map((org, idx) => (
-        <Org {...org} key={org.key} idx={idx} />
+      {orgs.map(({ key, ...org }, idx) => (
+        <Org key={key} orgKey={key} {...org} idx={idx} />
       ))}
 
       {/* Grow the last section to cover the page */}

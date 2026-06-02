@@ -32,8 +32,8 @@ export async function decryptRecord<
     try {
       const decrypted = await decrypt(encryptedValue, key);
       result[fieldName] = decrypted as (typeof result)[typeof fieldName];
-    } catch (_) {
-      throw new Error("Could not decrypt record"); // Re-throw with a more generic error message to avoid leaking information
+    } catch (cause) {
+      throw new Error("Could not decrypt record", { cause }); // Re-throw with a more generic error message to avoid leaking information
     }
   }
 

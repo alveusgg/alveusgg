@@ -950,84 +950,88 @@ const AboutAlveusPage: NextPage = () => {
         </Heading>
 
         <div className="mt-8 grid w-full grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          {Object.entries(news).map(([key, item]) => (
-            <div key={key} className="flex flex-col">
-              <div className="order-last">
-                <Heading level={3}>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      external
-                      custom
-                      className="flex items-baseline justify-between gap-1 transition-colors hover:text-alveus-green-800 hover:underline"
-                    >
-                      {item.title}
-                      <IconExternal className="relative -bottom-0.5" />
-                    </Link>
-                  ) : (
-                    item.title
-                  )}
-                </Heading>
+          {Object.entries(news).map(([key, item]) => {
+            const videoHref =
+              "video" in item
+                ? item.video.type === "stream"
+                  ? getStreamUrlIframe(item.video, {
+                      title: `Alveus Sanctuary: ${item.title}`,
+                      link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
+                    })
+                  : `https://www.youtube.com/watch?v=${encodeURIComponent(
+                      item.video.id,
+                    )}`
+                : undefined;
 
-                {item.quote ? (
-                  <blockquote className="relative pl-10 text-xl text-balance text-alveus-green italic">
-                    <div className="absolute inset-y-0 left-0 h-full w-1 rounded-xs bg-alveus-green" />
-                    <IconQuote className="absolute top-0 left-3 size-6 opacity-50" />
-                    {item.quote}
-                  </blockquote>
+            return (
+              <div key={key} className="flex flex-col">
+                <div className="order-last">
+                  <Heading level={3}>
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        external
+                        custom
+                        className="flex items-baseline justify-between gap-1 transition-colors hover:text-alveus-green-800 hover:underline"
+                      >
+                        {item.title}
+                        <IconExternal className="relative -bottom-0.5" />
+                      </Link>
+                    ) : (
+                      item.title
+                    )}
+                  </Heading>
+
+                  {item.quote ? (
+                    <blockquote className="relative pl-10 text-xl text-balance text-alveus-green italic">
+                      <div className="absolute inset-y-0 left-0 h-full w-1 rounded-xs bg-alveus-green" />
+                      <IconQuote className="absolute top-0 left-3 size-6 opacity-50" />
+                      {item.quote}
+                    </blockquote>
+                  ) : (
+                    <div className="h-1 w-32 max-w-full rounded-xs bg-alveus-green" />
+                  )}
+                </div>
+
+                {"video" in item ? (
+                  <Link
+                    href={videoHref!}
+                    external
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setNewsLightboxOpen(key);
+                    }}
+                    className="group/trigger w-full"
+                    custom
+                  >
+                    {item.video.type === "stream" && (
+                      <StreamPreview src={item.video} alt={item.title} />
+                    )}
+                    {item.video.type === "youtube" && (
+                      <YouTubePreview
+                        videoId={item.video.id}
+                        alt={item.title}
+                      />
+                    )}
+                  </Link>
                 ) : (
-                  <div className="h-1 w-32 max-w-full rounded-xs bg-alveus-green" />
+                  <Link
+                    href={item.href}
+                    external
+                    className="group/trigger flex aspect-video w-full items-center justify-center rounded-2xl bg-linear-to-br from-alveus-green-900/90 to-alveus-green-700/90 p-4 shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                    custom
+                  >
+                    <Image
+                      src={item.logo}
+                      alt=""
+                      width={480}
+                      className="pointer-events-none h-12 w-auto object-contain drop-shadow-md transition group-hover/trigger:scale-102 group-hover/trigger:drop-shadow-xl"
+                    />
+                  </Link>
                 )}
               </div>
-
-              {"video" in item ? (
-                <Link
-                  href={(() => {
-                    switch (item.video.type) {
-                      case "stream":
-                        return getStreamUrlIframe(item.video, {
-                          title: `Alveus Sanctuary: ${item.title}`,
-                          link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
-                        });
-
-                      case "youtube":
-                        return `https://www.youtube.com/watch?v=${encodeURIComponent(
-                          item.video.id,
-                        )}`;
-                    }
-                  })()}
-                  external
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setNewsLightboxOpen(key);
-                  }}
-                  className="group/trigger w-full"
-                  custom
-                >
-                  {item.video.type === "stream" && (
-                    <StreamPreview src={item.video} alt={item.title} />
-                  )}
-                  {item.video.type === "youtube" && (
-                    <YouTubePreview videoId={item.video.id} alt={item.title} />
-                  )}
-                </Link>
-              ) : (
-                <Link
-                  href={item.href}
-                  external
-                  className="group/trigger flex aspect-video w-full items-center justify-center rounded-2xl bg-linear-to-br from-alveus-green-900/90 to-alveus-green-700/90 p-4 shadow-xl transition hover:scale-102 hover:shadow-2xl"
-                  custom
-                >
-                  <Image
-                    src={item.logo}
-                    alt=""
-                    width={480}
-                    className="pointer-events-none h-12 w-auto object-contain drop-shadow-md transition group-hover/trigger:scale-102 group-hover/trigger:drop-shadow-xl"
-                  />
-                </Link>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <Lightbox
