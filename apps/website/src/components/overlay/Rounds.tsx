@@ -123,11 +123,7 @@ const useRoundsState = (channels: string[], users?: string[]) => {
           if (command === "!rounds") {
             if (keys[0] === "off" || keys[0] === "stop") {
               // reset checkmarks when rounds stop
-              setStatuses((prev) =>
-                typeSafeObjectFromEntries(
-                  typeSafeObjectEntries(prev).map(([key]) => [key, false]),
-                ),
-              );
+              setStatuses({});
               setEnabled(false);
             } else {
               setEnabled(true);
