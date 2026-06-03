@@ -1,0 +1,22 @@
+{
+  "id": "patchy",
+  "slug": "ambassadors/patchy",
+  "meta": {
+    "title": "Patchy | Ambassadors",
+    "description": "Patchy was rehomed to Alveus from a local breeder after it was discovered that she had a genetic defect and was missing an eye."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "patchy",
+        "name": "Patchy",
+        "alternate": [],
+        "story": "Patchy was rehomed to Alveus from a local breeder after it was discovered that she had a genetic defect and was missing an eye.",
+        "mission": "She is an ambassador for how the pet trade and habitat loss has affected hers and many other reptile species worldwide.",
+        "fact": "Breeding ball pythons for specific colors and patterns is very popular within the pet trade. However, some of the sought-after traits are linked to genes that can also cause major health issues, including exophthalmos (where the eyes protrude from the head excessively), reduced fertility, wobble syndrome (where the head wobbles from side to side), or even death sometimes.\n\nThese genetic associations highlight the importance of ethical breeding within the pet trade to avoid unnecessary health issues, as can be seen with Patchy and his missing eye."
+      }
+    }
+  ]
+}

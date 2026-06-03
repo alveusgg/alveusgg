@@ -1,0 +1,24 @@
+{
+  "id": "bb",
+  "slug": "ambassadors/bb",
+  "meta": {
+    "title": "BB | Ambassadors",
+    "description": "Our spanish orange isopods were born in captivity and ethically sourced."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "bb",
+        "name": "BB",
+        "alternate": [
+          "Bonus Bug"
+        ],
+        "story": "Our spanish orange isopods were born in captivity and ethically sourced.",
+        "mission": "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
+        "fact": "Like other detritivores, the ecological role of BB and all Spanish orange isopods in the wild is to break down organic matter like leaf litter. As the isopods are decomposing nutrient-rich leaf litter, they produce feces that accelerate the decomposition of nutrient-poor leaf litter, further relieving the ecosystem of excessive organic matter buildup."
+      }
+    }
+  ]
+}

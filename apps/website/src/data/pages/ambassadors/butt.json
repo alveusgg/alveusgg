@@ -1,0 +1,24 @@
+{
+  "id": "butt",
+  "slug": "ambassadors/butt",
+  "meta": {
+    "title": "Butt | Ambassadors",
+    "description": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "butt",
+        "name": "Butt",
+        "alternate": [
+          "Mrs. Butt"
+        ],
+        "story": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas.",
+        "mission": "They are ambassadors for the conservation of plants and reducing the poaching of wild plants.",
+        "fact": "Butt, and all Mexican Butterworts, passively trap and digest insects on their leaves. They produce a sticky substance called mucilage that coats the leaves to initially trap the insect. Enzymes are then released to begin the digestion process, and nutrient-rich fluids are absorbed through small holes in the leaf's surface."
+      }
+    }
+  ]
+}

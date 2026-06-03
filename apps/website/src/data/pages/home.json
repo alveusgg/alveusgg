@@ -1,0 +1,188 @@
+{
+  "id": "home",
+  "slug": "home",
+  "meta": {
+    "title": "Alveus Sanctuary",
+    "description": "Educating the World from the Web"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "data": {
+        "heading": "Educating the World from the Web",
+        "mission": "Alveus is a virtual education center following the journeys of our non-releasable animal ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.",
+        "primaryCta": {
+          "label": "Meet the Ambassadors",
+          "href": "/ambassadors"
+        },
+        "twitchChannel": "alveussanctuary",
+        "institute": {
+          "heading": "Introducing the Alveus Research & Recovery Institute",
+          "body": "We're taking the Alveus approach to the wild; creating conservation breeding programs to help save species from extinction, while pushing forward technology and public engagement in conservation.",
+          "ctas": [
+            {
+              "label": "Learn More About the Institute",
+              "href": "/institute"
+            },
+            {
+              "label": "Donate to Support the Institute",
+              "href": "/institute/pixels/two"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "what-is-alveus",
+      "type": "whatIsAlveus",
+      "data": {
+        "heading": "What is Alveus?",
+        "founder": "Founded by Maya Higa",
+        "paragraphs": [
+          "Alveus is a nonprofit organization founded by Maya Higa that functions as a wildlife sanctuary and as a virtual education center facility to provide permanent homes to non-releasable animal ambassadors.",
+          "Alveus runs a 24/7 live stream on Twitch, where viewers can watch the animal ambassadors, get to know them and gain an appreciation for their species. The sanctuary also hosts content collaborations where creators can visit and participate in education programs, sharing the ambassadors with their own audiences and combining platforms to maximize the impact for spreading conservation messages."
+        ],
+        "cta": {
+          "label": "Learn More About Alveus Sanctuary",
+          "href": "/about"
+        }
+      }
+    },
+    {
+      "id": "ambassadors",
+      "type": "ambassadorsCarousel",
+      "data": {
+        "heading": "Ambassadors:",
+        "seeAllHref": "/ambassadors",
+        "featured": [
+          {
+            "key": "georgie",
+            "title": "Georgie!",
+            "description": "He is here to teach all about threats to his species and to amphibians worldwide."
+          },
+          {
+            "key": "stompy",
+            "title": "Stompy!",
+            "description": "He is an ambassador for how the exotic meat trade & use of animal products in cosmetics has affected his species and many others."
+          },
+          {
+            "key": "moomin",
+            "title": "Moomin is Movin' In!",
+            "description": "He is an ambassador for how the fur trade has affected his species and many others."
+          }
+        ],
+        "support": {
+          "heading": "Do you want to support these animals?",
+          "body": "Donations help Alveus carry on its mission to inspire online audiences to engage in conservation efforts while providing high-quality animal care to these ambassadors.",
+          "cta": {
+            "label": "Donate Now",
+            "href": "/donate"
+          }
+        }
+      }
+    },
+    {
+      "id": "animal-quest",
+      "type": "animalQuestTeaser",
+      "data": {
+        "heading": "Animal Quest",
+        "body": "Hosted by Maya, Animal Quest is an educational video series that introduces you to the ambassadors at Alveus. Each episode focuses on a different ambassador, teaching you about their species and their importance to our environment.",
+        "cta": {
+          "label": "View All Episodes",
+          "href": "/animal-quest"
+        },
+        "latestLabel": "Latest Episode"
+      }
+    },
+    {
+      "id": "merch",
+      "type": "merch",
+      "data": {
+        "heading": "Alveus Merch",
+        "intro": "Grab yourself some high-quality merch and support Alveus in your home or when you're out and about!",
+        "merchCta": {
+          "label": "Explore Merch Collection",
+          "href": "/merch"
+        },
+        "plushiesHeading": "+ Plushies",
+        "plushiesIntro": "Or, have your very own ambassador in your home with our soft and cuddly plushies!",
+        "plushiesCta": {
+          "label": "Buy Ambassador Plushies",
+          "href": "/plushies"
+        },
+        "proceeds": "All proceeds go directly into Alveus and the support + care of our educational ambassadors!"
+      }
+    },
+    {
+      "id": "recent-videos",
+      "type": "recentVideos",
+      "data": {
+        "heading": "Recent Videos",
+        "videos": [
+          {
+            "id": "o7IynC7lFFg",
+            "title": "Winnie + Donkeys Vet Visit Recap",
+            "published": "2026-06-01T15:00:37+00:00",
+            "author": {
+              "name": "Alveus Highlights",
+              "uri": "https://www.youtube.com/@AlveusSanctuaryHighlights"
+            }
+          },
+          {
+            "id": "Alxq5nYFWxQ",
+            "title": "Intro To Vet Care with Kayla and Connor!",
+            "published": "2026-06-01T14:00:19+00:00",
+            "author": {
+              "name": "Alveus Highlights",
+              "uri": "https://www.youtube.com/@AlveusSanctuaryHighlights"
+            }
+          },
+          {
+            "id": "UmyFQM4v-F4",
+            "title": "LEAKING PLANS FOR OUR NEW INSTITUTE",
+            "published": "2026-06-01T13:00:01+00:00",
+            "author": {
+              "name": "Alveus Highlights",
+              "uri": "https://www.youtube.com/@AlveusSanctuaryHighlights"
+            }
+          },
+          {
+            "id": "Wy55RyazDR8",
+            "title": "How Alveus Videos Are Made",
+            "published": "2026-05-28T21:46:34+00:00",
+            "author": {
+              "name": "Alveus Highlights",
+              "uri": "https://www.youtube.com/@AlveusSanctuaryHighlights"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "how-to-help",
+      "type": "howToHelp",
+      "data": {
+        "heading": "How to Help",
+        "items": [
+          {
+            "icon": "dollar",
+            "title": "Donate to Alveus directly",
+            "href": "/donate"
+          },
+          {
+            "icon": "amazon",
+            "title": "Gift via our Amazon Wishlist",
+            "href": "/wishlist",
+            "external": true
+          },
+          {
+            "icon": "box",
+            "title": "Send items to our PO Box",
+            "href": "/po-box"
+          }
+        ]
+      }
+    }
+  ]
+}

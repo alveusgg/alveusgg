@@ -1,5 +1,6 @@
-import { type NextPage } from "next";
+import { type InferGetStaticPropsType, type NextPage } from "next";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { type ComponentProps, useMemo } from "react";
 
@@ -36,6 +37,13 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+
+import { env } from "@/env";
+import { loadSiloPage } from "@/olon/lib/silo-source";
+
+// OlonJS render is dynamically imported so its code + static config-JSON imports stay OUT
+// of the flag-off bundle — the chunk loads only when NEXT_PUBLIC_OLON_PILOT renders it.
+const OlonPage = dynamic(() => import("@/olon/OlonPage").then((m) => m.OlonPage));
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -306,4 +314,37 @@ const AmbassadorsPage: NextPage = () => {
   );
 };
 
-export default AmbassadorsPage;
+// Flag-on only: read the ambassadors-index silo at runtime so editing ambassadors.json is
+// reflected with no rebuild (same move as home/profiles). Flag-off returns empty props.
+export const getStaticProps = async () => {
+  const olonPage = env.NEXT_PUBLIC_OLON_PILOT
+    ? await loadSiloPage("ambassadors")
+    : null;
+  return { props: { ...(olonPage && { olonPage }) } };
+};
+
+// Flag-switch (NEXT_PUBLIC_OLON_PILOT): OlonJS render when on, current page when off.
+function AmbassadorsRoute(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) {
+  if (env.NEXT_PUBLIC_OLON_PILOT && props.olonPage)
+    return (
+      <>
+        <Meta
+          title={props.olonPage.meta.title}
+          description={props.olonPage.meta.description}
+        >
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="Alveus Sanctuary Ambassadors"
+            href="/feeds/ambassadors.xml"
+          />
+        </Meta>
+        <OlonPage page={props.olonPage} />
+      </>
+    );
+  return <AmbassadorsPage />;
+}
+
+export default AmbassadorsRoute;

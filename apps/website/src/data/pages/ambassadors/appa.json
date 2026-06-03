@@ -1,0 +1,22 @@
+{
+  "id": "appa",
+  "slug": "ambassadors/appa",
+  "meta": {
+    "title": "Appa | Ambassadors",
+    "description": "Appa was rescued by Alveus after being surrendered to a veterinarian due to neglect."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "appa",
+        "name": "Appa",
+        "alternate": [],
+        "story": "Appa was rescued by Alveus after being surrendered to a veterinarian due to neglect.",
+        "mission": "He is an ambassador for the exotic pet trade and how it affects primate species worldwide.",
+        "fact": "Appa is a \"common\" or white-tufted marmoset, which is a New World monkey originating from Brazil. The first part of his scientific name, \"Callithrix\", means beautiful hair. The second part, \"jacchus\", is after the God Bacchus, who is the god of agriculture, wine, and fertility. Marmosets spread seeds from fruits and nuts as they poop everywhere, helping to populate the vegetation in their area, making it a fitting name and a good reason to not have them as pets."
+      }
+    }
+  ]
+}

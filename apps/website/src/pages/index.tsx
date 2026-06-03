@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import { type ReactNode, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -10,7 +10,6 @@ import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 import { channels as youTubeChannels } from "@/data/youtube";
 
-import { formatDateTime } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
@@ -20,16 +19,15 @@ import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
-import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
+import RecentVideos from "@/components/content/RecentVideos";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
-import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -49,6 +47,14 @@ import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
 import instituteWolvesHeroImage from "@/assets/institute/hero/wolves.png";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
+
+import type { PageConfig } from "@olonjs/core/runtime";
+import { env } from "@/env";
+import { loadSiloPage } from "@/olon/lib/silo-source";
+
+// OlonJS render is dynamically imported so its code + static config-JSON imports stay OUT
+// of the flag-off bundle — the chunk loads only when NEXT_PUBLIC_OLON_PILOT renders it.
+const OlonHome = dynamic(() => import("@/olon/home"));
 
 const slides = [
   {
@@ -148,9 +154,17 @@ export const getStaticProps = async () => {
       .slice(0, 4),
   );
 
+  // Flag-on only: read the home silo at runtime so editing home.json is reflected with
+  // no rebuild. Gated + conditionally spread so the flag-off props stay byte-identical
+  // (no `page` key in __NEXT_DATA__, and no silo read on the classic path).
+  const page: PageConfig | null = env.NEXT_PUBLIC_OLON_PILOT
+    ? await loadSiloPage("home")
+    : null;
+
   return {
     props: {
       videos: latestVideos,
+      ...(page && { page }),
     },
     revalidate: 1800, // revalidate after 30 minutes
   };
@@ -159,25 +173,6 @@ export const getStaticProps = async () => {
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
 }) => {
-  const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
-
-  const latestLightboxItems = useMemo(
-    () =>
-      videos.reduce<Record<string, ReactNode>>(
-        (acc, video) => ({
-          ...acc,
-          [video.id]: (
-            <YouTubeEmbed
-              videoId={video.id}
-              caption={`${video.title}: ${formatDateTime(video.published, { style: "long" })}`}
-            />
-          ),
-        }),
-        {},
-      ),
-    [videos],
-  );
-
   return (
     <>
       <Meta>
@@ -480,66 +475,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </Section>
       </div>
 
-      {videos.length > 0 && (
-        <Section dark>
-          <Heading level={2} id="recent-videos" link>
-            Recent Videos
-          </Heading>
-
-          <div className="mt-8 flex w-full flex-wrap justify-around gap-y-4">
-            {videos.map((video) => (
-              <div
-                key={video.id}
-                className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
-              >
-                <Heading
-                  level={2}
-                  className="order-3 my-0 px-1 text-center text-2xl"
-                >
-                  {video.title}
-                </Heading>
-
-                <Link
-                  href={`https://www.youtube.com/watch?v=${video.id}`}
-                  external
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setLatestLightboxOpen(video.id);
-                  }}
-                  className="group/trigger order-1 w-full max-w-2xl"
-                  custom
-                >
-                  <YouTubePreview
-                    videoId={video.id}
-                    alt={video.title}
-                    className="aspect-video h-auto w-full"
-                  />
-                </Link>
-
-                <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
-                  <p className="text-sm/tight text-alveus-green-200">
-                    {formatDateTime(video.published, { style: "long" })}
-                  </p>
-                  <Link
-                    href={video.author.uri}
-                    external
-                    custom
-                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs/tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
-                  >
-                    {video.author.name}
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Lightbox
-            open={latestLightboxOpen}
-            onClose={() => setLatestLightboxOpen(undefined)}
-            items={latestLightboxItems}
-          />
-        </Section>
-      )}
+      <RecentVideos heading="Recent Videos" videos={videos} />
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
@@ -578,4 +514,11 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 };
 
-export default Home;
+// Flag-switch (NEXT_PUBLIC_OLON_PILOT): OlonJS render when on, current home when off.
+function IndexPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (env.NEXT_PUBLIC_OLON_PILOT && props.page)
+    return <OlonHome page={props.page} videos={props.videos} />;
+  return <Home {...props} />;
+}
+
+export default IndexPage;

@@ -113,6 +113,17 @@ export const env = createEnv({
     CF_STREAM_HOST: z.string().optional(),
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
+    // OlonJS live-editing — runtime silo read + revalidation config. All optional:
+    // unset = local FS read (next dev) + revalidate endpoint disabled. On the Olon
+    // (flag-on) deploy these locate the PUBLIC Alveus repo silo (no token: public repo).
+    // The on/off switch is the existing NEXT_PUBLIC_OLON_PILOT, NOT these vars.
+    OLON_GIT_OWNER: z.string().optional(),
+    OLON_GIT_REPO: z.string().optional(),
+    // Fallback ref when reading from git; the revalidate call pins reads to a SHA.
+    // On deploy Olon sets this to the demo branch.
+    OLON_GIT_REF: z.string().optional().default("main"),
+    OLON_REVALIDATE_SECRET: z.string().optional(),
+    OLON_LICENSE_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -130,6 +141,7 @@ export const env = createEnv({
       .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
+    NEXT_PUBLIC_OLON_PILOT: z.stringbool().optional().default(false),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
@@ -221,6 +233,11 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+    OLON_GIT_OWNER: process.env.OLON_GIT_OWNER,
+    OLON_GIT_REPO: process.env.OLON_GIT_REPO,
+    OLON_GIT_REF: process.env.OLON_GIT_REF,
+    OLON_REVALIDATE_SECRET: process.env.OLON_REVALIDATE_SECRET,
+    OLON_LICENSE_KEY: process.env.OLON_LICENSE_KEY,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
@@ -232,6 +249,7 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_OLON_PILOT: process.env.NEXT_PUBLIC_OLON_PILOT,
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
       process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:

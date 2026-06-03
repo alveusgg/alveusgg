@@ -1,0 +1,22 @@
+{
+  "id": "awa",
+  "slug": "ambassadors/awa",
+  "meta": {
+    "title": "Awa | Ambassadors",
+    "description": "Awa was rescued from a facility that has received numerous USDA citations based on violations of the Animal Welfare Act."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "awa",
+        "name": "Awa",
+        "alternate": [],
+        "story": "Awa was rescued from a facility that has received numerous USDA citations based on violations of the Animal Welfare Act.",
+        "mission": "She is an ambassador for educating people about responsible pet ownership, the historic persecution of wolves by humans, and the importance of wolves as keystone species in their ecosystems.",
+        "fact": null
+      }
+    }
+  ]
+}

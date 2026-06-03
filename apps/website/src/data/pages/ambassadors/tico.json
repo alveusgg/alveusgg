@@ -1,0 +1,22 @@
+{
+  "id": "tico",
+  "slug": "ambassadors/tico",
+  "meta": {
+    "title": "Tico | Ambassadors",
+    "description": "Tico was rehomed to Alveus as the previous sanctuary's owner was retiring."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "tico",
+        "name": "Tico",
+        "alternate": [],
+        "story": "Tico was rehomed to Alveus as the previous sanctuary's owner was retiring.",
+        "mission": "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
+        "fact": "At dawn and dusk, one of Tico's behaviors includes very loud calls that can exceed 100 dB, an intensity that can cause hearing loss due to prolonged exposure.\n\nIn the wild, blue and gold macaws vocalize at dawn and dusk to communicate with other members of their flock as a \"check-in\" measure. In captivity, these vocalizations can become bothersome and harmful to humans because of their intensity."
+      }
+    }
+  ]
+}

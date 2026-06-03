@@ -1,0 +1,22 @@
+{
+  "id": "marty",
+  "slug": "ambassadors/marty",
+  "meta": {
+    "title": "Marty | Ambassadors",
+    "description": "Our zebra isopods were born in captivity and ethically sourced."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "marty",
+        "name": "Marty",
+        "alternate": [],
+        "story": "Our zebra isopods were born in captivity and ethically sourced.",
+        "mission": "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
+        "fact": "Zebra isopods are crustaceans named for their black and white stripes that resemble a zebra. These characteristics are unique to Marty's species, but other isopods also have their own distinct and diverse colors, patterns, and sizes. Some can grow to be 16 inches long, while others may be purple, have spots, or even be translucent."
+      }
+    }
+  ]
+}

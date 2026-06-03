@@ -1,0 +1,22 @@
+{
+  "id": "snork",
+  "slug": "ambassadors/snork",
+  "meta": {
+    "title": "Snork | Ambassadors",
+    "description": "Snork was part of an educational program at a zoo and was rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "snork",
+        "name": "Snork",
+        "alternate": [],
+        "story": "Snork was part of an educational program at a zoo and was rehomed to Alveus.",
+        "mission": "She is an ambassador for the exploitation of wildlife in the fur trade.",
+        "fact": "At 20,000 hairs per square centimeter, chinchillas have the densest fur of all living terrestrial mammals! Because of this density, their fur is incredibly soft but makes them susceptible to overheating easily in temperatures over 80°F (26°C)."
+      }
+    }
+  ]
+}

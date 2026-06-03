@@ -1,0 +1,22 @@
+{
+  "id": "orion",
+  "slug": "ambassadors/orion",
+  "meta": {
+    "title": "Orion | Ambassadors",
+    "description": "Orion was originally owned by Maya before becoming an ambassador at Alveus. Orion sadly passed away in June 2022 after an unfortunate self-inflicted accident in his enclosure."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "orion",
+        "name": "Orion",
+        "alternate": [],
+        "story": "Orion was originally owned by Maya before becoming an ambassador at Alveus.\n\nOrion sadly passed away in June 2022 after an unfortunate self-inflicted accident in his enclosure.",
+        "mission": "He is an ambassador for showing how pest control affects wildlife globally and how to conserve major keystone species.",
+        "fact": null
+      }
+    }
+  ]
+}

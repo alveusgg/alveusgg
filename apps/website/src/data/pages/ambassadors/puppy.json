@@ -1,0 +1,22 @@
+{
+  "id": "puppy",
+  "slug": "ambassadors/puppy",
+  "meta": {
+    "title": "Puppy | Ambassadors",
+    "description": "Our emperor scorpions were born in captivity and ethically sourced."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "puppy",
+        "name": "Puppy",
+        "alternate": [],
+        "story": "Our emperor scorpions were born in captivity and ethically sourced.",
+        "mission": "He is an ambassador for the importance of invertebrates and the misconceptions they face.",
+        "fact": "While scorpions are often perceived as scary or dangerous, only about 1% of species (25 of roughly 2500 known species) are dangerous to humans. Most scorpions' stings (including the emperor scorpion like Puppy) are no worse than a bee sting."
+      }
+    }
+  ]
+}

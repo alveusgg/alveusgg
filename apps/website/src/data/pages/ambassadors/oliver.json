@@ -1,0 +1,22 @@
+{
+  "id": "oliver",
+  "slug": "ambassadors/oliver",
+  "meta": {
+    "title": "Oliver | Ambassadors",
+    "description": "Oliver was put in the reject/return cage at a local feed store."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "oliver",
+        "name": "Oliver",
+        "alternate": [],
+        "story": "Oliver was put in the reject/return cage at a local feed store.",
+        "mission": "He is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": null
+      }
+    }
+  ]
+}

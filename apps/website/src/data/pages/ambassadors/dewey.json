@@ -1,0 +1,22 @@
+{
+  "id": "dewey",
+  "slug": "ambassadors/dewey",
+  "meta": {
+    "title": "Dewey | Ambassadors",
+    "description": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "dewey",
+        "name": "Dewey",
+        "alternate": [],
+        "story": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas.",
+        "mission": "They are ambassadors for the conservation of plants and reducing the poaching of wild plants.",
+        "fact": null
+      }
+    }
+  ]
+}

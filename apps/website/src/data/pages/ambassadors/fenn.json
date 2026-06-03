@@ -1,0 +1,22 @@
+{
+  "id": "fenn",
+  "slug": "ambassadors/fenn",
+  "meta": {
+    "title": "Fenn | Ambassadors",
+    "description": "Fenn was confiscated from the illegal pet trade by California Department of Fish and Wildlife. He was then rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "fenn",
+        "name": "Fenn",
+        "alternate": [],
+        "story": "Fenn was confiscated from the illegal pet trade by California Department of Fish and Wildlife. He was then rehomed to Alveus.",
+        "mission": "He is an ambassador for the exploitation of wildlife in the pet trade and the fur trade.",
+        "fact": "While Fenn has dark grey fur, he is an American Red Fox. His different coat color is due to selective breeding orchestrated by humans for both the illegal pet trade and the fur trade. Selective breeding results in a higher chance of genetic defects and a smaller pool of genetic diversity, and the conditions animals bred for the fur trade are subjected to are often inhumane."
+      }
+    }
+  ]
+}

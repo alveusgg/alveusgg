@@ -1,0 +1,22 @@
+{
+  "id": "akela",
+  "slug": "ambassadors/akela",
+  "meta": {
+    "title": "Akela | Ambassadors",
+    "description": "Akela was originally purchased for breeding by a private owner. For several years, he was left to live entirely on his own before being rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "akela",
+        "name": "Akela",
+        "alternate": [],
+        "story": "Akela was originally purchased for breeding by a private owner. For several years, he was left to live entirely on his own before being rehomed to Alveus.",
+        "mission": "He is an ambassador for educating people about responsible pet ownership, the historic persecution of wolves by humans, and the importance of wolves as keystone species in their ecosystems.",
+        "fact": null
+      }
+    }
+  ]
+}

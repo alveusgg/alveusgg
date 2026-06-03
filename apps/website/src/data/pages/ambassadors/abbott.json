@@ -1,0 +1,22 @@
+{
+  "id": "abbott",
+  "slug": "ambassadors/abbott",
+  "meta": {
+    "title": "Abbott | Ambassadors",
+    "description": "Abbott was brought into a wildlife rehab center as a baby. He imprinted during the rehab process and then was deemed non-releasable."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "abbott",
+        "name": "Abbott",
+        "alternate": [],
+        "story": "Abbott was brought into a wildlife rehab center as a baby. He imprinted during the rehab process and then was deemed non-releasable.",
+        "mission": "He is an ambassador for educating people on the misconceptions that wildlife face as well as human-wildlife conflict.",
+        "fact": "American crows are considered to be occasional tool users in the wild, a trait that was once thought to be unique to humans, and in captivity, they are capable of learning how to use a variety of tools.\n\nOne of the skills Abbott has learned through training sessions involves retrieving and stacking rings onto a stationary post."
+      }
+    }
+  ]
+}

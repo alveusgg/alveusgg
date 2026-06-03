@@ -1,0 +1,22 @@
+{
+  "id": "nugget",
+  "slug": "ambassadors/nugget",
+  "meta": {
+    "title": "Nugget | Ambassadors",
+    "description": "Nugget was rehomed to Alveus because she was bullied by hens in her previous flock."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "nugget",
+        "name": "Nugget",
+        "alternate": [],
+        "story": "Nugget was rehomed to Alveus because she was bullied by hens in her previous flock.",
+        "mission": "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": null
+      }
+    }
+  ]
+}

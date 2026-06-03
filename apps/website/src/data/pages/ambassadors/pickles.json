@@ -1,0 +1,22 @@
+{
+  "id": "pickles",
+  "slug": "ambassadors/pickles",
+  "meta": {
+    "title": "Pickles | Ambassadors",
+    "description": "Our vinegaroon was born in captivity and ethically sourced. Sadly, Pickles passed away in February 2023 because she was unable to make it through her first molt."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "pickles",
+        "name": "Pickles",
+        "alternate": [],
+        "story": "Our vinegaroon was born in captivity and ethically sourced.\n\nSadly, Pickles passed away in February 2023 because she was unable to make it through her first molt.",
+        "mission": "She is an ambassador for the importance of invertebrates and the misconceptions they face.",
+        "fact": null
+      }
+    }
+  ]
+}

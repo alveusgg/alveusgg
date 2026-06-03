@@ -1,0 +1,22 @@
+{
+  "id": "henrietta",
+  "slug": "ambassadors/henrietta",
+  "meta": {
+    "title": "Henrietta | Ambassadors",
+    "description": "Henrietta was rehomed from a local farm. Henrietta was retired from being an ambassador in March 2023."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "henrietta",
+        "name": "Henrietta",
+        "alternate": [],
+        "story": "Henrietta was rehomed from a local farm.\n\nHenrietta was retired from being an ambassador in March 2023.",
+        "mission": "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": null
+      }
+    }
+  ]
+}

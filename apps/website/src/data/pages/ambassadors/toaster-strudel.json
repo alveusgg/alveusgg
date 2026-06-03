@@ -1,0 +1,22 @@
+{
+  "id": "toasterStrudel",
+  "slug": "ambassadors/toaster-strudel",
+  "meta": {
+    "title": "Toaster Strudel | Ambassadors",
+    "description": "Toaster Strudel was part of an educational program at a zoo and was rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "toasterStrudel",
+        "name": "Toaster Strudel",
+        "alternate": [],
+        "story": "Toaster Strudel was part of an educational program at a zoo and was rehomed to Alveus.",
+        "mission": "They are an ambassador for how human development and invasive species can affect natural habitats and native species.",
+        "fact": "Blue-tongued skinks are aptly named after their blue tongue, which is used in a type of anti-predator behavior called deimatic display. In a species like Toast, deimatic display involves rapid full-tongued movements during an encounter with a predator in hopes that the bright-colored and fast-moving tongue will deter the predator."
+      }
+    }
+  ]
+}

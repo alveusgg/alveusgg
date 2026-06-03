@@ -1,0 +1,22 @@
+{
+  "id": "stinky",
+  "slug": "ambassadors/stinky",
+  "meta": {
+    "title": "Stinky | Ambassadors",
+    "description": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "stinky",
+        "name": "Stinky",
+        "alternate": [],
+        "story": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas.",
+        "mission": "They are ambassadors for the conservation of plants and reducing the poaching of wild plants.",
+        "fact": "Despite Amorphophallus titanum smelling like rotting corpses when in bloom (giving it the nickname corpse flower), which attracts many flies and other insects, the flower is not actually carnivorous. It collects nutrients through photosynthesis, like most plants, and stores them in its tuber, while the smell produced is used to attract pollinators to the plant while it is blooming."
+      }
+    }
+  ]
+}

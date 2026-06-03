@@ -1,0 +1,22 @@
+{
+  "id": "reed",
+  "slug": "ambassadors/reed",
+  "meta": {
+    "title": "Reed | Ambassadors",
+    "description": "Reed was orphaned as a wild kit and was rescued to be raised at a zoo to be an educational ambassador. He was then rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "reed",
+        "name": "Reed",
+        "alternate": [],
+        "story": "Reed was orphaned as a wild kit and was rescued to be raised at a zoo to be an educational ambassador. He was then rehomed to Alveus.",
+        "mission": "He is an ambassador for the exploitation of wildlife in the pet trade and the fur trade.",
+        "fact": "Foxes like Reed may look cute, but make for terrible pets. Foxes have a distinct musky smell, often described as similar to a skunk's, and their natural behaviors include frequently urinating and defecating to mark their territory. Foxes also enjoy digging as their dens are underground and can easily dig escape routes."
+      }
+    }
+  ]
+}

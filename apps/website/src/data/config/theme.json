@@ -1,0 +1,8 @@
+{
+  "name": "alveus",
+  "tokens": {
+    "colors": { "background": "#ffffff", "foreground": "#111111" },
+    "typography": { "fontFamily": { "primary": "system-ui, sans-serif" } },
+    "borderRadius": { "md": "0.5rem" }
+  }
+}

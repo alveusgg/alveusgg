@@ -1,0 +1,680 @@
+{
+  "id": "ambassadors",
+  "slug": "ambassadors",
+  "meta": {
+    "title": "Ambassadors",
+    "description": "Each and every ambassador at Alveus plays an important role as a representative of their species, sharing unique stories about conservation and consumer choice."
+  },
+  "sections": [
+    {
+      "id": "ambassadors-index",
+      "type": "ambassadorsIndex",
+      "data": {
+        "heading": "Alveus Ambassadors",
+        "intro": "Each and every ambassador at Alveus plays an important role as a representative of their species, sharing unique stories about conservation and consumer choice. Our non-releasable animal ambassadors are not pets — they help educate our audience, inspire conservation efforts, and foster a deeper connection with their species.",
+        "items": [
+          {
+            "key": "georgie",
+            "name": "Georgie",
+            "species": "African Bullfrog",
+            "classification": {
+              "slug": "reptiles-and-amphibians",
+              "name": "Reptiles & Amphibians",
+              "order": 2
+            },
+            "enclosure": {
+              "slug": "reptiles",
+              "name": "Reptile Room"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "pushPop",
+            "name": "Push Pop",
+            "species": "Sulcata Tortoise",
+            "classification": {
+              "slug": "reptiles-and-amphibians",
+              "name": "Reptiles & Amphibians",
+              "order": 3
+            },
+            "enclosure": {
+              "slug": "tortoise",
+              "name": "Tortoise Enclosure"
+            },
+            "arrival": "2024-02"
+          },
+          {
+            "key": "stompy",
+            "name": "Stompy",
+            "species": "Emu",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "emus",
+              "name": "Emu Grove"
+            },
+            "arrival": "2021-06-01"
+          },
+          {
+            "key": "nolie",
+            "name": "Nolie",
+            "species": "Emu",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "emus",
+              "name": "Emu Grove"
+            },
+            "arrival": "2025-09-12"
+          },
+          {
+            "key": "tico",
+            "name": "Tico",
+            "species": "Blue and Gold Macaw",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "parrots",
+              "name": "Parrot Aviary"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "miley",
+            "name": "Miley",
+            "species": "Catalina Macaw",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "parrots",
+              "name": "Parrot Aviary"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "mia",
+            "name": "Mia",
+            "species": "African Grey",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "parrots",
+              "name": "Parrot Aviary"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "tipsy",
+            "name": "Tipsy",
+            "species": "African Grey",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "parrots",
+              "name": "Parrot Aviary"
+            },
+            "arrival": "2026-03-10"
+          },
+          {
+            "key": "abbott",
+            "name": "Abbott",
+            "species": "American Crow",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "crows",
+              "name": "Crow Aviary"
+            },
+            "arrival": "2021-08"
+          },
+          {
+            "key": "coconut",
+            "name": "Coconut",
+            "species": "American Crow",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "crows",
+              "name": "Crow Aviary"
+            },
+            "arrival": "2021-08"
+          },
+          {
+            "key": "oliver",
+            "name": "Oliver",
+            "species": "Olive Egger Chicken",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "chickens",
+              "name": "Chicken Coop"
+            },
+            "arrival": "2021-06"
+          },
+          {
+            "key": "nugget",
+            "name": "Nugget",
+            "species": "Ameraucana Chicken",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "chickens",
+              "name": "Chicken Coop"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "henrique",
+            "name": "Henrique",
+            "species": "Half Dark Brahma, Half Saipan Chicken",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "chickens",
+              "name": "Chicken Coop"
+            },
+            "arrival": "2022-08"
+          },
+          {
+            "key": "betty",
+            "name": "Betty",
+            "species": "Cochin Chicken",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "chickens",
+              "name": "Chicken Coop"
+            },
+            "arrival": "2024-09"
+          },
+          {
+            "key": "polly",
+            "name": "Polly",
+            "species": "Bantam Silkie Chicken",
+            "classification": {
+              "slug": "birds",
+              "name": "Birds",
+              "order": 1
+            },
+            "enclosure": {
+              "slug": "nutrition",
+              "name": "Nutrition House"
+            },
+            "arrival": "2023-11"
+          },
+          {
+            "key": "winnieTheMoo",
+            "name": "Winnie (The Moo)",
+            "species": "Red Angus Beef Cow",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "pasture",
+              "name": "Pasture"
+            },
+            "arrival": "2022-04"
+          },
+          {
+            "key": "serrano",
+            "name": "Serrano",
+            "species": "Domestic Donkey",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "pasture",
+              "name": "Pasture"
+            },
+            "arrival": "2021-05"
+          },
+          {
+            "key": "jalapeno",
+            "name": "Jalapeño",
+            "species": "Domestic Donkey",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "pasture",
+              "name": "Pasture"
+            },
+            "arrival": "2021-05"
+          },
+          {
+            "key": "fenn",
+            "name": "Fenn",
+            "species": "American Red Fox",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "foxes",
+              "name": "Fox Enclosure"
+            },
+            "arrival": "2022-11"
+          },
+          {
+            "key": "reed",
+            "name": "Reed",
+            "species": "American Red Fox",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "foxes",
+              "name": "Fox Enclosure"
+            },
+            "arrival": "2022-11"
+          },
+          {
+            "key": "awa",
+            "name": "Awa",
+            "species": "Wolf Hybrid",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "wolves",
+              "name": "Wolf Enclosure"
+            },
+            "arrival": "2024-05-04"
+          },
+          {
+            "key": "akela",
+            "name": "Akela",
+            "species": "Wolf Hybrid",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "wolves",
+              "name": "Wolf Enclosure"
+            },
+            "arrival": "2025-01-27"
+          },
+          {
+            "key": "snork",
+            "name": "Snork",
+            "species": "Chinchilla",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "nutrition",
+              "name": "Nutrition House"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "moomin",
+            "name": "Moomin",
+            "species": "Chinchilla",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "nutrition",
+              "name": "Nutrition House"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "momo",
+            "name": "Momo",
+            "species": "Black Tufted Marmoset",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "marmosets",
+              "name": "Marmoset Enclosure"
+            },
+            "arrival": "2022-12"
+          },
+          {
+            "key": "appa",
+            "name": "Appa",
+            "species": "Common Marmoset",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "marmosets",
+              "name": "Marmoset Enclosure"
+            },
+            "arrival": "2022-12"
+          },
+          {
+            "key": "noodle",
+            "name": "Noodle",
+            "species": "Coastal Carpet Python",
+            "classification": {
+              "slug": "reptiles-and-amphibians",
+              "name": "Reptiles & Amphibians",
+              "order": 3
+            },
+            "enclosure": {
+              "slug": "reptiles",
+              "name": "Reptile Room"
+            },
+            "arrival": "2021-04"
+          },
+          {
+            "key": "patchy",
+            "name": "Patchy",
+            "species": "Ball Python",
+            "classification": {
+              "slug": "reptiles-and-amphibians",
+              "name": "Reptiles & Amphibians",
+              "order": 3
+            },
+            "enclosure": {
+              "slug": "reptiles",
+              "name": "Reptile Room"
+            },
+            "arrival": "2021-10"
+          },
+          {
+            "key": "hankMrMctrain",
+            "name": "Hank Mr. McTrain",
+            "species": "Smokey Ghost Millipede",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 4
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-01"
+          },
+          {
+            "key": "barbaraBakedBean",
+            "name": "Barbara / Baked Bean",
+            "species": "Madagascar Hissing Cockroaches",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 5
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-01"
+          },
+          {
+            "key": "marty",
+            "name": "Marty",
+            "species": "Zebra Isopods",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 6
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-01"
+          },
+          {
+            "key": "bb",
+            "name": "BB",
+            "species": "Spanish Orange Isopods",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 6
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-01"
+          },
+          {
+            "key": "tortellini",
+            "name": "Tortellini",
+            "species": "Emperor Scorpion",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 7
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-11"
+          },
+          {
+            "key": "puppy",
+            "name": "Puppy",
+            "species": "Emperor Scorpion",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 7
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2022-11"
+          },
+          {
+            "key": "eva",
+            "name": "Eva",
+            "species": "Mexican Red Rump Tarantula",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 7
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2025-06-16"
+          },
+          {
+            "key": "kiwi",
+            "name": "Kiwi",
+            "species": "Honduran Curly-Hair Tarantula",
+            "classification": {
+              "slug": "invertebrates",
+              "name": "Invertebrates",
+              "order": 7
+            },
+            "enclosure": {
+              "slug": "critters",
+              "name": "Critter Cave"
+            },
+            "arrival": "2025-06-16"
+          },
+          {
+            "key": "toasterStrudel",
+            "name": "Toaster Strudel",
+            "species": "Blue-tongued Skink",
+            "classification": {
+              "slug": "reptiles-and-amphibians",
+              "name": "Reptiles & Amphibians",
+              "order": 3
+            },
+            "enclosure": {
+              "slug": "reptiles",
+              "name": "Reptile Room"
+            },
+            "arrival": "2022-11"
+          },
+          {
+            "key": "kasi",
+            "name": "Kasi",
+            "species": "Serval",
+            "classification": {
+              "slug": "mammals",
+              "name": "Mammals",
+              "order": 0
+            },
+            "enclosure": {
+              "slug": "serval",
+              "name": "Serval Enclosure"
+            },
+            "arrival": "2026-04-01"
+          },
+          {
+            "key": "pitchjars",
+            "name": "PitchJars",
+            "species": "Veitch's Pitcher-Plant",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          },
+          {
+            "key": "dewey",
+            "name": "Dewey",
+            "species": "Fork-Leaved Sundew",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          },
+          {
+            "key": "butt",
+            "name": "Butt",
+            "species": "Mexican Butterwort",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          },
+          {
+            "key": "stinky",
+            "name": "Stinky",
+            "species": "Corpse Flower",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          },
+          {
+            "key": "martyMcfly",
+            "name": "Marty McFly",
+            "species": "Venus Flytrap",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          },
+          {
+            "key": "drew",
+            "name": "Drew",
+            "species": "Flask-Shaped Pitcher-Plant",
+            "classification": {
+              "slug": "plants",
+              "name": "Plants",
+              "order": 8
+            },
+            "enclosure": {
+              "slug": "greenhouse",
+              "name": "Greenhouse"
+            },
+            "arrival": "2025-03-04"
+          }
+        ]
+      }
+    }
+  ]
+}

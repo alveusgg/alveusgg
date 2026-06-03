@@ -1,0 +1,22 @@
+{
+  "id": "georgie",
+  "slug": "ambassadors/georgie",
+  "meta": {
+    "title": "Georgie | Ambassadors",
+    "description": "Georgie was part of an educational program at a zoo and was rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "georgie",
+        "name": "Georgie",
+        "alternate": [],
+        "story": "Georgie was part of an educational program at a zoo and was rehomed to Alveus.",
+        "mission": "He is an ambassador for the wildlife trade and how chytrid fungus is affecting amphibian species worldwide.",
+        "fact": "African Bullfrogs, like many other amphibians, have semipermeable skin that allows them to absorb water and oxygen. This adaptation is super important to allow them to drink and breathe while they're underwater or buried in the mud.\n\nUnfortunately, this also means that they can absorb any harmful chemicals in their environment, which is why it is so important to keep pollution and litter out of our waterways!"
+      }
+    }
+  ]
+}

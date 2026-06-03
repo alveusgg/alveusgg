@@ -1,0 +1,22 @@
+{
+  "id": "betty",
+  "slug": "ambassadors/betty",
+  "meta": {
+    "title": "Betty | Ambassadors",
+    "description": "Betty was rehomed from a local farm."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "betty",
+        "name": "Betty",
+        "alternate": [],
+        "story": "Betty was rehomed from a local farm.",
+        "mission": "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": null
+      }
+    }
+  ]
+}

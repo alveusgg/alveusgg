@@ -1,0 +1,22 @@
+{
+  "id": "nillaWafer",
+  "slug": "ambassadors/nilla-wafer",
+  "meta": {
+    "title": "Nilla Wafer | Ambassadors",
+    "description": "Nilla Wafer was bred as a feeder rat for snakes, but she will now live out her full life at Alveus. Nilla passed away peacefully in December 2024 from old age."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "nillaWafer",
+        "name": "Nilla Wafer",
+        "alternate": [],
+        "story": "Nilla Wafer was bred as a feeder rat for snakes, but she will now live out her full life at Alveus.\n\nNilla passed away peacefully in December 2024 from old age.",
+        "mission": "She is an ambassador for how rodenticide use and outdoor cats affect all levels of wildlife.",
+        "fact": null
+      }
+    }
+  ]
+}

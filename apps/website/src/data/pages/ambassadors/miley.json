@@ -1,0 +1,24 @@
+{
+  "id": "miley",
+  "slug": "ambassadors/miley",
+  "meta": {
+    "title": "Miley | Ambassadors",
+    "description": "Miley was rehomed to Alveus as the previous sanctuary's owner was retiring."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "miley",
+        "name": "Miley",
+        "alternate": [
+          "Miele"
+        ],
+        "story": "Miley was rehomed to Alveus as the previous sanctuary's owner was retiring.",
+        "mission": "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
+        "fact": "In captivity, Catalina macaws like Miley require a lot of mental stimulation in the form of environmental enrichment. Without access to enrichment opportunities, these birds can become frustrated and destructive to their surroundings, including chewing through solid wood, which is yet another reason why they shouldn't be kept as pets."
+      }
+    }
+  ]
+}

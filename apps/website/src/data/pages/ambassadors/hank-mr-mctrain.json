@@ -1,0 +1,25 @@
+{
+  "id": "hankMrMctrain",
+  "slug": "ambassadors/hank-mr-mctrain",
+  "meta": {
+    "title": "Hank Mr. McTrain | Ambassadors",
+    "description": "Our smokey ghost millipede was born in captivity and ethically sourced."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "hankMrMctrain",
+        "name": "Hank Mr. McTrain",
+        "alternate": [
+          "Hank The Tank Choo Choo Mr. McTrain",
+          "Mr. Conductor Man"
+        ],
+        "story": "Our smokey ghost millipede was born in captivity and ethically sourced.",
+        "mission": "He is an ambassador for the importance of invertebrates and the misconceptions they face.",
+        "fact": "Hank, a smokey ghost millipede, is a detritivore who spends a lot of time burrowed in the ground. Having existed on our planet for over 400 million years, the structure of millipede burrows can be differentiated from other burrowing organisms to help identify sediment composition and moisture content in the fossil record, providing us with a better understanding of soil health."
+      }
+    }
+  ]
+}

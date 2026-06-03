@@ -11,6 +11,8 @@ peerDependencyRules:
     "next-superjson-plugin>next": "^16.0"
     "react-to-text>react": "^19.0"
     "react-to-text>react-dom": "^19.0"
+    # OlonJS core declares zod ^3 as a peer; render-only usage is zod-4 compatible (render path doesn't touch zod internals)
+    "@olonjs/core>zod": "^4.0.0"
 
 # FIXME: https://github.com/prettier/prettier/issues/17565
 publicHoistPattern:

@@ -1,0 +1,24 @@
+{
+  "id": "pitchjars",
+  "slug": "ambassadors/pitchjars",
+  "meta": {
+    "title": "PitchJars | Ambassadors",
+    "description": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "pitchjars",
+        "name": "PitchJars",
+        "alternate": [
+          "Pitchy"
+        ],
+        "story": "Our plants were acquired from Carnivero, a carnivorous and rare plant nursery in Austin, Texas.",
+        "mission": "They are ambassadors for the conservation of plants and reducing the poaching of wild plants.",
+        "fact": "The Veitch's Pitcher-Plant, like PitchJars, belongs to a genus of carnivorous plants called Nepenthes. Because of their variability in pitcher color, pattern, and structure, pitcher plants are often poached out of the wild from their very small and unique natural habitats to become part of the carnivorous plant trade. Currently, 25 species of Nepenthes are considered endangered."
+      }
+    }
+  ]
+}

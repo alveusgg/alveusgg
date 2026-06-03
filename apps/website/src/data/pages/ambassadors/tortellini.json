@@ -1,0 +1,22 @@
+{
+  "id": "tortellini",
+  "slug": "ambassadors/tortellini",
+  "meta": {
+    "title": "Tortellini | Ambassadors",
+    "description": "Our emperor scorpions were born in captivity and ethically sourced."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "tortellini",
+        "name": "Tortellini",
+        "alternate": [],
+        "story": "Our emperor scorpions were born in captivity and ethically sourced.",
+        "mission": "He is an ambassador for the importance of invertebrates and the misconceptions they face.",
+        "fact": "Scorpions, like Tortellini, glow brightly under UV light due to a UV-reactive layer in their exoskeletons. Why they glow continues to remain a mystery to science, and there are multiple potential theories. Some recent studies suggest it plays a role in a scorpion's light detection to allow them to detect when they are under shelter, for example."
+      }
+    }
+  ]
+}

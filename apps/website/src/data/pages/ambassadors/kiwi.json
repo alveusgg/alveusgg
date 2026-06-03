@@ -1,0 +1,22 @@
+{
+  "id": "kiwi",
+  "slug": "ambassadors/kiwi",
+  "meta": {
+    "title": "Kiwi | Ambassadors",
+    "description": "Our tarantulas were captive bred by an entomologist before being donated to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "kiwi",
+        "name": "Kiwi",
+        "alternate": [],
+        "story": "Our tarantulas were captive bred by an entomologist before being donated to Alveus.",
+        "mission": "She is here to help people overcome their misconceptions towards spiders and to teach people about how important spiders are in our ecosystems.",
+        "fact": null
+      }
+    }
+  ]
+}

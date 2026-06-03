@@ -1,0 +1,24 @@
+{
+  "id": "pushPop",
+  "slug": "ambassadors/push-pop",
+  "meta": {
+    "title": "Push Pop | Ambassadors",
+    "description": "Push Pop was bought as a pet and was rehomed when the family moved states. She was then transferred to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "pushPop",
+        "name": "Push Pop",
+        "alternate": [
+          "Poppy"
+        ],
+        "story": "Push Pop was bought as a pet and was rehomed when the family moved states. She was then transferred to Alveus.",
+        "mission": "She is an ambassador for teaching the world about the exotic pet trade, habitat loss due to agricultural expansion for cattle, and the gradual effects of climate change on our natural world.",
+        "fact": null
+      }
+    }
+  ]
+}

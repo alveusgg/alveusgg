@@ -1,0 +1,22 @@
+{
+  "id": "momo",
+  "slug": "ambassadors/momo",
+  "meta": {
+    "title": "Momo | Ambassadors",
+    "description": "Momo was rescued by Alveus after being surrendered to a veterinarian due to neglect."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "momo",
+        "name": "Momo",
+        "alternate": [],
+        "story": "Momo was rescued by Alveus after being surrendered to a veterinarian due to neglect.",
+        "mission": "He is an ambassador for the exotic pet trade and how it affects primate species worldwide.",
+        "fact": null
+      }
+    }
+  ]
+}

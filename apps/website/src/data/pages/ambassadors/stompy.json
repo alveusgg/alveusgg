@@ -1,0 +1,22 @@
+{
+  "id": "stompy",
+  "slug": "ambassadors/stompy",
+  "meta": {
+    "title": "Stompy | Ambassadors",
+    "description": "Stompy was hatched in captivity and was hand raised by Maya to be the first Alveus ambassador."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "stompy",
+        "name": "Stompy",
+        "alternate": [],
+        "story": "Stompy was hatched in captivity and was hand raised by Maya to be the first Alveus ambassador.",
+        "mission": "He is an ambassador for teaching about the exotic meat trade, traditional medicine, and the use of animal products in cosmetics.",
+        "fact": "Emus are terrestrial birds that walk on two legs and have three toes, characteristics that also belong to an extinct group of dinosaurs called theropods, which include the Tyrannosaurus rex and Velociraptor.\n\nStompy's long legs and specialized musculature allow him to run efficiently while also maintaining high speeds of around 30 mph."
+      }
+    }
+  ]
+}

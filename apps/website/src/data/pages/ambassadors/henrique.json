@@ -1,0 +1,22 @@
+{
+  "id": "henrique",
+  "slug": "ambassadors/henrique",
+  "meta": {
+    "title": "Henrique | Ambassadors",
+    "description": "Henrique was rehomed from a local farm."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "henrique",
+        "name": "Henrique",
+        "alternate": [],
+        "story": "Henrique was rehomed from a local farm.",
+        "mission": "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": "The closest wild relative of domestic chickens, like Henrique, are red junglefowl. While our commercial layers have been selectively bred to lay over 300 eggs per year, their wild counterparts only lay around 12 eggs per year.\n\nThe difference in egg yield between the two species highlights the impact that selective breeding can have on the process of domestication."
+      }
+    }
+  ]
+}

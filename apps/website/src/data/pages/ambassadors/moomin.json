@@ -1,0 +1,22 @@
+{
+  "id": "moomin",
+  "slug": "ambassadors/moomin",
+  "meta": {
+    "title": "Moomin | Ambassadors",
+    "description": "Moomin was rehomed from a local pet owner."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "moomin",
+        "name": "Moomin",
+        "alternate": [],
+        "story": "Moomin was rehomed from a local pet owner.",
+        "mission": "He is an ambassador for the exploitation of wildlife in the fur trade.",
+        "fact": "Because of their very dense and soft fur, chinchillas have often been used in the fur trade. It can take upwards of 100 chinchilla pelts to make a single fur coat. Chinchillas are currently endangered because they have been poached for their pelts, as well as due to habitat loss."
+      }
+    }
+  ]
+}

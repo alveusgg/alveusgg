@@ -1,0 +1,22 @@
+{
+  "id": "serrano",
+  "slug": "ambassadors/serrano",
+  "meta": {
+    "title": "Serrano | Ambassadors",
+    "description": "Rehomed to Alveus from a local equine rescue."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "serrano",
+        "name": "Serrano",
+        "alternate": [],
+        "story": "Rehomed to Alveus from a local equine rescue.",
+        "mission": "Serrano is an ambassador for the wildlife trade and use of wild animals in traditional medicine.",
+        "fact": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "winnieTheMoo",
+  "slug": "ambassadors/winnie-the-moo",
+  "meta": {
+    "title": "Winnie (The Moo) | Ambassadors",
+    "description": "Winnie came from a cattle operation in Oklahoma."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "winnieTheMoo",
+        "name": "Winnie (The Moo)",
+        "alternate": [],
+        "story": "Winnie came from a cattle operation in Oklahoma.",
+        "mission": "She is an ambassador for the beef industry and how people can use their consumer choice to impact the environment in a positive way.",
+        "fact": "Before arriving at Alveus, Winnie was part of a cattle operation as a Red Angus Beef Cow. The massive demand for beef around the world has led to vast deforestation and land clearing to provide space for cattle farming, resulting in habitat loss in critical ecosystems like the Amazon Rainforest, as well as the methane generated contributing to global warming."
+      }
+    }
+  ]
+}

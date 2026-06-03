@@ -1,0 +1,22 @@
+{
+  "id": "barbaraBakedBean",
+  "slug": "ambassadors/barbara-baked-bean",
+  "meta": {
+    "title": "Barbara / Baked Bean | Ambassadors",
+    "description": "Our cockroach colony was started with 7 roaches that were part of an educational colony at a school in Pennsylvania."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "barbaraBakedBean",
+        "name": "Barbara / Baked Bean",
+        "alternate": [],
+        "story": "Our cockroach colony was started with 7 roaches that were part of an educational colony at a school in Pennsylvania.",
+        "mission": "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
+        "fact": null
+      }
+    }
+  ]
+}

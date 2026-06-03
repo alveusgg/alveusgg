@@ -1,0 +1,22 @@
+{
+  "id": "polly",
+  "slug": "ambassadors/polly",
+  "meta": {
+    "title": "Polly | Ambassadors",
+    "description": "Polly was rehomed from another owner."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "polly",
+        "name": "Polly",
+        "alternate": [],
+        "story": "Polly was rehomed from another owner.",
+        "mission": "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
+        "fact": null
+      }
+    }
+  ]
+}

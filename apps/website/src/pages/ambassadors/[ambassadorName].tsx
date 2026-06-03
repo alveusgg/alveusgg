@@ -1,4 +1,5 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Fragment, type ReactNode, useMemo, useState } from "react";
 
@@ -41,6 +42,14 @@ import Meta from "@/components/content/Meta";
 import PartialDateDiff from "@/components/content/PartialDateDiff";
 import Section from "@/components/content/Section";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+
+import type { PageConfig } from "@olonjs/core/runtime";
+import { env } from "@/env";
+import { loadSiloPage } from "@/olon/lib/silo-source";
+
+// OlonJS render is dynamically imported so its code + static config-JSON imports stay OUT
+// of the flag-off bundle — the chunk loads only when NEXT_PUBLIC_OLON_PILOT renders it.
+const OlonPage = dynamic(() => import("@/olon/OlonPage").then((m) => m.OlonPage));
 
 type Stat = {
   title: string;
@@ -183,11 +192,18 @@ type AmbassadorPageProps = {
   animalQuest?: AnimalQuestWithRelation[];
 };
 
-export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
-  context,
-) => {
+type PageProps = { olonPage: PageConfig } | AmbassadorPageProps;
+
+export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
+
+  if (env.NEXT_PUBLIC_OLON_PILOT) {
+    // Runtime silo read (FS local / public git on deploy) so editing a profile JSON is
+    // reflected with no rebuild. Replaces the prior inline readFileSync.
+    const olonPage = await loadSiloPage(`ambassadors/${ambassadorName}`);
+    return { props: { olonPage } };
+  }
 
   const ambassadorKey = kebabToCamel(ambassadorName);
   if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
@@ -537,4 +553,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   );
 };
 
-export default AmbassadorPage;
+// Flag-switch (NEXT_PUBLIC_OLON_PILOT): OlonJS render when on, current page when off.
+const AmbassadorRoute: NextPage<PageProps> = (props) => {
+  if ("olonPage" in props) return <OlonPage page={props.olonPage} />;
+  return <AmbassadorPage {...props} />;
+};
+
+export default AmbassadorRoute;

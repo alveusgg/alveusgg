@@ -1,0 +1,22 @@
+{
+  "id": "noodle",
+  "slug": "ambassadors/noodle",
+  "meta": {
+    "title": "Noodle | Ambassadors",
+    "description": "Noodle was part of an educational program at a zoo and was rehomed to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "noodle",
+        "name": "Noodle",
+        "alternate": [],
+        "story": "Noodle was part of an educational program at a zoo and was rehomed to Alveus.",
+        "mission": "She is an ambassador for how the pet trade and habitat loss has affected hers and many other reptile species worldwide.",
+        "fact": "Most people think of snakes as a reptile that slithers around on the ground, but coastal carpet pythons like Noodle are an arboreal or semi-arboreal species, meaning they spend a lot of their lives hunting, lounging, and sleeping in trees.\n\nReplicating these environments in captivity can be extremely challenging, and so people should reconsider whether they're able to provide optimal living conditions to an animal before they own one."
+      }
+    }
+  ]
+}

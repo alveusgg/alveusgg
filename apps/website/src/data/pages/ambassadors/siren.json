@@ -1,0 +1,22 @@
+{
+  "id": "siren",
+  "slug": "ambassadors/siren",
+  "meta": {
+    "title": "Siren | Ambassadors",
+    "description": "Siren was rehomed to Alveus as the previous sanctuary's owner was retiring. Siren sadly passed away in January 2026 due to complications from heart disease."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "siren",
+        "name": "Siren",
+        "alternate": [],
+        "story": "Siren was rehomed to Alveus as the previous sanctuary's owner was retiring.\n\nSiren sadly passed away in January 2026 due to complications from heart disease.",
+        "mission": "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
+        "fact": null
+      }
+    }
+  ]
+}

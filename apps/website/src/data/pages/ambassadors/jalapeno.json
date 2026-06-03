@@ -1,0 +1,22 @@
+{
+  "id": "jalapeno",
+  "slug": "ambassadors/jalapeno",
+  "meta": {
+    "title": "Jalapeño | Ambassadors",
+    "description": "Rehomed to Alveus from a local equine rescue."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "jalapeno",
+        "name": "Jalapeño",
+        "alternate": [],
+        "story": "Rehomed to Alveus from a local equine rescue.",
+        "mission": "Jalapeño is an ambassador for the wildlife trade and use of wild animals in traditional medicine.",
+        "fact": null
+      }
+    }
+  ]
+}

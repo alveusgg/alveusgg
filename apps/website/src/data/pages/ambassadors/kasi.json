@@ -1,0 +1,22 @@
+{
+  "id": "kasi",
+  "slug": "ambassadors/kasi",
+  "meta": {
+    "title": "Kasi | Ambassadors",
+    "description": "Originally purchased as a pet at a Texas flea market, Kasi was then surrendered to another rescue facility before being transferred to Alveus."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "kasi",
+        "name": "Kasi",
+        "alternate": [],
+        "story": "Originally purchased as a pet at a Texas flea market, Kasi was then surrendered to another rescue facility before being transferred to Alveus.",
+        "mission": "He is an ambassador for the exotic pet trade and how it affects his species.",
+        "fact": null
+      }
+    }
+  ]
+}

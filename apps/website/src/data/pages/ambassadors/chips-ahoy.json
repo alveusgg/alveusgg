@@ -1,0 +1,22 @@
+{
+  "id": "chipsAhoy",
+  "slug": "ambassadors/chips-ahoy",
+  "meta": {
+    "title": "Chips Ahoy | Ambassadors",
+    "description": "Chips Ahoy was bred as a feeder rat for snakes, but she will now live out her full life at Alveus. Chips passed away peacefully in December 2024 from old age."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "chipsAhoy",
+        "name": "Chips Ahoy",
+        "alternate": [],
+        "story": "Chips Ahoy was bred as a feeder rat for snakes, but she will now live out her full life at Alveus.\n\nChips passed away peacefully in December 2024 from old age.",
+        "mission": "She is an ambassador for how rodenticide use and outdoor cats affect all levels of wildlife.",
+        "fact": null
+      }
+    }
+  ]
+}

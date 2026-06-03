@@ -1,0 +1,22 @@
+{
+  "id": "ducky",
+  "slug": "ambassadors/ducky",
+  "meta": {
+    "title": "Ducky | Ambassadors",
+    "description": "Our rubber ducky isopods were born in captivity and ethically sourced. Unfortunately, our colony of isopods didn't breed enough to sustain themselves, with the final few passing away in June 2023."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "ducky",
+        "name": "Ducky",
+        "alternate": [],
+        "story": "Our rubber ducky isopods were born in captivity and ethically sourced.\n\nUnfortunately, our colony of isopods didn't breed enough to sustain themselves, with the final few passing away in June 2023.",
+        "mission": "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
+        "fact": null
+      }
+    }
+  ]
+}

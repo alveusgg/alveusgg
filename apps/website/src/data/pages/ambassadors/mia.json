@@ -1,0 +1,22 @@
+{
+  "id": "mia",
+  "slug": "ambassadors/mia",
+  "meta": {
+    "title": "Mia | Ambassadors",
+    "description": "Mia was rehomed to Alveus as the previous sanctuary's owner was retiring."
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "mia",
+        "name": "Mia",
+        "alternate": [],
+        "story": "Mia was rehomed to Alveus as the previous sanctuary's owner was retiring.",
+        "mission": "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
+        "fact": "African greys are both smart and social. They are known to use different sets of sounds/words depending on the social situation. This can be seen in Mia using more beeps, whistles, and bird calls when humans aren't present, but more \"Hello\"s, \"Bye\"s, and explosions when keepers are around."
+      }
+    }
+  ]
+}

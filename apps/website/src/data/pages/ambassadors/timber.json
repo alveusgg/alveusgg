@@ -1,0 +1,22 @@
+{
+  "id": "timber",
+  "slug": "ambassadors/timber",
+  "meta": {
+    "title": "Timber | Ambassadors",
+    "description": "Timber was rescued from a facility that has received numerous USDA citations based on violations of the Animal Welfare Act. Unfortunately, Timber passed away in December 2024 after not waking up from "
+  },
+  "sections": [
+    {
+      "id": "profile",
+      "type": "ambassadorProfile",
+      "data": {
+        "key": "timber",
+        "name": "Timber",
+        "alternate": [],
+        "story": "Timber was rescued from a facility that has received numerous USDA citations based on violations of the Animal Welfare Act.\n\nUnfortunately, Timber passed away in December 2024 after not waking up from emergency surgery to treat his stomach unexpectedly twisting.",
+        "mission": "He is an ambassador for educating people about responsible pet ownership, the historic persecution of wolves by humans, and the importance of wolves as keystone species in their ecosystems.",
+        "fact": null
+      }
+    }
+  ]
+}
