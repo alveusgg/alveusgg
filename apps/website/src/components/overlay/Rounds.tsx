@@ -9,6 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { z } from "zod";
 
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -22,6 +23,7 @@ import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { type RouterOutputs, trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
+import useLocalStorage from "@/hooks/storage";
 
 import Video from "@/components/content/Video";
 
@@ -64,12 +66,23 @@ const transformChecks = (
     })
     .filter(isNotNull);
 
-const useChecks = (channels: string[], users?: string[]) => {
+const useRoundsState = (channels: string[], users?: string[]) => {
+  const [roundsEnabled, setRoundsEnabled] = useLocalStorage(
+    "stream/overlay:rounds-enabled",
+    useMemo(() => z.boolean(), []),
+    false,
+  );
+
   const checks = trpc.stream.getRoundsChecks.useQuery(undefined, {
+    enabled: roundsEnabled,
     refetchInterval: 15_000,
   });
 
-  const [statuses, setStatuses] = useState<Record<string, boolean>>({});
+  const [statuses, setStatuses] = useLocalStorage(
+    "stream/overlay:rounds-statuses",
+    useMemo(() => z.record(z.string(), z.boolean()), []),
+    {},
+  );
 
   useEffect(() => {
     setStatuses((prev) =>
@@ -80,7 +93,7 @@ const useChecks = (channels: string[], users?: string[]) => {
         ]),
       ),
     );
-  }, [checks.data]);
+  }, [checks.data, setStatuses]);
 
   useChat(
     channels,
@@ -106,15 +119,33 @@ const useChecks = (channels: string[], users?: string[]) => {
             );
             return;
           }
+
+          if (command === "!rounds") {
+            if (keys[0] === "off" || keys[0] === "stop") {
+              // reset checkmarks when rounds stop
+              setStatuses((prev) =>
+                typeSafeObjectFromEntries(
+                  typeSafeObjectEntries(prev).map(([key]) => [key, false]),
+                ),
+              );
+              setRoundsEnabled(false);
+            } else {
+              setRoundsEnabled(true);
+            }
+            return;
+          }
         }
       },
-      [users],
+      [setRoundsEnabled, setStatuses, users],
     ),
   );
 
   return useMemo(
-    () => transformChecks(checks.data ?? [], statuses),
-    [checks.data, statuses],
+    () => ({
+      checks: transformChecks(checks.data ?? [], statuses),
+      roundsEnabled,
+    }),
+    [checks.data, roundsEnabled, statuses],
   );
 };
 
@@ -200,7 +231,7 @@ const Rounds = ({
   const background = night ? roundsNightBackground : roundsDayBackground;
 
   // Get the checks with chat command controls
-  const checks = useChecks(channels, users);
+  const { roundsEnabled, checks } = useRoundsState(channels, users);
 
   // Define the animation keyframes
   const id = useId().replace(/:/g, "");
@@ -238,6 +269,10 @@ const Rounds = ({
       }),
     };
   }, [timing, checks.length, scale]);
+
+  if (!roundsEnabled) {
+    return null;
+  }
 
   return (
     <>
