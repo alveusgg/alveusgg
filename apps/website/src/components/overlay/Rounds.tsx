@@ -199,17 +199,15 @@ const Check = ({
   );
 };
 
-const Rounds = ({
-  channels,
-  users,
+const RoundsOverlayContent = ({
+  checks,
   timing = {
     duration: 750,
     delay: { item: -600, before: 1000, after: 9000 },
   },
   scale = { from: 1, to: 1.15 },
 }: {
-  channels: string[];
-  users?: string[];
+  checks: Check[];
   timing?: {
     duration: number;
     delay: { item: number; before: number; after: number };
@@ -229,9 +227,6 @@ const Rounds = ({
     return () => clearInterval(interval);
   }, []);
   const background = night ? roundsNightBackground : roundsDayBackground;
-
-  // Get the checks with chat command controls
-  const { roundsEnabled, checks } = useRoundsState(channels, users);
 
   // Define the animation keyframes
   const id = useId().replace(/:/g, "");
@@ -268,11 +263,15 @@ const Rounds = ({
         },
       }),
     };
-  }, [timing, checks.length, scale]);
-
-  if (!roundsEnabled) {
-    return null;
-  }
+  }, [
+    checks.length,
+    timing.duration,
+    timing.delay.item,
+    timing.delay.before,
+    timing.delay.after,
+    scale.from,
+    scale.to,
+  ]);
 
   return (
     <>
@@ -316,6 +315,23 @@ const Rounds = ({
       </div>
     </>
   );
+};
+
+const Rounds = ({
+  channels,
+  users,
+}: {
+  channels: string[];
+  users?: string[];
+}) => {
+  // Get the checks with chat command controls
+  const { roundsEnabled, checks } = useRoundsState(channels, users);
+
+  if (!roundsEnabled) {
+    return null;
+  }
+
+  return <RoundsOverlayContent checks={checks} />;
 };
 
 export default Rounds;
