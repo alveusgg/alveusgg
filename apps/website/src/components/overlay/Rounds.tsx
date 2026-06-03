@@ -67,14 +67,14 @@ const transformChecks = (
     .filter(isNotNull);
 
 const useRoundsState = (channels: string[], users?: string[]) => {
-  const [roundsEnabled, setRoundsEnabled] = useLocalStorage(
+  const [enabled, setEnabled] = useLocalStorage(
     "stream/overlay:rounds-enabled",
     useMemo(() => z.boolean(), []),
     false,
   );
 
   const checks = trpc.stream.getRoundsChecks.useQuery(undefined, {
-    enabled: roundsEnabled,
+    enabled,
     refetchInterval: 15_000,
   });
 
@@ -128,24 +128,24 @@ const useRoundsState = (channels: string[], users?: string[]) => {
                   typeSafeObjectEntries(prev).map(([key]) => [key, false]),
                 ),
               );
-              setRoundsEnabled(false);
+              setEnabled(false);
             } else {
-              setRoundsEnabled(true);
+              setEnabled(true);
             }
             return;
           }
         }
       },
-      [setRoundsEnabled, setStatuses, users],
+      [setEnabled, setStatuses, users],
     ),
   );
 
   return useMemo(
     () => ({
       checks: transformChecks(checks.data ?? [], statuses),
-      roundsEnabled,
+      enabled,
     }),
-    [checks.data, roundsEnabled, statuses],
+    [checks.data, enabled, statuses],
   );
 };
 
@@ -325,9 +325,9 @@ const Rounds = ({
   users?: string[];
 }) => {
   // Get the checks with chat command controls
-  const { roundsEnabled, checks } = useRoundsState(channels, users);
+  const { enabled, checks } = useRoundsState(channels, users);
 
-  if (!roundsEnabled) {
+  if (!enabled) {
     return null;
   }
 
