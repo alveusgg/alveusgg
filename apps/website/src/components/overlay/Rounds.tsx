@@ -15,10 +15,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters"
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
-import {
-  typeSafeObjectEntries,
-  typeSafeObjectFromEntries,
-} from "@/utils/helpers";
+import { typeSafeObjectFromEntries } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { type RouterOutputs, trpc } from "@/utils/trpc";
 
@@ -84,17 +81,6 @@ const useRoundsState = (channels: string[], users?: string[]) => {
     {},
   );
 
-  useEffect(() => {
-    setStatuses((prev) =>
-      typeSafeObjectFromEntries(
-        (checks.data ?? []).map(({ command }) => [
-          command,
-          prev[command] ?? false,
-        ]),
-      ),
-    );
-  }, [checks.data, setStatuses]);
-
   useChat(
     channels,
     useCallback(
@@ -111,10 +97,11 @@ const useRoundsState = (channels: string[], users?: string[]) => {
           if (command === "!check") {
             setStatuses((prev) =>
               typeSafeObjectFromEntries(
-                typeSafeObjectEntries(prev).map(([key, value]) => {
-                  if (keys[0] === "reset") return [key, false];
+                checks.data?.map((check) => {
+                  const key = check.command;
+                  const value = prev[check.command] ?? false;
                   return [key, keys.includes(key) ? !value : value];
-                }),
+                }) ?? [],
               ),
             );
             return;
@@ -132,7 +119,7 @@ const useRoundsState = (channels: string[], users?: string[]) => {
           }
         }
       },
-      [setEnabled, setStatuses, users],
+      [checks.data, setEnabled, setStatuses, users],
     ),
   );
 
