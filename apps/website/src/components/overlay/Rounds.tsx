@@ -95,15 +95,19 @@ const useRoundsState = (channels: string[], users?: string[]) => {
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
           if (command === "!check") {
-            setStatuses((prev) =>
-              typeSafeObjectFromEntries(
-                checks.data?.map((check) => {
-                  const key = check.command;
-                  const value = prev[check.command] ?? false;
-                  return [key, keys.includes(key) ? !value : value];
-                }) ?? [],
-              ),
-            );
+            if (keys[0] === "reset") {
+              setStatuses({});
+            } else {
+              setStatuses((prev) =>
+                typeSafeObjectFromEntries(
+                  checks.data?.map((check) => {
+                    const key = check.command;
+                    const value = prev[check.command] ?? false;
+                    return [key, keys.includes(key) ? !value : value];
+                  }) ?? [],
+                ),
+              );
+            }
             return;
           }
 
