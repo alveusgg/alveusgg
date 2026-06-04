@@ -137,9 +137,9 @@
     "ts-morph": "^28.0.0",
     "tsdown": "^0.22.0",
     "tsx": "^4.22.3",
-    "typescript-eslint": "^8.59.4",
-    "vitest": "^4.1.6",
-    "webpack": "^5.106.2"
+    "typescript-eslint": "^8.60.0",
+    "vitest": "^4.1.7",
+    "webpack": "^5.107.2"
   },
   "prettier": {
     "plugins": [
