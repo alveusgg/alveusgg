@@ -23,6 +23,7 @@ import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
 import lefthammock from "@/assets/presets/marmout/lefthammock.png";
+import leftpostbranch from "@/assets/presets/marmout/leftpostbranch.png";
 import leftpostshelf from "@/assets/presets/marmout/leftpostshelf.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
 import leftshelfl from "@/assets/presets/marmout/leftshelfl.png";
@@ -193,6 +194,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: lefthammock,
     position: { pan: 116.1, tilt: -18.9, zoom: 415 },
     // modified: 2026-01-04T17:27:14.612Z
+  },
+  leftpostbranch: {
+    description: "leftpostbranch",
+    image: leftpostbranch,
+    position: { pan: 120.6, tilt: -11.33, zoom: 752 },
+    // modified: 2026-06-04T23:27:01.133Z
   },
   leftpostshelf: {
     description: "leftpostshelf",
