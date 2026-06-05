@@ -212,7 +212,6 @@ const OverlayPage: NextPage = () => {
     useMemo(() => z.boolean(), []),
     false,
   );
-  const [rounds, setRounds] = useState(false);
   const [text, setText] = useLocalStorage(
     "stream/overlay:text",
     useMemo(() => z.string(), []),
@@ -266,15 +265,6 @@ const OverlayPage: NextPage = () => {
             const url = new URL(window.location.href);
             url.searchParams.set("reload", Date.now().toString());
             window.location.href = url.toString();
-            return;
-          }
-
-          // Mods (or trusted users) can run the command to toggle the rounds overlay
-          if (command === "!rounds") {
-            setRounds(() => {
-              if (arg === "off" || arg === "stop") return false;
-              return true;
-            });
             return;
           }
 
@@ -406,9 +396,7 @@ const OverlayPage: NextPage = () => {
         )}
       </div>
 
-      {!hide.has("rounds") && rounds && (
-        <Rounds channels={channels} users={users} />
-      )}
+      {!hide.has("rounds") && <Rounds channels={channels} users={users} />}
 
       {!hide.has("datetime") && (
         <Datetime className="absolute top-2 right-2 text-right">
