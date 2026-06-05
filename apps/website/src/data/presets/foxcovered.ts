@@ -85,8 +85,8 @@ const foxcoveredPresets: Record<string, Preset> = {
   rampb: {
     description: "rampb",
     image: rampb,
-    position: { pan: -141.43, tilt: -6.69, zoom: 2021 },
-    // modified: 2026-04-18T13:19:45.312Z
+    position: { pan: -139.37, tilt: -8.81, zoom: 6462 },
+    // modified: 2026-06-01T14:47:14.749Z
   },
   right: {
     description: "right",

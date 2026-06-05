@@ -1,6 +1,7 @@
 import cratef from "@/assets/presets/serval/cratef.png";
 import cratel from "@/assets/presets/serval/cratel.png";
 import door from "@/assets/presets/serval/door.png";
+import doorsleep from "@/assets/presets/serval/doorsleep.png";
 import down from "@/assets/presets/serval/down.png";
 import home from "@/assets/presets/serval/home.png";
 import insidecrate from "@/assets/presets/serval/insidecrate.png";
@@ -8,6 +9,7 @@ import left from "@/assets/presets/serval/left.png";
 import leftplatform from "@/assets/presets/serval/leftplatform.png";
 import leftplatformb from "@/assets/presets/serval/leftplatformb.png";
 import leftplatformf from "@/assets/presets/serval/leftplatformf.png";
+import leftrampb from "@/assets/presets/serval/leftrampb.png";
 import leftwide from "@/assets/presets/serval/leftwide.png";
 import log from "@/assets/presets/serval/log.png";
 import middleplatform from "@/assets/presets/serval/middleplatform.png";
@@ -53,6 +55,12 @@ const servalPresets: Record<string, Preset> = {
     position: { pan: -110.89, tilt: -77.69, zoom: 1 },
     // modified: 2026-04-02T12:38:24.129Z
   },
+  doorsleep: {
+    description: "doorsleep",
+    image: doorsleep,
+    position: { pan: -143.88, tilt: -74.36, zoom: 294 },
+    // modified: 2026-06-04T12:50:35.362Z
+  },
   down: {
     description: "down",
     image: down,
@@ -88,6 +96,12 @@ const servalPresets: Record<string, Preset> = {
     image: leftplatformf,
     position: { pan: -148.46, tilt: -20.61, zoom: 1255 },
     // modified: 2026-04-26T14:38:58.746Z
+  },
+  leftrampb: {
+    description: "leftrampb",
+    image: leftrampb,
+    position: { pan: -133.04, tilt: -31.17, zoom: 1529 },
+    // modified: 2026-06-03T15:28:52.031Z
   },
   leftwide: {
     description: "leftwide",
