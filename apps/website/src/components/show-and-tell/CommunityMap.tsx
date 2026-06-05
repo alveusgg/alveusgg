@@ -173,7 +173,7 @@ export function CommunityMap({
         }
         popup
           .setLngLat(coordinates)
-          .setHTML(feature.properties.name)
+          .setText(feature.properties.name)
           .addTo(map);
       }
     });
