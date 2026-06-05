@@ -39,9 +39,9 @@ const headersToObject = (headers: Headers) =>
   );
 
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
-  const shortLink = await api.shortLinks.getShortLink.query(
-    req.nextUrl.pathname.replace(/^\/(l|go)\//, ""),
-  );
+  const shortLink = await api.shortLinks.getShortLink
+    .query(req.nextUrl.pathname.replace(/^\/(l|go)\//, ""))
+    .catch(() => null);
 
   if (shortLink) {
     event.waitUntil(
