@@ -1,14 +1,26 @@
+import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import {
   type NextFetchEvent,
   type NextRequest,
   NextResponse,
 } from "next/server";
+import superjson from "superjson";
 
 import { env } from "@/env";
 
+import type { AppRouter } from "@/server/trpc/router/_app";
 import { callEndpoint } from "@/server/utils/queue";
 
 import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
+
+const api = createTRPCProxyClient<AppRouter>({
+  links: [
+    httpLink({
+      url: `${env.NEXT_PUBLIC_BASE_URL}/api/trpc`,
+      transformer: superjson,
+    }),
+  ],
+});
 
 const headersToObject = (headers: Headers) =>
   [...headers.entries()].reduce<Record<string, string | string[]>>(
@@ -27,16 +39,13 @@ const headersToObject = (headers: Headers) =>
   );
 
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
-  const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
-    method: "POST",
-    body: JSON.stringify({
-      slug: req.nextUrl.pathname.replace(/^\/(l|go)\//, ""),
-    }),
-  });
-  const shortLink = await res.json();
+  const shortLink = await api.shortLinks.getShortLink.query(
+    req.nextUrl.pathname.replace(/^\/(l|go)\//, ""),
+  );
 
   if (shortLink) {
     event.waitUntil(
+      // TODO: Ideally we'd have the queue use tRPC as well
       callEndpoint<TrackClickSchema>("/api/short-links/track-click", {
         id: shortLink.id,
         slug: shortLink.slug,
