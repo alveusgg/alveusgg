@@ -4,6 +4,7 @@ import bridgeb from "@/assets/presets/marmout/bridgeb.png";
 import bridgem from "@/assets/presets/marmout/bridgem.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
+import domellt from "@/assets/presets/marmout/domellt.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
 import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
@@ -86,6 +87,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: domellshelf,
     position: { pan: 121.34, tilt: -8.91, zoom: 898 },
     // modified: 2026-02-19T14:48:50.697Z
+  },
+  domellt: {
+    description: "domellt",
+    image: domellt,
+    position: { pan: 125.57, tilt: -5.75, zoom: 898 },
+    // modified: 2026-06-06T14:37:21.836Z
   },
   domelu: {
     description: "Dome Left Upper",
@@ -198,8 +205,8 @@ const marmoutPresets: Record<string, Preset> = {
   leftpostbranch: {
     description: "leftpostbranch",
     image: leftpostbranch,
-    position: { pan: 120.6, tilt: -11.33, zoom: 752 },
-    // modified: 2026-06-04T23:27:01.133Z
+    position: { pan: 120.59, tilt: -11.33, zoom: 752 },
+    // modified: 2026-06-06T14:32:16.903Z
   },
   leftpostshelf: {
     description: "leftpostshelf",
