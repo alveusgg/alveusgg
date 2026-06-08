@@ -815,10 +815,10 @@ const AboutAlveusPage: NextPage = () => {
 
       <Section
         dark
-        className="py-8"
-        containerClassName="flex flex-wrap items-center justify-between"
+        className="max-xl:py-8"
+        containerClassName="grid grid-cols-1 xl:grid-cols-2 gap-x-8 gap-y-16 items-center"
       >
-        <div className="flex basis-full flex-col gap-4 pt-4 pb-16 xl:basis-1/2 xl:py-24">
+        <div className="flex flex-col gap-4">
           <Heading className="my-0">About Alveus Sanctuary</Heading>
 
           <p className="text-lg">
@@ -856,8 +856,18 @@ const AboutAlveusPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
-          <div className="mx-auto max-w-2xl xl:mr-0">
+        <div className="flex flex-col gap-4 xl:order-last xl:col-span-full">
+          <div className="mx-auto h-1 w-full max-w-sm rounded-md bg-alveus-green-50/50" />
+          <p className="text-center font-serif text-xl text-alveus-green-50 italic">
+            Alveus Sanctuary&apos;s mission is to use the internet to cultivate
+            our next generation of conservationists and to secure a flourishing
+            future for all living things.
+          </p>
+          <div className="mx-auto h-1 w-full max-w-sm rounded-md bg-alveus-green-50/50" />
+        </div>
+
+        <div>
+          <div className="mx-auto max-w-2xl">
             <YouTubeLightbox videoId="-YwzCOVeLEE" />
 
             <Heading level={2} className="text-center">
