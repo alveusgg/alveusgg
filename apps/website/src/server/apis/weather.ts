@@ -2,6 +2,11 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
+import {
+  RedisValueAlreadyExistsError,
+  getRedisOptional,
+} from "@/server/utils/redis";
+
 import invariant from "@/utils/invariant";
 import { rounded } from "@/utils/math";
 
@@ -74,17 +79,103 @@ export async function getCurrentObservation<T extends boolean>(
 ): Promise<CurrentObservation<T>> {
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
-  const response = await fetch(
-    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
-  );
+  // If we have Redis available, try to cache weather data for 1 minute to reduce API calls
+  const redis = getRedisOptional();
+  const timeout = 5;
+  const expiry = 60;
+  const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
+  let lock: string | undefined;
 
-  const json = await response.json();
-  if (response.status !== 200) {
-    console.error(json);
-    throw new Error("Could not get current observations!");
+  const cached = async () => {
+    if (redis) {
+      const raw = await redis.get(cache);
+      if (raw) {
+        try {
+          const data =
+            await currentObservationsSchema(imperial).parseAsync(raw);
+          return data.observations[0] as CurrentObservation<T>;
+        } catch (err) {
+          console.error("Error parsing cached weather data", err);
+          try {
+            await redis.del(cache);
+          } catch (delErr) {
+            console.error("Error deleting cached weather data", delErr);
+          }
+        }
+      }
+    }
+  };
+
+  if (redis) {
+    // Try to get cached weather data from Redis
+    const data = await cached();
+    if (data) return data;
+
+    // Attempt to acquire a lock from Redis if there isn't already a lock
+    try {
+      lock = crypto.randomUUID();
+      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry });
+    } catch (err) {
+      if (!(err instanceof RedisValueAlreadyExistsError)) {
+        throw err;
+      }
+
+      // If there is already lock in Redis, wait up to the timeout for cached data
+      lock = undefined;
+      for (let attempt = 0; attempt < timeout * 10; attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000 / 10));
+        const data = await cached();
+        if (data) return data;
+      }
+      throw new Error(
+        "Failed to get weather data from cache after waiting for lock",
+      );
+    }
   }
 
+  // If we didn't get valid cached data, fetch from the API
+  const response = await fetch(
+    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
+    {
+      headers: {
+        "User-Agent": "alveus.gg",
+      },
+      signal: AbortSignal.timeout(timeout * 1000),
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error(
+      `Error fetching weather data: ${response.status} ${response.statusText}`,
+      { cause: await response.text() },
+    );
+  }
+
+  const json = await response.json();
   const data = await currentObservationsSchema(imperial).parseAsync(json);
+
+  // If we get valid data from the API, and have Redis available, cache it
+  if (redis) {
+    try {
+      await redis.set(cache, json, { expiry });
+    } catch (err) {
+      console.error("Error caching weather data", err);
+    }
+
+    // Also, if we acquired the current lock, release it
+    // Don't release on error, as to avoid thundering herd issues
+    if (lock) {
+      try {
+        const owner = await redis.get(`${cache}:lock`);
+        if (owner === lock) {
+          await redis.del(`${cache}:lock`);
+        }
+      } catch (err) {
+        console.error("Error releasing weather cache lock", err);
+      }
+    }
+  }
+
   return data.observations[0] as CurrentObservation<T>;
 }
 
@@ -102,7 +193,6 @@ const getFeelsLike = (
 
 export async function getWeather() {
   invariant(env.WEATHER_STATION_ID, "WEATHER_STATION_ID is required");
-  invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
   const weather = await getCurrentObservation(env.WEATHER_STATION_ID, true);
   const feelsLike = getFeelsLike(

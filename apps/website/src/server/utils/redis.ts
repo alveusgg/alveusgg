@@ -3,12 +3,13 @@ import IORedis from "ioredis";
 
 import { env } from "@/env";
 
-type RedisGetOptions = { delete: boolean };
+type RedisGetOptions = { delete?: boolean };
 type RedisSetOptions = { expiry?: number; overwrite?: boolean };
 
 export interface RedisCache {
-  get<T>(key: string, options: RedisGetOptions): Promise<T | null>;
-  set(key: string, value: unknown, options: RedisSetOptions): Promise<void>;
+  get<T>(key: string, options?: RedisGetOptions): Promise<T | null>;
+  set(key: string, value: unknown, options?: RedisSetOptions): Promise<void>;
+  del(key: string): Promise<void>;
 }
 
 export class RedisValueAlreadyExistsError extends Error {
@@ -48,31 +49,35 @@ export class UpstashRedisCache implements RedisCache {
     });
   }
 
-  async get<T>(key: string, options: RedisGetOptions) {
-    const value = options.delete
+  async get<T>(key: string, options?: RedisGetOptions) {
+    const value = options?.delete
       ? ((await this.client.getdel<string>(key)) ?? null)
       : ((await this.client.get<string>(key)) ?? null);
 
     return parseRedisJson<T>(value);
   }
 
-  async set(key: string, value: unknown, options: RedisSetOptions) {
+  async set(key: string, value: unknown, options?: RedisSetOptions) {
     const payload = JSON.stringify(value);
     const result =
-      options.expiry && options.overwrite === false
+      options?.expiry && options?.overwrite === false
         ? await this.client.set(key, payload, {
             ex: options.expiry,
             nx: true as const,
           })
-        : options.expiry
+        : options?.expiry
           ? await this.client.set(key, payload, { ex: options.expiry })
-          : options.overwrite === false
+          : options?.overwrite === false
             ? await this.client.set(key, payload, { nx: true as const })
             : await this.client.set(key, payload);
 
-    if (options.overwrite === false && result !== "OK") {
+    if (options?.overwrite === false && result !== "OK") {
       throw new RedisValueAlreadyExistsError(key);
     }
+  }
+
+  async del(key: string) {
+    await this.client.del(key);
   }
 }
 
@@ -83,28 +88,32 @@ export class IORedisCache implements RedisCache {
     this.client = new IORedis(redisUrl);
   }
 
-  async get<T>(key: string, options: RedisGetOptions) {
-    const value = options.delete
+  async get<T>(key: string, options?: RedisGetOptions) {
+    const value = options?.delete
       ? await this.client.call("GETDEL", key)
       : await this.client.get(key);
 
     return parseRedisJson<T>(value === null ? null : String(value));
   }
 
-  async set(key: string, value: unknown, options: RedisSetOptions) {
+  async set(key: string, value: unknown, options?: RedisSetOptions) {
     const payload = JSON.stringify(value);
     const result =
-      options.expiry && options.overwrite === false
+      options?.expiry && options?.overwrite === false
         ? await this.client.set(key, payload, "EX", options.expiry, "NX")
-        : options.expiry
+        : options?.expiry
           ? await this.client.set(key, payload, "EX", options.expiry)
-          : options.overwrite === false
+          : options?.overwrite === false
             ? await this.client.set(key, payload, "NX")
             : await this.client.set(key, payload);
 
-    if (options.overwrite === false && result !== "OK") {
+    if (options?.overwrite === false && result !== "OK") {
       throw new RedisValueAlreadyExistsError(key);
     }
+  }
+
+  async del(key: string) {
+    await this.client.del(key);
   }
 }
 
@@ -129,4 +138,12 @@ export function getRedis() {
     redis = createRedisCache();
   }
   return redis;
+}
+
+export function getRedisOptional() {
+  try {
+    return getRedis();
+  } catch {
+    return undefined;
+  }
 }
