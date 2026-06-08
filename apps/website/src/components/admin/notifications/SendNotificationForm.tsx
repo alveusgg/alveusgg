@@ -111,7 +111,7 @@ export function SendNotificationForm() {
             required
             value={category}
             onChange={(event) => setCategory(event.target.value)}
-            size={notificationCategories.length}
+            size={notificationCategories.filter(({ hidden }) => !hidden).length}
           >
             {notificationCategories.map(
               ({ tag, label, ttl, hidden }) =>
