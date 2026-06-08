@@ -45,24 +45,6 @@ export async function getRecentNotificationsForTags({
   return { items, nextCursor };
 }
 
-export async function getActiveAnnouncements() {
-  const now = new Date();
-
-  return prisma.notification.findMany({
-    where: {
-      tag: "announcements",
-      canceledAt: null,
-      OR: [
-        { expiresAt: { gt: now } },
-        { scheduledStartAt: { gt: now } },
-        { scheduledEndAt: { gt: now } },
-      ],
-    },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-  });
-}
-
 export async function getNotificationById(notificationId: string) {
   const notification = await prisma.notification.findUnique({
     where: { id: notificationId },

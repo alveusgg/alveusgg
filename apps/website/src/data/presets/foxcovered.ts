@@ -6,6 +6,7 @@ import home from "@/assets/presets/foxcovered/home.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import middle from "@/assets/presets/foxcovered/middle.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
+import platformbl from "@/assets/presets/foxcovered/platformbl.png";
 import platformbr from "@/assets/presets/foxcovered/platformbr.png";
 import platformfl from "@/assets/presets/foxcovered/platformfl.png";
 import platformfr from "@/assets/presets/foxcovered/platformfr.png";
@@ -61,32 +62,38 @@ const foxcoveredPresets: Record<string, Preset> = {
   platform: {
     description: "platform",
     image: platform,
-    position: { pan: -143.87, tilt: -0.93, zoom: 1604 },
-    // modified: 2026-04-18T13:16:49.326Z
+    position: { pan: -142.08, tilt: 0, zoom: 1604 },
+    // modified: 2026-06-06T12:36:06.085Z
+  },
+  platformbl: {
+    description: "platformbl",
+    image: platformbl,
+    position: { pan: -144.94, tilt: -0.13, zoom: 2417 },
+    // modified: 2026-06-06T12:34:11.051Z
   },
   platformbr: {
     description: "platformbr",
     image: platformbr,
-    position: { pan: -142.73, tilt: -1.16, zoom: 4039 },
-    // modified: 2026-04-18T13:18:33.995Z
+    position: { pan: -141.07, tilt: -0.19, zoom: 2417 },
+    // modified: 2026-06-06T12:32:28.830Z
   },
   platformfl: {
     description: "platformfl",
     image: platformfl,
-    position: { pan: -145.14, tilt: -0.87, zoom: 3363 },
-    // modified: 2026-05-20T13:14:30.113Z
+    position: { pan: -144.57, tilt: -0.67, zoom: 2417 },
+    // modified: 2026-06-06T12:35:14.684Z
   },
   platformfr: {
     description: "platformfr",
     image: platformfr,
-    position: { pan: -140.72, tilt: -1.11, zoom: 3601 },
-    // modified: 2026-04-18T13:19:07.544Z
+    position: { pan: -138.66, tilt: -0.64, zoom: 1604 },
+    // modified: 2026-06-06T12:36:41.278Z
   },
   rampb: {
     description: "rampb",
     image: rampb,
-    position: { pan: -141.43, tilt: -6.69, zoom: 2021 },
-    // modified: 2026-04-18T13:19:45.312Z
+    position: { pan: -139.37, tilt: -8.81, zoom: 6462 },
+    // modified: 2026-06-01T14:47:14.749Z
   },
   right: {
     description: "right",

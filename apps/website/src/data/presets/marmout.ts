@@ -4,6 +4,7 @@ import bridgeb from "@/assets/presets/marmout/bridgeb.png";
 import bridgem from "@/assets/presets/marmout/bridgem.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
+import domellt from "@/assets/presets/marmout/domellt.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
 import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
@@ -12,6 +13,7 @@ import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
 import farcornerb from "@/assets/presets/marmout/farcornerb.png";
+import farcornershelf from "@/assets/presets/marmout/farcornershelf.png";
 import farcornert from "@/assets/presets/marmout/farcornert.png";
 import farrightshelf from "@/assets/presets/marmout/farrightshelf.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
@@ -22,6 +24,7 @@ import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
 import lefthammock from "@/assets/presets/marmout/lefthammock.png";
+import leftpostbranch from "@/assets/presets/marmout/leftpostbranch.png";
 import leftpostshelf from "@/assets/presets/marmout/leftpostshelf.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
 import leftshelfl from "@/assets/presets/marmout/leftshelfl.png";
@@ -85,6 +88,12 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 121.34, tilt: -8.91, zoom: 898 },
     // modified: 2026-02-19T14:48:50.697Z
   },
+  domellt: {
+    description: "domellt",
+    image: domellt,
+    position: { pan: 125.57, tilt: -5.75, zoom: 898 },
+    // modified: 2026-06-06T14:37:21.836Z
+  },
   domelu: {
     description: "Dome Left Upper",
     image: domelu,
@@ -132,6 +141,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: farcornerb,
     position: { pan: 135.66, tilt: -11.05, zoom: 332 },
     // modified: 2026-03-20T21:04:56.947Z
+  },
+  farcornershelf: {
+    description: "farcornershelf",
+    image: farcornershelf,
+    position: { pan: 135.4, tilt: -6.07, zoom: 1659 },
+    // modified: 2026-06-02T17:40:13.380Z
   },
   farcornert: {
     description: "Far Corner Top",
@@ -186,6 +201,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: lefthammock,
     position: { pan: 116.1, tilt: -18.9, zoom: 415 },
     // modified: 2026-01-04T17:27:14.612Z
+  },
+  leftpostbranch: {
+    description: "leftpostbranch",
+    image: leftpostbranch,
+    position: { pan: 120.59, tilt: -11.33, zoom: 752 },
+    // modified: 2026-06-06T14:32:16.903Z
   },
   leftpostshelf: {
     description: "leftpostshelf",

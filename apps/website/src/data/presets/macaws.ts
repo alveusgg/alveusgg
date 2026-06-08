@@ -96,8 +96,8 @@ const macawsPresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
-    position: { pan: -140.85, tilt: -23.58, zoom: 1 },
-    // modified: 2026-02-17T15:40:49.078Z
+    position: { pan: -135.16, tilt: -22.19, zoom: 1 },
+    // modified: 2026-05-31T12:45:59.232Z
   },
   water: {
     description: "Water",
