@@ -2,13 +2,13 @@ import { Duration } from "luxon";
 import { type FormEvent, useCallback, useRef, useState } from "react";
 
 import {
+  defaultTag,
   notificationCategories,
   notificationChannels,
   notificationLinkDefault,
   notificationLinkSuggestions,
 } from "@/data/notifications";
 
-import { classes } from "@/utils/classes";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
@@ -20,7 +20,6 @@ import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
-import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
 import { TextField } from "@/components/shared/form/TextField";
@@ -61,12 +60,10 @@ export function SendNotificationForm() {
 
   const image = imageAttachmentData.files[0];
 
-  const [category, setCategory] = useState("announcements");
+  const [category, setCategory] = useState(defaultTag);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [link, setLink] = useState(notificationLinkDefault);
-
-  const [isScheduled, setIsScheduled] = useState(false);
 
   const submit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -75,10 +72,6 @@ export function SendNotificationForm() {
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;
       const fileStorageObjectId =
         image?.status === "upload.done" ? image.fileStorageObjectId : undefined;
-      const scheduledStartAt =
-        (isScheduled && String(data.get("scheduledStartAt"))) || undefined;
-      const scheduledEndAt =
-        (isScheduled && String(data.get("scheduledEndAt"))) || undefined;
       const channels = data.getAll("channel").map(String);
 
       createNotification.mutate({
@@ -86,8 +79,6 @@ export function SendNotificationForm() {
         tag: String(data.get("tag") || ""),
         title: String(data.get("title") || ""),
         linkUrl: String(data.get("url") || ""),
-        scheduledStartAt,
-        scheduledEndAt,
         imageUrl,
         vodUrl: String(data.get("vodUrl") || "") || undefined,
         fileStorageObjectId,
@@ -95,7 +86,7 @@ export function SendNotificationForm() {
         isDiscord: channels.includes("discord"),
       });
     },
-    [image, isScheduled, createNotification],
+    [image, createNotification],
   );
 
   return (
@@ -120,17 +111,20 @@ export function SendNotificationForm() {
             required
             value={category}
             onChange={(event) => setCategory(event.target.value)}
-            size={notificationCategories.length}
+            size={notificationCategories.filter(({ hidden }) => !hidden).length}
           >
-            {notificationCategories.map(({ tag, label, ttl }) => (
-              <option key={tag} value={tag}>
-                {label} (push active for{" "}
-                {Duration.fromMillis(ttl * 1000, { locale: "en-US" })
-                  .rescale()
-                  .toHuman({ unitDisplay: "short" })}
-                )
-              </option>
-            ))}
+            {notificationCategories.map(
+              ({ tag, label, ttl, hidden }) =>
+                !hidden && (
+                  <option key={tag} value={tag}>
+                    {label} (push active for{" "}
+                    {Duration.fromMillis(ttl * 1000, { locale: "en-US" })
+                      .rescale()
+                      .toHuman({ unitDisplay: "short" })}
+                    )
+                  </option>
+                ),
+            )}
           </SelectBoxField>
 
           <TextField
@@ -212,38 +206,6 @@ export function SendNotificationForm() {
             pattern="https?://.*"
             inputClassName="font-mono"
           />
-
-          <Fieldset legend="Announcement details">
-            <div>
-              <CheckboxField
-                name="isScheduled"
-                value="true"
-                isSelected={isScheduled}
-                onChange={(selected) => setIsScheduled(selected)}
-              >
-                Is scheduled event (start/end date)
-              </CheckboxField>
-            </div>
-
-            <div
-              className={classes(
-                `flex flex-wrap gap-4 border-l pl-3`,
-                !isScheduled && "hidden",
-              )}
-            >
-              <LocalDateTimeField
-                showResetButton
-                name="scheduledStartAt"
-                label="Start (Central Time)"
-                required
-              />
-              <LocalDateTimeField
-                showResetButton
-                name="scheduledEndAt"
-                label="End (Central Time)"
-              />
-            </div>
-          </Fieldset>
 
           <Fieldset legend="Publication channels">
             <div className="flex flex-wrap gap-4">
