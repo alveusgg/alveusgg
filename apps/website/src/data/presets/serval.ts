@@ -1,3 +1,4 @@
+import cratebl from "@/assets/presets/serval/cratebl.png";
 import cratef from "@/assets/presets/serval/cratef.png";
 import cratel from "@/assets/presets/serval/cratel.png";
 import door from "@/assets/presets/serval/door.png";
@@ -36,6 +37,12 @@ const servalPresets: Record<string, Preset> = {
     image: home,
     position: { pan: -88.51, tilt: -18.05, zoom: 1 },
     // modified: 2026-04-02T12:27:39.327Z
+  },
+  cratebl: {
+    description: "cratebl",
+    image: cratebl,
+    position: { pan: -97.43, tilt: -64.02, zoom: 1 },
+    // modified: 2026-06-08T14:01:03.254Z
   },
   cratef: {
     description: "cratef",
