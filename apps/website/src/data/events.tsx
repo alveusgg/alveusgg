@@ -662,7 +662,7 @@ const events: Event[] = (
           of donation goals along the way, aiming to raise as much money as
           possible to kick-start Alveus. Each donor that donated $100 or more
           got their name engraved on a golden leaf that form part of six donor
-          trees now affixed to the back of the studio building. The final goal
+          trees now affixed to the walls of the Emu enclosure. The final goal
           for the stream was that at $500k raised Maya would shave her head, and
           we were able to reach that goal with $573,004 raised for Alveus over
           the whole stream. Thank you to all the leafers, everyone that donated
