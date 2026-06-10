@@ -21,7 +21,7 @@
     "@twurple/easy-bot": "^8.1.4",
     "luxon": "^3.7.2",
     "read-pkg": "^10.1.0",
-    "tsx": "^4.22.3",
+    "tsx": "^4.22.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {
