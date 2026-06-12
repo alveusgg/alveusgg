@@ -13,6 +13,7 @@ import domer from "@/assets/presets/marmout/domer.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
+import downrightbranch from "@/assets/presets/marmout/downrightbranch.png";
 import farcornerb from "@/assets/presets/marmout/farcornerb.png";
 import farcornershelf from "@/assets/presets/marmout/farcornershelf.png";
 import farcornert from "@/assets/presets/marmout/farcornert.png";
@@ -140,8 +141,14 @@ const marmoutPresets: Record<string, Preset> = {
   downright: {
     description: "Down Right",
     image: downright,
-    position: { pan: 164.45, tilt: -54.07, zoom: 1 },
-    // modified: 2025-11-09T15:45:20.993Z
+    position: { pan: 164.44, tilt: -54.07, zoom: 1 },
+    // modified: 2026-06-11T23:59:23.840Z
+  },
+  downrightbranch: {
+    description: "downrightbranch",
+    image: downrightbranch,
+    position: { pan: 172.08, tilt: -30.78, zoom: 1 },
+    // modified: 2026-06-12T00:01:34.802Z
   },
   farcornerb: {
     description: "Far Corner Bottom",
