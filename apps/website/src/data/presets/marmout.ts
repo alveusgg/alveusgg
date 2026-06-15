@@ -22,6 +22,7 @@ import flaps from "@/assets/presets/marmout/flaps.png";
 import flapsb from "@/assets/presets/marmout/flapsb.png";
 import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
+import hose from "@/assets/presets/marmout/hose.png";
 import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
@@ -191,6 +192,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: ground,
     position: { pan: 133.79, tilt: -36.41, zoom: 1 },
     // modified: 2025-11-09T15:46:05.330Z
+  },
+  hose: {
+    description: "hose",
+    image: hose,
+    position: { pan: 90.46, tilt: -53.02, zoom: 166 },
+    // modified: 2026-06-14T12:52:38.214Z
   },
   left: {
     description: "Left",
