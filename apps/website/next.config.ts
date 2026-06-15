@@ -318,6 +318,31 @@ const config: NextConfig = {
       destination: "/help/found-animal",
       permanent: false,
     },
+    {
+      source: "/neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/report-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/neglect-surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
