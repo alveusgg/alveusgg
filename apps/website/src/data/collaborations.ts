@@ -82,6 +82,7 @@ import xchocobars from "@/assets/collaborations/xchocobars.png";
 import yourRage from "@/assets/collaborations/your-rage.png";
 import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
+import zelinaVega from "@/assets/collaborations/zelina-vega.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
 export type Creator = {
@@ -102,6 +103,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Zelina Vega",
+      link: "https://www.twitch.tv/theatrinidad",
+      date: new Date("2026-06-09"),
+      videoId: "-wAICXiEDQ0",
+      creators: [
+        {
+          name: "Zelina Vega",
+          image: zelinaVega,
+          popularity: 117_000, // Twitch followers, 2026-06-12
+        },
+      ],
+    },
     {
       name: "Ted Nivison",
       link: "https://www.youtube.com/@TedNivison",
