@@ -6,6 +6,7 @@ import home from "@/assets/presets/foxcovered/home.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import middle from "@/assets/presets/foxcovered/middle.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
+import platformbl from "@/assets/presets/foxcovered/platformbl.png";
 import platformbr from "@/assets/presets/foxcovered/platformbr.png";
 import platformfl from "@/assets/presets/foxcovered/platformfl.png";
 import platformfr from "@/assets/presets/foxcovered/platformfr.png";
@@ -63,6 +64,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     image: platform,
     position: { pan: -143.87, tilt: -0.93, zoom: 1604 },
     // modified: 2026-06-06T12:36:06.085Z
+  },
+  platformbl: {
+    description: "platformbl",
+    image: platformbl,
+    position: { pan: -144.94, tilt: -0.13, zoom: 2417 },
+    // modified: 2026-06-06T12:34:11.051Z
   },
   platformbr: {
     description: "platformbr",

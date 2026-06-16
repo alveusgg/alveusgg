@@ -5,6 +5,7 @@ import bughotel from "@/assets/presets/garden/bughotel.png";
 import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
+import pasturefarright from "@/assets/presets/garden/pasturefarright.png";
 import pasturegrove from "@/assets/presets/garden/pasturegrove.png";
 import pastureleft from "@/assets/presets/garden/pastureleft.png";
 import pasturepole from "@/assets/presets/garden/pasturepole.png";
@@ -62,6 +63,12 @@ const gardenPresets: Record<string, Preset> = {
     image: pasturebrush,
     position: { pan: -133.21, tilt: -11.39, zoom: 1048 },
     // modified: 2026-04-29T14:01:54.742Z
+  },
+  pasturefarright: {
+    description: "pasturefarright",
+    image: pasturefarright,
+    position: { pan: -41.43, tilt: -5.58, zoom: 1145 },
+    // modified: 2026-06-04T22:15:10.073Z
   },
   pasturegrove: {
     description: "Pasture Grove",
