@@ -199,7 +199,7 @@ const AddressBase = z.object({
   addressLine2: z.string().nullable(),
   addressLine3: z.string().nullable(),
   addressLine4: z.string().nullable(),
-  city: z.string(),
+  city: z.string().nullable(),
   stateProvince: CodeNamePair.nullable(),
   country: IdNamePair.nullable(),
   territory: z.string().nullable(),
@@ -293,7 +293,7 @@ const SharedAccountData = z.object({
   email1OptOut: z.boolean().nullable(),
   origin: z
     .object({
-      originDetail: z.string(),
+      originDetail: z.string().nullable(),
       originCategory: z.string(),
     })
     .nullable(),
@@ -317,7 +317,7 @@ const CompanyAccount = SharedAccountData.extend({
   name: z.string(),
   primaryContactAccountId: RecordId.nullable(),
   companyTypes: z.array(IdNamePair),
-  shippingAddresses: z.array(ShippingAddress),
+  shippingAddresses: z.array(ShippingAddress).nullable(),
 });
 
 export type AccountResponse = z.output<typeof AccountResponse>;
