@@ -133,6 +133,7 @@ const marmoutPresets: Record<string, Preset> = {
   downrightbranch: {
     description: "downrightbranch",
     image: downrightbranch,
+    position: { pan: 172.08, tilt: -30.78, zoom: 1 },
     // modified: 2026-06-12T00:01:34.802Z
   },
   farcornerb: {
@@ -180,6 +181,7 @@ const marmoutPresets: Record<string, Preset> = {
   hose: {
     description: "hose",
     image: hose,
+    position: { pan: 90.46, tilt: -53.02, zoom: 166 },
     // modified: 2026-06-14T12:52:38.214Z
   },
   left: {

@@ -1,11 +1,14 @@
-import type { Preset } from "../tech/cameras.types";
-
-const chickenmultiPresets: Record<string, Preset> = {};
+import multi from "@/assets/presets/chickenmulti.png";
 
 const chickenmulti = {
   title: "Chicken Multi-View",
   group: "chicken",
-  presets: chickenmultiPresets,
+  multi: {
+    description: "multi",
+    image: multi,
+    cameras: ["chicken", "chickenindoor"],
+    // modified: 2025-10-09T11:10:30.496Z
+  },
 };
 
 export default chickenmulti;

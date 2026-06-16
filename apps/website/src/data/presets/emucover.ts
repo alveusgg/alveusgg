@@ -36,6 +36,7 @@ const emucoverPresets: Record<string, Preset> = {
   centerr: {
     description: "centerr",
     image: centerr,
+    position: { pan: -16.58, tilt: -3.27, zoom: 87 },
     // modified: 2026-06-11T23:57:11.229Z
   },
   down: {
@@ -65,6 +66,7 @@ const emucoverPresets: Record<string, Preset> = {
   feeder: {
     description: "feeder",
     image: feeder,
+    position: { pan: -93.8, tilt: -3.94, zoom: 638 },
     // modified: 2026-06-11T23:42:35.199Z
   },
   left: {

@@ -94,6 +94,7 @@ const servalPresets: Record<string, Preset> = {
   leftrampb: {
     description: "leftrampb",
     image: leftrampb,
+    position: { pan: -133.04, tilt: -31.17, zoom: 1529 },
     // modified: 2026-06-03T15:28:52.031Z
   },
   leftwide: {
