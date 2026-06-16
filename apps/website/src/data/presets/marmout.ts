@@ -142,7 +142,7 @@ const marmoutPresets: Record<string, Preset> = {
   downright: {
     description: "Down Right",
     image: downright,
-    position: { pan: 164.44, tilt: -54.07, zoom: 1 },
+    position: { pan: 164.45, tilt: -54.07, zoom: 1 },
     // modified: 2026-06-11T23:59:23.840Z
   },
   downrightbranch: {

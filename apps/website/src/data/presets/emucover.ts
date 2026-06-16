@@ -24,7 +24,7 @@ const emucoverPresets: Record<string, Preset> = {
   home: {
     description: "home",
     image: home,
-    position: { pan: -97.52, tilt: -2.69, zoom: 1 },
+    position: { pan: -95.19, tilt: -3.7, zoom: 1 },
     // modified: 2026-06-11T23:41:47.191Z
   },
   center: {
@@ -48,7 +48,7 @@ const emucoverPresets: Record<string, Preset> = {
   downleft: {
     description: "downleft",
     image: downleft,
-    position: { pan: -99.12, tilt: -23.14, zoom: 1 },
+    position: { pan: -124.9, tilt: -21.05, zoom: 1 },
     // modified: 2026-06-11T23:50:46.235Z
   },
   downright: {
@@ -72,7 +72,7 @@ const emucoverPresets: Record<string, Preset> = {
   left: {
     description: "left",
     image: left,
-    position: { pan: -118.1, tilt: -4.45, zoom: 1 },
+    position: { pan: -118.85, tilt: -8.84, zoom: 1 },
     // modified: 2026-06-11T23:50:03.830Z
   },
   leftcorner: {
@@ -102,7 +102,7 @@ const emucoverPresets: Record<string, Preset> = {
   mudpit: {
     description: "mudpit",
     image: mudpit,
-    position: { pan: -48.72, tilt: -8.53, zoom: 172 },
+    position: { pan: -47.53, tilt: -9.13, zoom: 172 },
     // modified: 2026-06-11T23:44:27.665Z
   },
   right: {
@@ -126,7 +126,7 @@ const emucoverPresets: Record<string, Preset> = {
   shelter: {
     description: "shelter",
     image: shelter,
-    position: { pan: -160.28, tilt: -30.92, zoom: 1 },
+    position: { pan: -158.8, tilt: -37.41, zoom: 1 },
     // modified: 2026-06-11T23:51:46.188Z
   },
   sleep: {

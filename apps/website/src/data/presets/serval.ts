@@ -19,6 +19,7 @@ import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
+import rightrampr from "@/assets/presets/serval/rightrampr.png";
 import rightwide from "@/assets/presets/serval/rightwide.png";
 import rwatersleep from "@/assets/presets/serval/rwatersleep.png";
 import sand from "@/assets/presets/serval/sand.png";
@@ -157,6 +158,12 @@ const servalPresets: Record<string, Preset> = {
     image: rightplatformb,
     position: { pan: -59, tilt: -25.22, zoom: 916 },
     // modified: 2026-04-03T16:39:24.997Z
+  },
+  rightrampr: {
+    description: "rightrampr",
+    image: rightrampr,
+    position: { pan: -58.8, tilt: -32.11, zoom: 1181 },
+    // modified: 2026-06-15T18:03:32.946Z
   },
   rightwide: {
     description: "rightwide",
