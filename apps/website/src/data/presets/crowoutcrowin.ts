@@ -6,7 +6,7 @@ const crowoutcrowin = {
   multi: {
     description: "Crow outdoor camera with crow indoor picture-in-picture",
     image: multi,
-    cameras: ["CrowOut", "CrowIn"],
+    cameras: ["crowout", "crowin"],
     // modified: 2025-10-09T11:10:30.504Z
   },
 };

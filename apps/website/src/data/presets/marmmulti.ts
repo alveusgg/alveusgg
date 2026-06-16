@@ -7,7 +7,7 @@ const marmmulti = {
     description:
       "Marmoset outdoor camera with marmoset indoor picture-in-picture",
     image: multi,
-    cameras: ["Marmout", "Marmin"],
+    cameras: ["marmout", "marmin"],
     // modified: 2025-10-09T11:10:30.504Z
   },
 };
