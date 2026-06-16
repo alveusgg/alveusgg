@@ -6,10 +6,19 @@ import {
 import { type Options, buildBasicAuth } from "./env.js";
 import { createWebhook, deleteWebhook, getWebhooks } from "./index.js";
 import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
+import type { ZodError } from "zod";
 
 export type { DonationWebhookPayload } from "./schema.js";
 
-type WebhookOptions = Pick<Options, "organizationId" | "localTimezone">;
+type WebhookOptions = Pick<Options, "organizationId" | "localTimezone"> & {
+  onParseError?: (
+    error: ZodError,
+    context: {
+      kind: "webhook";
+      eventTrigger: string | undefined;
+    },
+  ) => void;
+};
 
 type WebhookTypeSchemas = (typeof WebhookPayload.def.options)[number];
 
@@ -22,6 +31,16 @@ export const parseWebhook = async <Schema extends WebhookTypeSchemas>(
   if (!payload.success) {
     console.error("Failed to parse Neon webhook payload", {
       error: payload.error,
+    });
+    options.onParseError?.(payload.error, {
+      kind: "webhook",
+      eventTrigger:
+        typeof body === "object" &&
+        body !== null &&
+        "eventTrigger" in body &&
+        typeof body.eventTrigger === "string"
+          ? body.eventTrigger
+          : undefined,
     });
     return false;
   }

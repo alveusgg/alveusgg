@@ -13,12 +13,23 @@ import {
   parseDonationWebhook,
   setupWebhook,
 } from "@alveusgg/neon-crm-api/webhooks";
+import * as Sentry from "@sentry/cloudflare";
+import type { ZodError } from "zod";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
 import timingSafeCompareString from "../../utils/timing-safe-compare-string";
 
 type NeonDonationProviderOptions = Options & {
   donationDisplayNameCustomFieldId?: string;
+  onParseError?: (
+    error: ZodError,
+    context: {
+      eventTrigger?: string;
+      kind?: string;
+      method?: string;
+      path?: string;
+    },
+  ) => void;
 };
 
 type NeonDonationData = DonationWebhookPayload["data"] | Donation;
@@ -37,6 +48,26 @@ const SYNC_MAX_PAGES = 10;
 const SYNC_PAGE_SIZE = 50;
 const SELF_IMPORT_ORIGIN_CATEGORY = "Self-Import";
 const SUCCEEDED_STATUS = "SUCCEEDED";
+
+function reportNeonParseError(
+  error: ZodError,
+  context: {
+    eventTrigger?: string;
+    kind?: string;
+    method?: string;
+    path?: string;
+  },
+) {
+  Sentry.withScope((scope) => {
+    scope.setTag("integration", "neon-crm");
+    scope.setTag("error.kind", "schema-parse");
+    if (context.path) scope.setTag("neon.path", context.path);
+    if (context.kind) scope.setTag("neon.kind", context.kind);
+    scope.setContext("neon", context);
+    scope.setContext("zod", { issues: error.issues });
+    Sentry.captureException(error);
+  });
+}
 
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
@@ -60,6 +91,7 @@ export class NeonDonationProvider implements DonationProvider {
       ...envToOptions(env),
       donationDisplayNameCustomFieldId:
         env.NEON_DONATION_DISPLAY_NAME_CUSTOM_FIELD_ID,
+      onParseError: reportNeonParseError,
     };
 
     try {
