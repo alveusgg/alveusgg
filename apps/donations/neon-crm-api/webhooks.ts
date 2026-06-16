@@ -4,7 +4,7 @@ import {
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
-import { createWebhook, getWebhooks } from "./index.js";
+import { createWebhook, deleteWebhook, getWebhooks } from "./index.js";
 import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
 
 export type { DonationWebhookPayload } from "./schema.js";
@@ -52,25 +52,39 @@ export async function setupWebhook(
   options: Options,
 ) {
   const existingWebhooks = await getWebhooks(options);
-  const webhookSetUp =
-    existingWebhooks.ok &&
-    existingWebhooks.data.some(
+  if (!existingWebhooks.ok) {
+    throw new Error(
+      `Failed to list Neon webhooks before setup: ${existingWebhooks.error}`,
+    );
+  }
+
+  const matchingWebhooks = existingWebhooks.data
+    .filter(
       (webhook) =>
         isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
         webhook.trigger === trigger &&
         webhook.httpBasic.userName === options.basicAuthUsername,
-    );
+    )
+    .sort((a, b) => Number(a.id) - Number(b.id));
 
-  if (webhookSetUp) {
+  if (matchingWebhooks.length > 0) {
+    for (const duplicate of matchingWebhooks.slice(1)) {
+      const deleted = await deleteWebhook(options, duplicate.id);
+      if (!deleted.ok) {
+        throw new Error(
+          `Failed to delete duplicate Neon webhook ${duplicate.id}: ${deleted.error}`,
+        );
+      }
+    }
     return;
   }
 
-  const uuid = crypto.randomUUID();
+  const uuid = getWebhookUuid(url, trigger);
   const urlWithUuid = new URL(url);
   urlWithUuid.searchParams.set("uuid", uuid);
 
   const created = await createWebhook(options, {
-    name: `alveusgg-donations-${uuid}`,
+    name: getWebhookName(url, trigger),
     url: String(urlWithUuid),
     trigger,
     httpBasic: buildBasicAuth(options),
@@ -81,7 +95,19 @@ export async function setupWebhook(
       },
     ],
   });
-  if (!created) {
-    throw new Error("Failed to create Neon webhook");
+  if (!created.ok) {
+    throw new Error(`Failed to create Neon webhook: ${created.error}`);
   }
+}
+
+function getWebhookName(url: string, trigger: WebhookResponse["trigger"]) {
+  const hostname = new URL(url).hostname.replace(/[^a-zA-Z0-9]+/g, "-");
+  return `alveusgg-donations-${trigger.toLowerCase()}-${hostname}`;
+}
+
+function getWebhookUuid(url: string, trigger: WebhookResponse["trigger"]) {
+  const normalizedUrl = new URL(url);
+  normalizedUrl.searchParams.delete("uuid");
+  normalizedUrl.searchParams.sort();
+  return `${trigger}:${normalizedUrl}`;
 }

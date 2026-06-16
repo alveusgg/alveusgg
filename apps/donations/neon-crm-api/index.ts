@@ -128,3 +128,6 @@ export const createWebhook = (
     httpBasic: input.httpBasic,
     customParameters: input.customParameters ?? [],
   } satisfies CreateWebhookInput);
+
+export const deleteWebhook = (options: Options, id: RecordId) =>
+  fetchOk(options, url`webhooks/${id}`, "DELETE");
