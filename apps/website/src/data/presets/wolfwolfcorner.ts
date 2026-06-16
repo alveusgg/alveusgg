@@ -6,7 +6,7 @@ const wolfwolfcorner = {
   multi: {
     description: "Wolf camera with wolf corner picture-in-picture",
     image: multi,
-    cameras: ["wolf", "wolfcorner"],
+    cameras: ["Wolf", "Wolfcorner"],
     // modified: 2025-10-09T11:10:30.500Z
   },
 };

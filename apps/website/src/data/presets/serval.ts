@@ -1,8 +1,6 @@
-import cratebl from "@/assets/presets/serval/cratebl.png";
 import cratef from "@/assets/presets/serval/cratef.png";
 import cratel from "@/assets/presets/serval/cratel.png";
 import door from "@/assets/presets/serval/door.png";
-import doorsleep from "@/assets/presets/serval/doorsleep.png";
 import down from "@/assets/presets/serval/down.png";
 import home from "@/assets/presets/serval/home.png";
 import insidecrate from "@/assets/presets/serval/insidecrate.png";
@@ -19,6 +17,7 @@ import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
+import rightrampr from "@/assets/presets/serval/rightrampr.png";
 import rightwide from "@/assets/presets/serval/rightwide.png";
 import rwatersleep from "@/assets/presets/serval/rwatersleep.png";
 import sand from "@/assets/presets/serval/sand.png";
@@ -38,12 +37,6 @@ const servalPresets: Record<string, Preset> = {
     position: { pan: -88.51, tilt: -18.05, zoom: 1 },
     // modified: 2026-04-02T12:27:39.327Z
   },
-  cratebl: {
-    description: "cratebl",
-    image: cratebl,
-    position: { pan: -97.43, tilt: -64.02, zoom: 1 },
-    // modified: 2026-06-08T14:01:03.254Z
-  },
   cratef: {
     description: "cratef",
     image: cratef,
@@ -61,12 +54,6 @@ const servalPresets: Record<string, Preset> = {
     image: door,
     position: { pan: -110.89, tilt: -77.69, zoom: 1 },
     // modified: 2026-04-02T12:38:24.129Z
-  },
-  doorsleep: {
-    description: "doorsleep",
-    image: doorsleep,
-    position: { pan: -143.88, tilt: -74.36, zoom: 294 },
-    // modified: 2026-06-04T12:50:35.362Z
   },
   down: {
     description: "down",
@@ -107,7 +94,6 @@ const servalPresets: Record<string, Preset> = {
   leftrampb: {
     description: "leftrampb",
     image: leftrampb,
-    position: { pan: -133.04, tilt: -31.17, zoom: 1529 },
     // modified: 2026-06-03T15:28:52.031Z
   },
   leftwide: {
@@ -157,6 +143,12 @@ const servalPresets: Record<string, Preset> = {
     image: rightplatformb,
     position: { pan: -59, tilt: -25.22, zoom: 916 },
     // modified: 2026-04-03T16:39:24.997Z
+  },
+  rightrampr: {
+    description: "rightrampr",
+    image: rightrampr,
+    position: { pan: -58.79, tilt: -32.1, zoom: 1181 },
+    // modified: 2026-06-15T18:03:32.946Z
   },
   rightwide: {
     description: "rightwide",

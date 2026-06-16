@@ -6,7 +6,7 @@ const macawsmulti = {
   multi: {
     description: "Macaws camera with littles picture-in-picture",
     image: multi,
-    cameras: ["macaws", "littles"],
+    cameras: ["Macaw", "Parrots"],
     // modified: 2026-01-28T17:40:31.962Z
   },
 };

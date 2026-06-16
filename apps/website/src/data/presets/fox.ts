@@ -10,7 +10,6 @@ import den1t from "@/assets/presets/fox/den1t.png";
 import den1tr from "@/assets/presets/fox/den1tr.png";
 import den1w from "@/assets/presets/fox/den1w.png";
 import den2 from "@/assets/presets/fox/den2.png";
-import den2b from "@/assets/presets/fox/den2b.png";
 import den2t from "@/assets/presets/fox/den2t.png";
 import den2tr from "@/assets/presets/fox/den2tr.png";
 import dirtpile from "@/assets/presets/fox/dirtpile.png";
@@ -120,14 +119,8 @@ const foxPresets: Record<string, Preset> = {
   den2: {
     description: "den2",
     image: den2,
-    position: { pan: -4.78, tilt: -3.17, zoom: 754 },
+    position: { pan: -4.8, tilt: -3.18, zoom: 754 },
     // modified: 2026-06-09T21:28:54.736Z
-  },
-  den2b: {
-    description: "den2b",
-    image: den2b,
-    position: { pan: -4.79, tilt: -3.9, zoom: 10229 },
-    // modified: 2026-06-09T21:26:42.082Z
   },
   den2t: {
     description: "den2t",
