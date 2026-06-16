@@ -35,7 +35,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "file:/Users/saarah/CS/AI_301/data",
+    "@alveusgg/data": "0.73.2",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@auth/prisma-adapter": "^2.11.2",
