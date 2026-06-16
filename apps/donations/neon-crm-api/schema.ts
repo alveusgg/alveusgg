@@ -150,12 +150,23 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
+const NullableYesNoBoolean = z
+  .enum(["Yes", "No"])
+  .nullable()
+  .optional()
+  .transform((val) => val === "Yes");
+
 export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
   lastModifiedBy: z.string(),
   lastModifiedDateTime: DateTimeSchema,
+});
+
+const NullableTimestamps = Timestamps.extend({
+  createdBy: z.string().nullable(),
+  lastModifiedBy: z.string().nullable(),
 });
 
 const webhookPayloadBase = {
@@ -192,6 +203,66 @@ export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
   DonationWebhookPayload,
 ]);
 
+const DonationPayment = z.object({
+  id: RecordId,
+  amount: z.number(),
+  paymentStatus: z.string().nullable().optional(),
+  receivedDate: DateSchema.nullable().optional(),
+  note: z.string().nullable().optional(),
+});
+
+export type AccountDonation = z.output<typeof AccountDonation>;
+export const AccountDonation = z.object({
+  id: RecordId,
+  accountId: RecordId,
+  amount: z.number().positive(),
+  purpose: z.string().nullable().optional(),
+  campaign: IdNamePair.nullable(),
+  fund: IdNamePair.nullable(),
+  origin: z
+    .object({
+      originDetail: z.string().nullable().optional(),
+      originCategory: z.string().nullable().optional(),
+    })
+    .nullable()
+    .optional(),
+  timestamps: NullableTimestamps,
+  date: DateSchema,
+  anonymousType: NullableYesNoBoolean,
+  donationCustomFields: z.array(CustomFieldData).nullable().optional(),
+  donorCoveredFeeFlag: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((val) => val === true),
+  payLater: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((val) => val === true),
+  payments: z
+    .array(DonationPayment)
+    .nullable()
+    .optional()
+    .transform((payments) => payments ?? []),
+  status: z.string().nullable().optional(),
+});
+
+const Pagination = z.object({
+  currentPage: z.number(),
+  pageSize: z.number(),
+  totalPages: z.number(),
+  totalResults: z.number(),
+});
+
+export type AccountDonationsResponse = z.output<
+  typeof AccountDonationsResponse
+>;
+export const AccountDonationsResponse = z.object({
+  donations: z.array(AccountDonation),
+  pagination: Pagination,
+});
+
 const AddressBase = z.object({
   addressId: RecordId,
   type: IdNamePair,
@@ -199,7 +270,7 @@ const AddressBase = z.object({
   addressLine2: z.string().nullable(),
   addressLine3: z.string().nullable(),
   addressLine4: z.string().nullable(),
-  city: z.string(),
+  city: z.string().nullable(),
   stateProvince: CodeNamePair.nullable(),
   country: IdNamePair.nullable(),
   territory: z.string().nullable(),
@@ -293,7 +364,7 @@ const SharedAccountData = z.object({
   email1OptOut: z.boolean().nullable(),
   origin: z
     .object({
-      originDetail: z.string(),
+      originDetail: z.string().nullable(),
       originCategory: z.string(),
     })
     .nullable(),
@@ -317,7 +388,7 @@ const CompanyAccount = SharedAccountData.extend({
   name: z.string(),
   primaryContactAccountId: RecordId.nullable(),
   companyTypes: z.array(IdNamePair),
-  shippingAddresses: z.array(ShippingAddress),
+  shippingAddresses: z.array(ShippingAddress).nullable(),
 });
 
 export type AccountResponse = z.output<typeof AccountResponse>;

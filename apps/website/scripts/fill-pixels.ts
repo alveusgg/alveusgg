@@ -21,7 +21,7 @@ const strictPixelAmounts = process.argv.includes("--strict-amount");
 
 function printUsageHint() {
   console.error(
-    "Usage: pnpm run murals:fill-pixels [--help] [--dry-run] [--verbose] [--strict-amount] [--provider=x] [startDateTime] [endDateTime]",
+    "Usage: pnpm run murals:fill-pixels [--help] [--dry-run] [--verbose] [--strict-amount] [--provider=x] [--neon-campaign-id=2] [--neon-fund-id=2] [startDateTime] [endDateTime]",
   );
 }
 
@@ -32,6 +32,12 @@ if (help) {
 
 const provider = process.argv
   .find((arg) => arg.startsWith("--provider="))
+  ?.split("=")[1];
+const neonCampaignId = process.argv
+  .find((arg) => arg.startsWith("--neon-campaign-id="))
+  ?.split("=")[1];
+const neonFundId = process.argv
+  .find((arg) => arg.startsWith("--neon-fund-id="))
   ?.split("=")[1];
 
 const fixedArgs = process.argv
@@ -70,6 +76,13 @@ async function main() {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     console.log(`\n--- Attempt ${attempt}/${MAX_RETRIES} ---`);
 
+    const neonCampaignFilter = neonCampaignId
+      ? `AND JSON_UNQUOTE(JSON_EXTRACT(d.providerMetadata, '$.neonCampaignId')) = '${neonCampaignId.replace(/'/g, "''")}'`
+      : "";
+    const neonFundFilter = neonFundId
+      ? `AND JSON_UNQUOTE(JSON_EXTRACT(d.providerMetadata, '$.neonFundId')) = '${neonFundId.replace(/'/g, "''")}'`
+      : "";
+
     const neededCounts = await prisma.$queryRawUnsafe<NeededCount[]>(`
       SELECT d.id,
              FLOOR((d.amount + 500) / 10000) - (SELECT COUNT(*)
@@ -80,6 +93,8 @@ async function main() {
         AND d.receivedAt <= '${endDateTime.toISOString()}'
         AND d.amount > ${MIN_AMOUNT_CENTS}
         ${provider ? `AND provider = '${provider}'` : ""}
+        ${neonCampaignFilter}
+        ${neonFundFilter}
         ${strictPixelAmounts ? `AND MOD(d.amount, ${PIXEL_PRICE * 100}) < ${DONATION_TOLERANCE * 100})` : ""}
       HAVING pixelsNeeded > 0
       ORDER BY d.receivedAt
