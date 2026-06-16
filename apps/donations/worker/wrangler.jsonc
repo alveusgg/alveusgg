@@ -71,6 +71,9 @@
       "enabled": true,
     },
   },
+  "triggers": {
+    "crons": ["0 * * * *"],
+  },
 
   "env": {
     "production": {

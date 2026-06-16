@@ -150,12 +150,26 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
+const normalizeStatus = (status: string) =>
+  status.toUpperCase().replace(/[^A-Z]/g, "_");
+
+const NullableYesNoBoolean = z
+  .enum(["Yes", "No"])
+  .nullable()
+  .optional()
+  .transform((val) => val === "Yes");
+
 export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
   lastModifiedBy: z.string(),
   lastModifiedDateTime: DateTimeSchema,
+});
+
+const NullableTimestamps = Timestamps.extend({
+  createdBy: z.string().nullable(),
+  lastModifiedBy: z.string().nullable(),
 });
 
 const webhookPayloadBase = {
@@ -191,6 +205,82 @@ export const DonationWebhookPayload = z.object({
 export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
   DonationWebhookPayload,
 ]);
+
+const DonationPayment = z.object({
+  id: RecordId,
+  amount: z.number(),
+  paymentStatus: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((status) => (status ? normalizeStatus(status) : status)),
+  receivedDate: DateSchema.nullable().optional(),
+  note: z.string().nullable().optional(),
+});
+
+const DonationOrigin = z
+  .object({
+    originDetail: z.string().nullable().optional(),
+    originCategory: z.string().nullable().optional(),
+  })
+  .nullable()
+  .optional();
+
+const DonationIdNamePair = IdNamePairBase.extend({
+  status: Status.nullable().optional(),
+}).nullable();
+
+export type DonationResponse = z.output<typeof DonationResponse>;
+export const DonationResponse = z.object({
+  id: RecordId,
+  accountId: RecordId,
+  amount: z.number().positive(),
+  purpose: z.string().nullable().optional(),
+  campaign: DonationIdNamePair,
+  fund: DonationIdNamePair,
+  origin: DonationOrigin,
+  timestamps: NullableTimestamps,
+  date: DateSchema,
+  anonymousType: NullableYesNoBoolean,
+  donationCustomFields: z.array(CustomFieldData).nullable().optional(),
+  donorCoveredFeeFlag: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((val) => val === true),
+  payLater: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((val) => val === true),
+  payments: z
+    .array(DonationPayment)
+    .nullable()
+    .optional()
+    .transform((payments) => payments ?? []),
+  status: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((status) => (status ? normalizeStatus(status) : status)),
+});
+
+const Pagination = z.object({
+  currentPage: z.number(),
+  pageSize: z.number(),
+  totalPages: z.number(),
+  totalResults: z.number(),
+  sortColumn: z.string().nullable().optional(),
+  sortDirection: z.string().nullable().optional(),
+});
+
+export type DonationSearchResponse = z.output<typeof DonationSearchResponse>;
+export const DonationSearchResponse = z.object({
+  pagination: Pagination,
+  searchResults: z.array(
+    z.record(z.string(), z.union([z.string(), z.number(), z.null()])),
+  ),
+});
 
 const AddressBase = z.object({
   addressId: RecordId,

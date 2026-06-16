@@ -4,9 +4,18 @@ import type { Options as AllOptions } from "./env.js";
 export type Options = Pick<
   AllOptions,
   "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
->;
+> & {
+  onParseError?: SchemaParseErrorReporter;
+};
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type SchemaParseErrorReporter = (
+  error: ZodError,
+  context: {
+    method: ApiMethod;
+    path: string;
+  },
+) => void;
 
 type FetchSuccess<T = unknown> = { ok: true; data: T };
 type FetchNetworkError = { ok: false; errorType: "network"; error: string };
@@ -31,11 +40,13 @@ const apiHeaders = ({
 export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
   strings.reduce(
     (acc, str, i) =>
-      acc + str + (i < values.length ? encodeURIComponent(values[i]) : ""),
+      acc +
+      str +
+      (i < values.length ? encodeURIComponent(values[i] ?? "") : ""),
     "",
   );
 
-const fetch = async (
+const fetch = (
   options: Options,
   path: string,
   method: ApiMethod = "GET",
@@ -77,7 +88,10 @@ export const fetchOk = async (
     return {
       ok: false,
       errorType: "network",
-      error: "Error fetching data from Neon CRM API",
+      error:
+        error instanceof Error
+          ? `Error fetching data from Neon CRM API: ${error.name}: ${error.message}`
+          : "Error fetching data from Neon CRM API",
     };
   }
 };
@@ -106,6 +120,10 @@ export const fetchWithSchema = async <ResponseSchema extends ZodType>(
         path,
         error: parsed.error,
       });
+      options.onParseError?.(parsed.error, {
+        method: method ?? "GET",
+        path,
+      });
       return {
         ok: false,
         errorType: "parse",
@@ -124,7 +142,10 @@ export const fetchWithSchema = async <ResponseSchema extends ZodType>(
     return {
       ok: false,
       errorType: "network",
-      error: "Error fetching data from Neon CRM API",
+      error:
+        error instanceof Error
+          ? `Error fetching data from Neon CRM API: ${error.name}: ${error.message}`
+          : "Error fetching data from Neon CRM API",
     };
   }
 };
