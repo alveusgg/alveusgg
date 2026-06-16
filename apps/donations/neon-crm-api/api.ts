@@ -4,7 +4,10 @@ import type { Options as AllOptions } from "./env.js";
 export type Options = Pick<
   AllOptions,
   "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
->;
+> & {
+  debug?: boolean;
+  fetchTimeoutMs?: number;
+};
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -31,7 +34,9 @@ const apiHeaders = ({
 export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
   strings.reduce(
     (acc, str, i) =>
-      acc + str + (i < values.length ? encodeURIComponent(values[i]) : ""),
+      acc +
+      str +
+      (i < values.length ? encodeURIComponent(values[i] ?? "") : ""),
     "",
   );
 
@@ -41,9 +46,11 @@ const fetch = async (
   method: ApiMethod = "GET",
   body?: unknown,
 ) => {
+  const timeoutMs = options.fetchTimeoutMs ?? 10_000;
   const request: RequestInit & { headers: Record<string, string> } = {
     method,
     headers: apiHeaders(options),
+    signal: AbortSignal.timeout(timeoutMs),
   };
 
   if (body) {
@@ -51,7 +58,22 @@ const fetch = async (
     request.body = JSON.stringify(body);
   }
 
-  return global.fetch(options.baseUrl + path, request);
+  if (options.debug) {
+    console.info(`[neon-api] ${method} ${path} start`);
+  }
+
+  const start = performance.now();
+  const response = await global.fetch(options.baseUrl + path, request);
+
+  if (options.debug) {
+    console.info(
+      `[neon-api] ${method} ${path} -> ${response.status} in ${Math.round(
+        performance.now() - start,
+      )}ms`,
+    );
+  }
+
+  return response;
 };
 
 export const fetchOk = async (
@@ -77,7 +99,10 @@ export const fetchOk = async (
     return {
       ok: false,
       errorType: "network",
-      error: "Error fetching data from Neon CRM API",
+      error:
+        error instanceof Error
+          ? `Error fetching data from Neon CRM API: ${error.name}: ${error.message}`
+          : "Error fetching data from Neon CRM API",
     };
   }
 };
@@ -124,7 +149,10 @@ export const fetchWithSchema = async <ResponseSchema extends ZodType>(
     return {
       ok: false,
       errorType: "network",
-      error: "Error fetching data from Neon CRM API",
+      error:
+        error instanceof Error
+          ? `Error fetching data from Neon CRM API: ${error.name}: ${error.message}`
+          : "Error fetching data from Neon CRM API",
     };
   }
 };
