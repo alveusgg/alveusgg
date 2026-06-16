@@ -440,6 +440,24 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               ))
             )}
 
+            {ambassador.sounds && ambassador.sounds.length > 0 && (
+              <div className="my-6">
+                <Heading level={2} id="sounds" link className="text-2xl">
+                  {ambassador.name}&apos;s Sounds
+                </Heading>
+                <div className="mt-3 flex flex-wrap gap-4">
+                  {ambassador.sounds.map(({ src, caption }) => (
+                    <div key={src} className="flex flex-col items-center gap-1">
+                      <audio controls src={`/sounds/${src}`} />
+                      <p className="text-center text-base text-alveus-green-700">
+                        {caption}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <Carousel
               items={carouselItems}
               auto={null}

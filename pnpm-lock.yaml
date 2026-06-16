@@ -243,8 +243,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.73.2
-        version: 0.73.2(tailwindcss@4.3.0)(zod@4.4.3)
+        specifier: file:/Users/saarah/CS/AI_301/data
+        version: file:../data(tailwindcss@4.3.0)(zod@4.4.3)
       '@alveusgg/database':
         specifier: workspace:*
         version: link:../database
@@ -559,11 +559,15 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.73.2':
-    resolution: {integrity: sha512-UjNYVidK2vAAfuqT9mdfKPhbQ6OsWmm4WBYkNiuUNFQ8V8WsTOVlVYbJbQ8Z3x7pI2YngGUq8Es+b/FuGv+/8A==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.73.2/eb7215308776f1d50150c873da48d2afc0d6f658}
+  '@alveusgg/data@file:../data':
+    resolution: {directory: ../data, type: directory}
+    engines: {pnpm: ^11.3.0}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
@@ -6536,10 +6540,11 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.73.2(tailwindcss@4.3.0)(zod@4.4.3)':
+  '@alveusgg/data@file:../data(tailwindcss@4.3.0)(zod@4.4.3)':
     dependencies:
-      tailwindcss: 4.3.0
       zod: 4.4.3
+    optionalDependencies:
+      tailwindcss: 4.3.0
 
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
