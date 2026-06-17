@@ -88,8 +88,8 @@ const marmoutPresets: Record<string, Preset> = {
   domellb: {
     description: "domellb",
     image: domellb,
-    position: { pan: 126.35, tilt: -10.89, zoom: 332 },
-    // modified: 2026-06-08T13:56:17.053Z
+    position: { pan: 126.97, tilt: -10.69, zoom: 390 },
+    // modified: 2026-06-16T17:00:43.522Z
   },
   domellshelf: {
     description: "domellshelf",
