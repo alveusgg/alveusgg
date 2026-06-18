@@ -322,8 +322,8 @@ const marmoutPresets: Record<string, Preset> = {
   upright: {
     description: "Up Right",
     image: upright,
-    position: { pan: 154, tilt: 9.72, zoom: 1 },
-    // modified: 2025-11-07T22:55:24.472Z
+    position: { pan: 152.63, tilt: 10.75, zoom: 1 },
+    // modified: 2026-06-17T12:07:22.482Z
   },
   uprightbranches: {
     description: "uprightbranches",
