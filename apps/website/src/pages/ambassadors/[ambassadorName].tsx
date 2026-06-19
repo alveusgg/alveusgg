@@ -17,6 +17,7 @@ import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
 } from "@alveusgg/data/build/ambassadors/images";
+import { getAmbassadorSounds } from "@alveusgg/data/build/ambassadors/sound";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import {
   type AnimalQuestWithRelation,
@@ -220,6 +221,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   iconImage,
   animalQuest,
 }) => {
+  const sounds = getAmbassadorSounds(ambassadorKey);
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
@@ -403,6 +405,25 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               })}
             </dl>
 
+            {sounds && sounds.length > 0 && (
+              <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">
+                <div className="col-span-full h-px bg-alveus-green opacity-10" />
+                <dt className="self-center text-2xl font-bold">Sounds</dt>
+                <dd className="self-center">
+                  <div className="flex flex-wrap gap-4">
+                    {sounds.map(({ src, caption }) => (
+                      <div key={String(src)} className="flex flex-col items-center gap-1">
+                        <audio controls src={String(src)} />
+                        <p className="text-center text-base text-alveus-green-700">
+                          {caption}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </dd>
+              </dl>
+            )}
+
             {ambassador.fact ? (
               <Box dark className="my-6 flex flex-col gap-2 p-4">
                 <Heading
@@ -438,24 +459,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   className="my-6"
                 />
               ))
-            )}
-
-            {ambassador.sounds && ambassador.sounds.length > 0 && (
-              <div className="my-6">
-                <Heading level={2} id="sounds" link className="text-2xl">
-                  {ambassador.name}&apos;s Sounds
-                </Heading>
-                <div className="mt-3 flex flex-wrap gap-4">
-                  {ambassador.sounds.map(({ src, caption }) => (
-                    <div key={src} className="flex flex-col items-center gap-1">
-                      <audio controls src={`/sounds/${src}`} />
-                      <p className="text-center text-base text-alveus-green-700">
-                        {caption}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
             )}
 
             <Carousel
