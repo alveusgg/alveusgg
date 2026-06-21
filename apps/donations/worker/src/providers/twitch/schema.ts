@@ -31,7 +31,7 @@ export const TwitchAmountPayload = z.object({
     ),
 });
 
-export const TwitchEventPayload = z.object({
+export const TwitchCharityDonationEventPayload = z.object({
   id: z.string(),
   campaign_id: z.string(),
   broadcaster_user_id: z.string(),
@@ -41,6 +41,51 @@ export const TwitchEventPayload = z.object({
   charity_name: z.string(),
   amount: TwitchAmountPayload,
 });
+
+export const TwitchNewSubscriptionEventPayload = z.object({
+  id: z.string(),
+  campaign_id: z.string(),
+  broadcaster_user_id: z.string(),
+  user_id: z.string(),
+  user_login: z.string(),
+  user_name: z.string(),
+  tier: z.number(),
+  is_gift: z.boolean(),
+});
+
+export const TwitchReSubscriptionEventPayload = z.object({
+  id: z.string(),
+  campaign_id: z.string(),
+  broadcaster_user_id: z.string(),
+  user_id: z.string(),
+  user_login: z.string(),
+  user_name: z.string(),
+  tier: z.number(),
+  message: z.object().optional(),
+  cumulative_months: z.number(),
+  streak_months: z.number(),
+  duration_months: z.number(),
+});
+
+export const TwitchGiftSubscriptionEventPayload = z.object({
+  id: z.string(),
+  campaign_id: z.string(),
+  broadcaster_user_id: z.string(),
+  user_id: z.string(),
+  user_login: z.string(),
+  user_name: z.string(),
+  tier: z.number(),
+  total: z.number(),
+  cumulative_total: z.number(),
+  is_anonymous: z.boolean(),
+});
+
+export const TwitchEventPayload = z.xor([
+  TwitchCharityDonationEventPayload,
+  TwitchNewSubscriptionEventPayload,
+  TwitchReSubscriptionEventPayload,
+  TwitchGiftSubscriptionEventPayload,
+]);
 
 export const TwitchNotificationPayload = z.object({
   subscription: TwitchSubscriptionPayload,
