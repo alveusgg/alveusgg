@@ -341,8 +341,8 @@ const pasturePresets: Record<string, Preset> = {
   purplenest: {
     description: "Purple Martin Nest",
     image: purplenest,
-    position: { pan: -1.17, tilt: -1.68, zoom: 7915 },
-    // modified: 2026-06-02T17:42:55.063Z
+    position: { pan: -1.17, tilt: -1.67, zoom: 5441 },
+    // modified: 2026-06-18T14:32:18.363Z
   },
   right: {
     description: "Right",
