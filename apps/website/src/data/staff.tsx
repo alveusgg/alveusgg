@@ -21,6 +21,8 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import mirandaFunImage from "@/assets/people/miranda-fun.jpg";
+import mirandaImage from "@/assets/people/miranda.jpg";
 import rockyImage from "@/assets/people/rocky.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
@@ -214,6 +216,27 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2024-07",
+    department: "animalCare",
+  },
+  miranda: {
+    image: [mirandaImage, mirandaFunImage],
+    name: "Miranda (Randi)",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Miranda grew up in Southern California and always had a passion for
+          animals. She looked at local schools to pursue a career working with
+          animals and found Moorpark College, where she then spent 2 years as a
+          student zookeeper working on the zoo and taking classes. After
+          graduation she did a short stint as a dog trainer, training dogs who
+          would aid people with diabetes. Following that, she then began working
+          with marine mammals in San Diego, which she did for years before
+          packing up and moving to Texas to work for Alveus!
+        </p>
+      </>
+    ),
+    joined: "2026-03",
     department: "animalCare",
   },
   linden: {
