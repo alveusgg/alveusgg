@@ -23,6 +23,29 @@ const currencyFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 2,
 });
 
+const formatTwitchSubTier = (tier?: string) => {
+  if (tier == "1000") return 1;
+  if (tier == "2000") return 2;
+  if (tier == "3000") return 3;
+  return "";
+};
+
+const formatTwitchSub = (donation: Donation) => {
+  const metadata = donation.providerMetadata;
+
+  if (!metadata.twitchSubscription) return null;
+
+  const formattedTier = formatTwitchSubTier(metadata.twitchSubscription.tier);
+
+  if (metadata.twitchSubscription.type === "gift") {
+    return `Gifted ${metadata.twitchSubscription.total} T${formattedTier}`;
+  } else if (metadata.twitchSubscription.type === "resubscription") {
+    return `Resub T${formattedTier} ${metadata.twitchSubscription.durationMonths}X`;
+  } else {
+    return `New T${formattedTier}`;
+  }
+};
+
 const formatDonationAmount = (amount: number) =>
   currencyFormatter.format(Math.round(amount / 100));
 
@@ -133,7 +156,9 @@ function DonationFeedItem({
             />
           }
         >
-          {formatDonationAmount(donation.amount)}
+          {donation.provider === "twitchsubscription"
+            ? formatTwitchSub(donation)
+            : formatDonationAmount(donation.amount)}
         </Badge>
         {donation.pixels > 0 && (
           <Badge

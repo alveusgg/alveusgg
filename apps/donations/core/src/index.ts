@@ -51,7 +51,7 @@ export const Providers = z.literal([
   "paypal",
   "thegivingblock",
   "neon",
-  "twitchsubscriber",
+  "twitchsubscription",
 ]);
 export type Providers = z.infer<typeof Providers>;
 
@@ -123,11 +123,15 @@ const TwitchSubscriptionDonationMetadataSchema = z.object({
   twitchDonatorDisplayName: z.string(),
   twitchBroadcasterId: z.string(),
   twitchSubscription: z.object({
-    subType: z.literal(["prime", "sub", "resub", "gift"]),
-    tier: z.string(),
+    type: z.literal(["gift", "resubscription", "subscription"]),
+    isGift: z.boolean().optional(),
+    tier: z.literal(["1000", "2000", "3000"]),
     total: z.number().optional(),
     cumulativeTotal: z.number().optional(),
-    anonymous: z.boolean().optional(),
+    cumulativeMonths: z.number().optional(),
+    streakMonths: z.number().optional(),
+    durationMonths: z.number().optional(),
+    isAnonymous: z.boolean().optional(),
   }),
 });
 
