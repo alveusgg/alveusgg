@@ -213,8 +213,8 @@ const data: RootNetworkItem[] = [
           {
             type: "switch",
             name: "HQ",
-            model: "Ubiquiti USW-16-PoE",
-            url: "https://store.ui.com/products/usw-16-poe",
+            model: "Ubiquiti USW-Pro-24-PoE",
+            url: "https://store.ui.com/products/usw-pro-24-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
@@ -276,41 +276,55 @@ const data: RootNetworkItem[] = [
                 ],
               },
               {
-                type: "converter",
+                type: "switch",
                 name: "Pasture",
-                model: "TP-Link MC220L",
-                url: "https://www.tp-link.com/us/business-networking/accessory/mc220l/",
+                model: "Ubiquiti USW-Pro-XG-8-PoE",
+                url: "https://store.ui.com/products/usw-pro-xg-8-poe",
                 connection: { type: "fiber", location: "wall" },
                 links: [
                   {
-                    type: "switch",
-                    name: "Pasture",
-                    model: "Ubiquiti USW-Lite-8-PoE",
-                    url: "https://store.ui.com/products/usw-lite-8-poe",
+                    type: "interface",
+                    name: "Pasture Audio I/O",
+                    model: "AXIS T6112 Mk II",
+                    url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
-                        type: "interface",
-                        name: "Pasture Audio I/O",
-                        model: "AXIS T6112 Mk II",
-                        url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
+                        type: "camera",
+                        name: "Pasture",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
                         connection: { type: "ethernet", location: "wall" },
-                        links: [
-                          {
-                            type: "camera",
-                            name: "Pasture",
-                            model: "AXIS Q6318-LE (PTZ)",
-                            url: "https://www.axis.com/products/axis-q6318-le",
-                            connection: { type: "ethernet", location: "wall" },
-                          },
-                          {
-                            type: "microphone",
-                            name: "Pasture Microphone",
-                            model: "AXIS TU1001-VE",
-                            url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
-                            connection: { type: "ethernet", location: "wall" },
-                          },
-                        ],
+                      },
+                      {
+                        type: "microphone",
+                        name: "Pasture Microphone",
+                        model: "AXIS TU1001-VE",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                  {
+                    type: "camera",
+                    name: "Pasture Feeder",
+                    model: "AXIS Q3536-LVE (Fixed)",
+                    url: "https://www.axis.com/products/axis-q3536-lve",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "switch",
+                    name: "Gate",
+                    model: "Ubiquiti USW-Pro-XG-8-PoE",
+                    url: "https://store.ui.com/products/usw-pro-xg-8-poe",
+                    connection: { type: "fiber", location: "buried" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Pasture Lower",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
+                        connection: { type: "ethernet", location: "wall" },
                       },
                     ],
                   },
