@@ -766,6 +766,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/about/staff",
         },
       },
+      {
+        key: "miranda",
+        date: "2026-03",
+        content: [
+          "Miranda joins the Alveus team",
+          "Alveus continues to grow, with Miranda joining the team as an Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
 ];
