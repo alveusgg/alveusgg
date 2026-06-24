@@ -672,8 +672,7 @@ const commands = {
     ],
   },
   ptzlist: {
-    description:
-      "Get all preset positions for a camera, or get the cameras on stream currently",
+    description: "Get all preset positions for a camera",
     category: "Presets",
     args: [
       {
@@ -913,6 +912,11 @@ const commands = {
   },
   camlist: {
     description: "Get all preset camera layouts",
+    category: "Scenes",
+    args: [],
+  },
+  scenecams: {
+    description: "Get names and slots of all cameras on stream currently",
     category: "Scenes",
     args: [],
   },
