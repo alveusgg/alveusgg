@@ -678,7 +678,7 @@ const commands = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
