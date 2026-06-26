@@ -10,6 +10,8 @@ import domelu from "@/assets/presets/marmout/domelu.png";
 import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
+import domerl from "@/assets/presets/marmout/domerl.png";
+import domerr from "@/assets/presets/marmout/domerr.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
@@ -126,6 +128,18 @@ const marmoutPresets: Record<string, Preset> = {
     image: domer,
     position: { pan: 150.19, tilt: -7.04, zoom: 1662 },
     // modified: 2025-11-09T15:43:20.327Z
+  },
+  domerl: {
+    description: "domerl",
+    image: domerl,
+    position: { pan: 148.54, tilt: -7.83, zoom: 1662 },
+    // modified: 2026-06-22T13:41:38.760Z
+  },
+  domerr: {
+    description: "domerr",
+    image: domerr,
+    position: { pan: 151.57, tilt: -7.67, zoom: 1662 },
+    // modified: 2026-06-22T13:40:20.947Z
   },
   down: {
     description: "Down",

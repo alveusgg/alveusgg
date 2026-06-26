@@ -27,26 +27,27 @@ export const useActiveNav = () => {
   const { asPath } = useRouter();
 
   // Find the path with the most matching segments in the nav structure
-  return useMemo(
-    () =>
-      flatNavStructure.reduce(
-        ({ path, segments }, link) => {
-          const linkSegments = link.split("/").filter(Boolean);
-          const pathSegments = asPath.split("/").filter(Boolean);
+  return useMemo(() => {
+    const pathSegments = asPath
+      .replace(/[#?].*$/, "")
+      .split("/")
+      .filter(Boolean);
+    return flatNavStructure.reduce(
+      ({ path, segments }, link) => {
+        const linkSegments = link.split("/").filter(Boolean);
 
-          const invalidSegment = linkSegments.findIndex(
-            (seg, i) => seg !== pathSegments[i],
-          );
-          const matchSegments =
-            invalidSegment === -1 ? linkSegments.length : invalidSegment;
+        const invalidSegment = linkSegments.findIndex(
+          (seg, i) => seg !== pathSegments[i],
+        );
+        const matchSegments =
+          invalidSegment === -1 ? linkSegments.length : invalidSegment;
 
-          if (matchSegments > segments) {
-            return { path: link, segments: matchSegments };
-          }
-          return { path, segments };
-        },
-        { path: "/", segments: 0 },
-      ).path,
-    [asPath],
-  );
+        if (matchSegments > segments) {
+          return { path: link, segments: matchSegments };
+        }
+        return { path, segments };
+      },
+      { path: "/", segments: 0 },
+    ).path;
+  }, [asPath]);
 };

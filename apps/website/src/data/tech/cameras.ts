@@ -32,6 +32,7 @@ import nature from "../presets/nature";
 import noodle from "../presets/noodle";
 import pasture from "../presets/pasture";
 import pasturefeeder from "../presets/pasturefeeder";
+import pasturelower from "../presets/pasturelower";
 import patchy from "../presets/patchy";
 import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
@@ -90,6 +91,7 @@ const cameras = {
   macawsmulti,
   pasture,
   pasturefeeder,
+  pasturelower,
   patchy,
   pushpop,
   pushpopcrunch,
