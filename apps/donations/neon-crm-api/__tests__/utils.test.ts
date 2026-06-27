@@ -1,6 +1,7 @@
 import { it, expect, describe } from "vitest";
 
 import {
+  formatDateInTimezone,
   fixDateTimezone,
   fixTimestampsTimezone,
   isSameUrlWithoutQuery,
@@ -20,6 +21,13 @@ describe("fixDateTimezone", () => {
     const timestamp = new Date("2024-06-01T12:00:00Z");
     const fixedDate = fixDateTimezone(timestamp, timezone);
     expect(fixedDate.toISOString()).toBe("2024-06-01T17:00:00.000Z");
+  });
+});
+
+describe("formatDateInTimezone", () => {
+  it("formats a date in the requested timezone as an ISO date", () => {
+    const timestamp = new Date("2026-06-17T04:00:00Z");
+    expect(formatDateInTimezone(timestamp, timezone)).toBe("2026-06-16");
   });
 });
 
