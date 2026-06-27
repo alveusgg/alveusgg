@@ -491,8 +491,7 @@ model Donation {
 
   pixels Pixel[]
 
-  @@index([receivedAt(sort: Desc)], name: "Donation_recent")
-  @@index([provider, receivedAt(sort: Desc)], name: "Donation_providerAndRecent")
+  @@index([receivedAt(sort: Desc), provider], name: "Donation_recent")
 }
 
 model Pixel {
