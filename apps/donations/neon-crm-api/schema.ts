@@ -10,6 +10,14 @@ const Status = z.enum(["ACTIVE", "INACTIVE"]);
 
 const ConsentStatus = z.enum(["GIVEN", "DECLINED", "NOT_ASKED"]);
 
+const GenericStatus = z
+  .string()
+  .nullable()
+  .optional()
+  .transform((status) =>
+    status ? status.toUpperCase().replace(/[^A-Z]/g, "_") : status,
+  );
+
 const DataType = z.enum([
   "Whole_Number",
   "Decimal",
@@ -150,9 +158,6 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
-const normalizeStatus = (status: string) =>
-  status.toUpperCase().replace(/[^A-Z]/g, "_");
-
 const NullableYesNoBoolean = z
   .enum(["Yes", "No"])
   .nullable()
@@ -209,11 +214,7 @@ export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
 const DonationPayment = z.object({
   id: RecordId,
   amount: z.number(),
-  paymentStatus: z
-    .string()
-    .nullable()
-    .optional()
-    .transform((status) => (status ? normalizeStatus(status) : status)),
+  paymentStatus: GenericStatus,
   receivedDate: DateSchema.nullable().optional(),
   note: z.string().nullable().optional(),
 });
@@ -258,11 +259,7 @@ export const DonationResponse = z.object({
     .nullable()
     .optional()
     .transform((payments) => payments ?? []),
-  status: z
-    .string()
-    .nullable()
-    .optional()
-    .transform((status) => (status ? normalizeStatus(status) : status)),
+  status: GenericStatus,
 });
 
 const Pagination = z.object({
