@@ -168,7 +168,7 @@ export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
-  lastModifiedBy: z.string(),
+  lastModifiedBy: z.string().nullable(),
   lastModifiedDateTime: DateTimeSchema,
 });
 
