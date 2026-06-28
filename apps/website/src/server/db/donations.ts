@@ -72,7 +72,7 @@ export async function getDonationFeed({
         : includeSubscriptions
           ? undefined
           : {
-              provider: { in: ["twitch", "paypal", "thegivingblock", "neon"] },
+              provider: { not: "twitchsubscription" },
             },
       orderBy: {
         receivedAt: "desc",

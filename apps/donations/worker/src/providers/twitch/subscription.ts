@@ -7,7 +7,11 @@ import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import superjson from "superjson";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
-import { TwitchEventHubMessageTypeHeader } from "./const";
+import {
+  TwitchEventHubMessageTypeHeader,
+  TwitchEventHubMessageIdHeader,
+  TwitchEventHubMessageTimestampHeader,
+} from "./const";
 import { verifySignature } from "./crypto";
 import {
   TwitchChallengePayload,
@@ -111,6 +115,12 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
       return new Response(null, { status: 201 });
     }
 
+    const uniqueMessageId = request.headers.get(TwitchEventHubMessageIdHeader);
+    if (!uniqueMessageId) {
+      await this.clear();
+      return new Response(null, { status: 400 });
+    }
+
     if (type === "notification") {
       const payload = TwitchSubscriptionNotificationPayload.safeParse(body);
 
@@ -129,10 +139,14 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
         return Response.json({ success: true }, { status: 201 });
       }
 
+      const messageTimestamp = request.headers.get(
+        TwitchEventHubMessageTimestampHeader,
+      );
+
       const donation = {
         id: crypto.randomUUID(),
         provider: "twitchsubscription",
-        providerUniqueId: request.headers.get("twitch-eventsub-message-id")!,
+        providerUniqueId: uniqueMessageId,
         providerMetadata: {
           twitchDonatorId: payload.data.event.user_id,
           twitchDonatorDisplayName: payload.data.event.user_name,
@@ -152,9 +166,7 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
         // Explicitly set amount to 0 because we have no way of determining the monetary
         // amount of any sub/resub/giftsub
         amount: 0,
-        receivedAt: new Date(
-          request.headers.get("twitch-eventsub-message-timestamp")!,
-        ),
+        receivedAt: messageTimestamp ? new Date(messageTimestamp) : new Date(),
         donatedBy: {
           primary: "username",
           username: payload.data.event.user_login,
