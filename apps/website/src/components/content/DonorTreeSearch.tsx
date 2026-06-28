@@ -38,9 +38,7 @@ export default function DonorTreeSearch({
         if (value) onSelect(value);
       }}
     >
-      <Label className="mb-1 block text-sm font-medium text-alveus-tan">
-        Search for your name
-      </Label>
+      <Label className="sr-only">Search for your name</Label>
       <div className="relative">
         <ComboboxInput
           displayValue={(value: string | null) => value ?? ""}
@@ -63,7 +61,7 @@ export default function DonorTreeSearch({
                   key={name}
                   value={name}
                   as="li"
-                  className="cursor-pointer px-4 py-2 text-sm text-white data-focus:bg-alveus-green-700"
+                  className="cursor-pointer px-4 py-2 text-sm text-white data-focus:bg-alveus-tan/15"
                 >
                   {name}
                 </ComboboxOption>

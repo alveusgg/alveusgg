@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { z } from "zod";
 
 import tree1Image from "@/assets/donor-trees/1.webp";
 import tree2Image from "@/assets/donor-trees/2.webp";
@@ -14,10 +15,15 @@ import tree4Annotations from "./donor-trees/4.json";
 import tree5Annotations from "./donor-trees/5.json";
 import tree6Annotations from "./donor-trees/6.json";
 
-export type TreeAnnotation = {
-  box: [number, number, number, number]; // [x1, y1, x2, y2] in image pixels
-  name: string;
-};
+// Validate the imported JSON at module load rather than trusting it with an
+// `as` assertion, so malformed annotation data fails loudly here.
+const treeAnnotationSchema = z.object({
+  box: z.tuple([z.number(), z.number(), z.number(), z.number()]), // [x1, y1, x2, y2] in image pixels
+  name: z.string(),
+});
+const treeAnnotationsSchema = z.array(treeAnnotationSchema);
+
+export type TreeAnnotation = z.infer<typeof treeAnnotationSchema>;
 
 export type DonorTree = {
   id: number;
@@ -29,32 +35,32 @@ export const DONOR_TREES: DonorTree[] = [
   {
     id: 1,
     image: tree1Image,
-    annotations: tree1Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree1Annotations),
   },
   {
     id: 2,
     image: tree2Image,
-    annotations: tree2Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree2Annotations),
   },
   {
     id: 3,
     image: tree3Image,
-    annotations: tree3Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree3Annotations),
   },
   {
     id: 4,
     image: tree4Image,
-    annotations: tree4Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree4Annotations),
   },
   {
     id: 5,
     image: tree5Image,
-    annotations: tree5Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree5Annotations),
   },
   {
     id: 6,
     image: tree6Image,
-    annotations: tree6Annotations as TreeAnnotation[],
+    annotations: treeAnnotationsSchema.parse(tree6Annotations),
   },
 ];
 
