@@ -45,9 +45,3 @@ export async function verifySignature(request: Request, secret: string) {
   );
   return signature === expectedSignature;
 }
-
-export async function sha256(message: string): Promise<string> {
-  const data = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return arrayBufferToHex(hashBuffer);
-}
