@@ -133,8 +133,8 @@ const servalPresets: Record<string, Preset> = {
   middleplatformbz: {
     description: "middleplatformbz",
     image: middleplatformbz,
-    position: { pan: -88.78, tilt: -9.2, zoom: 2408 },
-    // modified: 2026-06-23T06:46:17.679Z
+    position: { pan: -88.78, tilt: -9.19, zoom: 2408 },
+    // modified: 2026-06-27T14:06:53.059Z
   },
   middleplatformt: {
     description: "middleplatformt",
