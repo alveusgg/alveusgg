@@ -147,7 +147,7 @@ const collaborations: Collaboration[] = (
       name: "Jacksepticeye",
       link: "https://www.youtube.com/@jacksepticeye",
       date: new Date("2026-05-19"),
-      videoId: "b6apUuJHU2I",
+      videoId: "U7hGfOk9eOU",
       vodId: "qberatnwFhU",
       creators: [
         {
