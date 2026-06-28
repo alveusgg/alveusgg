@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import adapt from "@/assets/collaborations/adapt.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
@@ -30,7 +31,6 @@ import esfandtv from "@/assets/collaborations/esfandtv.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import extraEmily from "@/assets/collaborations/extra-emily.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
-import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -103,6 +103,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Adapt",
+      link: "https://www.twitch.tv/adapt",
+      date: new Date("2026-06-26"),
+      videoId: "zxjdjHnHTWI",
+      creators: [
+        {
+          name: "Adapt",
+          image: adapt,
+          popularity: 1_500_000, // Twitch followers, 2026-06-28
+        },
+      ],
+    },
     {
       name: "Zelina Vega",
       link: "https://www.twitch.tv/theatrinidad",
@@ -549,11 +562,7 @@ const collaborations: Collaboration[] = (
           image: fazeSilky,
           popularity: 654_000, // Twitch followers, 2024-11-13
         },
-        {
-          name: "FaZe Adapt",
-          image: fazeAdapt,
-          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
-        },
+        // Adapt has a more recent collaboration
       ],
     },
     {
