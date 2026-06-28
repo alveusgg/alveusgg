@@ -20,6 +20,7 @@ import farcornerb from "@/assets/presets/marmout/farcornerb.png";
 import farcornershelf from "@/assets/presets/marmout/farcornershelf.png";
 import farcornert from "@/assets/presets/marmout/farcornert.png";
 import farrightshelf from "@/assets/presets/marmout/farrightshelf.png";
+import farrightshelfb from "@/assets/presets/marmout/farrightshelfb.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
 import flapsb from "@/assets/presets/marmout/flapsb.png";
 import ground from "@/assets/presets/marmout/ground.png";
@@ -188,6 +189,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: farrightshelf,
     position: { pan: 178.48, tilt: -7.38, zoom: 664 },
     // modified: 2026-02-26T16:50:34.144Z
+  },
+  farrightshelfb: {
+    description: "farrightshelfb",
+    image: farrightshelfb,
+    position: { pan: 179.34, tilt: -25.19, zoom: 1210 },
+    // modified: 2026-06-27T14:04:51.953Z
   },
   flaps: {
     description: "Flaps",
