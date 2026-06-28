@@ -68,6 +68,19 @@ export const mainNavStructure: NavStructure = {
           },
         },
       },
+      community: {
+        title: "Get involved",
+        links: {
+          showAndTell: {
+            title: "Show & Tell",
+            link: "/show-and-tell",
+          },
+          pollinatorCensus: {
+            title: "Pollinator Census",
+            link: "https://census.alveussanctuary.org",
+          },
+        },
+      },
       series: {
         title: "Series",
         links: {
@@ -75,16 +88,13 @@ export const mainNavStructure: NavStructure = {
             title: "Animal Quest",
             link: "/animal-quest",
           },
-          showAndTell: {
-            title: "Show & Tell",
-            link: "/show-and-tell",
-          },
           bookClub: {
             title: "Alveus Book Club",
             link: "/book-club",
           },
         },
       },
+
       help: {
         title: "Help",
         links: {
