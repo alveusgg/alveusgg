@@ -1,5 +1,7 @@
 import {
+  ControlButton,
   Controls,
+  type CoordinateExtent,
   type Node,
   type NodeProps,
   ReactFlow,
@@ -14,6 +16,9 @@ import type { DonorTree, TreeAnnotation } from "@/data/donor-trees";
 import { classes } from "@/utils/classes";
 
 import useTooltip from "@/hooks/tooltip";
+
+import IconArrowsIn from "@/icons/IconArrowsIn";
+import IconArrowsOut from "@/icons/IconArrowsOut";
 
 import "@xyflow/react/dist/style.css";
 
@@ -33,6 +38,11 @@ const ANNOTATION_HIGHLIGHT_PADDING = 8;
 const FOCUS_WIDTH = 600;
 const FOCUS_HEIGHT = 340;
 
+// Pan is clamped to the image bounds expanded by this fraction on every side,
+// so the user can't drag off into empty space while still leaving slack for the
+// letterboxed fit and edge annotations.
+const EXTENT_PADDING = 0.25;
+
 // --- Image node ---
 
 type ImageData = Record<string, unknown> & { image: DonorTree["image"] };
@@ -41,11 +51,18 @@ const TreeImageNode = ({ data }: NodeProps<Node<ImageData>>) => {
   // Boolean selector so this only re-renders when crossing the threshold, not
   // on every pan/zoom frame. The panZoom guard matters: for the first frames
   // after mount the store viewport is a hardcoded zoom 1 (above
-  // FULL_RES_ZOOM), which would fire the multi-MB full-res request on every
-  // mount before the initial fit applies.
-  const showFullRes = useStore(
+  // FULL_RES_ZOOM), which would fire the high-res request on every mount before
+  // the initial fit applies.
+  const crossedThreshold = useStore(
     (s) => s.panZoom !== null && s.transform[2] >= FULL_RES_ZOOM,
   );
+  // Latch on: once the user has zoomed in far enough to load the high-res
+  // image, keep it mounted even after zooming back out — there's no benefit to
+  // tearing it down and re-fetching it next time they zoom in.
+  const [showFullRes, setShowFullRes] = useState(false);
+  useEffect(() => {
+    if (crossedThreshold) setShowFullRes(true);
+  }, [crossedThreshold]);
 
   return (
     <div
@@ -58,18 +75,15 @@ const TreeImageNode = ({ data }: NodeProps<Node<ImageData>>) => {
         alt=""
         fill
         priority
-        sizes="(max-width: 1024px) 100vw, 900px"
+        sizes="(max-width: 1024px) 100vw, 1024px"
         draggable={false}
       />
-      {/* Full-res — fetched on demand, overlays thumbnail when zoomed in */}
+      {/* High-res — fetched on demand, overlays thumbnail once zoomed in.
+          unoptimized serves the original file untouched: the engraved names
+          are only legible at the source resolution, so we must not let Next
+          downscale it to a device-size variant. */}
       {showFullRes && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={data.image.src}
-          alt=""
-          draggable={false}
-          className="absolute inset-0 size-full"
-        />
+        <Image src={data.image} alt="" fill unoptimized draggable={false} />
       )}
     </div>
   );
@@ -130,10 +144,16 @@ const PanelMinZoom = ({
   image,
   flow,
   onChange,
+  active,
 }: {
   image: DonorTree["image"];
   flow: ReactFlowInstance | null;
   onChange: (minZoom: number) => void;
+  // True while a searched name is focused. When set, the auto re-fit below is
+  // suppressed: on a cross-tree search the panel remounts and fitZoom settles
+  // from null, which would otherwise fire a whole-tree fitView that stomps the
+  // zoom-to-name animation.
+  active: boolean;
 }) => {
   const fitZoom = useStore((s) =>
     s.width && s.height
@@ -145,7 +165,7 @@ const PanelMinZoom = ({
   useEffect(() => {
     if (!fitZoom) return;
     onChange(fitZoom);
-    if (flow) {
+    if (flow && !active) {
       const zoom = flow.getZoom();
       // Re-fit if the panel grew past the current zoom, or if the user was
       // sitting at the old floor (fully zoomed out) when the panel resized.
@@ -154,7 +174,7 @@ const PanelMinZoom = ({
       if (zoom < fitZoom - 1e-6 || wasAtFloor) flow.fitView({ duration: 0 });
     }
     prevFitZoom.current = fitZoom;
-  }, [fitZoom, flow, onChange]);
+  }, [fitZoom, flow, onChange, active]);
 
   return null;
 };
@@ -164,9 +184,21 @@ const PanelMinZoom = ({
 type Props = {
   tree: DonorTree;
   activeAnnotation: TreeAnnotation | null;
+  // When set, a control button is shown that calls this to toggle the
+  // page-level fullscreen overlay (see the donor-trees page).
+  onToggleFullscreen?: () => void;
+  // True when this panel is the one rendered inside the fullscreen overlay:
+  // fills its container instead of using the inline aspect-video frame, and
+  // the toggle button collapses rather than expands.
+  fullscreen?: boolean;
 };
 
-export default function DonorTreePanel({ tree, activeAnnotation }: Props) {
+export default function DonorTreePanel({
+  tree,
+  activeAnnotation,
+  onToggleFullscreen,
+  fullscreen = false,
+}: Props) {
   // The instance is only stored once the initial fit has completed, so the
   // effects below never race against it. NOTE: do not gate viewport work on
   // useNodesInitialized — it never turns true for these handle-less nodes.
@@ -182,8 +214,10 @@ export default function DonorTreePanel({ tree, activeAnnotation }: Props) {
     setFlow(instance);
   }, []);
 
-  // Zoom to the searched name; on a fresh mount this runs right after the
-  // initial whole-tree fit, animating from the overview into the name.
+  // Zoom to the searched name. On a fresh mount (a search that switched trees)
+  // this runs once flow is set, right after the initial whole-tree fit; on the
+  // same tree it runs when activeAnnotation changes. PanelMinZoom is told a
+  // name is active so its auto-refit doesn't stomp this on the remount.
   useEffect(() => {
     if (!flow || !activeAnnotation) return;
     const [x1, y1, x2, y2] = activeAnnotation.box;
@@ -244,14 +278,33 @@ export default function DonorTreePanel({ tree, activeAnnotation }: Props) {
     return [imageNode, ...annNodes];
   }, [tree, activeAnnotation]);
 
+  const translateExtent = useMemo<CoordinateExtent>(
+    () => [
+      [-tree.image.width * EXTENT_PADDING, -tree.image.height * EXTENT_PADDING],
+      [
+        tree.image.width * (1 + EXTENT_PADDING),
+        tree.image.height * (1 + EXTENT_PADDING),
+      ],
+    ],
+    [tree.image.width, tree.image.height],
+  );
+
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-alveus-green-300/20 shadow-lg">
+    <div
+      className={classes(
+        "relative overflow-hidden bg-alveus-green-900",
+        fullscreen
+          ? "size-full rounded-2xl"
+          : "aspect-video w-full rounded-2xl border border-alveus-green-300/20 shadow-lg",
+      )}
+    >
       <ReactFlow
         nodes={nodes}
         edges={[]}
         nodeTypes={nodeTypes}
         minZoom={minZoom}
         maxZoom={4}
+        translateExtent={translateExtent}
         fitView
         // NOTE: onlyRenderVisibleElements is incompatible with the awaited
         // fitView in handleInit — unrendered nodes never get measured, so the
@@ -263,8 +316,23 @@ export default function DonorTreePanel({ tree, activeAnnotation }: Props) {
         onInit={handleInit}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls showInteractive={false} />
-        <PanelMinZoom image={tree.image} flow={flow} onChange={setMinZoom} />
+        <Controls showInteractive={false}>
+          {onToggleFullscreen && (
+            <ControlButton
+              onClick={onToggleFullscreen}
+              title={fullscreen ? "Exit fullscreen" : "View fullscreen"}
+              aria-label={fullscreen ? "Exit fullscreen" : "View fullscreen"}
+            >
+              {fullscreen ? <IconArrowsIn /> : <IconArrowsOut />}
+            </ControlButton>
+          )}
+        </Controls>
+        <PanelMinZoom
+          image={tree.image}
+          flow={flow}
+          onChange={setMinZoom}
+          active={activeAnnotation !== null}
+        />
       </ReactFlow>
     </div>
   );
