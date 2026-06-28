@@ -159,7 +159,7 @@ function DonationFeedItem({
           }
         >
           {donation.provider === "twitchsubscription"
-            ? formatTwitchSub(donation)
+            ? formatTwitchSub(donation as unknown as TwitchSubscriptionDonation)
             : formatDonationAmount(donation.amount)}
         </Badge>
         {donation.pixels > 0 && (
