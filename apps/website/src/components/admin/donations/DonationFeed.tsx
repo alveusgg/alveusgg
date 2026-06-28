@@ -133,7 +133,7 @@ export function DonationFeed() {
                     setIncludeSubscriptions(!includeSubscriptions)
                   }
                 />
-                <label htmlFor="subscription" className="ml-2">
+                <label htmlFor="subscriptions" className="ml-2">
                   Include twitch new/resub/gift subscriptions
                 </label>
               </div>

@@ -2,6 +2,8 @@ import { DateTime } from "luxon";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
+import { type TwitchSubscriptionDonation } from "@alveusgg/donations-core";
+
 import type { DonationFeed } from "@/server/trpc/router/donations";
 
 import { classes } from "@/utils/classes";
@@ -30,7 +32,7 @@ const formatTwitchSubTier = (tier?: string) => {
   return "";
 };
 
-const formatTwitchSub = (donation: Donation) => {
+const formatTwitchSub = (donation: TwitchSubscriptionDonation) => {
   const metadata = donation.providerMetadata;
 
   if (!metadata.twitchSubscription) return null;
