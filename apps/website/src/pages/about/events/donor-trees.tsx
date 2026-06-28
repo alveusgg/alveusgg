@@ -1,3 +1,4 @@
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { type NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
 
@@ -17,6 +18,7 @@ import Section from "@/components/content/Section";
 
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
+import IconX from "@/icons/IconX";
 
 type ActiveSelection = {
   treeId: number;
@@ -38,8 +40,11 @@ function findAnnotationForName(name: string): ActiveSelection | null {
 const DonorTreesPage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [active, setActive] = useState<ActiveSelection | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
 
   const currentTree = DONOR_TREES[currentIndex]!;
+  const currentActiveAnnotation =
+    active?.treeId === currentTree.id ? active.annotation : null;
 
   const goTo = useCallback((index: number) => {
     setCurrentIndex(index);
@@ -105,12 +110,12 @@ const DonorTreesPage: NextPage = () => {
 
       <Section className="grow">
         {/* Gallery navigation header — width-matched to the panel below */}
-        <div className="mx-auto mb-4 flex w-full max-w-4xl items-center justify-between">
+        <div className="mx-auto mb-4 flex w-full max-w-5xl items-center justify-between">
           <button
             type="button"
             onClick={goPrev}
             disabled={currentIndex === 0}
-            className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex items-center gap-1 rounded-lg px-3 py-2 text-base font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
             aria-label="Previous tree"
           >
             <IconChevronLeft className="size-4" />
@@ -139,7 +144,7 @@ const DonorTreesPage: NextPage = () => {
             type="button"
             onClick={goNext}
             disabled={currentIndex === DONOR_TREES.length - 1}
-            className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex items-center gap-1 rounded-lg px-3 py-2 text-base font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
             aria-label="Next tree"
           >
             Next
@@ -148,20 +153,49 @@ const DonorTreesPage: NextPage = () => {
         </div>
 
         {/* Single tree panel — key resets zoom/pan state on navigation */}
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <DonorTreePanel
             key={currentTree.id}
             tree={currentTree}
-            activeAnnotation={
-              active?.treeId === currentTree.id ? active.annotation : null
-            }
+            activeAnnotation={currentActiveAnnotation}
+            onToggleFullscreen={() => setFullscreen(true)}
           />
         </div>
 
-        <p className="mt-3 text-center text-sm text-alveus-green-700">
+        <p className="mt-3 text-center text-base text-alveus-green-700">
           Tree {currentIndex + 1} of {DONOR_TREES.length}
         </p>
       </Section>
+
+      {/* Fullscreen overlay — an in-page Dialog (not the browser Fullscreen
+          API) hosting a fill-the-viewport copy of the panel. Re-keyed per tree
+          so it re-fits when opened or navigated. */}
+      <Dialog
+        open={fullscreen}
+        onClose={() => setFullscreen(false)}
+        className="relative z-100"
+      >
+        <div className="fixed inset-0 bg-black/80" aria-hidden="true" />
+        <div className="fixed inset-0 p-4 md:p-8">
+          <DialogPanel className="relative size-full">
+            <DonorTreePanel
+              key={`fullscreen-${currentTree.id}`}
+              tree={currentTree}
+              activeAnnotation={currentActiveAnnotation}
+              onToggleFullscreen={() => setFullscreen(false)}
+              fullscreen
+            />
+            <button
+              type="button"
+              onClick={() => setFullscreen(false)}
+              aria-label="Exit fullscreen"
+              className="absolute top-3 right-3 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+            >
+              <IconX className="size-5" />
+            </button>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </>
   );
 };
