@@ -8,12 +8,12 @@ import superjson from "superjson";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
 import { TwitchEventHubMessageTypeHeader } from "./const";
-import { verifySignature, sha256 } from "./crypto";
+import { verifySignature } from "./crypto";
 import {
   TwitchChallengePayload,
   TwitchSubscriptionNotificationPayload,
 } from "./schema";
-import type { TwitchDonationProviderConfig } from "./twitch.ts";
+import type { TwitchDonationProviderConfig } from "./twitch";
 
 const subscriptionType = (type: string) => {
   if (type === "channel.subscription.gift") return "gift";
@@ -132,12 +132,7 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
       const donation = {
         id: crypto.randomUUID(),
         provider: "twitchsubscription",
-        // Twitch subscription messages do not include an id field.
-        // We create a sha256 hash of user_id and when the notification was
-        // created.
-        providerUniqueId: await sha256(
-          `${payload.data.event.user_id}-${payload.data.subscription.created_at}`,
-        ),
+        providerUniqueId: request.headers.get("twitch-eventsub-message-id")!,
         providerMetadata: {
           twitchDonatorId: payload.data.event.user_id,
           twitchDonatorDisplayName: payload.data.event.user_name,
@@ -154,11 +149,12 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
             total: payload.data.event.total,
           },
         },
-        // Explicitly set amount to 0 because we have no way of determining the monitary
+        // Explicitly set amount to 0 because we have no way of determining the monetary
         // amount of any sub/resub/giftsub
         amount: 0,
-        receivedAt: new Date(),
-        donatedAt: new Date(),
+        receivedAt: new Date(
+          request.headers.get("twitch-eventsub-message-timestamp")!,
+        ),
         donatedBy: {
           primary: "username",
           username: payload.data.event.user_login,
