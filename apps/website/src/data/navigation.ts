@@ -95,7 +95,6 @@ export const mainNavStructure: NavStructure = {
           },
         },
       },
-
       help: {
         title: "Help",
         links: {
