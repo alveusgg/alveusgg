@@ -69,7 +69,7 @@ export const mainNavStructure: NavStructure = {
         },
       },
       community: {
-        title: "Get involved",
+        title: "Get Involved",
         links: {
           showAndTell: {
             title: "Show & Tell",
@@ -77,7 +77,8 @@ export const mainNavStructure: NavStructure = {
           },
           pollinatorCensus: {
             title: "Pollinator Census",
-            link: "https://census.alveussanctuary.org",
+            link: "/census",
+            external: true,
           },
         },
       },

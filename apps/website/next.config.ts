@@ -522,6 +522,11 @@ const config: NextConfig = {
         destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
         permanent: true,
       })),
+    {
+      source: "/census",
+      destination: "https://census.alveussanctuary.org",
+      permanent: true,
+    },
   ],
   headers: async () => [
     {
