@@ -51,6 +51,7 @@ export const Providers = z.literal([
   "paypal",
   "thegivingblock",
   "neon",
+  "twitchsubscription",
 ]);
 export type Providers = z.infer<typeof Providers>;
 
@@ -117,11 +118,37 @@ export const NeonDonationSchema = CoreDonationSchema.extend({
 });
 export type NeonDonation = z.infer<typeof NeonDonationSchema>;
 
+const TwitchSubscriptionDonationMetadataSchema = z.object({
+  twitchDonatorId: z.string(),
+  twitchDonatorDisplayName: z.string(),
+  twitchBroadcasterId: z.string(),
+  twitchSubscription: z.object({
+    type: z.literal(["gift", "resubscription", "subscription"]),
+    isGift: z.boolean().optional(),
+    tier: z.literal(["1000", "2000", "3000"]),
+    total: z.number().optional(),
+    cumulativeTotal: z.number().optional(),
+    cumulativeMonths: z.number().optional(),
+    streakMonths: z.number().optional(),
+    durationMonths: z.number().optional(),
+    isAnonymous: z.boolean().optional(),
+  }),
+});
+
+export const TwitchSubscriptionDonationSchema = CoreDonationSchema.extend({
+  provider: z.literal("twitchsubscription"),
+  providerMetadata: TwitchSubscriptionDonationMetadataSchema,
+});
+export type TwitchSubscriptionDonation = z.infer<
+  typeof TwitchSubscriptionDonationSchema
+>;
+
 export const DonationSchema = z.discriminatedUnion("provider", [
   TwitchDonationSchema,
   PaypalDonationSchema,
   TheGivingBlockDonationSchema,
   NeonDonationSchema,
+  TwitchSubscriptionDonationSchema,
 ]);
 
 export type Donation = z.infer<typeof DonationSchema>;

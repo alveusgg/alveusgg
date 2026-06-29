@@ -38,10 +38,12 @@ export async function getDonationFeed({
   take,
   cursor,
   onlyPixels = false,
+  includeSubscriptions = false,
 }: {
   take?: number;
   cursor?: string;
   onlyPixels?: boolean;
+  includeSubscriptions?: boolean;
 } = {}) {
   return (
     await prisma.donation.findMany({
@@ -54,6 +56,7 @@ export async function getDonationFeed({
         donatedBy: true,
         tags: true,
         note: true,
+        ...(includeSubscriptions ? { providerMetadata: true } : {}),
         _count: {
           select: { pixels: true },
         },
@@ -66,7 +69,11 @@ export async function getDonationFeed({
               some: {},
             },
           }
-        : undefined,
+        : includeSubscriptions
+          ? undefined
+          : {
+              provider: { not: "twitchsubscription" },
+            },
       orderBy: {
         receivedAt: "desc",
       },
@@ -76,6 +83,9 @@ export async function getDonationFeed({
     // That can be baked into the database schema in the future
     // with prisma-json-types-generator.
     const donatedBy = donation.donatedBy as Donator;
+    const providerMetadata = includeSubscriptions
+      ? (donation.providerMetadata as Record<string, unknown>)
+      : {};
     const tags = (donation.tags || {}) as Record<string, string>;
 
     return {
@@ -85,6 +95,7 @@ export async function getDonationFeed({
       donatedAt: donation.donatedAt ?? donation.receivedAt,
       provider: donation.provider,
       pixels: donation._count.pixels,
+      providerMetadata: providerMetadata,
       note: donation.note,
       tags: {
         campaign: tags.campaign,

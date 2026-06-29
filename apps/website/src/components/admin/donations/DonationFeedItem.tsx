@@ -2,6 +2,8 @@ import { DateTime } from "luxon";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
+import { type TwitchSubscriptionDonation } from "@alveusgg/donations-core";
+
 import type { DonationFeed } from "@/server/trpc/router/donations";
 
 import { classes } from "@/utils/classes";
@@ -22,6 +24,29 @@ const currencyFormatter = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 });
+
+const formatTwitchSubTier = (tier?: string) => {
+  if (tier == "1000") return 1;
+  if (tier == "2000") return 2;
+  if (tier == "3000") return 3;
+  return "";
+};
+
+const formatTwitchSub = (donation: TwitchSubscriptionDonation) => {
+  const metadata = donation.providerMetadata;
+
+  if (!metadata.twitchSubscription) return null;
+
+  const formattedTier = formatTwitchSubTier(metadata.twitchSubscription.tier);
+
+  if (metadata.twitchSubscription.type === "gift") {
+    return `Gifted ${metadata.twitchSubscription.total} T${formattedTier}`;
+  } else if (metadata.twitchSubscription.type === "resubscription") {
+    return `Resub T${formattedTier} ${metadata.twitchSubscription.durationMonths}X`;
+  } else {
+    return `New T${formattedTier}`;
+  }
+};
 
 const formatDonationAmount = (amount: number) =>
   currencyFormatter.format(Math.round(amount / 100));
@@ -133,7 +158,9 @@ function DonationFeedItem({
             />
           }
         >
-          {formatDonationAmount(donation.amount)}
+          {donation.provider === "twitchsubscription"
+            ? formatTwitchSub(donation as unknown as TwitchSubscriptionDonation)
+            : formatDonationAmount(donation.amount)}
         </Badge>
         {donation.pixels > 0 && (
           <Badge
