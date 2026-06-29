@@ -385,6 +385,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/census",
+      destination: "https://census.alveussanctuary.org",
+      permanent: true,
+    },
+    {
       source: "/wishlist",
       destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
       permanent: true,
@@ -522,11 +527,6 @@ const config: NextConfig = {
         destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
         permanent: true,
       })),
-    {
-      source: "/census",
-      destination: "https://census.alveussanctuary.org",
-      permanent: true,
-    },
   ],
   headers: async () => [
     {
