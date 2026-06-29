@@ -15,6 +15,7 @@ import owlbox from "@/assets/presets/pasturelower/owlbox.png";
 import purplebasel from "@/assets/presets/pasturelower/purplebasel.png";
 import purplenest from "@/assets/presets/pasturelower/purplenest.png";
 import right from "@/assets/presets/pasturelower/right.png";
+import rightcorner from "@/assets/presets/pasturelower/rightcorner.png";
 import upperpasture from "@/assets/presets/pasturelower/upperpasture.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -121,6 +122,12 @@ const pasturelowerPresets: Record<string, Preset> = {
     image: right,
     position: { pan: -16.57, tilt: -2.25, zoom: 1 },
     // modified: 2026-06-19T13:11:49.161Z
+  },
+  rightcorner: {
+    description: "rightcorner",
+    image: rightcorner,
+    position: { pan: 12.46, tilt: -7.76, zoom: 1 },
+    // modified: 2026-06-28T14:30:00.944Z
   },
   upperpasture: {
     description: "upperpasture",
