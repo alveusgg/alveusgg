@@ -1,5 +1,6 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { type NextPage } from "next";
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -18,6 +19,11 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 
 import IconX from "@/icons/IconX";
+
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type ActiveSelection = {
   treeId: number;
@@ -140,16 +146,41 @@ const DonorTreesPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark className="z-10 py-24">
-        <Heading>Donor Trees</Heading>
-        <p className="text-lg">
-          Thank you to everyone who donated during our fundraising campaign.
-          Your name is engraved on one of our six donor recognition trees at
-          Alveus. Search for your name below to find where it appears.
-        </p>
-      </Section>
+      <div className="relative">
+        <Image
+          src={leafRightImage1}
+          alt=""
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block"
+        />
+        <Image
+          src={leafLeftImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+        />
 
-      <Section className="grow">
+        <Section dark className="py-24">
+          <Heading>Donor Trees</Heading>
+          <p className="text-lg">
+            Thank you to everyone who donated during our fundraising campaign.
+            Your name is engraved on one of our six donor recognition trees at
+            Alveus. Search for your name below to find where it appears.
+          </p>
+        </Section>
+      </div>
+
+      <div className="relative flex grow flex-col">
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
+        />
+        <Image
+          src={leafRightImage2}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+        />
+
+        <Section className="grow">
         {/* Drag is disabled so panning a tree doesn't scroll the carousel;
             trees are changed via the arrows, dots, keyboard, or search. */}
         <Carousel
@@ -188,7 +219,8 @@ const DonorTreesPage: NextPage = () => {
         <div className="mx-auto mt-8 w-full max-w-2xl">
           <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
         </div>
-      </Section>
+        </Section>
+      </div>
 
       {/* Fullscreen overlay — an in-page Dialog (not the browser Fullscreen
           API) hosting a fill-the-viewport copy of the current tree. Re-keyed
