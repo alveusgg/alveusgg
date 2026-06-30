@@ -1,6 +1,6 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { type NextPage } from "next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   DONOR_NAMES,
@@ -10,14 +10,13 @@ import {
 
 import { classes } from "@/utils/classes";
 
+import Carousel from "@/components/content/Carousel";
 import DonorTreePanel from "@/components/content/DonorTreePanel";
 import DonorTreeSearch from "@/components/content/DonorTreeSearch";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 
-import IconChevronLeft from "@/icons/IconChevronLeft";
-import IconChevronRight from "@/icons/IconChevronRight";
 import IconX from "@/icons/IconX";
 
 type ActiveSelection = {
@@ -38,30 +37,61 @@ function findAnnotationForName(name: string): ActiveSelection | null {
 }
 
 const DonorTreesPage: NextPage = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [active, setActive] = useState<ActiveSelection | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
 
   const currentTree = DONOR_TREES[currentIndex]!;
   const currentActiveAnnotation =
     active?.treeId === currentTree.id ? active.annotation : null;
 
-  const goTo = useCallback((index: number) => {
-    setCurrentIndex(index);
-    setActive(null);
+  // Refs to each carousel slide (keyed by tree id), so we can scroll a specific
+  // tree into view and observe which one is currently centered.
+  const slidesRef = useRef<Record<string, HTMLDivElement>>({});
+
+  const scrollToTree = useCallback((treeId: number) => {
+    slidesRef.current[String(treeId)]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "start",
+      block: "nearest",
+    });
   }, []);
 
-  const goPrev = useCallback(
-    () => goTo(Math.max(0, currentIndex - 1)),
-    [goTo, currentIndex],
+  // The carousel owns the scroll position, so derive the current tree from
+  // whichever slide is most visible (drives the counter, dots, keyboard nav,
+  // and the fullscreen target).
+  useEffect(() => {
+    const slides = Object.entries(slidesRef.current);
+    const root = slides[0]?.[1]?.parentElement;
+    if (!root) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!mostVisible) return;
+        const id = slides.find(([, el]) => el === mostVisible.target)?.[0];
+        const index = DONOR_TREES.findIndex((t) => String(t.id) === id);
+        if (index >= 0) setCurrentIndex(index);
+      },
+      { root, threshold: [0.25, 0.5, 0.75, 1] },
+    );
+    for (const [, el] of slides) observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleSelect = useCallback(
+    (name: string) => {
+      const found = findAnnotationForName(name);
+      if (!found) return;
+      setActive(found);
+      scrollToTree(found.treeId);
+    },
+    [scrollToTree],
   );
 
-  const goNext = useCallback(
-    () => goTo(Math.min(DONOR_TREES.length - 1, currentIndex + 1)),
-    [goTo, currentIndex],
-  );
-
-  // Keyboard left/right navigation
+  // Keyboard left/right navigation between trees
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // Don't hijack arrow keys while typing in the search (or any input)
@@ -70,20 +100,34 @@ const DonorTreesPage: NextPage = () => {
         ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)
       )
         return;
-      if (e.key === "ArrowLeft") goPrev();
-      else if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft" && currentIndex > 0)
+        scrollToTree(DONOR_TREES[currentIndex - 1]!.id);
+      else if (e.key === "ArrowRight" && currentIndex < DONOR_TREES.length - 1)
+        scrollToTree(DONOR_TREES[currentIndex + 1]!.id);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goPrev, goNext]);
+  }, [currentIndex, scrollToTree]);
 
-  const handleSelect = useCallback((name: string) => {
-    const found = findAnnotationForName(name);
-    if (!found) return;
-    const index = DONOR_TREES.findIndex((t) => t.id === found.treeId);
-    setCurrentIndex(index);
-    setActive(found);
-  }, []);
+  // One panel per tree, all mounted so the carousel can scroll between them and
+  // a searched name can be zoomed without remounting.
+  const items = useMemo(
+    () =>
+      Object.fromEntries(
+        DONOR_TREES.map((tree) => [
+          String(tree.id),
+          <DonorTreePanel
+            key={tree.id}
+            tree={tree}
+            activeAnnotation={
+              active?.treeId === tree.id ? active.annotation : null
+            }
+            onToggleFullscreen={() => setFullscreen(true)}
+          />,
+        ]),
+      ),
+    [active],
+  );
 
   return (
     <>
@@ -109,25 +153,25 @@ const DonorTreesPage: NextPage = () => {
       </Section>
 
       <Section className="grow">
-        {/* Gallery navigation header — width-matched to the panel below */}
-        <div className="mx-auto mb-4 flex w-full max-w-5xl items-center justify-between">
-          <button
-            type="button"
-            onClick={goPrev}
-            disabled={currentIndex === 0}
-            className="flex items-center gap-1 rounded-lg px-3 py-2 text-base font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
-            aria-label="Previous tree"
-          >
-            <IconChevronLeft className="size-4" />
-            Previous
-          </button>
+        {/* Drag is disabled so panning a tree doesn't scroll the carousel;
+            trees are changed via the arrows, dots, keyboard, or search. */}
+        <Carousel
+          items={items}
+          auto={null}
+          draggable={false}
+          className="mx-auto max-w-5xl items-center"
+          itemClassName="basis-full p-1"
+          buttonClassName="text-alveus-green-800 transition-colors hover:text-alveus-green-500"
+          itemsRef={slidesRef}
+        />
 
+        <div className="mx-auto mt-4 flex max-w-5xl flex-col items-center gap-2">
           <div className="flex items-center gap-2">
             {DONOR_TREES.map((tree, i) => (
               <button
                 key={tree.id}
                 type="button"
-                onClick={() => goTo(i)}
+                onClick={() => scrollToTree(tree.id)}
                 aria-label={`Tree ${tree.id}`}
                 aria-current={i === currentIndex ? "true" : undefined}
                 className={classes(
@@ -139,37 +183,15 @@ const DonorTreesPage: NextPage = () => {
               />
             ))}
           </div>
-
-          <button
-            type="button"
-            onClick={goNext}
-            disabled={currentIndex === DONOR_TREES.length - 1}
-            className="flex items-center gap-1 rounded-lg px-3 py-2 text-base font-medium text-alveus-green-800 transition-colors hover:bg-alveus-green-100 disabled:cursor-not-allowed disabled:opacity-30"
-            aria-label="Next tree"
-          >
-            Next
-            <IconChevronRight className="size-4" />
-          </button>
+          <p className="text-base text-alveus-green-700">
+            Tree {currentIndex + 1} of {DONOR_TREES.length}
+          </p>
         </div>
-
-        {/* Single tree panel — key resets zoom/pan state on navigation */}
-        <div className="mx-auto max-w-5xl">
-          <DonorTreePanel
-            key={currentTree.id}
-            tree={currentTree}
-            activeAnnotation={currentActiveAnnotation}
-            onToggleFullscreen={() => setFullscreen(true)}
-          />
-        </div>
-
-        <p className="mt-3 text-center text-base text-alveus-green-700">
-          Tree {currentIndex + 1} of {DONOR_TREES.length}
-        </p>
       </Section>
 
       {/* Fullscreen overlay — an in-page Dialog (not the browser Fullscreen
-          API) hosting a fill-the-viewport copy of the panel. Re-keyed per tree
-          so it re-fits when opened or navigated. */}
+          API) hosting a fill-the-viewport copy of the current tree. Re-keyed
+          per tree so it re-fits when opened or navigated. */}
       <Dialog
         open={fullscreen}
         onClose={() => setFullscreen(false)}

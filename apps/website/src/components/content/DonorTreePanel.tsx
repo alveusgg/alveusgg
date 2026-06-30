@@ -69,12 +69,13 @@ const TreeImageNode = ({ data }: NodeProps<Node<ImageData>>) => {
       className="pointer-events-none relative select-none"
       style={{ width: data.image.width, height: data.image.height }}
     >
-      {/* Optimized thumbnail — always present, visible while full-res loads */}
+      {/* Optimized thumbnail — always present, visible while full-res loads.
+          Lazy (no priority): several panels are mounted at once in the
+          carousel, so only the on-screen one should fetch up front. */}
       <Image
         src={data.image}
         alt=""
         fill
-        priority
         sizes="(max-width: 1024px) 100vw, 1024px"
         draggable={false}
       />
