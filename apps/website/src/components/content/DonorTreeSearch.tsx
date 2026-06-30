@@ -78,6 +78,9 @@ export default function DonorTreeSearch({
         </button>
 
         <ComboboxInput
+          // Suppress the browser's native autofill/autocomplete — we provide
+          // our own suggestions, and its overlay overrides the input styling.
+          autoComplete="off"
           displayValue={(value: string | null) => value ?? ""}
           onChange={(e) => {
             setQuery(e.target.value);
