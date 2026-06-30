@@ -6,6 +6,7 @@ import {
   type NodeProps,
   ReactFlow,
   type ReactFlowInstance,
+  useReactFlow,
   useStore,
 } from "@xyflow/react";
 import Image from "next/image";
@@ -37,11 +38,6 @@ const ANNOTATION_HIGHLIGHT_PADDING = 8;
 // would zoom in far too close; frame a fixed context region instead.
 const FOCUS_WIDTH = 600;
 const FOCUS_HEIGHT = 340;
-
-// Pan is clamped to the image bounds expanded by this fraction on every side,
-// so the user can't drag off into empty space while still leaving slack for the
-// letterboxed fit and edge annotations.
-const EXTENT_PADDING = 0.25;
 
 // --- Image node ---
 
@@ -143,12 +139,10 @@ const FIT_PADDING = 1.1;
 // <ReactFlow> to read the store.
 const PanelMinZoom = ({
   image,
-  flow,
   onChange,
   active,
 }: {
   image: DonorTree["image"];
-  flow: ReactFlowInstance | null;
   onChange: (minZoom: number) => void;
   // True while a searched name is focused. When set, the auto re-fit below is
   // suppressed: on a cross-tree search the panel remounts and fitZoom settles
@@ -156,6 +150,8 @@ const PanelMinZoom = ({
   // zoom-to-name animation.
   active: boolean;
 }) => {
+  // Rendered inside <ReactFlow>, so the instance is available from context.
+  const reactFlow = useReactFlow();
   const fitZoom = useStore((s) =>
     s.width && s.height
       ? Math.min(s.width / image.width, s.height / image.height) / FIT_PADDING
@@ -166,16 +162,17 @@ const PanelMinZoom = ({
   useEffect(() => {
     if (!fitZoom) return;
     onChange(fitZoom);
-    if (flow && !active) {
-      const zoom = flow.getZoom();
+    if (!active) {
+      const zoom = reactFlow.getZoom();
       // Re-fit if the panel grew past the current zoom, or if the user was
       // sitting at the old floor (fully zoomed out) when the panel resized.
       const wasAtFloor =
         prevFitZoom.current !== null && zoom <= prevFitZoom.current + 1e-4;
-      if (zoom < fitZoom - 1e-6 || wasAtFloor) flow.fitView({ duration: 0 });
+      if (zoom < fitZoom - 1e-6 || wasAtFloor)
+        reactFlow.fitView({ duration: 0 });
     }
     prevFitZoom.current = fitZoom;
-  }, [fitZoom, flow, onChange, active]);
+  }, [fitZoom, reactFlow, onChange, active]);
 
   return null;
 };
@@ -279,13 +276,14 @@ export default function DonorTreePanel({
     return [imageNode, ...annNodes];
   }, [tree, activeAnnotation]);
 
+  // Clamp panning to exactly the image bounds. xyflow keeps this extent
+  // covering the viewport, so once the image is larger than the viewport
+  // (zoomed in) its edges can never move inside the viewport — you can't pan
+  // past the image into empty space.
   const translateExtent = useMemo<CoordinateExtent>(
     () => [
-      [-tree.image.width * EXTENT_PADDING, -tree.image.height * EXTENT_PADDING],
-      [
-        tree.image.width * (1 + EXTENT_PADDING),
-        tree.image.height * (1 + EXTENT_PADDING),
-      ],
+      [0, 0],
+      [tree.image.width, tree.image.height],
     ],
     [tree.image.width, tree.image.height],
   );
@@ -293,7 +291,7 @@ export default function DonorTreePanel({
   return (
     <div
       className={classes(
-        "relative overflow-hidden bg-alveus-green-900",
+        "relative overflow-hidden bg-alveus-tan",
         fullscreen
           ? "size-full rounded-2xl"
           : "aspect-video w-full rounded-2xl border border-alveus-green-300/20 shadow-lg",
@@ -330,7 +328,6 @@ export default function DonorTreePanel({
         </Controls>
         <PanelMinZoom
           image={tree.image}
-          flow={flow}
           onChange={setMinZoom}
           active={activeAnnotation !== null}
         />
