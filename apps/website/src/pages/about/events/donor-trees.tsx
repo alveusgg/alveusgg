@@ -184,44 +184,44 @@ const DonorTreesPage: NextPage = () => {
         />
 
         <Section className="grow">
-        {/* Drag is disabled so panning a tree doesn't scroll the carousel;
+          {/* Drag is disabled so panning a tree doesn't scroll the carousel;
             trees are changed via the arrows, dots, keyboard, or search. */}
-        <Carousel
-          items={items}
-          auto={null}
-          draggable={false}
-          className="mx-auto max-w-5xl items-center"
-          itemClassName="basis-full p-1"
-          buttonClassName="text-alveus-green-800 transition-colors hover:text-alveus-green-500"
-          itemsRef={slidesRef}
-        />
+          <Carousel
+            items={items}
+            auto={null}
+            draggable={false}
+            className="mx-auto max-w-5xl items-center"
+            itemClassName="basis-full p-1"
+            buttonClassName="text-alveus-green-800 transition-colors hover:text-alveus-green-500"
+            itemsRef={slidesRef}
+          />
 
-        <div className="mx-auto mt-4 flex max-w-5xl flex-col items-center gap-2">
-          <div className="flex items-center gap-2">
-            {DONOR_TREES.map((tree, i) => (
-              <button
-                key={tree.id}
-                type="button"
-                onClick={() => scrollToTree(tree.id)}
-                aria-label={`Tree ${tree.id}`}
-                aria-current={i === currentIndex ? "true" : undefined}
-                className={classes(
-                  "size-2.5 rounded-full transition-colors",
-                  i === currentIndex
-                    ? "scale-125 bg-alveus-green-800"
-                    : "bg-alveus-green-300 hover:bg-alveus-green-500",
-                )}
-              />
-            ))}
+          <div className="mx-auto mt-4 flex max-w-5xl flex-col items-center gap-2">
+            <div className="flex items-center gap-2">
+              {DONOR_TREES.map((tree, i) => (
+                <button
+                  key={tree.id}
+                  type="button"
+                  onClick={() => scrollToTree(tree.id)}
+                  aria-label={`Tree ${tree.id}`}
+                  aria-current={i === currentIndex ? "true" : undefined}
+                  className={classes(
+                    "size-2.5 rounded-full transition-colors",
+                    i === currentIndex
+                      ? "scale-125 bg-alveus-green-800"
+                      : "bg-alveus-green-300 hover:bg-alveus-green-500",
+                  )}
+                />
+              ))}
+            </div>
+            <p className="text-base text-alveus-green-700">
+              Tree {currentIndex + 1} of {DONOR_TREES.length}
+            </p>
           </div>
-          <p className="text-base text-alveus-green-700">
-            Tree {currentIndex + 1} of {DONOR_TREES.length}
-          </p>
-        </div>
 
-        <div className="mx-auto mt-8 w-full max-w-2xl">
-          <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
-        </div>
+          <div className="mx-auto mt-8 w-full max-w-2xl">
+            <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
+          </div>
         </Section>
       </div>
 

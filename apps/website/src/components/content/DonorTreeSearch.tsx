@@ -76,7 +76,7 @@ export default function DonorTreeSearch({
         {query.trim().length > 0 && (
           <ComboboxOptions
             as="ul"
-            className="absolute bottom-full left-0 z-30 mb-2 max-h-60 w-full overflow-auto rounded-xl bg-alveus-green-900 shadow-lg ring-1 ring-inset ring-white/15"
+            className="absolute bottom-full left-0 z-30 mb-2 max-h-60 w-full overflow-auto rounded-xl bg-alveus-green-900 shadow-lg ring-1 ring-white/15 ring-inset"
           >
             {filtered.length === 0 ? (
               <li className="px-4 py-2 text-sm text-alveus-tan/60">
