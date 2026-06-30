@@ -162,8 +162,11 @@ const DonorTreesPage: NextPage = () => {
           <Heading>Donor Trees</Heading>
           <p className="text-lg">
             Thank you to everyone who donated during our fundraising campaign.
+            <br />
             Your name is engraved on one of our six donor recognition trees at
-            Alveus. Search for your name below to find where it appears.
+            Alveus.
+            <br />
+            Search for your name below to find where it appears.
           </p>
         </Section>
       </div>
