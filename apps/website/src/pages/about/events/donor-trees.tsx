@@ -87,14 +87,20 @@ const DonorTreesPage: NextPage = () => {
     return () => observer.disconnect();
   }, []);
 
+  // True once the carousel has settled on the searched tree, so we only clear
+  // the search when the user later navigates AWAY from it — not while the
+  // search's own scroll is still passing through other trees.
+  const landedOnActive = useRef(false);
+
   const handleSelect = useCallback(
     (name: string) => {
       const found = findAnnotationForName(name);
       if (!found) return;
+      landedOnActive.current = found.treeId === DONOR_TREES[currentIndex]?.id;
       setActive(found);
       scrollToTree(found.treeId);
     },
-    [scrollToTree],
+    [scrollToTree, currentIndex],
   );
 
   // Keyboard left/right navigation between trees
@@ -114,6 +120,19 @@ const DonorTreesPage: NextPage = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [currentIndex, scrollToTree]);
+
+  // Deactivate the search once the user navigates to a different tree than the
+  // searched one. This clears the lingering highlight and lets re-searching the
+  // same name zoom again (the focus keys on the annotation, which is otherwise
+  // a stable reference).
+  useEffect(() => {
+    if (!active) return;
+    if (DONOR_TREES[currentIndex]?.id === active.treeId) {
+      landedOnActive.current = true;
+    } else if (landedOnActive.current) {
+      setActive(null);
+    }
+  }, [currentIndex, active]);
 
   // One panel per tree, all mounted so the carousel can scroll between them and
   // a searched name can be zoomed without remounting.
@@ -220,7 +239,11 @@ const DonorTreesPage: NextPage = () => {
           </div>
 
           <div className="mx-auto mt-8 w-full max-w-2xl">
-            <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
+            <DonorTreeSearch
+              names={DONOR_NAMES}
+              onSelect={handleSelect}
+              onClear={() => setActive(null)}
+            />
           </div>
         </Section>
       </div>

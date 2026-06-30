@@ -17,14 +17,26 @@ const MAX_SUGGESTIONS = 10;
 type DonorTreeSearchProps = {
   names: string[];
   onSelect: (name: string) => void;
+  // Called when an active selection is cleared (cleared input, or edited away
+  // from the selected name), so the page can deactivate the search.
+  onClear?: () => void;
 };
 
 export default function DonorTreeSearch({
   names,
   onSelect,
+  onClear,
 }: DonorTreeSearchProps) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
+
+  // Editing the text away from the selected name clears the selection, so that
+  // re-picking the same name counts as a fresh selection (and re-zooms).
+  const clear = () => {
+    if (selected === null) return;
+    setSelected(null);
+    onClear?.();
+  };
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -52,7 +64,7 @@ export default function DonorTreeSearch({
           type="button"
           onClick={() => {
             setQuery("");
-            setSelected(null);
+            clear();
           }}
           title="Clear search"
           disabled={!query.length}
@@ -67,7 +79,10 @@ export default function DonorTreeSearch({
 
         <ComboboxInput
           displayValue={(value: string | null) => value ?? ""}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            clear();
+          }}
           placeholder="Search for your name on the trees..."
           className="shrink grow rounded-xl py-3 pl-10 text-sm transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75"
         />
