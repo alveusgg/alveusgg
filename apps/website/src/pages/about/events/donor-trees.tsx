@@ -147,10 +147,6 @@ const DonorTreesPage: NextPage = () => {
           Your name is engraved on one of our six donor recognition trees at
           Alveus. Search for your name below to find where it appears.
         </p>
-
-        <div className="mt-8 max-w-xl">
-          <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
-        </div>
       </Section>
 
       <Section className="grow">
@@ -187,6 +183,10 @@ const DonorTreesPage: NextPage = () => {
           <p className="text-base text-alveus-green-700">
             Tree {currentIndex + 1} of {DONOR_TREES.length}
           </p>
+        </div>
+
+        <div className="mx-auto mt-8 w-full max-w-2xl">
+          <DonorTreeSearch names={DONOR_NAMES} onSelect={handleSelect} />
         </div>
       </Section>
 

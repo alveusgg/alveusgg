@@ -7,6 +7,11 @@ import {
 } from "@headlessui/react";
 import { useMemo, useState } from "react";
 
+import Box from "@/components/content/Box";
+
+import IconSearch from "@/icons/IconSearch";
+import IconX from "@/icons/IconX";
+
 const MAX_SUGGESTIONS = 10;
 
 type DonorTreeSearchProps = {
@@ -39,20 +44,42 @@ export default function DonorTreeSearch({
       }}
     >
       <Label className="sr-only">Search for your name</Label>
-      <div className="relative">
+      <Box
+        dark
+        className="flex overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setQuery("");
+            setSelected(null);
+          }}
+          title="Clear search"
+          disabled={!query.length}
+          className="peer absolute inset-y-0 left-0 z-20 rounded-xl p-3 transition-colors hover:bg-alveus-green disabled:pointer-events-none"
+        >
+          {query.length ? (
+            <IconX className="size-5" />
+          ) : (
+            <IconSearch className="m-0.5 size-4" />
+          )}
+        </button>
+
         <ComboboxInput
           displayValue={(value: string | null) => value ?? ""}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name…"
-          className="w-full rounded-lg border border-white/30 bg-white/10 px-4 py-2 text-white placeholder:text-white/50 focus:border-white/60 focus:outline-none"
+          placeholder="Search for your name on the trees..."
+          className="shrink grow rounded-xl py-3 pl-10 text-sm transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75"
         />
+
+        {/* Opens upward — the bar lives at the bottom of the page */}
         {query.trim().length > 0 && (
           <ComboboxOptions
             as="ul"
-            className="absolute top-full z-50 mt-1 w-full overflow-auto rounded-lg border border-white/20 bg-alveus-green-900 shadow-lg"
+            className="absolute bottom-full left-0 z-30 mb-2 max-h-60 w-full overflow-auto rounded-xl bg-alveus-green-900 shadow-lg ring-1 ring-inset ring-white/15"
           >
             {filtered.length === 0 ? (
-              <li className="px-4 py-2 text-sm text-white/60">
+              <li className="px-4 py-2 text-sm text-alveus-tan/60">
                 No results found
               </li>
             ) : (
@@ -61,7 +88,7 @@ export default function DonorTreeSearch({
                   key={name}
                   value={name}
                   as="li"
-                  className="cursor-pointer px-4 py-2 text-sm text-white data-focus:bg-alveus-tan/15"
+                  className="cursor-pointer px-4 py-2 text-sm text-alveus-tan data-focus:bg-alveus-tan/15"
                 >
                   {name}
                 </ComboboxOption>
@@ -69,7 +96,7 @@ export default function DonorTreeSearch({
             )}
           </ComboboxOptions>
         )}
-      </div>
+      </Box>
     </Combobox>
   );
 }
