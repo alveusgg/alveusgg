@@ -65,7 +65,9 @@ const DonorTreesPage: NextPage = () => {
 
   // The carousel owns the scroll position, so derive the current tree from
   // whichever slide is most visible (drives the counter, dots, keyboard nav,
-  // and the fullscreen target).
+  // and the fullscreen target). Runs once on mount: slidesRef is already
+  // populated because child ref callbacks fire before parent effects, and the
+  // slide set is static (DONOR_TREES never changes).
   useEffect(() => {
     const slides = Object.entries(slidesRef.current);
     const root = slides[0]?.[1]?.parentElement;
@@ -87,20 +89,14 @@ const DonorTreesPage: NextPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  // True once the carousel has settled on the searched tree, so we only clear
-  // the search when the user later navigates AWAY from it — not while the
-  // search's own scroll is still passing through other trees.
-  const landedOnActive = useRef(false);
-
   const handleSelect = useCallback(
     (name: string) => {
       const found = findAnnotationForName(name);
       if (!found) return;
-      landedOnActive.current = found.treeId === DONOR_TREES[currentIndex]?.id;
       setActive(found);
       scrollToTree(found.treeId);
     },
-    [scrollToTree, currentIndex],
+    [scrollToTree],
   );
 
   // Keyboard left/right navigation between trees
@@ -121,18 +117,29 @@ const DonorTreesPage: NextPage = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [currentIndex, scrollToTree]);
 
-  // Deactivate the search once the user navigates to a different tree than the
-  // searched one. This clears the lingering highlight and lets re-searching the
-  // same name zoom again (the focus keys on the annotation, which is otherwise
-  // a stable reference).
+  // Search lifecycle, tracked in one place. A search sets `active` and scrolls
+  // the carousel to its tree; we must NOT deactivate while that scroll passes
+  // through intermediate trees, only once the user later navigates AWAY from
+  // the searched tree. So a search starts "pending", becomes "landed" when its
+  // tree is centered, and is cleared on the next move to a different tree.
+  // Clearing also lets re-searching the same name zoom again, since the focus
+  // keys on the otherwise-stable annotation reference.
+  const search = useRef<{ active: ActiveSelection | null; landed: boolean }>({
+    active: null,
+    landed: false,
+  });
   useEffect(() => {
-    if (!active) return;
-    if (DONOR_TREES[currentIndex]?.id === active.treeId) {
-      landedOnActive.current = true;
-    } else if (landedOnActive.current) {
+    const onSearchedTree = DONOR_TREES[currentIndex]?.id === active?.treeId;
+    if (active !== search.current.active) {
+      // New search (or cleared): (re)start the phase, already landed if the
+      // searched tree is the one we're on.
+      search.current = { active, landed: !!active && onSearchedTree };
+    } else if (active && onSearchedTree) {
+      search.current.landed = true;
+    } else if (active && search.current.landed) {
       setActive(null);
     }
-  }, [currentIndex, active]);
+  }, [active, currentIndex]);
 
   // One panel per tree, all mounted so the carousel can scroll between them and
   // a searched name can be zoomed without remounting.

@@ -246,7 +246,13 @@ export default function DonorTreePanel({
     wasCurrent.current = current;
   }, [current, flow]);
 
-  const nodes = useMemo<Node[]>(() => {
+  // Only the visible tree carries its ~420 annotation nodes (each with a
+  // tooltip hook); off-screen carousel panels render image-only so we don't
+  // mount six full canvases at once. A tree gains its annotations when it
+  // becomes current (or in the fullscreen overlay).
+  const showAnnotations = current || fullscreen;
+
+  const baseNodes = useMemo<Node[]>(() => {
     const imageNode: Node<ImageData> = {
       id: "image",
       type: "treeImage",
@@ -258,6 +264,7 @@ export default function DonorTreePanel({
       connectable: false,
       focusable: false,
     };
+    if (!showAnnotations) return [imageNode];
 
     const annNodes: Node<AnnotationData>[] = tree.annotations.map((ann, i) => {
       const [x1, y1, x2, y2] = ann.box;
@@ -268,14 +275,7 @@ export default function DonorTreePanel({
           x: x1 - ANNOTATION_HOVER_PADDING,
           y: y1 - ANNOTATION_HOVER_PADDING,
         },
-        // The highlight MUST flow through this controlled nodes prop:
-        // instance.setNodes is a silent no-op without defaultNodes or
-        // onNodesChange (see xyflow BatchProvider).
-        data: {
-          name: ann.name,
-          active:
-            activeAnnotation !== null && ann.name === activeAnnotation.name,
-        },
+        data: { name: ann.name, active: false },
         style: {
           width: x2 - x1 + 2 * ANNOTATION_HOVER_PADDING,
           height: y2 - y1 + 2 * ANNOTATION_HOVER_PADDING,
@@ -288,7 +288,21 @@ export default function DonorTreePanel({
     });
 
     return [imageNode, ...annNodes];
-  }, [tree, activeAnnotation]);
+  }, [tree, showAnnotations]);
+
+  // Flip the `active` highlight on just the searched node, reusing every other
+  // node's identity so xyflow only re-renders the one that changed. The flag
+  // MUST flow through this controlled `nodes` prop: instance.setNodes is a
+  // silent no-op without defaultNodes/onNodesChange (see xyflow BatchProvider).
+  const nodes = useMemo<Node[]>(() => {
+    if (!activeAnnotation) return baseNodes;
+    return baseNodes.map((node) =>
+      node.type === "annotation" &&
+      (node.data as AnnotationData).name === activeAnnotation.name
+        ? { ...node, data: { ...node.data, active: true } }
+        : node,
+    );
+  }, [baseNodes, activeAnnotation]);
 
   // Clamp panning to exactly the image bounds. xyflow keeps this extent
   // covering the viewport, so once the image is larger than the viewport
