@@ -189,6 +189,9 @@ type Props = {
   // fills its container instead of using the inline aspect-video frame, and
   // the toggle button collapses rather than expands.
   fullscreen?: boolean;
+  // Whether this panel is the carousel's current (centered) tree. When it
+  // stops being current the view resets to the whole tree (see below).
+  current?: boolean;
 };
 
 export default function DonorTreePanel({
@@ -196,6 +199,7 @@ export default function DonorTreePanel({
   activeAnnotation,
   onToggleFullscreen,
   fullscreen = false,
+  current = true,
 }: Props) {
   // The instance is only stored once the initial fit has completed, so the
   // effects below never race against it. NOTE: do not gate viewport work on
@@ -231,6 +235,16 @@ export default function DonorTreePanel({
       { padding: 0.1, duration: 800 },
     );
   }, [flow, activeAnnotation]);
+
+  // Reset to the whole-tree view when this panel stops being the carousel's
+  // current tree, so returning to it shows the tree fitted (matching the old
+  // remount-on-switch behaviour) rather than wherever it was last left. This
+  // runs while the panel is off-screen, so there's no visible jump.
+  const wasCurrent = useRef(current);
+  useEffect(() => {
+    if (wasCurrent.current && !current && flow) flow.fitView({ duration: 0 });
+    wasCurrent.current = current;
+  }, [current, flow]);
 
   const nodes = useMemo<Node[]>(() => {
     const imageNode: Node<ImageData> = {

@@ -114,7 +114,7 @@ const DonorTreesPage: NextPage = () => {
   const items = useMemo(
     () =>
       Object.fromEntries(
-        DONOR_TREES.map((tree) => [
+        DONOR_TREES.map((tree, i) => [
           String(tree.id),
           <DonorTreePanel
             key={tree.id}
@@ -122,11 +122,12 @@ const DonorTreesPage: NextPage = () => {
             activeAnnotation={
               active?.treeId === tree.id ? active.annotation : null
             }
+            current={i === currentIndex}
             onToggleFullscreen={() => setFullscreen(true)}
           />,
         ]),
       ),
-    [active],
+    [active, currentIndex],
   );
 
   return (
