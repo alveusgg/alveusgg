@@ -14,9 +14,6 @@ const ContactUsPage: NextPage = () => {
         description="Contact us for any questions or concerns you may have. We are not openly hiring."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {/* Grow the last section to cover the page */}
       <Section
         className="flex min-h-[85vh] grow"

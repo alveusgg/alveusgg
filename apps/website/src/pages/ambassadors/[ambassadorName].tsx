@@ -313,9 +313,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         noindex={!!ambassador.retired}
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       {ambassador.retired && (
         <Section dark className="py-4">
           <Heading level={-1} className="text-center text-2xl text-balance">

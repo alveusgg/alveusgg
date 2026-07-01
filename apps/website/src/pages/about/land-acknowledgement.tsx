@@ -12,9 +12,6 @@ const AboutLandAcknowledgementPage: NextPage = () => {
         description="Alveus Sanctuary acknowledges and respects the traditional and ancestral lands of the Tonkawa, Comanche, Lipan Apache, and other Indigenous communities, recognizing their deep connection to this land and its preservation."
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-
       <Section dark className="py-8">
         <Heading className="text-center">Land Acknowledgement</Heading>
       </Section>
