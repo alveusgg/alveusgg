@@ -24,6 +24,10 @@ type CarouselProps = {
   itemClassName?: string;
   buttonClassName?: string;
   itemsRef?: Ref<Record<string, HTMLDivElement>>;
+  // When false, the user can't drag/swipe/scroll between items — navigation is
+  // only via the arrows or programmatic scrolling. Useful when items capture
+  // their own pointer gestures (e.g. a pannable canvas).
+  draggable?: boolean;
 };
 
 const Carousel = ({
@@ -35,6 +39,7 @@ const Carousel = ({
   buttonClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
   itemsRef,
+  draggable = true,
 }: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
@@ -174,13 +179,16 @@ const Carousel = ({
 
       <div
         className={classes(
-          "scrollbar-none flex grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
+          "scrollbar-none flex grow snap-x snap-mandatory flex-nowrap",
+          // overflow-x-hidden still scrolls programmatically (arrows, scrollTo)
+          // but blocks user wheel/touch/scrollbar scrolling.
+          draggable ? "overflow-x-auto" : "overflow-x-hidden",
           wrapperClassName,
-          state === "none" ? "justify-evenly" : "cursor-grab",
+          state === "none" ? "justify-evenly" : draggable && "cursor-grab",
         )}
         ref={ref}
         onScroll={scrolled}
-        onMouseDown={state === "none" ? undefined : drag}
+        onMouseDown={state === "none" || !draggable ? undefined : drag}
       >
         {Object.entries(items).map(([key, item]) => (
           <div
