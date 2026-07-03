@@ -42,6 +42,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
+import youtube from "@/assets/in-the-news/youtube.svg";
 
 const sectionLinks = [
   { name: "Twitch.tv", href: "#twitch" },
@@ -161,6 +162,13 @@ const news: Record<string, News> = {
     quote:
       "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
     logo: forbes,
+  },
+  youtube: {
+    title: "YouTube Official Blog",
+    href: "https://blog.youtube/creator-and-artist-stories/maya-higa-alveus-animal-sanctuary/",
+    quote:
+      "How 27-year-old Maya Higa is bypassing traditional zoos to build the first virtual-only animal sanctuary.",
+    logo: youtube,
   },
   lowes: {
     title: "Lowe's Red Vests x MrBeast",
