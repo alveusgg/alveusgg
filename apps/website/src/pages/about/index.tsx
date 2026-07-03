@@ -196,7 +196,7 @@ const news: Record<string, News> = {
   },
   powderBlue: {
     title: "Powder Blue",
-    href: "https://www.creatormag.blog/p/introducing-our-next-cover-star",
+    href: "https://offlineonline.substack.com/p/introducing-our-next-cover-star",
     quote:
       "Maya has become a beloved science communicator as well as a staple in the streamer community",
     video: {
