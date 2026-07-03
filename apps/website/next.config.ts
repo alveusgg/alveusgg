@@ -343,6 +343,21 @@ const config: NextConfig = {
       destination: "/help/report-neglect-surrender",
       permanent: false,
     },
+    {
+      source: "/trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/donor-trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/leafers",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
