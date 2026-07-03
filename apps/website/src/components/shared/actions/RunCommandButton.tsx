@@ -113,6 +113,7 @@ const RunCommandButton = ({
         force: !!statusText,
         placement: tooltip?.placement,
         offset: tooltip?.offset,
+        className: "z-110",
       }}
       className={className}
     />

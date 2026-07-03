@@ -318,6 +318,31 @@ const config: NextConfig = {
       destination: "/help/found-animal",
       permanent: false,
     },
+    {
+      source: "/neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/report-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/neglect-surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
@@ -357,6 +382,11 @@ const config: NextConfig = {
     {
       source: "/plushy",
       destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/census",
+      destination: "https://census.alveussanctuary.org",
       permanent: true,
     },
     {

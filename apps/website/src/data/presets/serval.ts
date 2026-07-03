@@ -14,11 +14,13 @@ import leftrampb from "@/assets/presets/serval/leftrampb.png";
 import leftwide from "@/assets/presets/serval/leftwide.png";
 import log from "@/assets/presets/serval/log.png";
 import middleplatform from "@/assets/presets/serval/middleplatform.png";
+import middleplatformbz from "@/assets/presets/serval/middleplatformbz.png";
 import middleplatformt from "@/assets/presets/serval/middleplatformt.png";
 import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
+import rightrampr from "@/assets/presets/serval/rightrampr.png";
 import rightwide from "@/assets/presets/serval/rightwide.png";
 import rwatersleep from "@/assets/presets/serval/rwatersleep.png";
 import sand from "@/assets/presets/serval/sand.png";
@@ -128,6 +130,12 @@ const servalPresets: Record<string, Preset> = {
     position: { pan: -100.79, tilt: -24.79, zoom: 395 },
     // modified: 2026-04-02T12:37:39.728Z
   },
+  middleplatformbz: {
+    description: "middleplatformbz",
+    image: middleplatformbz,
+    position: { pan: -88.78, tilt: -9.19, zoom: 2408 },
+    // modified: 2026-06-27T14:06:53.059Z
+  },
   middleplatformt: {
     description: "middleplatformt",
     image: middleplatformt,
@@ -157,6 +165,12 @@ const servalPresets: Record<string, Preset> = {
     image: rightplatformb,
     position: { pan: -59, tilt: -25.22, zoom: 916 },
     // modified: 2026-04-03T16:39:24.997Z
+  },
+  rightrampr: {
+    description: "rightrampr",
+    image: rightrampr,
+    position: { pan: -58.8, tilt: -32.11, zoom: 1181 },
+    // modified: 2026-06-15T18:03:32.946Z
   },
   rightwide: {
     description: "rightwide",

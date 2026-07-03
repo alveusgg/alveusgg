@@ -10,17 +10,22 @@ import domelu from "@/assets/presets/marmout/domelu.png";
 import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
+import domerl from "@/assets/presets/marmout/domerl.png";
+import domerr from "@/assets/presets/marmout/domerr.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
+import downrightbranch from "@/assets/presets/marmout/downrightbranch.png";
 import farcornerb from "@/assets/presets/marmout/farcornerb.png";
 import farcornershelf from "@/assets/presets/marmout/farcornershelf.png";
 import farcornert from "@/assets/presets/marmout/farcornert.png";
 import farrightshelf from "@/assets/presets/marmout/farrightshelf.png";
+import farrightshelfb from "@/assets/presets/marmout/farrightshelfb.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
 import flapsb from "@/assets/presets/marmout/flapsb.png";
 import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
+import hose from "@/assets/presets/marmout/hose.png";
 import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
@@ -86,8 +91,8 @@ const marmoutPresets: Record<string, Preset> = {
   domellb: {
     description: "domellb",
     image: domellb,
-    position: { pan: 126.35, tilt: -10.89, zoom: 332 },
-    // modified: 2026-06-08T13:56:17.053Z
+    position: { pan: 126.97, tilt: -10.69, zoom: 390 },
+    // modified: 2026-06-16T17:00:43.522Z
   },
   domellshelf: {
     description: "domellshelf",
@@ -125,6 +130,18 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 150.19, tilt: -7.04, zoom: 1662 },
     // modified: 2025-11-09T15:43:20.327Z
   },
+  domerl: {
+    description: "domerl",
+    image: domerl,
+    position: { pan: 148.54, tilt: -7.83, zoom: 1662 },
+    // modified: 2026-06-22T13:41:38.760Z
+  },
+  domerr: {
+    description: "domerr",
+    image: domerr,
+    position: { pan: 151.57, tilt: -7.67, zoom: 1662 },
+    // modified: 2026-06-22T13:40:20.947Z
+  },
   down: {
     description: "Down",
     image: down,
@@ -141,7 +158,13 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Down Right",
     image: downright,
     position: { pan: 164.45, tilt: -54.07, zoom: 1 },
-    // modified: 2025-11-09T15:45:20.993Z
+    // modified: 2026-06-11T23:59:23.840Z
+  },
+  downrightbranch: {
+    description: "downrightbranch",
+    image: downrightbranch,
+    position: { pan: 172.08, tilt: -30.78, zoom: 1 },
+    // modified: 2026-06-12T00:01:34.802Z
   },
   farcornerb: {
     description: "Far Corner Bottom",
@@ -167,6 +190,12 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 178.48, tilt: -7.38, zoom: 664 },
     // modified: 2026-02-26T16:50:34.144Z
   },
+  farrightshelfb: {
+    description: "farrightshelfb",
+    image: farrightshelfb,
+    position: { pan: 179.34, tilt: -25.19, zoom: 1210 },
+    // modified: 2026-06-27T14:04:51.953Z
+  },
   flaps: {
     description: "Flaps",
     image: flaps,
@@ -184,6 +213,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: ground,
     position: { pan: 133.79, tilt: -36.41, zoom: 1 },
     // modified: 2025-11-09T15:46:05.330Z
+  },
+  hose: {
+    description: "hose",
+    image: hose,
+    position: { pan: 90.46, tilt: -53.02, zoom: 166 },
+    // modified: 2026-06-14T12:52:38.214Z
   },
   left: {
     description: "Left",
@@ -308,8 +343,8 @@ const marmoutPresets: Record<string, Preset> = {
   upright: {
     description: "Up Right",
     image: upright,
-    position: { pan: 154, tilt: 9.72, zoom: 1 },
-    // modified: 2025-11-07T22:55:24.472Z
+    position: { pan: 152.63, tilt: 10.75, zoom: 1 },
+    // modified: 2026-06-17T12:07:22.482Z
   },
   uprightbranches: {
     description: "uprightbranches",

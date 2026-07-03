@@ -2,7 +2,7 @@ import type { Donation } from "@alveusgg/donations-core";
 import { parse, stringify } from "superjson";
 
 export interface DonationStorage {
-  add: (...donations: Donation[]) => void;
+  add: (...donations: Donation[]) => Promise<number>;
   config: {
     set: (providerId: string, value: unknown | undefined) => void;
     get: <T>(providerId: string) => T | undefined;
@@ -31,7 +31,11 @@ export class DurableObjectDonationStorage implements DonationStorage {
       }
     }
 
-    this.ctx.waitUntil(this.queue.sendBatch(messages));
+    if (messages.length > 0) {
+      this.ctx.waitUntil(this.queue.sendBatch(messages));
+    }
+
+    return messages.length;
   }
 
   config = {
@@ -40,11 +44,11 @@ export class DurableObjectDonationStorage implements DonationStorage {
         `SELECT metadata FROM providerMetadata WHERE provider = ?`,
         providerId,
       );
-      if (cursor.rowsRead === 0) {
+      const result = cursor.next();
+      if (result.done) {
         return undefined;
       }
-      const result = cursor.one();
-      return parse(result.metadata as string) as T;
+      return parse(result.value.metadata as string) as T;
     },
     set: async (providerId: string, value: unknown | undefined) => {
       if (value === undefined) {
@@ -102,9 +106,9 @@ function reserveDonation(
     date,
   );
 
-  if (cursor.rowsRead === 1) {
-    const result = cursor.one();
-    return { new: true, date: result.date as string };
+  const result = cursor.next();
+  if (!result.done) {
+    return { new: true, date: result.value.date as string };
   }
 
   console.log(`Donation ${providerUniqueId} already exists`);

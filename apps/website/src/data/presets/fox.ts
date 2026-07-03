@@ -120,7 +120,7 @@ const foxPresets: Record<string, Preset> = {
   den2: {
     description: "den2",
     image: den2,
-    position: { pan: -4.78, tilt: -3.17, zoom: 754 },
+    position: { pan: -4.8, tilt: -3.18, zoom: 754 },
     // modified: 2026-06-09T21:28:54.736Z
   },
   den2b: {

@@ -80,13 +80,17 @@ const exportBingoEntries = async (
     "claimedAt",
   ]);
 
-  const csv = stringify(rows);
+  const csv = stringify(rows, {
+    bom: true,
+    escape_formulas: true,
+    quoted_string: true,
+  });
 
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
     .setHeader("Content-Disposition", `attachment; filename=bingo-entries.csv`)
-    .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
+    .send(csv);
 };
 
 export default exportBingoEntries;

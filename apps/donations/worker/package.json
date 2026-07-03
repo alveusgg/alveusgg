@@ -13,25 +13,25 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^24.12.4",
+    "@types/node": "^24.13.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-import-x": "^4.16.2",
-    "globals": "^17.6.0",
+    "eslint-plugin-import-x": "^4.17.0",
+    "globals": "^17.7.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.60.1",
-    "wrangler": "^4.97.0"
+    "typescript-eslint": "^8.62.0",
+    "wrangler": "^4.104.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@alveusgg/neon-crm-api": "workspace:*",
-    "@sentry/cloudflare": "^10.56.0",
+    "@sentry/cloudflare": "^10.60.0",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",
-    "hono": "^4.12.23",
+    "hono": "^4.12.27",
     "superjson": "^2.2.6",
     "zod": "^4.4.3"
   }

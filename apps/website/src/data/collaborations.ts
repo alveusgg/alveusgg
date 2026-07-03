@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import adapt from "@/assets/collaborations/adapt.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
@@ -30,7 +31,6 @@ import esfandtv from "@/assets/collaborations/esfandtv.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import extraEmily from "@/assets/collaborations/extra-emily.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
-import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -51,7 +51,6 @@ import julien from "@/assets/collaborations/julien.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
-import lacari from "@/assets/collaborations/lacari.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
@@ -82,6 +81,7 @@ import xchocobars from "@/assets/collaborations/xchocobars.png";
 import yourRage from "@/assets/collaborations/your-rage.png";
 import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
+import zelinaVega from "@/assets/collaborations/zelina-vega.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
 export type Creator = {
@@ -103,6 +103,32 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Adapt",
+      link: "https://www.twitch.tv/adapt",
+      date: new Date("2026-06-26"),
+      videoId: "zxjdjHnHTWI",
+      creators: [
+        {
+          name: "Adapt",
+          image: adapt,
+          popularity: 1_500_000, // Twitch followers, 2026-06-28
+        },
+      ],
+    },
+    {
+      name: "Zelina Vega",
+      link: "https://www.twitch.tv/theatrinidad",
+      date: new Date("2026-06-09"),
+      videoId: "-wAICXiEDQ0",
+      creators: [
+        {
+          name: "Zelina Vega",
+          image: zelinaVega,
+          popularity: 117_000, // Twitch followers, 2026-06-12
+        },
+      ],
+    },
+    {
       name: "Ted Nivison",
       link: "https://www.youtube.com/@TedNivison",
       date: new Date("2026-05-25"),
@@ -120,7 +146,7 @@ const collaborations: Collaboration[] = (
       name: "Jacksepticeye",
       link: "https://www.youtube.com/@jacksepticeye",
       date: new Date("2026-05-19"),
-      videoId: "b6apUuJHU2I",
+      videoId: "U7hGfOk9eOU",
       vodId: "qberatnwFhU",
       creators: [
         {
@@ -535,11 +561,7 @@ const collaborations: Collaboration[] = (
           image: fazeSilky,
           popularity: 654_000, // Twitch followers, 2024-11-13
         },
-        {
-          name: "FaZe Adapt",
-          image: fazeAdapt,
-          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
-        },
+        // Adapt has a more recent collaboration
       ],
     },
     {
@@ -973,20 +995,6 @@ const collaborations: Collaboration[] = (
           name: "Caroline Kwan",
           image: carolineKwan,
           popularity: 136_000, // Twitch followers, 2024-10-4
-        },
-      ],
-    },
-    {
-      name: "Lacari",
-      link: "https://www.twitch.tv/lacari",
-      date: new Date("2023-05-02"),
-      videoId: "IssAfvy_bmo",
-      vodId: "mVOypbE5YNs",
-      creators: [
-        {
-          name: "Lacari",
-          image: lacari,
-          popularity: 349_000, // Twitch followers, 2024-10-4
         },
       ],
     },
