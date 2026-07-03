@@ -51,7 +51,6 @@ import julien from "@/assets/collaborations/julien.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
-import lacari from "@/assets/collaborations/lacari.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
@@ -996,20 +995,6 @@ const collaborations: Collaboration[] = (
           name: "Caroline Kwan",
           image: carolineKwan,
           popularity: 136_000, // Twitch followers, 2024-10-4
-        },
-      ],
-    },
-    {
-      name: "Lacari",
-      link: "https://www.twitch.tv/lacari",
-      date: new Date("2023-05-02"),
-      videoId: "IssAfvy_bmo",
-      vodId: "mVOypbE5YNs",
-      creators: [
-        {
-          name: "Lacari",
-          image: lacari,
-          popularity: 349_000, // Twitch followers, 2024-10-4
         },
       ],
     },
