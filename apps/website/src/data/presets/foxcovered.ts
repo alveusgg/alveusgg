@@ -3,6 +3,7 @@ import downleft from "@/assets/presets/foxcovered/downleft.png";
 import downright from "@/assets/presets/foxcovered/downright.png";
 import farcorner from "@/assets/presets/foxcovered/farcorner.png";
 import home from "@/assets/presets/foxcovered/home.png";
+import insidedoor from "@/assets/presets/foxcovered/insidedoor.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import middle from "@/assets/presets/foxcovered/middle.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
@@ -46,6 +47,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     image: farcorner,
     position: { pan: -136.61, tilt: -5.8, zoom: 937 },
     // modified: 2026-04-18T13:26:11.654Z
+  },
+  insidedoor: {
+    description: "insidedoor",
+    image: insidedoor,
+    position: { pan: -68.44, tilt: -12.26, zoom: 152 },
+    // modified: 2026-07-06T13:43:18.659Z
   },
   left: {
     description: "left",
