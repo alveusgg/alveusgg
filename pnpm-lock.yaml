@@ -324,8 +324,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.9)(react@19.2.7)
       '@vercel/functions':
-        specifier: ^3.7.3
-        version: 3.7.3(@aws-sdk/credential-provider-web-identity@3.972.56)(ws@8.21.0)
+        specifier: ^3.7.4
+        version: 3.7.4(@aws-sdk/credential-provider-web-identity@3.972.56)(ws@8.21.0)
       '@xyflow/react':
         specifier: ^12.11.1
         version: 12.11.1(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
@@ -2979,8 +2979,8 @@ packages:
     resolution: {integrity: sha512-kQF8LGie/Hbdq9/psJxLE7owRTcqMQMhgybU04gCeR7cbQAr5t8OrjefDNColJv1QSSucFt4pLwRiARVmlOnug==}
     engines: {node: '>= 18'}
 
-  '@vercel/functions@3.7.3':
-    resolution: {integrity: sha512-Bn7VPthKb6jBiGM3W2JUXDgDl/2trIanvnnxQ9dCVpDlDLvwn/+uk1TM9bSQJuZ4dKbOfusstpbM0PZeuNStsw==}
+  '@vercel/functions@3.7.4':
+    resolution: {integrity: sha512-BvHqiuWziXaApV/eazLc84cHzEpPyNGG2UUAg82x+VN2VTCtX/DKH7SKOb3PxpRL/27zxPz8ltdO6GoKj66DaA==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -2991,8 +2991,8 @@ packages:
       ws:
         optional: true
 
-  '@vercel/oidc@3.7.0':
-    resolution: {integrity: sha512-FWmULATInXyxER8FJjtSEUdoaoeqWv9G9T4y3vraYMJNAx/ox354COtDmhiBb/XaeDjFuiwTY9ss44NRBaGjLQ==}
+  '@vercel/oidc@3.7.1':
+    resolution: {integrity: sha512-RrSsVWbq3KLK5lJobyTPp3tSthNfUp+zWkXno5Wkko0oEW05rA4ngOrnVypP4+L8/Av89uPo2rWFmzL8iwnsmA==}
     engines: {node: '>= 20'}
 
   '@vitest/expect@4.1.9':
@@ -8437,14 +8437,14 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.56)(ws@8.21.0)':
+  '@vercel/functions@3.7.4(@aws-sdk/credential-provider-web-identity@3.972.56)(ws@8.21.0)':
     dependencies:
-      '@vercel/oidc': 3.7.0
+      '@vercel/oidc': 3.7.1
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.56
       ws: 8.21.0
 
-  '@vercel/oidc@3.7.0':
+  '@vercel/oidc@3.7.1':
     dependencies:
       '@vercel/cli-config': 0.2.0
       '@vercel/cli-exec': 1.0.0
