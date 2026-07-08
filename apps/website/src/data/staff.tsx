@@ -111,7 +111,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
-    department: "facilities",
+    department: "operations",
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -265,7 +265,7 @@ const staff: Record<string, Staff> = {
   lukas: {
     image: lukasMeyerImage,
     name: "Lukas Meyer",
-    title: "Herpetology & Invert Lead | Habitat Specialist",
+    title: "FAID Manager | Herpetology & Invert Lead",
     description: (
       <>
         <p>
@@ -279,7 +279,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-01",
-    department: "facilities",
+    department: "operations",
   },
   dan: {
     image: danielDoormanImage,
