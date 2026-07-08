@@ -18,6 +18,7 @@ import sunriser from "@/assets/presets/garden/sunriser.png";
 import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
+import waspnest from "@/assets/presets/garden/waspnest.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -141,6 +142,12 @@ const gardenPresets: Record<string, Preset> = {
     image: tcright,
     position: { pan: 107.8, tilt: -6.38, zoom: 154 },
     // modified: 2025-10-09T11:10:30.316Z
+  },
+  waspnest: {
+    description: "waspnest",
+    image: waspnest,
+    position: { pan: 126.5, tilt: -21.26, zoom: 11107 },
+    // modified: 2026-07-07T15:40:09.689Z
   },
 };
 
