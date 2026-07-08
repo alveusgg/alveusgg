@@ -23,10 +23,7 @@ type FetchRequestError = { ok: false; errorType: "request"; error: string };
 type FetchParseError = { ok: false; errorType: "parse"; error: ZodError };
 
 type FetchResult<T = unknown> =
-  | FetchSuccess<T>
-  | FetchNetworkError
-  | FetchRequestError
-  | FetchParseError;
+  FetchSuccess<T> | FetchNetworkError | FetchRequestError | FetchParseError;
 
 const apiHeaders = ({
   organizationId,

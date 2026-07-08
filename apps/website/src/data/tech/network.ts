@@ -13,8 +13,7 @@ type NetworkConnectionWireless = NetworkConnectionCore & {
 };
 
 export type NetworkConnection =
-  | NetworkConnectionWired
-  | NetworkConnectionWireless;
+  NetworkConnectionWired | NetworkConnectionWireless;
 
 type NetworkItemCore = {
   type: string;
