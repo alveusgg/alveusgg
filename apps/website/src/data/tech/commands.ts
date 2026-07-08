@@ -29,8 +29,7 @@ export const isArguments = (args: unknown): args is Arguments =>
   Array.isArray(args) && args.length >= 1 && args.every(isArgument);
 
 export type OverloadedArguments =
-  | [Arguments, Arguments, ...Arguments[]]
-  | [Arguments, ...Arguments[], []];
+  [Arguments, Arguments, ...Arguments[]] | [Arguments, ...Arguments[], []];
 export const isOverloadedArguments = (
   args: unknown,
 ): args is OverloadedArguments =>

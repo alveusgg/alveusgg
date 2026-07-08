@@ -81,8 +81,7 @@ export const GiveAnHourProgress = ({
   text = "after",
 }: {
   target?:
-    | number
-    | ((hours: number, ended: boolean, computed: number) => number);
+    number | ((hours: number, ended: boolean, computed: number) => number);
   start?: DateString;
   end?: DateString;
   text?: "after" | "before";

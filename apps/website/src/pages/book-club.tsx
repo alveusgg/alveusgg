@@ -31,8 +31,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type BookOrPlaceholder =
-  | ({ type: "book" } & BookInfo)
-  | { type: "placeholder"; month: Month };
+  ({ type: "book" } & BookInfo) | { type: "placeholder"; month: Month };
 
 const booksWithPlaceholders = books.reduce<BookOrPlaceholder[]>(
   (acc, book, index) => {
