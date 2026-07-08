@@ -30,8 +30,8 @@
     "@types/node": "^24.13.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import-x": "^4.17.0",
-    "typescript-eslint": "^8.62.0"
+    "eslint-plugin-import-x": "^4.17.1",
+    "typescript-eslint": "^8.62.1"
   },
   "scripts": {
     "start": "tsx --env-file=.env src/server.ts",
