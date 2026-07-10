@@ -243,8 +243,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.74.0
-        version: 0.74.0(tailwindcss@4.3.2)(zod@4.4.3)
+        specifier: 0.75.0
+        version: 0.75.0(tailwindcss@4.3.2)(zod@4.4.3)
       '@alveusgg/database':
         specifier: workspace:*
         version: link:../database
@@ -559,9 +559,9 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.74.0':
-    resolution: {integrity: sha512-CiLSWMrMwsbaDch7e3ThXSZN0Ir22B024Du4NOANxbbn82VIlC3+yYEG+fv6RKZkNG5EysJgcY0/kdmf+3fMGg==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.74.0/2df7506e52b945b564bd41c8d0abab7baaa0b598}
-    engines: {pnpm: ^11.8.0}
+  '@alveusgg/data@0.75.0':
+    resolution: {integrity: sha512-s37REPAEHe43CrQtXw3LBa0J+BQ/ekxgEOE+7N0lXujp1U90g/wwWUJck452obZVI1n8KZPPmbtZa9xqH0Vpyg==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.75.0/b0ff3205b38fee517eeba7399559a32a037677a7}
+    engines: {pnpm: ^11.10.0}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
@@ -6205,7 +6205,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.74.0(tailwindcss@4.3.2)(zod@4.4.3)':
+  '@alveusgg/data@0.75.0(tailwindcss@4.3.2)(zod@4.4.3)':
     dependencies:
       tailwindcss: 4.3.2
       zod: 4.4.3
