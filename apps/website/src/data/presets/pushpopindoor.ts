@@ -1,18 +1,14 @@
-import digbox from "@/assets/presets/pushpopindoor/digbox.png";
 import down from "@/assets/presets/pushpopindoor/down.png";
-import downl from "@/assets/presets/pushpopindoor/downl.png";
-import downr from "@/assets/presets/pushpopindoor/downr.png";
+import downleft from "@/assets/presets/pushpopindoor/downleft.png";
+import downright from "@/assets/presets/pushpopindoor/downright.png";
 import farcorner from "@/assets/presets/pushpopindoor/farcorner.png";
 import farcornerz from "@/assets/presets/pushpopindoor/farcornerz.png";
-import heatlamp from "@/assets/presets/pushpopindoor/heatlamp.png";
 import home from "@/assets/presets/pushpopindoor/home.png";
 import left from "@/assets/presets/pushpopindoor/left.png";
 import leftcorner from "@/assets/presets/pushpopindoor/leftcorner.png";
-import nearcorner from "@/assets/presets/pushpopindoor/nearcorner.png";
 import right from "@/assets/presets/pushpopindoor/right.png";
 import rightcorner from "@/assets/presets/pushpopindoor/rightcorner.png";
 import rightcornerz from "@/assets/presets/pushpopindoor/rightcornerz.png";
-import rightcornerzzz from "@/assets/presets/pushpopindoor/rightcornerzzz.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -20,92 +16,68 @@ const pushpopindoorPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: 74.32, tilt: -20.43, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.444Z
-  },
-  digbox: {
-    description: "Dig Box",
-    image: digbox,
-    position: { pan: 79.65, tilt: -14.17, zoom: 1249 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -45.91, tilt: -26.36, zoom: 1 },
+    // modified: 2026-07-10T12:50:31.371Z
   },
   down: {
     description: "Down",
     image: down,
-    position: { pan: 88.57, tilt: -76.5, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -43.18, tilt: -68.02, zoom: 1 },
+    // modified: 2026-07-10T12:56:56.137Z
   },
-  downl: {
-    description: "Down Left",
-    image: downl,
-    position: { pan: 55.83, tilt: -48.78, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+  downleft: {
+    description: "downleft",
+    image: downleft,
+    position: { pan: -72.22, tilt: -41.96, zoom: 1 },
+    // modified: 2026-07-10T12:53:53.254Z
   },
-  downr: {
-    description: "Down Right",
-    image: downr,
-    position: { pan: 104.7, tilt: -63.63, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+  downright: {
+    description: "downright",
+    image: downright,
+    position: { pan: -35.21, tilt: -41.85, zoom: 1 },
+    // modified: 2026-07-10T13:02:11.391Z
   },
   farcorner: {
     description: "Far Corner",
     image: farcorner,
-    position: { pan: 69.66, tilt: -6.18, zoom: 4934 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -55.92, tilt: -13.12, zoom: 1 },
+    // modified: 2026-07-10T13:05:48.430Z
   },
   farcornerz: {
     description: "Far Corner Zoomed",
     image: farcornerz,
-    position: { pan: 69.42, tilt: -5.81, zoom: 10442 },
-    // modified: 2025-10-09T11:10:30.448Z
-  },
-  heatlamp: {
-    description: "Heat Lamp",
-    image: heatlamp,
-    position: { pan: 115.25, tilt: -23.66, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -55.14, tilt: -15.37, zoom: 2500 },
+    // modified: 2026-07-10T13:08:05.856Z
   },
   left: {
     description: "Left",
     image: left,
-    position: { pan: 50.03, tilt: -19.64, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -80.56, tilt: -23.06, zoom: 1 },
+    // modified: 2026-07-10T12:51:23.592Z
   },
   leftcorner: {
     description: "Left Corner",
     image: leftcorner,
-    position: { pan: 32.86, tilt: -9.22, zoom: 2650 },
-    // modified: 2025-10-09T11:10:30.448Z
-  },
-  nearcorner: {
-    description: "Near Corner",
-    image: nearcorner,
-    position: { pan: 167.16, tilt: -72.48, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.452Z
+    position: { pan: -85.14, tilt: -18.37, zoom: 1501 },
+    // modified: 2026-07-10T12:52:49.185Z
   },
   right: {
     description: "Right",
     image: right,
-    position: { pan: 96.31, tilt: -18.18, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -29.96, tilt: -25.64, zoom: 1 },
+    // modified: 2026-07-10T13:00:23.325Z
   },
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
-    position: { pan: 107.25, tilt: -7.83, zoom: 2451 },
-    // modified: 2025-10-09T11:10:30.448Z
+    position: { pan: -16.72, tilt: -15.18, zoom: 3601 },
+    // modified: 2026-07-10T12:45:02.566Z
   },
   rightcornerz: {
     description: "Right Corner Zoomed",
     image: rightcornerz,
-    position: { pan: 113.78, tilt: -10.57, zoom: 9083 },
-    // modified: 2025-10-09T11:10:30.440Z
-  },
-  rightcornerzzz: {
-    description: "rightcornerzzz",
-    image: rightcornerzzz,
-    position: { pan: 117.63, tilt: -11.54, zoom: 10374 },
-    // modified: 2026-02-28T20:37:39.428Z
+    position: { pan: -15.12, tilt: -15.11, zoom: 10200 },
+    // modified: 2026-07-10T12:40:08.189Z
   },
 };
 
