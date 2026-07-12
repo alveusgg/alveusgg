@@ -120,7 +120,8 @@ export const GiveAnHourStats = ({
         Since 2024, <strong>{membersFormatted} members</strong> of the Alveus
         community have given{" "}
         <strong>
-          {hoursFormatted} hours (~{daysFormatted} days)
+          {hoursFormatted} {stats.hours === 1 ? "hour" : "hours"} (~{daysFormatted}{" "}
+          {Math.floor(stats.hours / 24) === 1 ? "day" : "days"})
         </strong>
         {" during WWF's Give an Hour for Earth campaigns."}
       </p>
