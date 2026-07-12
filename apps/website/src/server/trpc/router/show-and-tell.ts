@@ -78,7 +78,10 @@ export const showAndTellRouter = router({
   getGiveAnHourStats: publicProcedure
     .input(
       z.object({
-        ranges: z.array(z.object({ start: z.date(), end: z.date() })).min(1),
+        ranges: z
+          .array(z.object({ start: z.date(), end: z.date() }))
+          .min(1)
+          .max(12),
       }),
     )
     .query(({ input }) => getGiveAnHourStats(input)),
