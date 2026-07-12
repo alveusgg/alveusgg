@@ -446,35 +446,58 @@ export async function getGiveAnHourStats({
     Math.max(...ranges.map(({ start }) => start.getTime())),
   );
 
-  const [entries, previousEntries] = await Promise.all([
-    prisma.showAndTellEntry.findMany({
-      select: {
-        id: true,
-        userId: true,
-        displayName: true,
-        location: true,
-        volunteeringMinutes: true,
-        createdAt: true,
-      },
-      where: {
-        AND: [
-          getPostFilter("approved"),
-          { volunteeringMinutes: { gt: 0 } },
-          {
-            OR: ranges.map(({ start, end }) => ({
-              createdAt: { gte: start, lt: end },
-            })),
+  const entries = await prisma.showAndTellEntry.findMany({
+    select: {
+      id: true,
+      userId: true,
+      displayName: true,
+      location: true,
+      volunteeringMinutes: true,
+      createdAt: true,
+    },
+    where: {
+      AND: [
+        getPostFilter("approved"),
+        { volunteeringMinutes: { gt: 0 } },
+        {
+          OR: ranges.map(({ start, end }) => ({
+            createdAt: { gte: start, lt: end },
+          })),
+        },
+      ],
+    },
+  });
+
+  const participantUserIds = [
+    ...new Set(entries.flatMap(({ userId }) => (userId ? [userId] : []))),
+  ];
+  const participantDisplayNames = [
+    ...new Set(
+      entries.flatMap(({ displayName }) => (displayName ? [displayName] : [])),
+    ),
+  ];
+  const previousEntries =
+    participantUserIds.length === 0 && participantDisplayNames.length === 0
+      ? []
+      : await prisma.showAndTellEntry.findMany({
+          select: { userId: true, displayName: true, createdAt: true },
+          where: {
+            AND: [
+              getPostFilter("approved"),
+              { createdAt: { lt: latestStart } },
+              {
+                OR: [
+                  ...(participantUserIds.length > 0
+                    ? [{ userId: { in: participantUserIds } }]
+                    : []),
+                  ...(participantDisplayNames.length > 0
+                    ? [{ displayName: { in: participantDisplayNames } }]
+                    : []),
+                ],
+              },
+            ],
           },
-        ],
-      },
-    }),
-    prisma.showAndTellEntry.findMany({
-      select: { userId: true, displayName: true, createdAt: true },
-      where: {
-        AND: [getPostFilter("approved"), { createdAt: { lt: latestStart } }],
-      },
-    }),
-  ] as const);
+        });
 
   const previousEntriesBeforeEarliestStart = previousEntries.filter(
     ({ createdAt }) => createdAt < earliestStart,
