@@ -6,6 +6,7 @@ import { env } from "@/env";
 import {
   createPost,
   deletePost,
+  getGiveAnHourStats,
   getMapFeatures,
   getPublicPostById,
   getPublicPosts,
@@ -73,6 +74,14 @@ export const showAndTellRouter = router({
       const minutes = await getVolunteeringMinutes(input);
       return Math.round(minutes / 60);
     }),
+
+  getGiveAnHourStats: publicProcedure
+    .input(
+      z.object({
+        ranges: z.array(z.object({ start: z.date(), end: z.date() })).min(1),
+      }),
+    )
+    .query(({ input }) => getGiveAnHourStats(input)),
 
   create: publicProcedure
     .input(showAndTellCreateInputSchema)
