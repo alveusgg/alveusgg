@@ -405,7 +405,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               })}
             </dl>
 
-            {sounds && sounds.length > 0 && (
+            {!!sounds?.length && (
               <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">
                 <div className="col-span-full h-px bg-alveus-green opacity-10" />
                 <dt className="self-center text-2xl font-bold">Sounds</dt>
