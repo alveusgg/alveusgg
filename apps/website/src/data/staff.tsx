@@ -11,7 +11,6 @@ import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import chandlerImage from "@/assets/people/chandler.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
 import jacobIckesFunImage from "@/assets/people/jacob-ickes-fun.jpg";
 import jacobIckesImage from "@/assets/people/jacob-ickes.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
@@ -280,24 +279,6 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-01",
     department: "operations",
-  },
-  dan: {
-    image: danielDoormanImage,
-    name: "Daniel (Dan the Doorman)",
-    title: "Facilities Specialist",
-    description: (
-      <>
-        <p>
-          Daniel has more than 15 years in the construction industry, working in
-          a varied capacity, including: carpentry, drywall, brick, tile,
-          plumbing, and more. His most recent job being in access solutions,
-          mainly overhead sectional doors. He enjoys tinkering with electronics,
-          puzzles, and has a strong appreciation for a good-looking door.
-        </p>
-      </>
-    ),
-    joined: "2025-07",
-    department: "facilities",
   },
   rocky: {
     image: rockyImage,
