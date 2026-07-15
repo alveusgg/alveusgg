@@ -575,11 +575,10 @@ const config: NextConfig = {
       type: "asset/resource",
     });
 
-    // Load MP3 files as URLs (include node_modules so data package assets resolve)
+    // Load MP3 files as URLs
     config.module.rules.push({
       test: /\.mp3$/,
       type: "asset/resource",
-      include: /node_modules\/@alveusgg\/data/,
     });
 
     // Disable Webpack caching if not in development
