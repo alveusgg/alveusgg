@@ -400,8 +400,8 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/census",
-      destination: "https://census.alveussanctuary.org",
+      source: "/census/:path*",
+      destination: "https://census.alveussanctuary.org/:path*",
       permanent: true,
     },
     {
