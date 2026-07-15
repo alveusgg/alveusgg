@@ -2,6 +2,7 @@ import barn1r from "@/assets/presets/garden/barn1r.png";
 import barn2 from "@/assets/presets/garden/barn2.png";
 import bughotel2 from "@/assets/presets/garden/bughotel2.png";
 import bughotel from "@/assets/presets/garden/bughotel.png";
+import butterflyplant from "@/assets/presets/garden/butterflyplant.png";
 import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
@@ -19,6 +20,7 @@ import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
 import waspnest from "@/assets/presets/garden/waspnest.png";
+import water from "@/assets/presets/garden/water.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -52,6 +54,12 @@ const gardenPresets: Record<string, Preset> = {
     image: bughotel2,
     position: { pan: 158.68, tilt: -9.59, zoom: 6726 },
     // modified: 2026-06-30T16:08:59.271Z
+  },
+  butterflyplant: {
+    description: "butterflyplant",
+    image: butterflyplant,
+    position: { pan: 97.41, tilt: -10.28, zoom: 721 },
+    // modified: 2026-07-14T14:53:07.551Z
   },
   gate: {
     description: "Gate",
@@ -148,6 +156,12 @@ const gardenPresets: Record<string, Preset> = {
     image: waspnest,
     position: { pan: 126.5, tilt: -21.26, zoom: 11107 },
     // modified: 2026-07-07T15:40:09.689Z
+  },
+  water: {
+    description: "water",
+    image: water,
+    position: { pan: 37.83, tilt: -14.74, zoom: 406 },
+    // modified: 2026-07-14T14:52:14.767Z
   },
 };
 
