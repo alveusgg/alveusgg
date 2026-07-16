@@ -49,9 +49,7 @@ const sectionLinks = [
   { name: "In The News", href: "#news" },
   { name: "Founding", href: "#maya" },
   { name: "History", href: "#history" },
-  { name: "Tour Part 1", href: "#tour-part-1" },
-  { name: "Tour Part 2", href: "#tour-part-2" },
-  { name: "Recap 2024", href: "#recap-2024" },
+  { name: "Tour", href: "#tour-2026" },
   { name: "Transparency", href: "#transparency" },
 ];
 
@@ -315,18 +313,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     ],
   },
   {
-    key: "tour-part-1",
+    key: "tour-2021",
     cta: (
       <div className="flex flex-wrap items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-1" level={3} className="scroll-mt-52 italic">
-            Alveus Tour Part 1
+          <Heading id="tour-2021" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2021
           </Heading>
 
           <p className="mt-4 text-lg">
-            Watch the video and join Maya for a tour of Alveus, exploring the
-            parrot aviary, the chicken coop, and the pasture. Meet some of our
-            ambassadors and learn about their stories.
+            Watch the video to join Maya for a tour of Alveus as it was in late
+            2021, exploring the parrot aviary, the chicken coop, and the
+            pasture. Meet some of our ambassadors and learn about their stories.
           </p>
         </div>
 
@@ -429,7 +427,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     ],
   },
   {
-    key: "tour-part-2",
+    key: "tour-2022",
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -437,14 +435,14 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-2" level={3} className="scroll-mt-52 italic">
-            Alveus Tour Part 2
+          <Heading id="tour-2022" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2022
           </Heading>
 
           <p className="mt-4 text-lg">
-            Watch the video and join Maya for a tour around more of Alveus,
+            Join Maya for a tour around more of Alveus as it was in late 2022,
             exploring the training center, the studio, the reptile room and
-            critter cave, the nutrition house, crow aviary and the new fox
+            critter cave, the nutrition house, the crow aviary and the new fox
             enclosure.
           </p>
         </div>
@@ -787,6 +785,29 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
     ],
+  },
+  {
+    key: "tour-2026",
+    cta: (
+      <div className="flex flex-wrap-reverse items-center gap-y-16">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <YouTubeLightbox videoId="tDFy0e-8FwA" />
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="tour-2026" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2026
+          </Heading>
+
+          <p className="mt-4 text-lg">
+            Watch the video to join Maya for a tour around all of Alveus as it
+            was in 2026, getting a behind-the-scenes look at the sanctuary, and
+            meeting many of the ambassadors around the property in their
+            enclosures.
+          </p>
+        </div>
+      </div>
+    ),
   },
 ];
 
