@@ -56,21 +56,16 @@ export const getGrantAmbassadorStats = (): GrantAmbassadorStats => {
     );
   }
 
-  const classificationOrder = [
-    "Mammals",
-    "Birds",
-    "Reptiles & Amphibians",
-    "Invertebrates",
-  ];
-
   const classifications = [...classificationCounts.entries()]
     .filter(([name]) => name !== "Plants")
     .sort(([aName], [bName]) => {
-      const aIndex = classificationOrder.indexOf(aName);
-      const bIndex = classificationOrder.indexOf(bName);
-      const aOrder = aIndex === -1 ? classificationOrder.length : aIndex;
-      const bOrder = bIndex === -1 ? classificationOrder.length : bIndex;
-      return aOrder - bOrder || aName.localeCompare(bName);
+      const order = [
+        "Mammals",
+        "Birds",
+        "Reptiles & Amphibians",
+        "Invertebrates",
+      ];
+      return order.indexOf(aName) - order.indexOf(bName);
     })
     .map(([name, count]) => ({
       name,

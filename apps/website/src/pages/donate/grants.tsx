@@ -365,7 +365,7 @@ const AmbassadorCarouselMedia = ({
   items: Record<string, ReactNode>;
 }) => (
   <Carousel
-    auto={null}
+    auto={0}
     variant="overlay"
     className="w-full"
     overlayClassName="top-0 aspect-4/3"
@@ -457,7 +457,7 @@ const AnimalCareStaffCarousel = ({
   <div className="w-full">
     <GrantCarouselHeading>Animal Care Staff</GrantCarouselHeading>
     <Carousel
-      auto={null}
+      auto={0}
       className="w-full"
       itemClassName="basis-2/5 shrink-0 snap-start p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
       items={items}
