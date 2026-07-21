@@ -198,6 +198,16 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/contact",
+      destination: "/contact-us",
+      permanent: true,
+    },
+    {
+      source: "/grants",
+      destination: "/donate/grants",
+      permanent: true,
+    },
+    {
       source: "/annual-reports/:path*",
       destination: "/about/annual-reports/:path*",
       permanent: true,
