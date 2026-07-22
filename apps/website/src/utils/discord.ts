@@ -1,6 +1,16 @@
-import LinkifyIt from "linkify-it";
+import { LinkifyIt } from "linkify-it";
 
-export function escapeLinksForDiscord(text: string) {
+type DiscordTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
+
+export const getDiscordTimestamp = (
+  date: Date,
+  style: DiscordTimestampStyle = "f",
+): string => {
+  const timestamp = Math.floor(date.getTime() / 1000);
+  return `<t:${timestamp}:${style}>`;
+};
+
+export const escapeLinksForDiscord = (text: string) => {
   const linkify = new LinkifyIt({
     fuzzyLink: false,
     fuzzyEmail: false,
@@ -23,4 +33,4 @@ export function escapeLinksForDiscord(text: string) {
   }
 
   return text;
-}
+};

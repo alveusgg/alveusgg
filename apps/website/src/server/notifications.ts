@@ -12,8 +12,7 @@ import {
   notificationCategories,
 } from "@/data/notifications";
 
-import getDiscordTimestamp from "@/utils/discord-timestamp";
-import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
+import { escapeLinksForDiscord, getDiscordTimestamp } from "@/utils/discord";
 import { getLinkDisplayText } from "@/utils/link-display";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
