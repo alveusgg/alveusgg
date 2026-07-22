@@ -7,6 +7,7 @@ import {
   type ImageAttachment,
   type ImageMetadata,
   type LinkAttachment,
+  type Prisma,
   type ShowAndTellEntry$attachmentsArgs,
   type ShowAndTellEntryAttachment,
   type ShowAndTellEntryAttachmentCreateWithoutEntryInput,
@@ -25,8 +26,9 @@ import {
 } from "@/data/show-and-tell";
 
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { summarizeGiveAnHourEntries } from "@/utils/give-an-hour";
+import { countFirstTimeGiveAnHourParticipants } from "@/utils/give-an-hour";
 import { notEmpty } from "@/utils/helpers";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
@@ -434,57 +436,51 @@ export async function getVolunteeringMinutes({
   return res._sum.volunteeringMinutes ?? 0;
 }
 
-export async function getGiveAnHourStats({
-  ranges,
-}: {
-  ranges: Array<{ start: Date; end: Date }>;
-}) {
-  const earliestStart = new Date(
-    Math.min(...ranges.map(({ start }) => start.getTime())),
-  );
-  const latestStart = new Date(
-    Math.max(...ranges.map(({ start }) => start.getTime())),
-  );
+type GiveAnHourRange = { start: Date; end: Date };
 
-  const entries = await prisma.showAndTellEntry.findMany({
-    select: {
-      id: true,
-      userId: true,
-      displayName: true,
-      location: true,
-      volunteeringMinutes: true,
-      createdAt: true,
-    },
-    where: {
-      AND: [
-        getPostFilter("approved"),
-        { volunteeringMinutes: { gt: 0 } },
-        {
-          OR: ranges.map(({ start, end }) => ({
-            createdAt: { gte: start, lt: end },
-          })),
-        },
-      ],
-    },
-  });
+const getGiveAnHourEntriesWhere = (ranges: GiveAnHourRange[]) =>
+  ({
+    AND: [
+      getPostFilter("approved"),
+      { volunteeringMinutes: { gt: 0 } },
+      {
+        OR: ranges.map(({ start, end }) => ({
+          createdAt: { gte: start, lt: end },
+        })),
+      },
+    ],
+  }) satisfies Prisma.ShowAndTellEntryWhereInput;
 
-  const participantUserIds = [
-    ...new Set(entries.flatMap(({ userId }) => (userId ? [userId] : []))),
-  ];
-  const participantDisplayNames = [
-    ...new Set(
-      entries.flatMap(({ displayName }) => (displayName ? [displayName] : [])),
-    ),
-  ];
-  const previousEntries =
+async function getGiveAnHourCampaignSummary({ start, end }: GiveAnHourRange) {
+  const where = getGiveAnHourEntriesWhere([{ start, end }]);
+  const [aggregate, participants] = await Promise.all([
+    prisma.showAndTellEntry.aggregate({
+      _sum: { volunteeringMinutes: true },
+      _count: { _all: true },
+      where,
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { userId: true, displayName: true },
+      where,
+      distinct: ["userId", "displayName"],
+    }),
+  ]);
+
+  const participantUserIds = participants.flatMap(({ userId }) =>
+    userId ? [userId] : [],
+  );
+  const participantDisplayNames = participants.flatMap(({ displayName }) =>
+    displayName ? [displayName] : [],
+  );
+  const previousParticipants =
     participantUserIds.length === 0 && participantDisplayNames.length === 0
       ? []
       : await prisma.showAndTellEntry.findMany({
-          select: { userId: true, displayName: true, createdAt: true },
+          select: { userId: true, displayName: true },
           where: {
             AND: [
               getPostFilter("approved"),
-              { createdAt: { lt: latestStart } },
+              { createdAt: { lt: start } },
               {
                 OR: [
                   ...(participantUserIds.length > 0
@@ -497,35 +493,65 @@ export async function getGiveAnHourStats({
               },
             ],
           },
+          distinct: ["userId", "displayName"],
         });
 
-  const previousEntriesBeforeEarliestStart = previousEntries.filter(
-    ({ createdAt }) => createdAt < earliestStart,
-  );
-  const stats = summarizeGiveAnHourEntries(
-    entries,
-    previousEntriesBeforeEarliestStart,
-  );
-  const campaignSummaries = ranges.map((range) => {
-    const campaignEntries = entries.filter(
-      ({ createdAt }) => createdAt >= range.start && createdAt < range.end,
-    );
-    const campaignPreviousEntries = previousEntries.filter(
-      ({ createdAt }) => createdAt < range.start,
-    );
-    const campaignStats = summarizeGiveAnHourEntries(
-      campaignEntries,
-      campaignPreviousEntries,
-    );
+  const minutes = aggregate._sum.volunteeringMinutes ?? 0;
 
-    return {
-      hours: campaignStats.hours,
-      minutes: campaignStats.minutes,
-      posts: campaignStats.posts,
-      firstTimeParticipants: campaignStats.firstTimeParticipants,
-      year: range.start.getUTCFullYear(),
-    };
-  });
+  return {
+    hours: Math.round(minutes / 60),
+    minutes,
+    posts: aggregate._count._all,
+    firstTimeParticipants: countFirstTimeGiveAnHourParticipants(
+      participants,
+      previousParticipants,
+    ),
+    year: start.getUTCFullYear(),
+  };
+}
+
+export async function getGiveAnHourStats({
+  ranges,
+}: {
+  ranges: GiveAnHourRange[];
+}) {
+  const where = getGiveAnHourEntriesWhere(ranges);
+  const [aggregate, participantsWithUserId, participantsWithoutUserId, places] =
+    await Promise.all([
+      prisma.showAndTellEntry.aggregate({
+        _sum: { volunteeringMinutes: true },
+        _count: { _all: true },
+        where,
+      }),
+      prisma.showAndTellEntry.findMany({
+        select: { userId: true },
+        where: { AND: [where, { userId: { not: null } }] },
+        distinct: ["userId"],
+      }),
+      prisma.showAndTellEntry.findMany({
+        select: { displayName: true },
+        where: {
+          AND: [where, { userId: null }, { displayName: { not: null } }],
+        },
+        distinct: ["displayName"],
+      }),
+      prisma.showAndTellEntry.findMany({
+        select: { location: true },
+        where: { AND: [where, { location: { not: null } }] },
+        distinct: ["location"],
+      }),
+    ]);
+  const campaignSummaries = await Promise.all(
+    ranges.map(getGiveAnHourCampaignSummary),
+  );
+  const minutes = aggregate._sum.volunteeringMinutes ?? 0;
+  const participants =
+    participantsWithUserId.length + participantsWithoutUserId.length;
+  const { locations, countries } = extractInfoFromMapFeatures(
+    places.flatMap(({ location }, index) =>
+      location ? [{ id: String(index), location }] : [],
+    ),
+  );
   const campaignCount = campaignSummaries.length;
   const averageFirstTimeParticipantsPerCampaign = Math.round(
     campaignSummaries.reduce(
@@ -547,21 +573,25 @@ export async function getGiveAnHourStats({
   );
 
   return {
-    hours: stats.hours,
-    posts: stats.posts,
-    participants: stats.participants,
-    averageHoursPerParticipant: stats.averageHoursPerParticipant,
-    locations: stats.locations,
-    countries: stats.countries,
+    hours: Math.round(minutes / 60),
+    posts: aggregate._count._all,
+    participants,
+    averageHoursPerParticipant:
+      participants === 0 ? 0 : Math.round(minutes / 60 / participants),
+    locations: locations.size,
+    countries: countries.size,
     averagePostsPerCampaign,
     averageFirstTimeParticipantsPerCampaign,
     averageCommunityHoursPerCampaign,
     recordHighCampaignYear: recordHighCampaign.year,
     recordHighCampaignHours: recordHighCampaign.hours,
-    campaigns: campaignSummaries.map(({ year, firstTimeParticipants }) => ({
-      year,
-      firstTimeParticipants,
-    })),
+    campaigns: campaignSummaries.map(
+      ({ year, firstTimeParticipants, hours }) => ({
+        year,
+        firstTimeParticipants,
+        hours,
+      }),
+    ),
   };
 }
 

@@ -463,10 +463,11 @@ const GiveAnHourPage: NextPage<
           <div className="flex w-full flex-col divide-y divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
             {wwfGiveAnHourCampaigns.map(({ start, end }) => {
               const year = start.split("-")[0]!;
+              const campaignStats = giveAnHourStatsQuery.data?.campaigns.find(
+                ({ year: campaignYear }) => campaignYear === Number(year),
+              );
               const firstTimeParticipants =
-                giveAnHourStatsQuery.data?.campaigns.find(
-                  ({ year: campaignYear }) => campaignYear === Number(year),
-                )?.firstTimeParticipants;
+                campaignStats?.firstTimeParticipants;
               return (
                 <div key={year} className="pt-4 pb-6">
                   <div className="flex flex-wrap items-baseline justify-between">
@@ -494,6 +495,14 @@ const GiveAnHourPage: NextPage<
                     start={start}
                     end={end}
                     target={wwfGiveAnHourSyncTarget}
+                    providedHours={
+                      giveAnHourStatsQuery.isError
+                        ? undefined
+                        : {
+                            data: campaignStats?.hours,
+                            isPending: giveAnHourStatsQuery.isPending,
+                          }
+                    }
                   />
                   {giveAnHourStatsQuery.isPending ? (
                     <p className="px-2 text-sm opacity-75">

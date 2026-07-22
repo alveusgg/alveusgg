@@ -86,7 +86,7 @@ export const GiveAnHourStats = ({
   const stats = statsQuery.data;
   const hoursFormatted = useLocaleString(stats?.hours ?? 0);
   const daysFormatted = useLocaleString(Math.floor((stats?.hours ?? 0) / 24));
-  const membersFormatted = useLocaleString(stats?.participants ?? 0);
+  const participantsFormatted = useLocaleString(stats?.participants ?? 0);
 
   if (statsQuery.isPending) {
     return (
@@ -117,11 +117,15 @@ export const GiveAnHourStats = ({
   return (
     <div className="mt-4">
       <p className="mb-4 w-full text-left text-lg">
-        Since 2024, <strong>{membersFormatted} members</strong> of the Alveus
-        community have given{" "}
+        Since 2024,{" "}
         <strong>
-          {hoursFormatted} {stats.hours === 1 ? "hour" : "hours"} (~{daysFormatted}{" "}
-          {Math.floor(stats.hours / 24) === 1 ? "day" : "days"})
+          {participantsFormatted}{" "}
+          {stats.participants === 1 ? "participant" : "participants"}
+        </strong>{" "}
+        in the Alveus community have given{" "}
+        <strong>
+          {hoursFormatted} {stats.hours === 1 ? "hour" : "hours"} (~
+          {daysFormatted} {Math.floor(stats.hours / 24) === 1 ? "day" : "days"})
         </strong>
         {" during WWF's Give an Hour for Earth campaigns."}
       </p>
