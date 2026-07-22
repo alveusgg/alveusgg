@@ -354,8 +354,8 @@ importers:
         specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.0.1)
       linkify-it:
-        specifier: ^5.0.2
-        version: 5.0.2
+        specifier: ^6.0.0
+        version: 6.0.0
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -4466,8 +4466,8 @@ packages:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
 
-  linkify-it@5.0.2:
-    resolution: {integrity: sha512-ONTm2jCMAVZjgQa/Fy1kScXsuOoF5NPTsoFBdE1KVIZ2vAh/r9+Bqo+0jINCBYnavTPQZz38QzFTme79ENoN3Q==}
+  linkify-it@6.0.0:
+    resolution: {integrity: sha512-YXaVuD1L9iL52IsWy5WsfHbzJjjDL5VzbW7ARliFbB+oHxHXb+fh2qjYl34PGhyy06x3LCvuAuvWdaSFte0P1w==}
 
   lint-staged@17.0.8:
     resolution: {integrity: sha512-B2P/d+jVW0UXOQ0MVMLrB/9ydA1P+zz6jYfdrbbEd9ur3S2rcbduFWKiUCC02Sm5hbC8nrm7y24WuYMG54HfxA==}
@@ -10104,7 +10104,7 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
 
-  linkify-it@5.0.2:
+  linkify-it@6.0.0:
     dependencies:
       uc.micro: 2.1.0
 
