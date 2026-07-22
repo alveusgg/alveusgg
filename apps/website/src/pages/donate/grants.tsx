@@ -1,27 +1,39 @@
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode } from "react";
 
+import {
+  type Classification,
+  getClassification,
+  sortAmbassadorClassification,
+} from "@alveusgg/data/build/ambassadors/classification";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
-import type { ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import {
+  type ActiveAmbassadorKey,
+  isActiveAmbassadorEntry,
+} from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
-import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
+import {
+  type SpeciesKey,
+  getSpecies,
+} from "@alveusgg/data/build/ambassadors/species";
+import type { EnclosureKey } from "@alveusgg/data/build/enclosures";
+import enclosures from "@alveusgg/data/build/enclosures";
 
 import collaborations from "@/data/collaborations";
 import staff from "@/data/staff";
 
 import { classes } from "@/utils/classes";
 import { sortPartialDateString } from "@/utils/datetime-partial";
-import {
-  type GrantClassificationStat,
-  type GrantEnclosureStat,
-  getGrantAmbassadorStats,
-} from "@/utils/grant-stats";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { convertToSlug } from "@/utils/slugs";
+import { camelToKebab } from "@/utils/string-case";
 
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
@@ -231,60 +243,6 @@ const animalCareStaffItems = Object.fromEntries(
     }),
 );
 
-const formatLinkedList = (
-  items: { label: string; href: string }[],
-  renderLink: (item: { label: string; href: string }) => ReactNode,
-) => {
-  if (items.length === 0) return null;
-  if (items.length === 1) {
-    const item = items[0];
-    if (!item) return null;
-    return renderLink(item);
-  }
-
-  return items.flatMap((item, index) => {
-    const isLast = index === items.length - 1;
-    const isSecondLast = index === items.length - 2;
-
-    return [
-      <span key={item.href}>{renderLink(item)}</span>,
-      isLast ? null : isSecondLast ? " and " : ", ",
-    ].filter(Boolean);
-  });
-};
-
-const LinkedClassifications = ({
-  items,
-  dark,
-}: {
-  items: GrantClassificationStat[];
-  dark?: boolean;
-}) =>
-  formatLinkedList(
-    items.map(({ name, href }) => ({ label: name.toLowerCase(), href })),
-    (item) => (
-      <Link key={item.href} href={item.href} dark={dark}>
-        {item.label}
-      </Link>
-    ),
-  );
-
-const LinkedEnclosures = ({
-  items,
-  dark,
-}: {
-  items: GrantEnclosureStat[];
-  dark?: boolean;
-}) =>
-  formatLinkedList(
-    items.map(({ name, href }) => ({ label: name, href })),
-    (item) => (
-      <Link key={item.href} href={item.href} dark={dark}>
-        {item.label}
-      </Link>
-    ),
-  );
-
 const GrantPriorityMedia = ({
   image,
   imageAlt,
@@ -428,22 +386,53 @@ const EducationPriorityContent = ({ dark }: { dark?: boolean }) => (
   </>
 );
 
-const AnimalCarePriorityContent = ({
-  stats,
-}: {
-  stats: ReturnType<typeof getGrantAmbassadorStats>;
-}) => (
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+const [activeEnclosures, activeSpecies] = activeAmbassadors
+  .reduce<[Set<EnclosureKey>, Set<SpeciesKey>]>(
+    ([accEnclosures, accSpecies], [, { enclosure, species }]) => {
+      accEnclosures.add(enclosure);
+      accSpecies.add(species);
+      return [accEnclosures, accSpecies];
+    },
+    [new Set(), new Set()],
+  )
+  .map((set) => [...set]) as [EnclosureKey[], SpeciesKey[]];
+
+const activeClassifications = [
+  ...activeSpecies
+    .sort((a, b) =>
+      sortAmbassadorClassification(getSpecies(a).class, getSpecies(b).class),
+    )
+    .reduce<Set<Classification>>((acc, speciesKey) => {
+      acc.add(getClassification(getSpecies(speciesKey).class));
+      return acc;
+    }, new Set()),
+];
+
+const AnimalCarePriorityContent = () => (
   <>
     <p>
       Alveus works to rescue non-releasable animals from a variety of situations
       like abuse, neglect or abandonment, the pet trade, injured and orphaned
       wildlife, and more. We currently care for{" "}
       <Link href="/ambassadors">
-        {stats.ambassadorCount} non-releasable animals
+        {activeAmbassadors.length} non-releasable animals
       </Link>{" "}
-      from {stats.speciesCount} species across{" "}
-      <LinkedClassifications items={stats.classifications} />, and are working
-      on several new rescues of animals in need.
+      from {activeSpecies.length} species across{" "}
+      <List
+        items={activeClassifications.map((classification) => (
+          <Link
+            key={classification}
+            href={`/ambassadors#classification:${convertToSlug(classification)}`}
+          >
+            {classification}
+          </Link>
+        ))}
+      />
+      , and are working on several new rescues of animals in need.
     </p>
 
     <p>
@@ -466,13 +455,7 @@ const AnimalCarePriorityContent = ({
   </>
 );
 
-const EnclosuresPriorityContent = ({
-  dark,
-  stats,
-}: {
-  dark?: boolean;
-  stats: ReturnType<typeof getGrantAmbassadorStats>;
-}) => (
+const EnclosuresPriorityContent = () => (
   <>
     <p>
       Help Alveus build the best possible enclosures for our rescued animal
@@ -493,8 +476,20 @@ const EnclosuresPriorityContent = ({
     <hr className="my-4 border-alveus-green-200" />
 
     <p>
-      We currently maintain {stats.enclosures.length} ambassador enclosures,
-      including the <LinkedEnclosures dark={dark} items={stats.enclosures} />.
+      We currently maintain {activeEnclosures.length} ambassador enclosures,
+      including the{" "}
+      <List
+        items={activeEnclosures.map((key) => (
+          <Link
+            key={key}
+            href={`/ambassadors#enclosures:${camelToKebab(key)}`}
+            dark
+          >
+            {enclosures[key].name}
+          </Link>
+        ))}
+      />
+      .
     </p>
   </>
 );
@@ -573,8 +568,6 @@ const GrantPrioritySection = ({
 );
 
 const GrantsPage: NextPage = () => {
-  const stats = useMemo(() => getGrantAmbassadorStats(), []);
-
   return (
     <>
       <Meta
@@ -688,7 +681,7 @@ const GrantsPage: NextPage = () => {
           </div>
         }
       >
-        <AnimalCarePriorityContent stats={stats} />
+        <AnimalCarePriorityContent />
       </GrantPrioritySection>
 
       <GrantPrioritySection
@@ -696,7 +689,7 @@ const GrantsPage: NextPage = () => {
         {...enclosuresPanel}
         media={<EmuEnclosureMedia dark />}
       >
-        <EnclosuresPriorityContent dark stats={stats} />
+        <EnclosuresPriorityContent />
       </GrantPrioritySection>
 
       <div className="relative flex grow flex-col">
