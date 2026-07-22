@@ -3,6 +3,7 @@ import Image, { type StaticImageData } from "next/image";
 import { type ReactNode, useMemo } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import type { ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 
@@ -48,31 +49,6 @@ const grantSectionLinks = [
   { name: "Reach Out", href: "#contact" },
 ];
 
-const educationShows = [
-  {
-    key: "conservation-conversations",
-    title: "Conservation Conversations",
-    image: "https://files.alveus.site/intros/podcast.png",
-  },
-  {
-    key: "animal-care-chats",
-    title: "Animal Care Chats",
-    image: "https://files.alveus.site/intros/animalcarechats.png",
-  },
-  {
-    key: "animal-quest",
-    title: "Animal Quest",
-    image: "https://files.alveus.site/intros/animalquest.png",
-    href: "/animal-quest",
-  },
-] as const;
-
-const grantAmbassadorSlides = ["kasi", "akela", "appa"] as const;
-
-const animalCareStaffEntries = Object.entries(staff)
-  .filter(([, person]) => person.department === "animalCare")
-  .sort(([, a], [, b]) => sortPartialDateString(b.joined, a.joined));
-
 const arriPanel = {
   panelId: "arri",
   title: "Alveus Research and Recovery Institute (ARRI)",
@@ -106,6 +82,154 @@ const enclosuresPanel = {
   description:
     "Building and maintaining AZA/GFAS-standard habitats for ambassador animals.",
 } as const;
+
+const ambassadorsItems = Object.fromEntries(
+  (["kasi", "akela", "appa"] satisfies ActiveAmbassadorKey[]).map(
+    (ambassador) => {
+      const { name, story, species: speciesKey } = ambassadors[ambassador];
+      const species = getSpecies(speciesKey);
+      const image = getAmbassadorImages(ambassador)[0];
+
+      return [
+        ambassador,
+        <figure key={ambassador} className="flex w-full flex-col gap-2">
+          <Image
+            src={image.src}
+            alt={image.alt}
+            placeholder="blur"
+            className="aspect-4/3 h-auto w-full overflow-hidden rounded-xl object-cover shadow-md"
+            style={{ objectPosition: image.position }}
+            width={470}
+            draggable={false}
+          />
+          <figcaption className="text-sm text-pretty text-alveus-green-800 md:px-5">
+            <p className="text-base font-semibold">
+              {name}
+              {" – "}
+              <span className="font-medium text-alveus-green-600">
+                {species.name}
+              </span>
+            </p>
+            <p className="mt-1 text-alveus-green-700">{story}</p>
+          </figcaption>
+        </figure>,
+      ] as const;
+    },
+  ),
+);
+
+const educationProgramsItems = Object.fromEntries([
+  ...(collaborations[0]
+    ? [
+        [
+          "alveus-collaborations",
+          <figure key="alveus-collaborations" className="flex flex-col gap-2">
+            <Link
+              href="/collaborations"
+              custom
+              className="group/trigger block"
+              draggable={false}
+            >
+              <YouTubePreview
+                videoId={collaborations[0].videoId}
+                alt={`Alveus collaboration with ${collaborations[0].name}`}
+                className="aspect-video h-auto w-full rounded-lg shadow-sm group-hover/trigger:shadow-lg"
+                icon={false}
+              />
+            </Link>
+            <figcaption className="text-center text-sm font-semibold text-alveus-green-800">
+              Alveus Collaborations Series
+            </figcaption>
+          </figure>,
+        ] as const,
+      ]
+    : []),
+  ...[
+    {
+      key: "conservation-conversations",
+      title: "Conservation Conversations",
+      image: "https://files.alveus.site/intros/podcast.png",
+    },
+    {
+      key: "animal-care-chats",
+      title: "Animal Care Chats",
+      image: "https://files.alveus.site/intros/animalcarechats.png",
+    },
+    {
+      key: "animal-quest",
+      title: "Animal Quest",
+      image: "https://files.alveus.site/intros/animalquest.png",
+      href: "/animal-quest",
+    },
+  ].map(({ key, title, image, ...show }) => {
+    const imageContent = (
+      <Image
+        src={image}
+        alt={title}
+        className="aspect-video w-full overflow-hidden rounded-lg bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
+        width={320}
+        height={180}
+        draggable={false}
+      />
+    );
+
+    return [
+      key,
+      <figure key={key} className="flex flex-col gap-2">
+        {"href" in show && show.href ? (
+          <Link
+            href={show.href}
+            custom
+            className="group/trigger block"
+            draggable={false}
+          >
+            {imageContent}
+          </Link>
+        ) : (
+          imageContent
+        )}
+        <figcaption className="text-center text-sm font-semibold text-alveus-green-800">
+          {title}
+        </figcaption>
+      </figure>,
+    ] as const;
+  }),
+]);
+
+const animalCareStaffItems = Object.fromEntries(
+  Object.entries(staff)
+    .filter(([, person]) => person.department === "animalCare")
+    .sort(([, a], [, b]) => sortPartialDateString(b.joined, a.joined))
+    .map(([key, person]) => {
+      const image = Array.isArray(person.image)
+        ? person.image[0]
+        : person.image;
+
+      return [
+        key,
+        <figure key={key} className="flex flex-col gap-2">
+          <Link
+            href={`/about/team#${key}`}
+            custom
+            className="group/trigger block"
+          >
+            <Image
+              src={image}
+              alt={person.name}
+              width={320}
+              className="aspect-square h-auto w-full overflow-hidden rounded-2xl bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
+            />
+          </Link>
+          <figcaption className="text-center text-sm text-alveus-green-800">
+            <p className="font-semibold">{person.name}</p>
+            <p className="mt-0! text-xs text-balance text-alveus-green-700">
+              {person.title}
+            </p>
+          </figcaption>
+        </figure>,
+      ] as const;
+    }),
+);
 
 const formatLinkedList = (
   items: { label: string; href: string }[],
@@ -161,163 +285,6 @@ const LinkedEnclosures = ({
     ),
   );
 
-const useGrantsCarousels = () => {
-  const stats = useMemo(() => getGrantAmbassadorStats(), []);
-
-  const educationShowCarouselItems = useMemo(() => {
-    const newestCollaboration = collaborations[0];
-
-    const showSlides = educationShows.map(({ key, title, image, ...show }) => {
-      const imageContent = (
-        <Image
-          src={image}
-          alt={title}
-          className="aspect-video w-full overflow-hidden rounded-lg bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
-          width={320}
-          height={180}
-          draggable={false}
-        />
-      );
-
-      return [
-        key,
-        <figure key={key} className="flex flex-col gap-2">
-          {"href" in show && show.href ? (
-            <Link
-              href={show.href}
-              custom
-              className="group/trigger block"
-              draggable={false}
-            >
-              {imageContent}
-            </Link>
-          ) : (
-            imageContent
-          )}
-          <figcaption className="text-center text-sm font-semibold text-alveus-green-800">
-            {title}
-          </figcaption>
-        </figure>,
-      ] as const;
-    });
-
-    const slides = [
-      ...(newestCollaboration
-        ? [
-            [
-              "alveus-collaborations",
-              <figure
-                key="alveus-collaborations"
-                className="flex flex-col gap-2"
-              >
-                <Link
-                  href="/collaborations"
-                  custom
-                  className="group/trigger block"
-                  draggable={false}
-                >
-                  <YouTubePreview
-                    videoId={newestCollaboration.videoId}
-                    alt={`Alveus collaboration with ${newestCollaboration.name}`}
-                    className="aspect-video h-auto w-full rounded-lg shadow-sm group-hover/trigger:shadow-lg"
-                    icon={false}
-                  />
-                </Link>
-                <figcaption className="text-center text-sm font-semibold text-alveus-green-800">
-                  Alveus Collaborations Series
-                </figcaption>
-              </figure>,
-            ] as const,
-          ]
-        : []),
-      ...showSlides,
-    ];
-
-    return Object.fromEntries(slides);
-  }, []);
-
-  const grantAmbassadorCarouselItems = useMemo(
-    () =>
-      Object.fromEntries(
-        grantAmbassadorSlides.map((ambassador) => {
-          const { name, story, species: speciesKey } = ambassadors[ambassador];
-          const species = getSpecies(speciesKey);
-          const images = getAmbassadorImages(ambassador);
-          const image = images[0];
-
-          return [
-            ambassador,
-            <figure key={ambassador} className="flex w-full flex-col gap-2">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                placeholder="blur"
-                className="aspect-4/3 h-auto w-full overflow-hidden rounded-xl object-cover shadow-md"
-                style={{ objectPosition: image.position }}
-                width={470}
-                draggable={false}
-              />
-              <figcaption className="text-sm text-pretty text-alveus-green-800 md:px-5">
-                <p className="text-base font-semibold">
-                  {name}
-                  {" – "}
-                  <span className="font-medium text-alveus-green-600">
-                    {species.name}
-                  </span>
-                </p>
-                <p className="mt-1 text-alveus-green-700">{story}</p>
-              </figcaption>
-            </figure>,
-          ] as const;
-        }),
-      ),
-    [],
-  );
-
-  const grantAnimalCareStaffCarouselItems = useMemo(
-    () =>
-      Object.fromEntries(
-        animalCareStaffEntries.map(([key, person]) => {
-          const image = Array.isArray(person.image)
-            ? person.image[0]
-            : person.image;
-
-          return [
-            key,
-            <figure key={key} className="flex flex-col gap-2">
-              <Link
-                href={`/about/team#${key}`}
-                custom
-                className="group/trigger block"
-              >
-                <Image
-                  src={image}
-                  alt={person.name}
-                  width={320}
-                  className="aspect-square h-auto w-full overflow-hidden rounded-2xl bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
-                />
-              </Link>
-              <figcaption className="text-center text-sm text-alveus-green-800">
-                <p className="font-semibold">{person.name}</p>
-                <p className="mt-0! text-xs text-balance text-alveus-green-700">
-                  {person.title}
-                </p>
-              </figcaption>
-            </figure>,
-          ] as const;
-        }),
-      ),
-    [],
-  );
-
-  return {
-    stats,
-    educationShowCarouselItems,
-    grantAmbassadorCarouselItems,
-    grantAnimalCareStaffCarouselItems,
-  };
-};
-
 const GrantPriorityMedia = ({
   image,
   imageAlt,
@@ -343,22 +310,6 @@ const GrantPriorityMedia = ({
         />
       ) : null)}
   </>
-);
-
-const AmbassadorCarouselMedia = ({
-  items,
-}: {
-  items: Record<string, ReactNode>;
-}) => (
-  <Carousel
-    auto={0}
-    variant="overlay"
-    className="w-full"
-    overlayClassName="top-0 aspect-4/3"
-    wrapperClassName="min-w-0 gap-3"
-    itemClassName="basis-full"
-    items={items}
-  />
 );
 
 const EmuEnclosureMedia = ({ dark }: { dark?: boolean } = {}) => (
@@ -413,46 +364,6 @@ const GrantCarouselHeading = ({
   >
     {children}
   </p>
-);
-
-const EducationProgramsCarousel = ({
-  dark,
-  items,
-}: {
-  dark?: boolean;
-  items: Record<string, ReactNode>;
-}) => (
-  <div
-    className={classes(
-      "w-full",
-      dark &&
-        "[&_figcaption]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75 [&_figcaption_p]:text-alveus-tan/90",
-    )}
-  >
-    <GrantCarouselHeading dark={dark}>Current Programs</GrantCarouselHeading>
-    <Carousel
-      auto={null}
-      className="w-full"
-      itemClassName="basis-3/5 shrink-0 snap-start p-2 sm:basis-1/2 md:basis-2/5 lg:basis-1/4"
-      items={items}
-    />
-  </div>
-);
-
-const AnimalCareStaffCarousel = ({
-  items,
-}: {
-  items: Record<string, ReactNode>;
-}) => (
-  <div className="w-full">
-    <GrantCarouselHeading>Animal Care Staff</GrantCarouselHeading>
-    <Carousel
-      auto={0}
-      className="w-full"
-      itemClassName="basis-2/5 shrink-0 snap-start p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
-      items={items}
-    />
-  </div>
 );
 
 const ArriPriorityContent = () => (
@@ -662,12 +573,7 @@ const GrantPrioritySection = ({
 );
 
 const GrantsPage: NextPage = () => {
-  const {
-    stats,
-    educationShowCarouselItems,
-    grantAmbassadorCarouselItems,
-    grantAnimalCareStaffCarouselItems,
-  } = useGrantsCarousels();
+  const stats = useMemo(() => getGrantAmbassadorStats(), []);
 
   return (
     <>
@@ -743,7 +649,15 @@ const GrantsPage: NextPage = () => {
         dark
         {...educationPanel}
         fullWidthFooter={
-          <EducationProgramsCarousel dark items={educationShowCarouselItems} />
+          <div className="w-full [&_figcaption]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75 [&_figcaption_p]:text-alveus-tan/90">
+            <GrantCarouselHeading dark>Current Programs</GrantCarouselHeading>
+            <Carousel
+              auto={null}
+              className="w-full"
+              itemClassName="basis-3/5 shrink-0 snap-start p-2 sm:basis-1/2 md:basis-2/5 lg:basis-1/4"
+              items={educationProgramsItems}
+            />
+          </div>
         }
       >
         <EducationPriorityContent dark />
@@ -751,9 +665,27 @@ const GrantsPage: NextPage = () => {
 
       <GrantPrioritySection
         {...animalCarePanel}
-        media={<AmbassadorCarouselMedia items={grantAmbassadorCarouselItems} />}
+        media={
+          <Carousel
+            auto={0}
+            variant="overlay"
+            className="w-full"
+            overlayClassName="top-0 aspect-4/3"
+            wrapperClassName="min-w-0 gap-3"
+            itemClassName="basis-full"
+            items={ambassadorsItems}
+          />
+        }
         fullWidthFooter={
-          <AnimalCareStaffCarousel items={grantAnimalCareStaffCarouselItems} />
+          <div className="w-full">
+            <GrantCarouselHeading>Animal Care Staff</GrantCarouselHeading>
+            <Carousel
+              auto={0}
+              className="w-full"
+              itemClassName="basis-2/5 shrink-0 snap-start p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
+              items={animalCareStaffItems}
+            />
+          </div>
         }
       >
         <AnimalCarePriorityContent stats={stats} />
