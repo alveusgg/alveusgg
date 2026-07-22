@@ -12,6 +12,7 @@ import IconArrowUp from "@/icons/IconArrowUp";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
+import IconEnvelope from "@/icons/IconEnvelope";
 import IconTwitch from "@/icons/IconTwitch";
 
 import Box from "./Box";
@@ -62,6 +63,14 @@ const links = {
     external: true,
     description:
       "Make a one-time donation to Alveus, or set up a recurring donation for ongoing support.",
+  },
+  grants: {
+    icon: IconEnvelope,
+    title: "Foundation & Corporate Grants",
+    link: "/donate/grants",
+    external: false,
+    description:
+      "Learn about our funding priorities and how your foundation or corporation can support Alveus.",
   },
 } as const satisfies Record<string, DonateLink>;
 

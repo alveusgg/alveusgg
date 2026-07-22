@@ -59,6 +59,15 @@ const ContactUsPage: NextPage = () => {
             </p>
 
             <p className="col-span-full text-xl font-semibold">
+              For foundation & corporate grants: <br />
+              <Link href="mailto:grants@alveussanctuary.org">
+                grants@alveussanctuary.org
+              </Link>
+              {" · "}
+              <Link href="/donate/grants">Funding priorities</Link>
+            </p>
+
+            <p className="col-span-full text-xl font-semibold">
               To connect with Maya regarding collaboration or to offer support
               for Alveus Sanctuary: <br />
               <Link href="mailto:mayahiga@alveussanctuary.org">

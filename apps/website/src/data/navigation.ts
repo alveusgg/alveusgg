@@ -128,6 +128,10 @@ export const mainNavStructure: NavStructure = {
             title: "Annual Reports",
             link: "/about/annual-reports",
           },
+          grants: {
+            title: "Grants",
+            link: "/donate/grants",
+          },
         },
       },
       impact: {
