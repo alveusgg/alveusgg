@@ -50,6 +50,7 @@ export const YouTubePreview = ({
           "pointer-events-none rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           className,
         )}
+        draggable={false}
       />
       {icon && (
         <>

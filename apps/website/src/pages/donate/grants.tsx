@@ -169,22 +169,26 @@ const useGrantsCarousels = () => {
 
     const showSlides = educationShows.map(({ key, title, image, ...show }) => {
       const imageContent = (
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-alveus-green-100 shadow-sm">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-            sizes="320px"
-          />
-        </div>
+        <Image
+          src={image}
+          alt={title}
+          className="aspect-video w-full overflow-hidden rounded-lg bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
+          width={320}
+          height={180}
+          draggable={false}
+        />
       );
 
       return [
         key,
         <figure key={key} className="flex flex-col gap-2">
           {"href" in show && show.href ? (
-            <Link href={show.href} custom className="block">
+            <Link
+              href={show.href}
+              custom
+              className="group/trigger block"
+              draggable={false}
+            >
               {imageContent}
             </Link>
           ) : (
@@ -206,11 +210,16 @@ const useGrantsCarousels = () => {
                 key="alveus-collaborations"
                 className="flex flex-col gap-2"
               >
-                <Link href="/collaborations" custom className="block">
+                <Link
+                  href="/collaborations"
+                  custom
+                  className="group/trigger block"
+                  draggable={false}
+                >
                   <YouTubePreview
                     videoId={newestCollaboration.videoId}
                     alt={`Alveus collaboration with ${newestCollaboration.name}`}
-                    className="aspect-video h-auto w-full rounded-lg shadow-sm"
+                    className="aspect-video h-auto w-full rounded-lg shadow-sm group-hover/trigger:shadow-lg"
                     icon={false}
                   />
                 </Link>
@@ -239,17 +248,15 @@ const useGrantsCarousels = () => {
           return [
             ambassador,
             <figure key={ambassador} className="flex w-full flex-col gap-2">
-              <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl shadow-md">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  placeholder="blur"
-                  fill
-                  className="object-cover"
-                  style={{ objectPosition: image.position }}
-                  sizes="(max-width: 1024px) 256px, 33vw"
-                />
-              </div>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                placeholder="blur"
+                className="aspect-4/3 h-auto w-full overflow-hidden rounded-xl object-cover shadow-md"
+                style={{ objectPosition: image.position }}
+                width={470}
+                draggable={false}
+              />
               <figcaption className="text-sm text-pretty text-alveus-green-800 md:px-5">
                 <p className="text-base font-semibold">
                   {name}
@@ -278,15 +285,17 @@ const useGrantsCarousels = () => {
           return [
             key,
             <figure key={key} className="flex flex-col gap-2">
-              <Link href={`/about/team#${key}`} custom className="block">
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-alveus-green-100 shadow-sm">
-                  <Image
-                    src={image}
-                    alt={person.name}
-                    width={320}
-                    className="size-full object-cover"
-                  />
-                </div>
+              <Link
+                href={`/about/team#${key}`}
+                custom
+                className="group/trigger block"
+              >
+                <Image
+                  src={image}
+                  alt={person.name}
+                  width={320}
+                  className="aspect-square h-auto w-full overflow-hidden rounded-2xl bg-alveus-green-100 object-cover shadow-sm transition group-hover/trigger:scale-102 group-hover/trigger:shadow-lg"
+                />
               </Link>
               <figcaption className="text-center text-sm text-alveus-green-800">
                 <p className="font-semibold">{person.name}</p>
@@ -326,15 +335,11 @@ const GrantPriorityMedia = ({
         <Image
           src={image}
           alt={imageAlt}
-          width={image.width}
-          height={image.height}
-          className={[
+          width={470}
+          className={classes(
             "h-auto max-h-64 w-full rounded-xl shadow-md sm:max-h-72 lg:max-h-none",
             imageClassName,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          sizes="(max-width: 1024px) 256px, 33vw"
+          )}
         />
       ) : null)}
   </>
@@ -362,15 +367,13 @@ const EmuEnclosureMedia = ({ dark }: { dark?: boolean } = {}) => (
       href={emuEnclosureInstagramUrl}
       external
       custom
-      className="relative block"
+      className="group relative block overflow-hidden rounded-xl shadow-md transition hover:scale-102 hover:shadow-xl"
     >
       <Image
         src={emuEnclosureImage}
         alt="Emus in the Alveus emu enclosure"
-        width={emuEnclosureImage.width}
-        height={emuEnclosureImage.height}
-        className="h-auto max-h-64 w-full rounded-xl shadow-md sm:max-h-72 lg:max-h-none"
-        sizes="(max-width: 1024px) 256px, 33vw"
+        width={470}
+        className="h-auto max-h-64 w-full sm:max-h-72 lg:max-h-none"
       />
       <IconInstagram
         className="absolute top-0 right-0 m-3 text-white opacity-80 drop-shadow-md"
