@@ -104,8 +104,8 @@ const littlesPresets: Record<string, Preset> = {
   insidel: {
     description: "insidel",
     image: insidel,
-    position: { pan: 171.1, tilt: -7.97, zoom: 4143 },
-    // modified: 2026-03-12T15:29:32.185Z
+    position: { pan: 171.05, tilt: -8.34, zoom: 4143 },
+    // modified: 2026-07-21T16:39:44.142Z
   },
   insidet: {
     description: "insidet",
