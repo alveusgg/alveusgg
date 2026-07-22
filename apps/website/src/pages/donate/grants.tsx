@@ -73,25 +73,6 @@ const animalCareStaffEntries = Object.entries(staff)
   .filter(([, person]) => person.department === "animalCare")
   .sort(([, a], [, b]) => sortPartialDateString(b.joined, a.joined));
 
-const introAnchorLinkClassName =
-  "underline decoration-alveus-tan/40 underline-offset-2 transition-colors hover:decoration-alveus-tan";
-
-const proseLightClassName =
-  "text-lg leading-relaxed text-alveus-green-900 [&_p+p]:mt-4";
-
-const proseDarkClassName = "text-lg leading-relaxed [&_p+p]:mt-4";
-
-const listClassName = "ml-6 list-disc space-y-1";
-
-const panelMediaClassName =
-  "order-1 mx-auto w-full max-w-xs lg:order-2 lg:col-span-1 lg:mx-0 lg:max-w-none lg:self-start";
-
-const grantGreenBandClassName =
-  "relative z-0 bg-alveus-green-100 py-16 text-center text-alveus-green-900";
-
-const carouselCaptionDarkClassName =
-  "[&_figcaption]:text-alveus-tan/90 [&_figcaption_p]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75";
-
 const arriPanel = {
   panelId: "arri",
   title: "Alveus Research and Recovery Institute (ARRI)",
@@ -438,7 +419,13 @@ const EducationProgramsCarousel = ({
   dark?: boolean;
   items: Record<string, ReactNode>;
 }) => (
-  <div className={classes("w-full", dark && carouselCaptionDarkClassName)}>
+  <div
+    className={classes(
+      "w-full",
+      dark &&
+        "[&_figcaption]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75 [&_figcaption_p]:text-alveus-tan/90",
+    )}
+  >
     <GrantCarouselHeading dark={dark}>Current Programs</GrantCarouselHeading>
     <Carousel
       auto={null}
@@ -554,7 +541,7 @@ const AnimalCarePriorityContent = ({
     <div className="flex flex-col gap-1">
       <p className="mt-2!">Grant funds help us:</p>
 
-      <ul className={listClassName}>
+      <ul className="ml-6 list-disc space-y-1">
         <li>Rescue new animals and provide ongoing sanctuary care</li>
         <li>
           Purchase food, veterinary care, and supplies to keep animals healthy
@@ -625,7 +612,7 @@ const GrantPrioritySection = ({
 }: GrantPrioritySectionProps) => (
   <Section dark={dark} className="scroll-mt-32 py-12 lg:py-16">
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
-      <figure className={panelMediaClassName}>
+      <figure className="order-1 mx-auto w-full max-w-xs lg:order-2 lg:col-span-1 lg:mx-0 lg:max-w-none lg:self-start">
         <GrantPriorityMedia
           image={image}
           imageAlt={imageAlt}
@@ -649,8 +636,8 @@ const GrantPrioritySection = ({
 
         <div
           className={classes(
-            "mt-6 flex flex-col gap-4",
-            dark ? proseDarkClassName : proseLightClassName,
+            "mt-6 flex flex-col gap-4 text-lg/relaxed",
+            dark ? "[&_p+p]:mt-4" : "text-alveus-green-900 [&_p+p]:mt-4",
           )}
         >
           {children}
@@ -704,7 +691,7 @@ const GrantsPage: NextPage = () => {
               href="#contact"
               custom
               dark
-              className={introAnchorLinkClassName}
+              className="underline decoration-alveus-tan/40 underline-offset-2 transition-colors hover:decoration-alveus-tan"
             >
               reach out
             </Link>
@@ -731,7 +718,7 @@ const GrantsPage: NextPage = () => {
 
       <SubNav links={grantSectionLinks} className="z-20" />
 
-      <Section className={grantGreenBandClassName}>
+      <Section className="relative z-0 bg-alveus-green-100 py-16 text-center text-alveus-green-900">
         <Heading id="priorities" level={2} link className="scroll-mt-32">
           Current Funding Priorities
         </Heading>
@@ -779,7 +766,7 @@ const GrantsPage: NextPage = () => {
 
       <div className="relative flex grow flex-col">
         <Section
-          className={grantGreenBandClassName}
+          className="relative z-0 bg-alveus-green-100 py-16 text-center text-alveus-green-900"
           containerClassName="max-w-3xl"
         >
           <Heading id="contact" level={2} link className="scroll-mt-32">
