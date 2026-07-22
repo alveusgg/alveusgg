@@ -36,16 +36,24 @@ export const useActiveNav = () => {
       ({ path, segments }, link) => {
         const linkSegments = link.split("/").filter(Boolean);
 
+        // If the link has more segments than the current path, it can't be a match
+        if (linkSegments.length > pathSegments.length) {
+          return { path, segments };
+        }
+
+        // Find the first segment that doesn't match, and get how many segments did match before that
+        // If there were no mismatched segments, findIndex returns -1, so all segments matched
+        // If a segment didn't match, findIndex returns 0-indexed, which is also how many segments matched
         const invalidSegment = linkSegments.findIndex(
           (seg, i) => seg !== pathSegments[i],
         );
         const matchSegments =
           invalidSegment === -1 ? linkSegments.length : invalidSegment;
 
-        if (matchSegments > segments) {
-          return { path: link, segments: matchSegments };
-        }
-        return { path, segments };
+        // If we have more matching segments than the current best match, prefer this link
+        return matchSegments > segments
+          ? { path: link, segments: matchSegments }
+          : { path, segments };
       },
       { path: "/", segments: 0 },
     ).path;
