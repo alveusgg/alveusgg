@@ -66,7 +66,7 @@
     "@xyflow/react": "^12.11.2",
     "country-list": "^2.4.1",
     "csv-stringify": "^6.8.1",
-    "dompurify": "^3.4.11",
+    "dompurify": "^3.4.12",
     "feed": "^6.0.0",
     "heic-to": "^1.5.2",
     "html-react-parser": "^6.1.4",
