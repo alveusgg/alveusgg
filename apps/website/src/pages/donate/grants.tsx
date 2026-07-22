@@ -53,48 +53,6 @@ const grantContactEmail = "grants@alveussanctuary.org";
 const grantEin = "86-1772907";
 const emuEnclosureInstagramUrl = "https://www.instagram.com/p/DZGNTYwD8Ba/";
 
-const grantSectionLinks = [
-  { name: "Research & Recovery", href: "#arri" },
-  { name: "Education", href: "#conservation-education" },
-  { name: "Animal Care", href: "#animal-care-and-rescue" },
-  { name: "Enclosures", href: "#animal-ambassador-enclosures" },
-  { name: "Reach Out", href: "#contact" },
-];
-
-const arriPanel = {
-  panelId: "arri",
-  title: "Alveus Research and Recovery Institute (ARRI)",
-  description:
-    "Conservation research and species recovery, starting with Mexican and Red wolves.",
-  image: arriBuildingImage,
-  imageAlt:
-    "Rendering of the Alveus Research & Recovery Institute building with donor recognition signage",
-  imageClassName: "object-[45%_40%]",
-} as const;
-
-const educationPanel = {
-  panelId: "conservation-education",
-  title: "Conservation Education Programs",
-  description:
-    "Free online conservation education through live streams and video series.",
-  image: studioHero,
-  imageAlt: "The Alveus studio where educational live streams are produced",
-} as const;
-
-const animalCarePanel = {
-  panelId: "animal-care-and-rescue",
-  title: "Animal Care and Rescue",
-  description:
-    "Rescue, daily care, and enrichment for non-releasable ambassador animals.",
-} as const;
-
-const enclosuresPanel = {
-  panelId: "animal-ambassador-enclosures",
-  title: "Animal Ambassador Enclosures",
-  description:
-    "Building and maintaining AZA/GFAS-standard habitats for ambassador animals.",
-} as const;
-
 const ambassadorsItems = Object.fromEntries(
   (["kasi", "akela", "appa"] satisfies ActiveAmbassadorKey[]).map(
     (ambassador) => {
@@ -243,6 +201,316 @@ const animalCareStaffItems = Object.fromEntries(
     }),
 );
 
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+const [activeEnclosures, activeSpecies] = activeAmbassadors
+  .reduce<[Set<EnclosureKey>, Set<SpeciesKey>]>(
+    ([accEnclosures, accSpecies], [, { enclosure, species }]) => {
+      accEnclosures.add(enclosure);
+      accSpecies.add(species);
+      return [accEnclosures, accSpecies];
+    },
+    [new Set(), new Set()],
+  )
+  .map((set) => [...set]) as [EnclosureKey[], SpeciesKey[]];
+
+const activeClassifications = [
+  ...activeSpecies
+    .sort((a, b) =>
+      sortAmbassadorClassification(getSpecies(a).class, getSpecies(b).class),
+    )
+    .reduce<Set<Classification>>((acc, speciesKey) => {
+      acc.add(getClassification(getSpecies(speciesKey).class));
+      return acc;
+    }, new Set()),
+];
+
+const GrantCarouselHeading = ({
+  dark,
+  children,
+}: {
+  dark?: boolean;
+  children: ReactNode;
+}) => (
+  <p
+    className={classes(
+      "mb-3 text-xs font-semibold tracking-wider uppercase",
+      dark ? "text-alveus-tan/70" : "text-alveus-green-600",
+    )}
+  >
+    {children}
+  </p>
+);
+
+type Priority = {
+  id: string;
+  title: string;
+  short?: string;
+  description: string;
+  content: ReactNode;
+  media?: ReactNode;
+  footer?: ReactNode;
+  image?: StaticImageData;
+  imageAlt?: string;
+  imageClassName?: string;
+  dark?: boolean;
+};
+
+const priorities: Priority[] = [
+  {
+    id: "arri",
+    title: "Alveus Research and Recovery Institute (ARRI)",
+    short: "Research & Recovery",
+    description:
+      "Conservation research and species recovery, starting with Mexican and Red wolves.",
+    image: arriBuildingImage,
+    imageAlt:
+      "Rendering of the Alveus Research & Recovery Institute building with donor recognition signage",
+    imageClassName: "object-[45%_40%]",
+    content: (
+      <>
+        <p>
+          Support Alveus as we work to conduct conservation research and
+          recovery programs for endangered species. ARRI will focus on three
+          pillars, Repopulation, Education, and Innovation. ARRI will launch
+          with a focus on breeding and reintroduction into the wild of Mexican
+          Wolves and Red Wolves, and move towards supporting additional species
+          as we continue to develop the program.
+        </p>
+
+        <p>
+          As we begin releasing animals we will launch livestreaming cameras in
+          the wild and deliver storytelling that will drive attachment to
+          individual animals and their species. We will establish research
+          programs that push the potential of conservation breeding programs by
+          utilizing the live cam model to monitor health and behavior patterns
+          for animals under our care.
+        </p>
+
+        <p>
+          Our conservation technology lab will work to develop improved and
+          cost-effective wildlife trackers, wild den cameras, and wildlife drone
+          monitoring systems.
+        </p>
+
+        <p>
+          Naming and other opportunities for recognition are available to
+          recognize you, your company or foundation, or to honor a loved one for
+          major donations to the ARRI capital campaign.
+        </p>
+
+        <p className="mt-6!">
+          <Link href="/institute" className="inline-flex items-center gap-1">
+            Learn more about the institute
+            <IconArrowRight size={16} />
+          </Link>
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "conservation-education",
+    title: "Conservation Education Programs",
+    short: "Education",
+    description:
+      "Free online conservation education through live streams and video series.",
+    image: studioHero,
+    imageAlt: "The Alveus studio where educational live streams are produced",
+    content: (
+      <>
+        <p>
+          Help Alveus produce high quality conservation focused live streams and
+          videos. Alveus is unique in that all of our educational programs are
+          posted online with no admission fees.
+        </p>
+
+        <p>
+          Your support will allow us to continue producing programs like the{" "}
+          <Link href="/collaborations" dark>
+            Alveus Collaborations Series
+          </Link>
+          , Conservation Conversations, Animal Care Chats, and{" "}
+          <Link href="/animal-quest" dark>
+            Animal Quest
+          </Link>
+          .
+        </p>
+      </>
+    ),
+    footer: (
+      <div className="w-full [&_figcaption]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75 [&_figcaption_p]:text-alveus-tan/90">
+        <GrantCarouselHeading dark>Current Programs</GrantCarouselHeading>
+        <Carousel
+          auto={null}
+          className="w-full"
+          itemClassName="basis-3/5 shrink-0 snap-start p-2 sm:basis-1/2 md:basis-2/5 lg:basis-1/4"
+          items={educationProgramsItems}
+        />
+      </div>
+    ),
+    dark: true,
+  },
+  {
+    id: "animal-care-and-rescue",
+    title: "Animal Care and Rescue",
+    short: "Animal Care",
+    description:
+      "Rescue, daily care, and enrichment for non-releasable ambassador animals.",
+    content: (
+      <>
+        <p>
+          Alveus works to rescue non-releasable animals from a variety of
+          situations like abuse, neglect or abandonment, the pet trade, injured
+          and orphaned wildlife, and more. We currently care for{" "}
+          <Link href="/ambassadors">
+            {activeAmbassadors.length} non-releasable animals
+          </Link>{" "}
+          from {activeSpecies.length} species across{" "}
+          <List
+            items={activeClassifications.map((classification) => (
+              <Link
+                key={classification}
+                href={`/ambassadors#classification:${convertToSlug(classification)}`}
+              >
+                {classification}
+              </Link>
+            ))}
+          />
+          , and are working on several new rescues of animals in need.
+        </p>
+
+        <p>
+          As the animal population at the sanctuary grows so does the cost of
+          maintaining their enclosures and ensuring they are fed, enriched, and
+          provided the best standard of care possible.
+        </p>
+
+        <div className="flex flex-col gap-1">
+          <p className="mt-2!">Grant funds help us:</p>
+
+          <ul className="ml-6 list-disc space-y-1">
+            <li>Rescue new animals and provide ongoing sanctuary care</li>
+            <li>
+              Purchase food, veterinary care, and supplies to keep animals
+              healthy
+            </li>
+            <li>Provide enrichment to keep animals active and fulfilled</li>
+          </ul>
+        </div>
+      </>
+    ),
+    media: (
+      <Carousel
+        auto={0}
+        variant="overlay"
+        className="w-full"
+        overlayClassName="top-0 aspect-4/3"
+        wrapperClassName="min-w-0 gap-3"
+        itemClassName="basis-full"
+        items={ambassadorsItems}
+      />
+    ),
+    footer: (
+      <div className="w-full">
+        <GrantCarouselHeading>Animal Care Staff</GrantCarouselHeading>
+        <Carousel
+          auto={0}
+          className="w-full"
+          itemClassName="basis-2/5 shrink-0 snap-start p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
+          items={animalCareStaffItems}
+        />
+      </div>
+    ),
+  },
+  {
+    id: "animal-ambassador-enclosures",
+    title: "Animal Ambassador Enclosures",
+    short: "Enclosures",
+    description:
+      "Building and maintaining AZA/GFAS-standard habitats for ambassador animals.",
+    content: (
+      <>
+        <p>
+          Help Alveus build the best possible enclosures for our rescued animal
+          ambassadors. Alveus is constantly working to invest in the quality of
+          our enclosures, building them to meet and exceed Association of Zoos
+          and Aquariums (AZA) and Global Federation of Animal Sanctuaries (GFAS)
+          standards.
+        </p>
+
+        <p>
+          We would love to discuss our upcoming rescues and their enclosure
+          needs with your foundation or corporation. Your support of the
+          construction, landscaping, or ongoing maintenance of our enclosures
+          may come with opportunities for recognition for you, a loved one, or
+          your foundation or company.
+        </p>
+
+        <hr className="my-4 border-alveus-green-200" />
+
+        <p>
+          We currently maintain {activeEnclosures.length} ambassador enclosures,
+          including the{" "}
+          <List
+            items={activeEnclosures.map((key) => (
+              <Link
+                key={key}
+                href={`/ambassadors#enclosures:${camelToKebab(key)}`}
+                dark
+              >
+                {enclosures[key].name}
+              </Link>
+            ))}
+          />
+          .
+        </p>
+      </>
+    ),
+    media: (
+      <>
+        <Link
+          href={emuEnclosureInstagramUrl}
+          external
+          custom
+          className="group relative block overflow-hidden rounded-xl shadow-md transition hover:scale-102 hover:shadow-xl"
+        >
+          <Image
+            src={emuEnclosureImage}
+            alt="Emus in the Alveus emu enclosure"
+            width={470}
+            className="h-auto max-h-64 w-full sm:max-h-72 lg:max-h-none"
+          />
+          <IconInstagram
+            className="absolute top-0 right-0 m-3 text-white opacity-80 drop-shadow-md"
+            size={42}
+          />
+        </Link>
+        <figcaption className="mt-2 text-center text-sm">
+          <Link
+            href={emuEnclosureInstagramUrl}
+            external
+            custom
+            className="text-alveus-tan underline decoration-alveus-tan/60 underline-offset-2 transition-colors hover:decoration-alveus-tan"
+          >
+            Emu Enclosure, Sponsored by Julien Solomita
+          </Link>
+        </figcaption>
+      </>
+    ),
+    dark: true,
+  },
+];
+
+const grantSectionLinks = [
+  ...priorities.map(({ id, title, short }) => ({
+    name: short ?? title,
+    href: `#${id}`,
+  })),
+  { name: "Reach Out", href: "#contact" },
+];
+
 const GrantPriorityMedia = ({
   image,
   imageAlt,
@@ -270,255 +538,18 @@ const GrantPriorityMedia = ({
   </>
 );
 
-const EmuEnclosureMedia = ({ dark }: { dark?: boolean } = {}) => (
-  <>
-    <Link
-      href={emuEnclosureInstagramUrl}
-      external
-      custom
-      className="group relative block overflow-hidden rounded-xl shadow-md transition hover:scale-102 hover:shadow-xl"
-    >
-      <Image
-        src={emuEnclosureImage}
-        alt="Emus in the Alveus emu enclosure"
-        width={470}
-        className="h-auto max-h-64 w-full sm:max-h-72 lg:max-h-none"
-      />
-      <IconInstagram
-        className="absolute top-0 right-0 m-3 text-white opacity-80 drop-shadow-md"
-        size={42}
-      />
-    </Link>
-    <figcaption className="mt-2 text-center text-sm">
-      <Link
-        href={emuEnclosureInstagramUrl}
-        external
-        custom
-        className={classes(
-          "underline underline-offset-2 transition-colors",
-          dark
-            ? "text-alveus-tan decoration-alveus-tan/60 hover:decoration-alveus-tan"
-            : "text-alveus-green-700 decoration-alveus-green-700/40 hover:decoration-alveus-green-700",
-        )}
-      >
-        Emu Enclosure, Sponsored by Julien Solomita
-      </Link>
-    </figcaption>
-  </>
-);
-
-const GrantCarouselHeading = ({
-  dark,
-  children,
-}: {
-  dark?: boolean;
-  children: ReactNode;
-}) => (
-  <p
-    className={classes(
-      "mb-3 text-xs font-semibold tracking-wider uppercase",
-      dark ? "text-alveus-tan/70" : "text-alveus-green-600",
-    )}
-  >
-    {children}
-  </p>
-);
-
-const ArriPriorityContent = () => (
-  <>
-    <p>
-      Support Alveus as we work to conduct conservation research and recovery
-      programs for endangered species. ARRI will focus on three pillars,
-      Repopulation, Education, and Innovation. ARRI will launch with a focus on
-      breeding and reintroduction into the wild of Mexican Wolves and Red
-      Wolves, and move towards supporting additional species as we continue to
-      develop the program.
-    </p>
-
-    <p>
-      As we begin releasing animals we will launch livestreaming cameras in the
-      wild and deliver storytelling that will drive attachment to individual
-      animals and their species. We will establish research programs that push
-      the potential of conservation breeding programs by utilizing the live cam
-      model to monitor health and behavior patterns for animals under our care.
-    </p>
-
-    <p>
-      Our conservation technology lab will work to develop improved and
-      cost-effective wildlife trackers, wild den cameras, and wildlife drone
-      monitoring systems.
-    </p>
-
-    <p>
-      Naming and other opportunities for recognition are available to recognize
-      you, your company or foundation, or to honor a loved one for major
-      donations to the ARRI capital campaign.
-    </p>
-
-    <p className="mt-6!">
-      <Link href="/institute" className="inline-flex items-center gap-1">
-        Learn more about the institute
-        <IconArrowRight size={16} />
-      </Link>
-    </p>
-  </>
-);
-
-const EducationPriorityContent = ({ dark }: { dark?: boolean }) => (
-  <>
-    <p>
-      Help Alveus produce high quality conservation focused live streams and
-      videos. Alveus is unique in that all of our educational programs are
-      posted online with no admission fees.
-    </p>
-
-    <p>
-      Your support will allow us to continue producing programs like the{" "}
-      <Link href="/collaborations" dark={dark}>
-        Alveus Collaborations Series
-      </Link>
-      , Conservation Conversations, Animal Care Chats, and{" "}
-      <Link href="/animal-quest" dark={dark}>
-        Animal Quest
-      </Link>
-      .
-    </p>
-  </>
-);
-
-const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
-  isActiveAmbassadorEntry,
-);
-
-const [activeEnclosures, activeSpecies] = activeAmbassadors
-  .reduce<[Set<EnclosureKey>, Set<SpeciesKey>]>(
-    ([accEnclosures, accSpecies], [, { enclosure, species }]) => {
-      accEnclosures.add(enclosure);
-      accSpecies.add(species);
-      return [accEnclosures, accSpecies];
-    },
-    [new Set(), new Set()],
-  )
-  .map((set) => [...set]) as [EnclosureKey[], SpeciesKey[]];
-
-const activeClassifications = [
-  ...activeSpecies
-    .sort((a, b) =>
-      sortAmbassadorClassification(getSpecies(a).class, getSpecies(b).class),
-    )
-    .reduce<Set<Classification>>((acc, speciesKey) => {
-      acc.add(getClassification(getSpecies(speciesKey).class));
-      return acc;
-    }, new Set()),
-];
-
-const AnimalCarePriorityContent = () => (
-  <>
-    <p>
-      Alveus works to rescue non-releasable animals from a variety of situations
-      like abuse, neglect or abandonment, the pet trade, injured and orphaned
-      wildlife, and more. We currently care for{" "}
-      <Link href="/ambassadors">
-        {activeAmbassadors.length} non-releasable animals
-      </Link>{" "}
-      from {activeSpecies.length} species across{" "}
-      <List
-        items={activeClassifications.map((classification) => (
-          <Link
-            key={classification}
-            href={`/ambassadors#classification:${convertToSlug(classification)}`}
-          >
-            {classification}
-          </Link>
-        ))}
-      />
-      , and are working on several new rescues of animals in need.
-    </p>
-
-    <p>
-      As the animal population at the sanctuary grows so does the cost of
-      maintaining their enclosures and ensuring they are fed, enriched, and
-      provided the best standard of care possible.
-    </p>
-
-    <div className="flex flex-col gap-1">
-      <p className="mt-2!">Grant funds help us:</p>
-
-      <ul className="ml-6 list-disc space-y-1">
-        <li>Rescue new animals and provide ongoing sanctuary care</li>
-        <li>
-          Purchase food, veterinary care, and supplies to keep animals healthy
-        </li>
-        <li>Provide enrichment to keep animals active and fulfilled</li>
-      </ul>
-    </div>
-  </>
-);
-
-const EnclosuresPriorityContent = () => (
-  <>
-    <p>
-      Help Alveus build the best possible enclosures for our rescued animal
-      ambassadors. Alveus is constantly working to invest in the quality of our
-      enclosures, building them to meet and exceed Association of Zoos and
-      Aquariums (AZA) and Global Federation of Animal Sanctuaries (GFAS)
-      standards.
-    </p>
-
-    <p>
-      We would love to discuss our upcoming rescues and their enclosure needs
-      with your foundation or corporation. Your support of the construction,
-      landscaping, or ongoing maintenance of our enclosures may come with
-      opportunities for recognition for you, a loved one, or your foundation or
-      company.
-    </p>
-
-    <hr className="my-4 border-alveus-green-200" />
-
-    <p>
-      We currently maintain {activeEnclosures.length} ambassador enclosures,
-      including the{" "}
-      <List
-        items={activeEnclosures.map((key) => (
-          <Link
-            key={key}
-            href={`/ambassadors#enclosures:${camelToKebab(key)}`}
-            dark
-          >
-            {enclosures[key].name}
-          </Link>
-        ))}
-      />
-      .
-    </p>
-  </>
-);
-
-type GrantPrioritySectionProps = {
-  dark?: boolean;
-  panelId: string;
-  title: string;
-  description: string;
-  image?: StaticImageData;
-  imageAlt?: string;
-  imageClassName?: string;
-  media?: ReactNode;
-  fullWidthFooter?: ReactNode;
-  children: ReactNode;
-};
-
 const GrantPrioritySection = ({
   dark = false,
-  panelId,
+  id,
   title,
   description,
   image,
   imageAlt,
   imageClassName,
   media,
-  fullWidthFooter,
-  children,
-}: GrantPrioritySectionProps) => (
+  footer,
+  content,
+}: Priority) => (
   <Section dark={dark} className="scroll-mt-32 py-12 lg:py-16">
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
       <figure className="order-1 mx-auto w-full max-w-xs lg:order-2 lg:col-span-1 lg:mx-0 lg:max-w-none lg:self-start">
@@ -531,7 +562,7 @@ const GrantPrioritySection = ({
       </figure>
 
       <article className="order-2 lg:order-1 lg:col-span-2">
-        <Heading level={3} link id={panelId} className="my-0 scroll-mt-32">
+        <Heading level={3} link id={id} className="my-0 scroll-mt-32">
           {title}
         </Heading>
         <p
@@ -549,19 +580,19 @@ const GrantPrioritySection = ({
             dark ? "[&_p+p]:mt-4" : "text-alveus-green-900 [&_p+p]:mt-4",
           )}
         >
-          {children}
+          {content}
         </div>
       </article>
     </div>
 
-    {fullWidthFooter ? (
+    {footer ? (
       <div
         className={classes(
           "mt-10 border-t pt-8 lg:mt-12",
           dark ? "border-white/15" : "border-alveus-green-300/25",
         )}
       >
-        {fullWidthFooter}
+        {footer}
       </div>
     ) : null}
   </Section>
@@ -634,63 +665,9 @@ const GrantsPage: NextPage = () => {
         </p>
       </Section>
 
-      <GrantPrioritySection {...arriPanel}>
-        <ArriPriorityContent />
-      </GrantPrioritySection>
-
-      <GrantPrioritySection
-        dark
-        {...educationPanel}
-        fullWidthFooter={
-          <div className="w-full [&_figcaption]:text-alveus-tan/90 [&_figcaption_.text-alveus-green-600]:text-alveus-tan/75 [&_figcaption_.text-alveus-green-700]:text-alveus-tan/75 [&_figcaption_p]:text-alveus-tan/90">
-            <GrantCarouselHeading dark>Current Programs</GrantCarouselHeading>
-            <Carousel
-              auto={null}
-              className="w-full"
-              itemClassName="basis-3/5 shrink-0 snap-start p-2 sm:basis-1/2 md:basis-2/5 lg:basis-1/4"
-              items={educationProgramsItems}
-            />
-          </div>
-        }
-      >
-        <EducationPriorityContent dark />
-      </GrantPrioritySection>
-
-      <GrantPrioritySection
-        {...animalCarePanel}
-        media={
-          <Carousel
-            auto={0}
-            variant="overlay"
-            className="w-full"
-            overlayClassName="top-0 aspect-4/3"
-            wrapperClassName="min-w-0 gap-3"
-            itemClassName="basis-full"
-            items={ambassadorsItems}
-          />
-        }
-        fullWidthFooter={
-          <div className="w-full">
-            <GrantCarouselHeading>Animal Care Staff</GrantCarouselHeading>
-            <Carousel
-              auto={0}
-              className="w-full"
-              itemClassName="basis-2/5 shrink-0 snap-start p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
-              items={animalCareStaffItems}
-            />
-          </div>
-        }
-      >
-        <AnimalCarePriorityContent />
-      </GrantPrioritySection>
-
-      <GrantPrioritySection
-        dark
-        {...enclosuresPanel}
-        media={<EmuEnclosureMedia dark />}
-      >
-        <EnclosuresPriorityContent />
-      </GrantPrioritySection>
+      {priorities.map((priority) => (
+        <GrantPrioritySection key={priority.id} {...priority} />
+      ))}
 
       <div className="relative flex grow flex-col">
         <Section
