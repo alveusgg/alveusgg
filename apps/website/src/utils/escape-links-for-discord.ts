@@ -1,4 +1,4 @@
-import LinkifyIt from "linkify-it";
+import { LinkifyIt } from "linkify-it";
 
 export function escapeLinksForDiscord(text: string) {
   const linkify = new LinkifyIt({
