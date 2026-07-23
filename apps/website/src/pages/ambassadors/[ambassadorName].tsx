@@ -17,7 +17,11 @@ import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
 } from "@alveusgg/data/build/ambassadors/images";
-import { getAmbassadorSounds } from "@alveusgg/data/build/ambassadors/sound";
+import {
+  type AmbassadorSounds,
+  getAmbassadorSounds,
+  // eslint-disable-next-line import-x/no-unresolved -- will resolve once @alveusgg/data@0.77.0 is published
+} from "@alveusgg/data/build/ambassadors/sound";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import {
   type AnimalQuestWithRelation,
@@ -182,6 +186,7 @@ type AmbassadorPageProps = {
   merchImage?: AmbassadorImage;
   iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
+  sounds?: AmbassadorSounds;
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
@@ -205,6 +210,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
         getAmbassadorBadgeImage(ambassadorKey) ??
         getAmbassadorEmoteImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
+      sounds: getAmbassadorSounds(ambassadorKey),
     },
   };
 };
@@ -220,8 +226,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   merchImage,
   iconImage,
   animalQuest,
+  sounds,
 }) => {
-  const sounds = getAmbassadorSounds(ambassadorKey);
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
@@ -412,8 +418,16 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <dd className="self-center">
                   <div className="flex flex-wrap gap-4">
                     {sounds.map(({ src, caption }) => (
-                      <div key={String(src)} className="flex flex-col items-center gap-1">
-                        <audio controls src={String(src)} />
+                      <div
+                        key={src}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <audio
+                          controls
+                          src={src}
+                          loading="lazy"
+                          preload="none"
+                        />
                         <p className="text-center text-base text-alveus-green-700">
                           {caption}
                         </p>
