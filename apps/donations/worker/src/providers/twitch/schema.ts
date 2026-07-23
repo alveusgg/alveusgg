@@ -6,8 +6,15 @@ export const TwitchChallengePayload = z.object({
 export const TwitchSubscriptionPayload = z.object({
   id: z.string(),
   type: z
-    .literal("channel.charity_campaign.donate")
-    .describe("Only channel.charity_campaign.donate events are supported."),
+    .literal([
+      "channel.charity_campaign.donate",
+      "channel.subscribe",
+      "channel.subscription.gift",
+      "channel.subscription.message",
+    ])
+    .describe(
+      "Only channel.charity_campaign.donate, channel.subscribe, channel.subscription.gift, and channel.subscription.message events are supported.",
+    ),
   version: z.string(),
   status: z.string(),
   condition: z.object({
@@ -17,6 +24,7 @@ export const TwitchSubscriptionPayload = z.object({
     method: z.string(),
     callback: z.string(),
   }),
+  created_at: z.iso.datetime(),
 });
 
 export const TwitchAmountPayload = z.object({
@@ -31,7 +39,7 @@ export const TwitchAmountPayload = z.object({
     ),
 });
 
-export const TwitchEventPayload = z.object({
+export const TwitchDonationEventPayload = z.object({
   id: z.string(),
   campaign_id: z.string(),
   broadcaster_user_id: z.string(),
@@ -42,7 +50,28 @@ export const TwitchEventPayload = z.object({
   amount: TwitchAmountPayload,
 });
 
+export const TwitchSubscriptionDonationEventPayload = z.object({
+  broadcaster_user_id: z.string(),
+  user_id: z.string(),
+  user_login: z.string(),
+  user_name: z.string(),
+  tier: z.literal(["1000", "2000", "3000"]),
+  is_gift: z.boolean().optional(),
+  total: z.number().optional(),
+  cumulative_total: z.number().optional(),
+  cumulative_months: z.number().optional(),
+  is_anonymous: z.boolean().optional(),
+  message: z.object().optional(),
+  streak_months: z.number().optional(),
+  duration_months: z.number().optional(),
+});
+
 export const TwitchNotificationPayload = z.object({
   subscription: TwitchSubscriptionPayload,
-  event: TwitchEventPayload,
+  event: TwitchDonationEventPayload,
+});
+
+export const TwitchSubscriptionNotificationPayload = z.object({
+  subscription: TwitchSubscriptionPayload,
+  event: TwitchSubscriptionDonationEventPayload,
 });

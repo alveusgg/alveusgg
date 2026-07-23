@@ -1,40 +1,45 @@
 import type { AppRouter } from "@alveusgg/alveusgg-website";
-import type { Providers, TwitchDonation } from "@alveusgg/donations-core";
+import type {
+  Providers,
+  TwitchSubscriptionDonation,
+} from "@alveusgg/donations-core";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import superjson from "superjson";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
-import { TwitchEventHubMessageTypeHeader } from "./const";
+import {
+  TwitchEventHubMessageTypeHeader,
+  TwitchEventHubMessageIdHeader,
+  TwitchEventHubMessageTimestampHeader,
+} from "./const";
 import { verifySignature } from "./crypto";
-import { TwitchChallengePayload, TwitchNotificationPayload } from "./schema";
+import {
+  TwitchChallengePayload,
+  TwitchSubscriptionNotificationPayload,
+} from "./schema";
+import type { TwitchDonationProviderConfig } from "./twitch";
 
-export interface TwitchDonationProviderConfig {
-  secret: string;
-}
+const subscriptionType = (type: string) => {
+  if (type === "channel.subscription.gift") return "gift";
+  if (type === "channel.subscription.message") return "resubscription";
+  return "subscription";
+};
 
-interface TwitchDonationProviderOptions {
-  sandbox: boolean;
-  allowedCharityName: string;
-}
-
-export class TwitchDonationProvider implements DonationProvider {
-  name: Providers = "twitch";
+export class TwitchSubscriptionDonationProvider implements DonationProvider {
+  name: Providers = "twitchsubscription";
   constructor(
     private config: TwitchDonationProviderConfig,
-    private options: TwitchDonationProviderOptions,
     private service: DonationStorage,
   ) {}
 
   static async init(
     service: DonationStorage,
     env: Env,
-  ): Promise<TwitchDonationProvider> {
-    const options: TwitchDonationProviderOptions = {
-      sandbox: env.SANDBOX === "true",
-      allowedCharityName: env.TWITCH_CHARITY_NAME!,
-    };
+  ): Promise<TwitchSubscriptionDonationProvider> {
     const config =
-      await service.config.get<TwitchDonationProviderConfig>("twitch");
+      await service.config.get<TwitchDonationProviderConfig>(
+        "twitchsubscription",
+      );
     if (!config) {
       const headers: Record<string, string> = {};
       if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
@@ -63,15 +68,15 @@ export class TwitchDonationProvider implements DonationProvider {
       const config = {
         secret: env.TWITCH_SUBSCRIPTION_SECRET,
       } as const satisfies TwitchDonationProviderConfig;
-      await service.config.set("twitch", config);
+      await service.config.set("twitchsubscription", config);
 
-      return new TwitchDonationProvider(config, options, service);
+      return new TwitchSubscriptionDonationProvider(config, service);
     }
-    return new TwitchDonationProvider(config, options, service);
+    return new TwitchSubscriptionDonationProvider(config, service);
   }
 
   async clear() {
-    await this.service.config.set("twitch", undefined);
+    await this.service.config.set("twitchsubscription", undefined);
   }
 
   async handle(request: Request): Promise<Response> {
@@ -110,8 +115,14 @@ export class TwitchDonationProvider implements DonationProvider {
       return new Response(null, { status: 201 });
     }
 
+    const uniqueMessageId = request.headers.get(TwitchEventHubMessageIdHeader);
+    if (!uniqueMessageId) {
+      await this.clear();
+      return new Response(null, { status: 400 });
+    }
+
     if (type === "notification") {
-      const payload = TwitchNotificationPayload.safeParse(body);
+      const payload = TwitchSubscriptionNotificationPayload.safeParse(body);
 
       if (!payload.success) {
         return new Response(
@@ -122,35 +133,48 @@ export class TwitchDonationProvider implements DonationProvider {
         );
       }
 
-      if (payload.data.event.charity_name !== this.options.allowedCharityName) {
-        // Only Alveus donations are supported. We ignore others.
-        console.log(
-          `Ignoring donation from ${payload.data.event.charity_name} because it is not the allowed charity name (${this.options.allowedCharityName}).`,
-        );
+      if (payload.data.event.is_gift) {
+        // We do not want to store users who were gifted.
+        // We store the original webhook event.
         return Response.json({ success: true }, { status: 201 });
       }
 
+      const messageTimestamp = request.headers.get(
+        TwitchEventHubMessageTimestampHeader,
+      );
+
       const donation = {
         id: crypto.randomUUID(),
-        provider: "twitch",
-        providerUniqueId: payload.data.event.id,
+        provider: "twitchsubscription",
+        providerUniqueId: uniqueMessageId,
         providerMetadata: {
           twitchDonatorId: payload.data.event.user_id,
           twitchDonatorDisplayName: payload.data.event.user_name,
           twitchBroadcasterId: payload.data.event.broadcaster_user_id,
-          twitchCharityCampaignId: payload.data.event.campaign_id,
+          twitchSubscription: {
+            type: subscriptionType(payload.data.subscription.type),
+            cumulativeTotal: payload.data.event.cumulative_total,
+            cumulativeMonths: payload.data.event.cumulative_months,
+            durationMonths: payload.data.event.duration_months,
+            isGift: payload.data.event.is_gift,
+            isAnonymous: payload.data.event.is_anonymous,
+            streakMonths: payload.data.event.streak_months,
+            tier: payload.data.event.tier,
+            total: payload.data.event.total,
+          },
         },
-        amount: payload.data.event.amount.value,
-        receivedAt: new Date(),
+        // Explicitly set amount to 0 because we have no way of determining the monetary
+        // amount of any sub/resub/giftsub
+        amount: 0,
+        receivedAt: messageTimestamp ? new Date(messageTimestamp) : new Date(),
         donatedBy: {
           primary: "username",
           username: payload.data.event.user_login,
         },
         tags: {
           twitchBroadcasterId: payload.data.event.broadcaster_user_id,
-          twitchCharityCampaignId: payload.data.event.campaign_id,
         },
-      } satisfies TwitchDonation;
+      } satisfies TwitchSubscriptionDonation;
 
       await this.service.add(donation);
 
@@ -184,9 +208,23 @@ async function setupTwitchSubscription(
     ],
   });
 
+  await Promise.all([
+    subscribeToWebhook(api, "channel.subscribe", selfUrl, secret),
+    subscribeToWebhook(api, "channel.subscription.gift", selfUrl, secret),
+    subscribeToWebhook(api, "channel.subscription.message", selfUrl, secret),
+  ]);
+}
+
+async function subscribeToWebhook(
+  api: ReturnType<typeof createTRPCProxyClient<AppRouter>>,
+  type: string,
+  selfUrl: string,
+  secret: string,
+) {
   await api.adminTwitch.setupWebhookSubscription.mutate({
-    event: { type: "channel.charity_campaign.donate", version: "1" },
-    url: `${selfUrl}/donations/twitch/live`,
+    event: { type, version: "1" },
+    url: `${selfUrl}/donations/twitchsubscription/live`,
     secret,
+    alveusOnly: true,
   });
 }
