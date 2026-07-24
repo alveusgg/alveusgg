@@ -21,7 +21,8 @@
     "lint:validate": "prisma validate",
     "lint:format": "prisma format --check",
     "lint": "pnpm run \"/^lint:.*/\"",
-    "format": "prisma format"
+    "format": "prisma format",
+    "seed": "prisma db seed"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.8.0",
@@ -31,7 +32,8 @@
     "@types/node": "^24.13.2",
     "dotenv": "^17.4.2",
     "prisma": "^7.8.0",
-    "tsdown": "^0.22.8"
+    "tsdown": "^0.22.8",
+    "tsx": "^4.21.0"
   },
   "exports": {
     ".": {
