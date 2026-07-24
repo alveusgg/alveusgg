@@ -17,6 +17,10 @@ import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
 } from "@alveusgg/data/build/ambassadors/images";
+import {
+  type AmbassadorSounds,
+  getAmbassadorSounds,
+} from "@alveusgg/data/build/ambassadors/sounds";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import {
   type AnimalQuestWithRelation,
@@ -181,6 +185,7 @@ type AmbassadorPageProps = {
   merchImage?: AmbassadorImage;
   iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
+  sounds?: AmbassadorSounds;
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
@@ -204,6 +209,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
         getAmbassadorBadgeImage(ambassadorKey) ??
         getAmbassadorEmoteImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
+      sounds: getAmbassadorSounds(ambassadorKey),
     },
   };
 };
@@ -219,6 +225,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   merchImage,
   iconImage,
   animalQuest,
+  sounds,
 }) => {
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
 
@@ -402,6 +409,33 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 );
               })}
             </dl>
+
+            {!!sounds?.length && (
+              <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">
+                <div className="col-span-full h-px bg-alveus-green opacity-10" />
+                <dt className="self-center text-2xl font-bold">Sounds</dt>
+                <dd className="self-center">
+                  <div className="flex flex-wrap gap-4">
+                    {sounds.map(({ src, caption }) => (
+                      <div
+                        key={src}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <audio
+                          controls
+                          src={src}
+                          loading="lazy"
+                          preload="none"
+                        />
+                        <p className="text-center text-base text-alveus-green-700">
+                          {caption}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </dd>
+              </dl>
+            )}
 
             {ambassador.fact ? (
               <Box dark className="my-6 flex flex-col gap-2 p-4">
