@@ -86,8 +86,9 @@ If you aren't working on features related to Twitch authentication, you can set 
    1. Copy your `TRPC_API_SHARED_KEY` from `apps/website/.env` as the value for `SHARED_KEY`
    2. Set a secret for Twitch EventSub as the value for `TWITCH_SUBSCRIPTION_SECRET`. See [Twitch EventSub secrets](https://dev.twitch.tv/docs/eventsub/eventsub-secret) for more info. This is used to verify that incoming EventSub webhooks are actually from Twitch.
 9. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
-10. Start the dev server using `pnpm dev` from within `apps/website`
-11. The website should be running at `http://localhost:3000/` (open in browser)
+10. Optionally, seed the database with example content (users with roles, forms, show-and-tell posts) using `pnpm seed` from within `apps/database`. The seed is idempotent, so it is safe to run again at any time.
+11. Start the dev server using `pnpm dev` from within `apps/website`
+12. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio` from within `apps/database`
