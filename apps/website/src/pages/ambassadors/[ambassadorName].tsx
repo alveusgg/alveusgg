@@ -20,8 +20,7 @@ import {
 import {
   type AmbassadorSounds,
   getAmbassadorSounds,
-  // eslint-disable-next-line import-x/no-unresolved -- will resolve once @alveusgg/data@0.77.0 is published
-} from "@alveusgg/data/build/ambassadors/sound";
+} from "@alveusgg/data/build/ambassadors/sounds";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import {
   type AnimalQuestWithRelation,

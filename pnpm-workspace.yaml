@@ -41,3 +41,6 @@ allowBuilds:
   "sharp": true
   "unrs-resolver": true
   "workerd": true
+
+minimumReleaseAgeExclude:
+  - "@alveusgg/data@0.77.0"
