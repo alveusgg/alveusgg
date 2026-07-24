@@ -19,7 +19,7 @@ type SeedEntry = {
 
 const entries: SeedEntry[] = [
   {
-    id: "seed-sat-01",
+    id: "cseedsat01",
     authorEmail: "seed-alice@example.com",
     displayName: "SeedAlice",
     title: "Squirrel feeder camera in my garden",
@@ -32,7 +32,7 @@ const entries: SeedEntry[] = [
     videoUrl: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
   },
   {
-    id: "seed-sat-02",
+    id: "cseedsat02",
     authorEmail: "seed-bob@example.com",
     displayName: "SeedBob",
     title: "Volunteered at a local wildlife rescue",
@@ -49,7 +49,7 @@ const entries: SeedEntry[] = [
     },
   },
   {
-    id: "seed-sat-03",
+    id: "cseedsat03",
     authorEmail: "seed-carol@example.com",
     displayName: "SeedCarol",
     title: "Pending post awaiting review",
@@ -61,7 +61,7 @@ const entries: SeedEntry[] = [
     volunteeringMinutes: null,
   },
   {
-    id: "seed-sat-04",
+    id: "cseedsat04",
     authorEmail: "seed-alice@example.com",
     displayName: "SeedAlice",
     title: "Edited after approval",
@@ -73,7 +73,7 @@ const entries: SeedEntry[] = [
     volunteeringMinutes: null,
   },
   {
-    id: "seed-sat-05",
+    id: "cseedsat05",
     authorEmail: null,
     displayName: "Anonymous Friend",
     title: "Anonymous bird feeder update",
@@ -85,7 +85,7 @@ const entries: SeedEntry[] = [
     volunteeringMinutes: null,
   },
   {
-    id: "seed-sat-06",
+    id: "cseedsat06",
     authorEmail: "seed-bob@example.com",
     displayName: "SeedBob",
     title: "Give an Hour: park cleanup",
@@ -98,7 +98,7 @@ const entries: SeedEntry[] = [
     location: { name: "Berlin, Germany", latitude: 52.52, longitude: 13.405 },
   },
   {
-    id: "seed-sat-07",
+    id: "cseedsat07",
     authorEmail: "seed-carol@example.com",
     displayName: "SeedCarol",
     title: "A longer story about my balcony garden",
@@ -110,7 +110,7 @@ const entries: SeedEntry[] = [
     volunteeringMinutes: null,
   },
   {
-    id: "seed-sat-08",
+    id: "cseedsat08",
     authorEmail: "seed-alice@example.com",
     displayName: "SeedAlice",
     title: "Beach cleanup down under",
@@ -163,12 +163,12 @@ export async function seedShowAndTell(
               attachments: {
                 create: [
                   {
-                    id: `${entry.id}-att-1`,
+                    id: `${entry.id}att1`,
                     order: 0,
                     attachmentType: "video",
                     linkAttachment: {
                       create: {
-                        id: `${entry.id}-link-1`,
+                        id: `${entry.id}link1`,
                         type: "youtube",
                         url: entry.videoUrl,
                         title: "Video",
