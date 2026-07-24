@@ -97,13 +97,13 @@ export function NotificationsLive() {
                     />
                   )}
                   <div className="flex-1 pl-2">
-                    <NotificationEntry notification={notification} />
+                    <NotificationEntry notification={notification} inline />
                   </div>
                   <div className="flex w-28 justify-end gap-1 border-l border-gray-400">
                     <Button
                       width="auto"
                       size="small"
-                      title="Cancel announcement"
+                      title="Cancel notification"
                       confirmationMessage="Are you sure you want to cancel this notification?"
                       onClick={() => {
                         cancelMutation.mutate(notification.id);

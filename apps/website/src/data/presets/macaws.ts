@@ -2,11 +2,13 @@ import bowld from "@/assets/presets/macaws/bowld.png";
 import bowlr from "@/assets/presets/macaws/bowlr.png";
 import closebranches from "@/assets/presets/macaws/closebranches.png";
 import door from "@/assets/presets/macaws/door.png";
+import doorz from "@/assets/presets/macaws/doorz.png";
 import downleft from "@/assets/presets/macaws/downleft.png";
 import home from "@/assets/presets/macaws/home.png";
 import leftpole from "@/assets/presets/macaws/leftpole.png";
 import perchbr from "@/assets/presets/macaws/perchbr.png";
 import postmb from "@/assets/presets/macaws/postmb.png";
+import postmbb from "@/assets/presets/macaws/postmbb.png";
 import postmt from "@/assets/presets/macaws/postmt.png";
 import right from "@/assets/presets/macaws/right.png";
 import water from "@/assets/presets/macaws/water.png";
@@ -49,6 +51,12 @@ const macawsPresets: Record<string, Preset> = {
     position: { pan: -168.21, tilt: -12.13, zoom: 1 },
     // modified: 2026-03-05T13:02:24.049Z
   },
+  doorz: {
+    description: "doorz",
+    image: doorz,
+    position: { pan: -173.32, tilt: -11.46, zoom: 1005 },
+    // modified: 2026-05-13T21:22:34.702Z
+  },
   downleft: {
     description: "downleft",
     image: downleft,
@@ -73,6 +81,12 @@ const macawsPresets: Record<string, Preset> = {
     position: { pan: 165.63, tilt: -22.03, zoom: 601 },
     // modified: 2025-10-16T15:12:14.306Z
   },
+  postmbb: {
+    description: "postmbb",
+    image: postmbb,
+    position: { pan: 165.95, tilt: -26.02, zoom: 963 },
+    // modified: 2026-05-19T00:18:52.025Z
+  },
   postmt: {
     description: "postmt",
     image: postmt,
@@ -82,8 +96,8 @@ const macawsPresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
-    position: { pan: -140.85, tilt: -23.58, zoom: 1 },
-    // modified: 2026-02-17T15:40:49.078Z
+    position: { pan: -135.16, tilt: -22.19, zoom: 1 },
+    // modified: 2026-05-31T12:45:59.232Z
   },
   water: {
     description: "Water",

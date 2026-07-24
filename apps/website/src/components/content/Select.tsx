@@ -13,17 +13,7 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import IconCheck from "@/icons/IconCheck";
 import IconChevronVertical from "@/icons/IconChevronVertical";
 
-type SelectProps = {
-  options: Record<string, string | JSX.Element>;
-  value: string;
-  onChange: (value: string) => void;
-  label?: string | JSX.Element;
-  dark?: boolean;
-  align?: "left" | "right";
-  className?: string;
-};
-
-const Select = ({
+const Select = <T extends string>({
   options,
   value,
   onChange,
@@ -31,7 +21,15 @@ const Select = ({
   dark = false,
   align = "left",
   className,
-}: SelectProps) => {
+}: {
+  options: Record<T, string | JSX.Element>;
+  value: T;
+  onChange: (value: T) => void;
+  label?: string | JSX.Element;
+  dark?: boolean;
+  align?: "left" | "right";
+  className?: string;
+}) => {
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={classes("relative mt-1 flex flex-col", className)}>
@@ -55,7 +53,7 @@ const Select = ({
         <ListboxOptions
           transition
           className={classes(
-            "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-[closed]:opacity-0",
+            "group absolute top-full z-30 mt-1 flex max-h-60 min-w-40 flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0",
             align === "left" ? "left-0" : "right-0",
             dark
               ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"
@@ -68,15 +66,15 @@ const Select = ({
               key={key}
               value={key}
               className={classes(
-                "group relative w-full min-w-max cursor-pointer rounded py-2 pr-4 pl-10 data-[focus]:outline-blue-500 data-[focus]:group-focus-visible:outline",
+                "group relative w-full min-w-max cursor-pointer rounded-sm py-2 pr-4 pl-10 data-focus:outline-blue-500 data-focus:group-focus-visible:outline",
                 dark
-                  ? "hover:bg-alveus-tan/20 data-[selected]:bg-alveus-tan/10"
-                  : "hover:bg-alveus-green/20 data-[selected]:bg-alveus-green/10",
+                  ? "hover:bg-alveus-tan/20 data-selected:bg-alveus-tan/10"
+                  : "hover:bg-alveus-green/20 data-selected:bg-alveus-green/10",
               )}
               as="li"
             >
               <span className="block">{value}</span>
-              <span className="absolute inset-y-0 left-0 hidden items-center pl-3 group-data-[selected]:flex">
+              <span className="absolute inset-y-0 left-0 hidden items-center pl-3 group-data-selected:flex">
                 <IconCheck className="size-5" aria-hidden="true" />
               </span>
             </ListboxOption>

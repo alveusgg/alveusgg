@@ -1,11 +1,31 @@
 import type { CSSProperties } from "react";
+import {
+  type ClassNameValue,
+  extendTailwindMerge,
+  fromTheme,
+} from "tailwind-merge";
 
 import { camelToKebab } from "./string-case";
 
-export function classes(
-  ...classes: Array<string | boolean | undefined | null>
-) {
-  return classes.filter(Boolean).join(" ");
+const twMerge = extendTailwindMerge<
+  "text-stroke" | "text-stroke-color" | "animation-delay"
+>({
+  extend: {
+    classGroups: {
+      // src/styles/text-stroke.ts: `text-stroke`, `text-stroke-{1..4}`
+      "text-stroke": [{ "text-stroke": ["", (v: string) => /^\d+$/.test(v)] }],
+      // src/styles/text-stroke.ts: `text-stroke-{color}`
+      "text-stroke-color": [{ "text-stroke": [fromTheme("color")] }],
+      // src/styles/tailwind.css: @utility animation-delay-*
+      "animation-delay": [
+        { "animation-delay": [(v: string) => /^\d+$/.test(v)] },
+      ],
+    },
+  },
+});
+
+export function classes(...inputs: ClassNameValue[]) {
+  return twMerge(...inputs);
 }
 
 export function objToCss(

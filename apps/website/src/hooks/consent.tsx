@@ -57,10 +57,10 @@ export const consentData = {
     description: "Embedded presentations from Prezi.com",
     privacy: "https://prezi.com/legal/privacy-policy/",
   },
-  givingBlock: {
-    name: "The Giving Block",
-    description: "Embedded donation widget from The Giving Block",
-    privacy: "https://thegivingblock.com/about/privacy-policy/",
+  neon: {
+    name: "Neon CRM",
+    description: "Embedded donation widget from Neon CRM",
+    privacy: "https://neonone.com/privacypolicy/",
   },
   vote: {
     name: "Vote.org",
@@ -85,14 +85,19 @@ const defaultConsent = Object.freeze(
 export const consentExplainer =
   "may set cookies on your device, or store your IP address, to personalise content and analyze traffic";
 
-const isPartialConsent = (val: unknown): val is Partial<Consent> =>
-  typeof val === "object" &&
-  val !== null &&
-  Object.entries(val).every(
-    ([k, v]) =>
+const safePartialConsent = (val: unknown): Partial<Consent> => {
+  if (typeof val !== "object" || val === null) return {};
+
+  return Object.entries(val).reduce((acc, [k, v]) => {
+    if (
       Object.prototype.hasOwnProperty.call(consentData, k) &&
-      typeof v === "boolean",
-  );
+      typeof v === "boolean"
+    ) {
+      return { ...acc, [k]: v };
+    }
+    return acc;
+  }, {} as Partial<Consent>);
+};
 
 type ConsentContext = Readonly<{
   consent: Consent;
@@ -213,7 +218,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             >
               <div className="my-2 grow">
                 {!hasInteracted && (
-                  <small className="block text-lg leading-snug text-alveus-green">
+                  <small className="block text-lg/snug text-alveus-green">
                     Welcome to Alveus
                   </small>
                 )}
@@ -271,7 +276,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             </p>
 
             <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
-              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
+              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-linear-to-b from-alveus-tan/0 to-alveus-tan" />
 
               <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {hasInteracted && (
@@ -309,7 +314,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
           <span
             className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
+              "inline-block size-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
             )}
           />
         </div>
@@ -326,9 +331,9 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const raw = localStorage.getItem("consent");
     if (raw) {
-      const parsed = safeJSONParse(raw);
-      if (isPartialConsent(parsed)) {
-        setConsent((prev: Consent) => Object.freeze({ ...prev, ...parsed }));
+      const partial = safePartialConsent(safeJSONParse(raw));
+      if (Object.keys(partial).length) {
+        setConsent((prev: Consent) => Object.freeze({ ...prev, ...partial }));
         setInteracted(true);
         setLoaded(true);
         return;

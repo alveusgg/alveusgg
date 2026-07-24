@@ -32,7 +32,7 @@ export function ImageUploadFilePreview({
         src={src}
         alt=""
         className={classes(
-          "absolute inset-0 h-full w-full object-contain object-center transition-opacity",
+          "absolute inset-0 size-full object-contain object-center transition-opacity",
           fadeOutImage && "opacity-50",
         )}
       />
@@ -68,6 +68,7 @@ export function ImageUploadAttachment({
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-4 shadow-lg">

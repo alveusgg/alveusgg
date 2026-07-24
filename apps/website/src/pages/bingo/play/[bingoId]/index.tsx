@@ -232,7 +232,7 @@ const PlayBingoPage = () => {
                 <span
                   className={classes(
                     embedStream ? "translate-x-6" : "translate-x-1",
-                    "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
+                    "inline-block size-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
                   )}
                 />
               </div>
@@ -250,7 +250,7 @@ const PlayBingoPage = () => {
             </label>
             <span className="italic">or</span>
 
-            <Link href={`https://www.twitch.tv/maya`} external>
+            <Link href="https://www.twitch.tv/maya" external>
               Open in new tab
             </Link>
           </div>

@@ -35,10 +35,10 @@ export const adminShowAndTellRouter = router({
 
   review: permittedProcedure
     .input(showAndTellReviewInputSchema)
-    .mutation(
-      async ({ ctx, input }) =>
-        await updatePost(ctx.res, input, undefined, true),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      await updatePost(ctx.res, input, undefined, true);
+      return getAdminPost(input.id);
+    }),
 
   approve: permittedProcedure
     .input(z.cuid())

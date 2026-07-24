@@ -13,8 +13,7 @@ type NetworkConnectionWireless = NetworkConnectionCore & {
 };
 
 export type NetworkConnection =
-  | NetworkConnectionWired
-  | NetworkConnectionWireless;
+  NetworkConnectionWired | NetworkConnectionWireless;
 
 type NetworkItemCore = {
   type: string;
@@ -87,7 +86,7 @@ const data: RootNetworkItem[] = [
         type: "switch",
         name: "Studio",
         model: "Ubiquiti USW-24-PoE",
-        url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
+        url: "https://store.ui.com/products/usw-24-poe",
         connection: { type: "cloud" },
         links: [
           {
@@ -101,14 +100,14 @@ const data: RootNetworkItem[] = [
             type: "accessPoint",
             name: "Studio",
             model: "Ubiquiti UAP-FlexHD",
-            url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-flexhd",
+            url: "https://store.ui.com/products/uap-flexhd",
             connection: { type: "ethernet", location: "wall" },
           },
           {
             type: "switch",
             name: "Reptile Room",
             model: "Ubiquiti USW-24-PoE",
-            url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
+            url: "https://store.ui.com/products/usw-24-poe",
             connection: { type: "ethernet", location: "wall" },
             links: [
               {
@@ -150,7 +149,7 @@ const data: RootNetworkItem[] = [
                 type: "switch",
                 name: "Critter Cave Upper",
                 model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/products/usw-lite-8-poe",
+                url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
                 links: [
                   {
@@ -189,7 +188,7 @@ const data: RootNetworkItem[] = [
                 type: "switch",
                 name: "Critter Cave Lower",
                 model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
                 links: [
                   {
@@ -213,82 +212,149 @@ const data: RootNetworkItem[] = [
           {
             type: "switch",
             name: "HQ",
-            model: "Ubiquiti USW-16-PoE",
-            url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-16-poe",
+            model: "Ubiquiti USW-Pro-24-PoE",
+            url: "https://store.ui.com/products/usw-pro-24-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
                 type: "accessPoint",
                 name: "HQ",
                 model: "Ubiquiti UAP-FlexHD",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-flexhd",
+                url: "https://store.ui.com/products/uap-flexhd",
                 connection: { type: "ethernet", location: "wall" },
               },
               {
                 type: "accessPoint",
                 name: "Area Wide",
                 model: "Ubiquiti UAP-AC-M-Pro",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                url: "https://store.ui.com/products/unifi-ac-mesh-pro-ap",
                 connection: { type: "ethernet", location: "wall" },
               },
               {
                 type: "switch",
                 name: "Training Center",
-                model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                model: "Ubiquiti USW-Pro-24-PoE",
+                url: "https://store.ui.com/products/usw-pro-24-poe",
                 connection: { type: "ethernet", location: "overhead" },
                 links: [
-                  /*
                   {
                     type: "camera",
                     name: "Training Center",
-                    model: "AXIS M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
+                    model: "AXIS Q6155-E (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6155-e",
                     connection: { type: "ethernet", location: "wall" },
                   },
-                  */
+                  {
+                    type: "camera",
+                    name: "Serval",
+                    model: "AXIS Q6358-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6358-le",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Pollinator Garden",
+                    model: "AXIS Q6318-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6318-le",
+                    connection: { type: "ethernet", location: "buried" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Training Center",
+                    model: "Ubiquiti U6-Mesh",
+                    url: "https://store.ui.com/products/u6-mesh",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
                   {
                     type: "accessPoint",
                     name: "Pasture",
                     model: "Ubiquiti U7-Pro-Outdoor",
-                    url: "https://store.ui.com/us/en/category/wifi-outdoor/products/u7-pro-outdoor-us",
+                    url: "https://store.ui.com/products/u7-pro-outdoor-us",
                     connection: { type: "ethernet", location: "buried" },
                   },
                 ],
               },
               {
-                type: "converter",
+                type: "switch",
                 name: "Pasture",
-                model: "TP-Link MC220L",
-                url: "https://www.tp-link.com/us/business-networking/accessory/mc220l/",
+                model: "Ubiquiti USW-Pro-XG-8-PoE",
+                url: "https://store.ui.com/products/usw-pro-xg-8-poe",
                 connection: { type: "fiber", location: "wall" },
                 links: [
                   {
-                    type: "switch",
-                    name: "Pasture",
-                    model: "Ubiquiti USW-Lite-8-PoE",
-                    url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                    type: "interface",
+                    name: "Pasture Audio I/O",
+                    model: "AXIS T6112 Mk II",
+                    url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
-                        type: "interface",
-                        name: "Pasture Audio I/O",
-                        model: "AXIS T6112 Mk II",
-                        url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
+                        type: "camera",
+                        name: "Pasture",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "microphone",
+                        name: "Pasture Microphone",
+                        model: "AXIS TU1001-VE",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                  {
+                    type: "camera",
+                    name: "Pasture Feeder",
+                    model: "AXIS Q3536-LVE (Fixed)",
+                    url: "https://www.axis.com/products/axis-q3536-lve",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "switch",
+                    name: "Gate",
+                    model: "Ubiquiti USW-Pro-XG-8-PoE",
+                    url: "https://store.ui.com/products/usw-pro-xg-8-poe",
+                    connection: { type: "fiber", location: "buried" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Pasture Lower",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "accessPoint",
+                name: "HQ Radio",
+                model: "airMAX Lite AP",
+                url: "https://store.ui.com/products/lap-120",
+                connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "accessPoint",
+                    name: "Cabin Radio",
+                    model: "airMAX NanoStation 5AC",
+                    url: "https://store.ui.com/products/ns-5ac",
+                    connection: { type: "wifi" },
+                    links: [
+                      {
+                        type: "switch",
+                        name: "Roof",
+                        model: "Ubiquiti USW-Flex-2.5G-8-PoE",
+                        url: "https://store.ui.com/products/usw-flex-2-5g-8-poe",
                         connection: { type: "ethernet", location: "wall" },
                         links: [
                           {
                             type: "camera",
-                            name: "Pasture",
-                            model: "AXIS Q6318-LE (PTZ)",
-                            url: "https://www.axis.com/products/axis-q6318-le",
-                            connection: { type: "ethernet", location: "wall" },
-                          },
-                          {
-                            type: "microphone",
-                            name: "Pasture Microphone",
-                            model: "AXIS TU1001-VE",
-                            url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                            name: "Nature",
+                            model: "AXIS Q6358-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6358-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                         ],
@@ -303,21 +369,21 @@ const data: RootNetworkItem[] = [
             type: "accessPoint",
             name: "Studio Radio",
             model: "airMAX NanoStation 5AC Loco",
-            url: "https://store.ui.com/us/en/products/loco5ac",
+            url: "https://store.ui.com/products/loco5ac",
             connection: { type: "ethernet", location: "wall" },
             links: [
               {
                 type: "accessPoint",
                 name: "Parrot Radio",
                 model: "airMAX NanoStation 5AC Loco",
-                url: "https://store.ui.com/us/en/products/loco5ac",
+                url: "https://store.ui.com/products/loco5ac",
                 connection: { type: "wifi" },
                 links: [
                   {
                     type: "switch",
                     name: "Parrot",
                     model: "Ubiquiti USW-24-PoE",
-                    url: "https://store.ui.com/us/en/collections/unifi-switching-standard-power-over-ethernet/products/usw-24-poe",
+                    url: "https://store.ui.com/products/usw-24-poe",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
@@ -345,7 +411,7 @@ const data: RootNetworkItem[] = [
                         type: "accessPoint",
                         name: "Parrot",
                         model: "Ubiquiti UAP-AC-M-Pro",
-                        url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                        url: "https://store.ui.com/products/unifi-ac-mesh-pro-ap",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
@@ -374,7 +440,7 @@ const data: RootNetworkItem[] = [
             type: "switch",
             name: "Nutrition House",
             model: "Ubiquiti USW-24-PoE",
-            url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
+            url: "https://store.ui.com/products/usw-24-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
@@ -388,14 +454,14 @@ const data: RootNetworkItem[] = [
                 type: "accessPoint",
                 name: "Nutrition House",
                 model: "Ubiquiti UAP-FlexHD",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-flexhd",
+                url: "https://store.ui.com/products/uap-flexhd",
                 connection: { type: "ethernet", location: "wall" },
               },
               {
                 type: "switch",
                 name: "Wall Switch",
                 model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
                 links: [
                   /*
@@ -473,14 +539,14 @@ const data: RootNetworkItem[] = [
                 type: "switch",
                 name: "Power Distribution",
                 model: "Ubiquiti USW-Lite-8-PoE",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "buried" },
                 links: [
                   {
                     type: "switch",
                     name: "Crow",
                     model: "Ubiquiti USW-Lite-16-PoE",
-                    url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-16-poe",
+                    url: "https://store.ui.com/products/usw-lite-16-poe",
                     connection: { type: "ethernet", location: "buried" },
                     links: [
                       {
@@ -501,7 +567,7 @@ const data: RootNetworkItem[] = [
                         type: "accessPoint",
                         name: "Crow",
                         model: "Ubiquiti UAP-AC-M-Pro",
-                        url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                        url: "https://store.ui.com/products/unifi-ac-mesh-pro-ap",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
@@ -524,7 +590,7 @@ const data: RootNetworkItem[] = [
                         type: "switch",
                         name: "Wolf",
                         model: "Ubiquiti USW-Pro-24-PoE",
-                        url: "https://store.ui.com/us/en/collections/unifi-switching-pro-power-over-ethernet/products/usw-pro-24-poe",
+                        url: "https://store.ui.com/products/usw-pro-24-poe",
                         connection: { type: "ethernet", location: "buried" },
                         links: [
                           {
@@ -573,14 +639,14 @@ const data: RootNetworkItem[] = [
                             type: "accessPoint",
                             name: "Wolf Indoor",
                             model: "Ubiquiti UAP-AC-M",
-                            url: "https://store.ui.com/us/en/collections/unifi-wifi-outdoor-long-range/products/uap-ac-mesh",
+                            url: "https://store.ui.com/products/uap-ac-mesh",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "switch",
                             name: "Wolf Deck",
                             model: "Ubiquiti USW-Flex",
-                            url: "https://store.ui.com/us/en/collections/unifi-switching-utility-indoor-outdoor/products/usw-flex",
+                            url: "https://store.ui.com/products/usw-flex",
                             connection: {
                               type: "ethernet",
                               location: "buried",
@@ -600,7 +666,7 @@ const data: RootNetworkItem[] = [
                                 type: "accessPoint",
                                 name: "Wolf Deck",
                                 model: "Ubiquiti UAP-AC-M",
-                                url: "https://store.ui.com/us/en/collections/unifi-wifi-outdoor-long-range/products/uap-ac-mesh",
+                                url: "https://store.ui.com/products/uap-ac-mesh",
                                 connection: {
                                   type: "ethernet",
                                   location: "wall",
@@ -615,8 +681,8 @@ const data: RootNetworkItem[] = [
                   {
                     type: "switch",
                     name: "Marmoset",
-                    model: "Ubiquiti USW-24-PoE",
-                    url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
+                    model: "Ubiquiti USW-Pro-24-PoE",
+                    url: "https://store.ui.com/products/usw-pro-24-poe",
                     connection: { type: "ethernet", location: "buried" },
                     links: [
                       {
@@ -637,7 +703,7 @@ const data: RootNetworkItem[] = [
                         type: "accessPoint",
                         name: "Marmoset",
                         model: "Ubiquiti U7-Pro-Outdoor",
-                        url: "https://store.ui.com/us/en/category/wifi-outdoor/products/u7-pro-outdoor-us",
+                        url: "https://store.ui.com/products/u7-pro-outdoor-us",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
@@ -659,9 +725,35 @@ const data: RootNetworkItem[] = [
                       {
                         type: "camera",
                         name: "Emu",
+                        model: "AXIS Q6358-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6358-le",
+                        connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Emu Cover",
                         model: "AXIS P5676-LE (PTZ)",
                         url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "switch",
+                        name: "Emu",
+                        model: "Ubiquiti USW-Lite-8-PoE",
+                        url: "https://store.ui.com/products/usw-lite-8-poe",
+                        connection: { type: "ethernet", location: "buried" },
+                        links: [
+                          {
+                            type: "camera",
+                            name: "Emu Pond",
+                            model: "AXIS M2036-LE (Fixed)",
+                            url: "https://www.axis.com/products/axis-m2036-le",
+                            connection: {
+                              type: "ethernet",
+                              location: "buried",
+                            },
+                          },
+                        ],
                       },
                     ],
                   },
@@ -676,7 +768,7 @@ const data: RootNetworkItem[] = [
                         type: "switch",
                         name: "Fox",
                         model: "Ubiquiti USW-Pro-24-PoE",
-                        url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-pro-24-poe",
+                        url: "https://store.ui.com/products/usw-pro-24-poe",
                         connection: { type: "fiber", location: "buried" },
                         links: [
                           {
@@ -689,15 +781,22 @@ const data: RootNetworkItem[] = [
                           {
                             type: "camera",
                             name: "Fox Covered",
-                            model: "AXIS P5676-LE (PTX)",
+                            model: "AXIS P5676-LE (PTZ)",
                             url: "https://www.axis.com/products/axis-p5676-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "camera",
+                            name: "Fox Indoor",
+                            model: "AXIS P1468-LE (Fixed)",
+                            url: "https://www.axis.com/products/axis-p1468-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "accessPoint",
                             name: "Fox",
                             model: "Ubiquiti U7-Pro-Outdoor",
-                            url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/u7-pro-outdoor-us",
+                            url: "https://store.ui.com/products/u7-pro-outdoor-us",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {

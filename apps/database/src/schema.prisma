@@ -371,6 +371,7 @@ model ShowAndTellEntry {
   title               String
   text                String    @db.Text
   displayName         String?
+  pronouns            String?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @default(now())
   approvedAt          DateTime?

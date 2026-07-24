@@ -2,11 +2,9 @@ import type { Context } from "hono";
 import { routePath } from "hono/route";
 
 export function forwardWithoutRoutePrefix(context: Context) {
-  const wildcard = routePath(context, 0);
-  const rootRoute = routePath(context, 1);
-
-  const prefix = rootRoute.replace(wildcard, "");
-  const suffix = context.req.path.replace(prefix, "");
+  const route = routePath(context);
+  const prefix = route.replace(/\/?\*+$/, "");
+  const suffix = context.req.path.slice(prefix.length) || "/";
 
   const url = new URL(context.req.raw.url);
   url.pathname = suffix;

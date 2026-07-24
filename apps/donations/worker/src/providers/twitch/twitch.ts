@@ -29,9 +29,9 @@ export class TwitchDonationProvider implements DonationProvider {
     service: DonationStorage,
     env: Env,
   ): Promise<TwitchDonationProvider> {
-    const options = {
+    const options: TwitchDonationProviderOptions = {
       sandbox: env.SANDBOX === "true",
-      allowedCharityName: env.TWITCH_CHARITY_NAME,
+      allowedCharityName: env.TWITCH_CHARITY_NAME!,
     };
     const config =
       await service.config.get<TwitchDonationProviderConfig>("twitch");
@@ -41,9 +41,20 @@ export class TwitchDonationProvider implements DonationProvider {
         headers["x-vercel-protection-bypass"] =
           env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
       }
+
+      if (!env.SHARED_KEY) {
+        throw new Error("SHARED_KEY must be defined in environment variables");
+      }
+
+      if (!env.TWITCH_SUBSCRIPTION_SECRET) {
+        throw new Error(
+          "TWITCH_SUBSCRIPTION_SECRET must be defined in environment variables",
+        );
+      }
+
       await setupTwitchSubscription(
-        env.SITE_URL,
-        env.SELF_URL,
+        env.SITE_URL!,
+        env.SELF_URL!,
         env.SHARED_KEY,
         env.TWITCH_SUBSCRIPTION_SECRET,
         headers,
@@ -51,7 +62,7 @@ export class TwitchDonationProvider implements DonationProvider {
 
       const config = {
         secret: env.TWITCH_SUBSCRIPTION_SECRET,
-      };
+      } as const satisfies TwitchDonationProviderConfig;
       await service.config.set("twitch", config);
 
       return new TwitchDonationProvider(config, options, service);

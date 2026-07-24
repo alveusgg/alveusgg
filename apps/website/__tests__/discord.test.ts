@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
+import { escapeLinksForDiscord } from "@/utils/discord";
 
 test("wrapping fully qualified urls", async () => {
   const example = "https://google.com";
@@ -55,6 +55,17 @@ test("full message example", async () => {
 test("full stop false", async () => {
   const example = "...beautiful day.we're live at";
   const expected = "...beautiful day.we're live at";
+
+  const res = escapeLinksForDiscord(example);
+
+  expect(res).toEqual(expected);
+});
+
+test("wrapping url inside masked markdown link", async () => {
+  const example =
+    "Read this @ [google.com](https://google.com/search?q=alveus)";
+  const expected =
+    "Read this @ [google.com](<https://google.com/search?q=alveus>)";
 
   const res = escapeLinksForDiscord(example);
 

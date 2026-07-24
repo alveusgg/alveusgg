@@ -6,16 +6,21 @@ on:
     # Run once per week on Monday at midnight, before Dependabot runs on Wednesday
     - cron: "0 0 * * 1"
 
+permissions:
+  contents: read
+
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Install pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: Update pnpm
         id: update
@@ -27,9 +32,10 @@ jobs:
 
       - name: Create PR
         if: steps.update.outputs.old != steps.update.outputs.new
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GH_PR_TOKEN }}
+          sign-commits: true
           title: Bump pnpm from ${{ steps.update.outputs.old }} to ${{ steps.update.outputs.new }}
           body: |
             Generated via `pnpm self-update`.

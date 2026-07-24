@@ -1,0 +1,73 @@
+name: Update Donations Worker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+      - "preview"
+    paths:
+      - "apps/donations/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/update-donations-worker.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    name: Deploy (${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }})
+    environment: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
+    runs-on: ubuntu-latest
+    if: github.repository == 'alveusgg/alveusgg'
+    timeout-minutes: 10
+    env:
+      ALVEUS_ENVIRONMENT: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Install Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Authenticate GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy
+        working-directory: apps/donations/worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: pnpm exec wrangler deploy --env=$ALVEUS_ENVIRONMENT --outdir dist --var SENTRY_DSN:$SENTRY_DSN --var SENTRY_RELEASE:${{ github.sha }} --keep-vars true
+
+      - name: Create Sentry Release
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3.7.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: alveus-sanctuary
+          SENTRY_PROJECT: donations-worker
+        with:
+          ignore_missing: true
+          ignore_empty: true
+          inject: false
+          release: ${{ github.sha }}
+          environment: ${{ env.ALVEUS_ENVIRONMENT }}
+          sourcemaps: apps/donations/worker/dist
+          strip_common_prefix: true

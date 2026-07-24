@@ -1,7 +1,7 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { type MouseEventHandler, useCallback, useRef } from "react";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -18,13 +18,17 @@ import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
+  LinkButton,
   approveButtonClasses,
   dangerButtonClasses,
   defaultButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
+import IconLoading from "@/icons/IconLoading";
 import IconMinus from "@/icons/IconMinus";
 import IconTrash from "@/icons/IconTrash";
 
@@ -131,6 +135,34 @@ const AdminReviewShowAndTellPage: NextPage<
     }
   }, [deleteMutation, entry]);
 
+  const handlePreview: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    (e) => {
+      if (
+        confirmIfUnsavedRef.current?.(
+          "You have unsaved changes. Preview will show the old version! Continue?",
+        ) === false
+      ) {
+        e.preventDefault();
+        return;
+      }
+
+      const popup = window.open(
+        e.currentTarget.href,
+        "preview",
+        "popup=yes,width=800,height=600",
+      );
+      if (popup) {
+        e.preventDefault();
+      }
+    },
+    [],
+  );
+
+  const isMutationPending =
+    approveMutation.isPending ||
+    removeApprovalMutation.isPending ||
+    deleteMutation.isPending;
+
   return (
     <>
       <Meta title="Review submission - Admin Show and Tell" />
@@ -169,7 +201,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 Last updated:{" "}
                 <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
                 <br />
-                {entry.approvedAt && (
+                {entry.approvedAt ? (
                   <>
                     Approved at:{" "}
                     <DateTime
@@ -177,17 +209,39 @@ const AdminReviewShowAndTellPage: NextPage<
                       format={{ time: "minutes" }}
                     />
                   </>
+                ) : (
+                  "Not approved"
                 )}
               </div>
               <div className="flex flex-col gap-2">
+                <LinkButton
+                  size="small"
+                  className={secondaryButtonClasses}
+                  href={`/admin/show-and-tell/review/${entry.id}/preview`}
+                  target="_blank"
+                  onClick={handlePreview}
+                >
+                  <IconEye className="size-5" />
+                  Preview
+                </LinkButton>
                 {status === "approved" && (
                   <Button
                     size="small"
                     className={defaultButtonClasses}
                     onClick={handleRemoveApproval}
+                    disabled={isMutationPending}
                   >
-                    <IconMinus className="size-4" />
-                    Remove approval
+                    {removeApprovalMutation.isPending ? (
+                      <>
+                        <IconLoading className="size-4" />
+                        Removing approval …
+                      </>
+                    ) : (
+                      <>
+                        <IconMinus className="size-4" />
+                        Remove approval
+                      </>
+                    )}
                   </Button>
                 )}
                 {status === "pendingApproval" && (
@@ -195,18 +249,38 @@ const AdminReviewShowAndTellPage: NextPage<
                     size="small"
                     className={approveButtonClasses}
                     onClick={handleApprove}
+                    disabled={isMutationPending}
                   >
-                    <IconCheckCircle className="size-4" />
-                    Approve
+                    {approveMutation.isPending ? (
+                      <>
+                        <IconLoading className="size-4" />
+                        Approving …
+                      </>
+                    ) : (
+                      <>
+                        <IconCheckCircle className="size-4" />
+                        Approve
+                      </>
+                    )}
                   </Button>
                 )}
                 <Button
                   size="small"
                   className={dangerButtonClasses}
                   onClick={handleDelete}
+                  disabled={isMutationPending}
                 >
-                  <IconTrash className="size-4" />
-                  Delete
+                  {deleteMutation.isPending ? (
+                    <>
+                      <IconLoading className="size-4" />
+                      Deleting …
+                    </>
+                  ) : (
+                    <>
+                      <IconTrash className="size-4" />
+                      Delete
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
@@ -218,6 +292,7 @@ const AdminReviewShowAndTellPage: NextPage<
             <Headline>Review or edit post:</Headline>
             <Panel lightMode>
               <ShowAndTellEntryForm
+                className="-m-4 p-4"
                 action="review"
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}

@@ -4,8 +4,8 @@ export type CalculatedFormConfig = z.infer<typeof formConfigSchema> & {
   hasRules: boolean;
 };
 
-export const PLACEHOLDER_SUBMIT_BUTTON_TEXT = "Submit";
-export const PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL =
+export const DEFAULT_SUBMIT_BUTTON_TEXT = "Submit";
+export const DEFAULT_ASK_MARKETING_EMAILS_LABEL =
   "Additionally, I am happy for Alveus Sanctuary Inc. to use my email for direct marketing relating to the sanctuary, including from its partners, such as for news, fundraisers, and other promotions.";
 
 export const formConfigSchema = z.object({

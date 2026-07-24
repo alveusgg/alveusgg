@@ -173,7 +173,7 @@ export function CommunityMap({
         }
         popup
           .setLngLat(coordinates)
-          .setHTML(feature.properties.name)
+          .setText(feature.properties.name)
           .addTo(map);
       }
     });
@@ -206,7 +206,10 @@ export function CommunityMap({
     <>
       <div
         id="mapVisualizerContainer"
-        className="alveus-community-map h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
+        className={
+          // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+          "alveus-community-map h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
+        }
       />
 
       <ModalDialog

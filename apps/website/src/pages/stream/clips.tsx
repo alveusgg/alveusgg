@@ -79,16 +79,34 @@ export const getStaticProps: GetStaticProps<{
     }
 
     // Get clips within the last year, older than a week, with at least 100 views
+    // And get clips beyond a year that have at least 2000 views
     const start = new Date();
     start.setFullYear(start.getFullYear() - 1);
     const end = new Date();
     end.setDate(end.getDate() - 7);
-    const clips = await getTwitchClips(
+    const recentClips = await getTwitchClips(
       twitchChannel.broadcasterAccount.access_token,
       channels.alveus.id,
       start,
       end,
       100,
+    );
+    const olderClips = await getTwitchClips(
+      twitchChannel.broadcasterAccount.access_token,
+      channels.alveus.id,
+      new Date(0),
+      start,
+      2000,
+    );
+    const { clips } = recentClips.concat(olderClips).reduce(
+      ({ clips, ids }, clip) => {
+        if (!ids.has(clip.id)) {
+          ids.add(clip.id);
+          clips.push(clip);
+        }
+        return { clips, ids };
+      },
+      { clips: [] as Clip[], ids: new Set<string>() },
     );
     console.log(`Fetched ${clips.length} clips`);
 
@@ -240,7 +258,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     [],
   );
 
-  // Allow a title to be set by mods in chat
+  // Allow a title to be set by mods in chat, or skipping to the next clip
   const [title, setTitle] = useState("");
   useEffect(() => {
     setTitle(typeof query.title === "string" ? query.title.trim() : "");
@@ -250,20 +268,33 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       const param = queryArray(query.channels);
       return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
     }, [query.channels]),
-    useCallback((message: ChatMessage) => {
-      const { text: raw, userInfo } = message;
-      const [command] = raw.trim().toLowerCase().split(/\s+/);
+    useCallback(
+      (message: ChatMessage) => {
+        const { text: raw, userInfo } = message;
+        const [command] = raw.trim().toLowerCase().split(/\s+/);
 
-      if (!userInfo.isMod && !userInfo.isBroadcaster) return;
-      if (command !== "!text") return;
+        if (!userInfo.isMod && !userInfo.isBroadcaster) return;
 
-      setTitle(
-        raw
-          .trimStart()
-          .slice(command.length + 1)
-          .trim(),
-      );
-    }, []),
+        if (command === "!text") {
+          setTitle(
+            raw
+              .trimStart()
+              .slice(command.length + 1)
+              .trim(),
+          );
+        }
+
+        if (command === "!nextclip" || command === "!skipclip") {
+          // Reset all the timers as we're moving to a new clip immediately
+          if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
+          if (loadedTimer.current) clearTimeout(loadedTimer.current);
+          if (detailsTimer.current) clearTimeout(detailsTimer.current);
+          if (errorTimer.current) clearTimeout(errorTimer.current);
+          increment();
+        }
+      },
+      [increment],
+    ),
   );
 
   return (
@@ -275,13 +306,13 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Transition show={!!title}>
               {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
                 <p className="text-center text-3xl font-bold">{title}</p>
               </div>
             </Transition>
 
             <Transition show={details === "overlay"}>
-              <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
+              <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-300">
                 <h1 className="text-5xl">
                   {clip.title}
                   <span className="ml-1 text-4xl">
@@ -309,7 +340,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Transition show={details === "below"}>
               {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
-              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
+              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
                 <p className="text-lg">{clip.title}</p>
                 <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
                 <p>

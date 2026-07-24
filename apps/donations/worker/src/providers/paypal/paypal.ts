@@ -20,9 +20,9 @@ export class PaypalDonationProvider implements DonationProvider {
     service: DonationStorage,
     env: Env,
   ): Promise<PaypalDonationProvider> {
-    const options = {
+    const options: PaypalDonationProviderOptions = {
       sandbox: env.SANDBOX === "true",
-      expectedBusinessEmailAddress: env.PAYPAL_BUSINESS_EMAIL,
+      expectedBusinessEmailAddress: env.PAYPAL_BUSINESS_EMAIL!,
     };
     return new PaypalDonationProvider(options, service);
   }

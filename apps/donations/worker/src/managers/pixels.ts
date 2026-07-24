@@ -2,13 +2,18 @@ import type { Donation, DonationAlert, Pixel } from "@alveusgg/donations-core";
 import { DurableObject } from "cloudflare:workers";
 
 import type { AppRouter } from "@alveusgg/alveusgg-website";
+import * as Sentry from "@sentry/cloudflare";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
-import { createSharedKeyMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
+import { getSentryConfig } from "../utils/sentry";
 
 interface PixelsManagerState {
   pixels: Pixel[];
@@ -22,7 +27,7 @@ const Grid = z.object({
 });
 type Grid = z.infer<typeof Grid>;
 
-export class PixelsManagerDurableObject extends DurableObject<Env> {
+class PixelsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private startup?: Promise<void>;
   private provider?: SyncProvider<PixelsManagerState>;
@@ -40,10 +45,16 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
     this.muralId = env.MURAL_ID;
+
+    if (!env.SHARED_KEY) {
+      throw new Error("SHARED_KEY must be defined in environment variables");
+    }
+
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
       .use(cors())
+      .use(setSentryTagsMiddleware())
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
@@ -68,6 +79,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           return c.json({ success: true });
         } catch (error) {
           console.error(error);
+          Sentry.captureException(error);
           return c.json(
             { error: "Failed to resync pixels", success: false },
             500,
@@ -77,8 +89,11 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   }
 
   async init() {
-    const grid = await getGrid(this.env.GRID_URL);
-    this.grid = grid;
+    if (!this.env.GRID_URL) {
+      throw new Error("GRID_URL must be defined in environment variables");
+    }
+
+    this.grid = await getGrid(this.env.GRID_URL);
 
     this.api = createTRPCProxyClient<AppRouter>({
       links: [
@@ -110,20 +125,21 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     }));
   }
 
-  private async getStateFromAPI() {
+  private async getStateFromAPI(): Promise<Pixel[]> {
     if (!this.api) throw new Error("API not initialized");
-    const pixels: Omit<Pixel, "data">[] =
-      await this.api.donations.getPixels.query({ muralId: this.muralId });
 
-    const pixelsWithImageData = pixels.map((pixel) => {
-      if (!this.grid) throw new Error("Grid not initialized");
-      return {
-        ...pixel,
-        data: this.grid.squares[`${pixel.column}:${pixel.row}`],
-      };
+    const pixels = await this.api.donations.getPixels.query({
+      muralId: this.muralId,
     });
 
-    return pixelsWithImageData;
+    const grid = this.grid;
+    if (!grid) throw new Error("Grid not initialized");
+
+    return pixels.map(({ renamedAt: _, ...pixel }) => ({
+      ...pixel,
+      muralId: this.muralId,
+      data: grid.squares[`${pixel.column}:${pixel.row}`],
+    }));
   }
 
   private async startWebsocketConnection(server: WebSocket) {
@@ -143,6 +159,29 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     }
   }
 
+  private isAValidPixelDonation(donation: Donation) {
+    switch (donation.provider) {
+      case "neon":
+        return (
+          (this.env.NEON_PIXEL_CAMPAIGN_ID !== "" &&
+            donation.providerMetadata.neonCampaignId ===
+              this.env.NEON_PIXEL_CAMPAIGN_ID) ||
+          (this.env.NEON_PIXEL_FUND_ID !== "" &&
+            donation.providerMetadata.neonFundId ===
+              this.env.NEON_PIXEL_FUND_ID)
+        );
+      case "paypal":
+        if (!this.env.PAYPAL_PIXEL_CAMPAIGN_ID) return false;
+        return donation.tags.campaign === this.env.PAYPAL_PIXEL_CAMPAIGN_ID;
+      case "twitch":
+        return false;
+      case "thegivingblock":
+        return false;
+      default:
+        return true;
+    }
+  }
+
   async process(donations: Donation[]) {
     await this.ctx.blockConcurrencyWhile(async () => {
       await this.ready();
@@ -157,6 +196,10 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       // New pixels
       const pixels: Record<string, Pixel[]> = {};
       for (const donation of donations) {
+        if (!this.isAValidPixelDonation(donation)) {
+          continue;
+        }
+
         // Use the primary property of the donatedBy object to get the identifier or default to "Anonymous"
         let identifier =
           donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";
@@ -249,6 +292,12 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     return this.router.fetch(request);
   }
 }
+
+export const PixelsManagerDurableObject =
+  Sentry.instrumentDurableObjectWithSentry(
+    getSentryConfig,
+    PixelsManagerDurableObjectBase,
+  );
 
 function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
   const totalPossibleSquares = grid.columns * grid.rows;

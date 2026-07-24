@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { type PartialDateString } from "@/utils/datetime-partial";
 
 import { MayaText } from "@/components/content/Maya";
@@ -9,7 +11,8 @@ import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import chandlerImage from "@/assets/people/chandler.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
+import jacobIckesFunImage from "@/assets/people/jacob-ickes-fun.jpg";
+import jacobIckesImage from "@/assets/people/jacob-ickes.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindenImage from "@/assets/people/linden.jpg";
 import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
@@ -17,13 +20,53 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import mirandaFunImage from "@/assets/people/miranda-fun.jpg";
+import mirandaImage from "@/assets/people/miranda.jpg";
 import rockyImage from "@/assets/people/rocky.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 
+export const departments = {
+  leadership: null, // No label for Maya as she isn't really in a department
+  animalCare: (
+    <>
+      Animal Care (
+      <abbr title="Animal Care Staff" className="cursor-help">
+        ACS
+      </abbr>
+      )
+    </>
+  ),
+  facilities: (
+    <>
+      Facilities and Infrastructure (
+      <abbr
+        title="Facilities and Infrastructure Department"
+        className="cursor-help"
+      >
+        FAID
+      </abbr>
+      )
+    </>
+  ),
+  operations: (
+    <>
+      Operations (
+      <abbr title="Operations" className="cursor-help">
+        OPS
+      </abbr>
+      )
+    </>
+  ),
+} as const satisfies Record<string, ReactNode>;
+
+type Department = keyof typeof departments;
+
 export interface Staff extends Person {
+  title: string;
   joined: PartialDateString;
+  department: Department;
 }
 
 const staff: Record<string, Staff> = {
@@ -42,6 +85,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-02",
+    department: "leadership",
   },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
@@ -66,6 +110,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
+    department: "operations",
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -91,6 +136,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
+    department: "animalCare",
   },
   lindsay: {
     image: [lindsayBellawImage, lindsayBellawFunImage],
@@ -112,6 +158,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2023-07",
+    department: "animalCare",
   },
   sruti: {
     image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
@@ -125,13 +172,13 @@ const staff: Record<string, Staff> = {
           her local zoo, Sruti was fortunate to realize her passion for animal
           behavior, conservation, and environmental education. This passion
           translated to jobs all over the world, participating in field research
-          and education. That trend continued when she moved to Michigan and
-          served as the Mammal Curator for The Creature Conservancy. This
-          opportunity channeled her interest in behavior into training, where
-          she trained with animals both big and small for fear-free veterinary
-          care, educational programs, and mental well-being. To further improve
-          her training skills, Sruti studied and worked with K9 Turbo Training
-          to obtain her certification in professional dog training. She
+          and education, including serving as the Mammal Curator for The
+          Creature Conservancy. This opportunity channeled her interest in
+          behavior into training, where she trained with animals both big and
+          small for fear-free veterinary care, educational programs, and mental
+          well-being. Sruti went on to study and work with K9 Turbo Training to
+          obtain her Certification Council for Professional Dog Trainers®
+          (CCPDT®) certification, which she continues to maintain. She
           specializes in fear and aggression and loves working with families to
           create a training environment that is supportive, engaging, and fun
           for everyone!
@@ -145,6 +192,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2024-04",
+    department: "animalCare",
   },
   amanda: {
     image: [amandaDenaroImage, amandaDenaroFunImage],
@@ -167,6 +215,28 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2024-07",
+    department: "animalCare",
+  },
+  miranda: {
+    image: [mirandaImage, mirandaFunImage],
+    name: "Miranda (Randi)",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Miranda grew up in Southern California and always had a passion for
+          animals. She looked at local schools to pursue a career working with
+          animals and found Moorpark College, where she then spent 2 years as a
+          student zookeeper working on the zoo and taking classes. After
+          graduation she did a short stint as a dog trainer, training dogs who
+          would aid people with diabetes. Following that, she then began working
+          with marine mammals in San Diego, which she did for years before
+          packing up and moving to Texas to work for Alveus!
+        </p>
+      </>
+    ),
+    joined: "2026-03",
+    department: "animalCare",
   },
   linden: {
     image: lindenImage,
@@ -189,11 +259,12 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-12",
+    department: "facilities",
   },
   lukas: {
     image: lukasMeyerImage,
     name: "Lukas Meyer",
-    title: "Herpetology & Invert Lead | Habitat Specialist",
+    title: "FAID Manager | Herpetology & Invert Lead",
     description: (
       <>
         <p>
@@ -207,23 +278,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-01",
-  },
-  dan: {
-    image: danielDoormanImage,
-    name: "Daniel (Dan the Doorman)",
-    title: "Facilities Specialist",
-    description: (
-      <>
-        <p>
-          Daniel has more than 15 years in the construction industry, working in
-          a varied capacity, including: carpentry, drywall, brick, tile,
-          plumbing, and more. His most recent job being in access solutions,
-          mainly overhead sectional doors. He enjoys tinkering with electronics,
-          puzzles, and has a strong appreciation for a good-looking door.
-        </p>
-      </>
-    ),
-    joined: "2025-07",
+    department: "operations",
   },
   rocky: {
     image: rockyImage,
@@ -243,6 +298,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-08",
+    department: "facilities",
   },
   space: {
     image: spaceVoyageImage,
@@ -268,6 +324,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-02",
+    department: "operations",
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -279,6 +336,29 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-04",
+    department: "operations",
+  },
+  jacob: {
+    image: [jacobIckesImage, jacobIckesFunImage],
+    name: "Jacob Ickes",
+    title: "Development and Administration Coordinator",
+    description: (
+      <p>
+        Jacob graduated with a degree in political science with a minor in
+        business and a postgraduate certificate in non-profit management. As a
+        Community Impact Coordinator he has managed volunteers, supported the
+        planning and implementation of community action initiatives, and hosted
+        trainings to build capacity for local non-profits focused on basic needs
+        and economic development. As a fundraiser and grant writer he has raised
+        over $4 million through individual, corporate and foundation donors for
+        multiple organizations, managing both solicitation and stewardship of
+        the giving process. His passion for conservation and the natural world
+        formed through volunteering and learning from The Wildlife Center of
+        Texas, Bayou Land Conservancy, and Alveus Sanctuary.
+      </p>
+    ),
+    joined: "2026-01",
+    department: "operations",
   },
 };
 

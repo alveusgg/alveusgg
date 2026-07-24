@@ -15,7 +15,7 @@
   "scripts": {
     "types": "tsc --noEmit",
     "build:generate": "prisma generate",
-    "build:compile": "tsup",
+    "build:compile": "tsdown",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "postinstall": "pnpm build",
     "lint:validate": "prisma validate",
@@ -25,14 +25,14 @@
     "seed": "prisma db seed"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "^7.5.0",
-    "@prisma/client": "^7.5.0"
+    "@prisma/adapter-mariadb": "^7.8.0",
+    "@prisma/client": "^7.8.0"
   },
   "devDependencies": {
-    "@types/node": "^24.12.0",
-    "dotenv": "^17.3.1",
-    "prisma": "^7.5.0",
-    "tsup": "^8.3.5",
+    "@types/node": "^24.13.2",
+    "dotenv": "^17.4.2",
+    "prisma": "^7.8.0",
+    "tsdown": "^0.22.8",
     "tsx": "^4.21.0"
   },
   "exports": {

@@ -15,6 +15,7 @@ import {
   getFileEndingForImageMimeType,
   getImageMimeType,
   isImageMimeType,
+  normalizeFileName,
 } from "@/utils/files";
 import { imageConverter } from "@/utils/image-converter";
 import {
@@ -78,6 +79,7 @@ type FailedUploadFileReference = {
 export type FileUploadRenderProps = {
   key: Key;
   fileReference: FileReference;
+  disabled?: boolean;
 };
 
 type FileUploadingPropsType = {
@@ -89,6 +91,7 @@ type FileUploadingPropsType = {
   label?: string;
   allowedFileTypes?: readonly string[];
   multiple?: boolean;
+  disabled?: boolean;
   maxNumber?: number;
   maxFileSize?: number;
   renderAttachment?: (props: FileUploadRenderProps) => ReactNode;
@@ -187,6 +190,7 @@ export const UploadAttachmentsField = ({
   upload,
   label = "Attachments",
   multiple = true,
+  disabled = false,
   maxNumber,
   maxFileSize,
   allowedFileTypes,
@@ -233,9 +237,14 @@ export const UploadAttachmentsField = ({
       const file = filesToAdd[i];
       if (!file) continue;
 
+      // Rename file to only include safe characters (up to 30) and preserve the file extension
+      const renamedFile = new File([file], normalizeFileName(file.name), {
+        type: file.type,
+      });
+
       // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
       // returns the original file if conversion not needed
-      const fileToUpload = await convertImage(file);
+      const fileToUpload = await convertImage(renamedFile);
 
       if (!fileToUpload) continue;
 
@@ -338,12 +347,17 @@ export const UploadAttachmentsField = ({
         onChange={onInputChange}
         className="hidden"
         id={id}
+        disabled={disabled}
       />
       <div>
         {RenderAttachment && files.length > 0 && (
           <div className={attachmentsClassName}>
             {files.map((file) => (
-              <RenderAttachment key={file.id} fileReference={file} />
+              <RenderAttachment
+                key={file.id}
+                fileReference={file}
+                disabled={disabled}
+              />
             ))}
           </div>
         )}
@@ -351,7 +365,8 @@ export const UploadAttachmentsField = ({
           type="button"
           className={isDragging ? "bg-red-300" : defaultButtonClasses}
           onClick={onFileUpload}
-          {...dragProps}
+          {...(disabled ? {} : dragProps)}
+          disabled={disabled}
         >
           <IconUploadFiles className="size-5" />
           Click or Drop here

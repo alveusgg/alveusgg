@@ -46,6 +46,14 @@ export const userRoles = {
     label: "Donations",
     description: "Can view and manage donations",
   },
+  census_admin: {
+    label: "Pollinator Census Admin",
+    description: "Can administer the pollinator census",
+  },
+  census_moderator: {
+    label: "Pollinator Census Moderator",
+    description: "Can moderate the pollinator census",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {

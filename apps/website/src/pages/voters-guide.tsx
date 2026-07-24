@@ -1,11 +1,7 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
 import IframeResizer from "@iframe-resizer/react";
 import { type NextPage } from "next";
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 import { type ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -13,16 +9,13 @@ import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
+import Accordion, { type AccordionItem } from "@/components/content/Accordion";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Share from "@/components/content/Share";
-
-import IconArrowRight from "@/icons/IconArrowRight";
-import IconChevronDown from "@/icons/IconChevronDown";
-import IconChevronUp from "@/icons/IconChevronUp";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -45,17 +38,11 @@ const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
   </Consent>
 );
 
-interface Step {
-  title: string;
-  link: string;
-  description: string;
-  content?: React.ReactNode;
-}
-
-const steps: Record<string, Step> = {
+const steps: Record<string, AccordionItem> = {
   register: {
     title: "Register to Vote",
     link: "https://www.vote.org/register-to-vote/",
+    linkIsExternal: true,
     description:
       "If you're not yet registered to vote, you can register online in minutes using this form.",
     content: <VoteEmbed type="register" />,
@@ -63,6 +50,7 @@ const steps: Record<string, Step> = {
   status: {
     title: "Check Your Voting Status",
     link: "https://www.vote.org/am-i-registered-to-vote/",
+    linkIsExternal: true,
     description:
       "Use this quick form to confirm that you're still all set to vote in your state.",
     content: <VoteEmbed type="verify" />,
@@ -70,6 +58,7 @@ const steps: Record<string, Step> = {
   preview: {
     title: "Preview Your Ballot",
     link: "https://www.vote.org/ballot-information/",
+    linkIsExternal: true,
     description:
       "Get a preview of your ballot, including the candidates and issues you'll be voting on.",
     content: <VoteEmbed type="ballot" />,
@@ -77,6 +66,7 @@ const steps: Record<string, Step> = {
   early: {
     title: "Explore Early Voting",
     link: "https://www.vote.org/early-voting-calendar/",
+    linkIsExternal: true,
     description:
       "Check if your state allows early voting, and if so, when and where you can vote early.",
   },
@@ -85,7 +75,7 @@ const steps: Record<string, Step> = {
 interface Issue {
   ambassador: ActiveAmbassadorKey;
   title: string;
-  content: React.ReactNode;
+  content: ReactNode;
 }
 
 const issues: Record<string, Issue> = {
@@ -219,73 +209,7 @@ const VotePage: NextPage = () => {
             </p>
           </div>
 
-          {Object.entries(steps).map(
-            ([key, { title, link, description, content }]) =>
-              content ? (
-                <Disclosure key={key}>
-                  {({ open }) => (
-                    <>
-                      <DisclosureButton className="mt-4 mb-2 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
-                        <div className="flex grow flex-wrap items-baseline gap-x-4">
-                          <Link
-                            href={link}
-                            external
-                            custom
-                            className="hover:underline"
-                          >
-                            <Heading level={3} className="my-0 text-2xl">
-                              {title}
-                            </Heading>
-                          </Link>
-
-                          <p>{description}</p>
-                        </div>
-
-                        {open ? (
-                          <IconChevronUp
-                            className="box-content shrink-0 p-1"
-                            size={32}
-                          />
-                        ) : (
-                          <IconChevronDown
-                            className="box-content shrink-0 p-1"
-                            size={32}
-                          />
-                        )}
-                      </DisclosureButton>
-
-                      <DisclosurePanel className="mx-4">
-                        {content}
-                      </DisclosurePanel>
-                    </>
-                  )}
-                </Disclosure>
-              ) : (
-                <Link
-                  key={key}
-                  href={link}
-                  external
-                  custom
-                  className="group mt-4 mb-2 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200"
-                >
-                  <div className="flex grow flex-wrap items-baseline gap-x-4">
-                    <Heading
-                      level={3}
-                      className="my-0 text-2xl group-hover:underline"
-                    >
-                      {title}
-                    </Heading>
-
-                    <p>{description}</p>
-                  </div>
-
-                  <IconArrowRight
-                    className="box-content shrink-0 p-1"
-                    size={32}
-                  />
-                </Link>
-              ),
-          )}
+          <Accordion items={steps} />
         </Section>
       </div>
 

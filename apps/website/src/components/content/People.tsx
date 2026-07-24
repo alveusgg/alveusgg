@@ -9,7 +9,7 @@ import Link from "./Link";
 export interface Person {
   image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
   name: string;
-  title: string;
+  title: ReactNode;
   description: ReactNode;
 }
 
@@ -52,7 +52,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
         <a id={key} className="scroll-mt-4" />
         <div
           className={classes(
-            "my-auto w-full max-w-xs flex-shrink-0 p-4",
+            "my-auto w-full max-w-xs shrink-0 p-4",
             align === "center" && "mx-auto",
           )}
         >
@@ -89,7 +89,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
         </div>
         <div
           className={classes(
-            "my-auto flex-grow p-4",
+            "my-auto grow p-4",
             columns === 1 && align === "center" && "text-center",
           )}
         >

@@ -11,7 +11,8 @@ import IconAmazon from "@/icons/IconAmazon";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
-import IconPayPal from "@/icons/IconPayPal";
+import IconDollar from "@/icons/IconDollar";
+import IconEnvelope from "@/icons/IconEnvelope";
 import IconTwitch from "@/icons/IconTwitch";
 
 import Box from "./Box";
@@ -28,18 +29,9 @@ const links = {
   twitch: {
     icon: IconTwitch,
     title: "Twitch Charity",
-    link: "/twitch-charity",
+    link: "/donate/twitch",
     external: true,
-    description:
-      "Donate to Alveus on Twitch via PayPal's Giving Fund, using a credit/debit card or PayPal account.",
-  },
-  paypal: {
-    icon: IconPayPal,
-    title: "PayPal",
-    link: "/paypal",
-    external: true,
-    description:
-      "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
+    description: "Donate to Alveus on Twitch.tv via PayPal's Giving Fund.",
   },
   wishlist: {
     icon: IconAmazon,
@@ -60,10 +52,25 @@ const links = {
   givingBlock: {
     icon: IconBitcoin,
     title: "The Giving Block",
-    link: "/giving-block",
+    link: "/donate/giving-block",
+    external: true,
+    description: "Donate cryptocurrency to Alveus using The Giving Block.",
+  },
+  direct: {
+    icon: IconDollar,
+    title: "Donate Directly",
+    link: "/donate/direct",
     external: true,
     description:
-      "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
+      "Make a one-time donation to Alveus, or set up a recurring donation for ongoing support.",
+  },
+  grants: {
+    icon: IconEnvelope,
+    title: "Foundation & Corporate Grants",
+    link: "/donate/grants",
+    external: false,
+    description:
+      "Learn about our funding priorities and how your foundation or corporation can support Alveus.",
   },
 } as const satisfies Record<string, DonateLink>;
 
@@ -104,7 +111,7 @@ const Donate = ({
               size={24}
               className="transition-opacity group-hover:opacity-0"
             />
-            <IconArrowUp className="absolute inset-2 -translate-x-full translate-y-full rotate-45 opacity-0 transition group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100" />
+            <IconArrowUp className="absolute inset-2 -translate-x-full translate-y-full rotate-45 opacity-0 transition group-hover:translate-0 group-hover:opacity-100" />
           </div>
           <Heading level={2} className="my-0">
             {link.title}

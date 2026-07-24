@@ -7,6 +7,7 @@ import center from "@/assets/presets/chicken/center.png";
 import down from "@/assets/presets/chicken/down.png";
 import downleft from "@/assets/presets/chicken/downleft.png";
 import downright from "@/assets/presets/chicken/downright.png";
+import feeder from "@/assets/presets/chicken/feeder.png";
 import food from "@/assets/presets/chicken/food.png";
 import home from "@/assets/presets/chicken/home.png";
 import left from "@/assets/presets/chicken/left.png";
@@ -82,6 +83,12 @@ const chickenPresets: Record<string, Preset> = {
     image: downright,
     position: { pan: -9.36, tilt: -43.51, zoom: 1 },
     // modified: 2025-10-09T11:10:30.460Z
+  },
+  feeder: {
+    description: "feeder",
+    image: feeder,
+    position: { pan: -30.84, tilt: -7.98, zoom: 1066 },
+    // modified: 2026-04-08T17:08:34.512Z
   },
   food: {
     description: "Food",

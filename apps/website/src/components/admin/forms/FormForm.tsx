@@ -13,8 +13,8 @@ import {
   utcToInputValueDatetimeLocal,
 } from "@/utils/datetime-local";
 import {
-  PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL,
-  PLACEHOLDER_SUBMIT_BUTTON_TEXT,
+  DEFAULT_ASK_MARKETING_EMAILS_LABEL,
+  DEFAULT_SUBMIT_BUTTON_TEXT,
   calcFormConfig,
 } from "@/utils/forms";
 import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
@@ -172,7 +172,7 @@ export function FormForm({ action, form }: FormFormProps) {
         <TextField
           label="Checkbox label asking user to allow marketing emails"
           name="askMarketingEmailsLabel"
-          placeholder={PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL}
+          placeholder={DEFAULT_ASK_MARKETING_EMAILS_LABEL}
           defaultValue={defaultConfig.askMarketingEmailsLabel}
           isDisabled={!askMarketingEmails}
         />
@@ -233,7 +233,7 @@ export function FormForm({ action, form }: FormFormProps) {
         <TextField
           label="Submit button text"
           name="submitButtonText"
-          placeholder={PLACEHOLDER_SUBMIT_BUTTON_TEXT}
+          placeholder={DEFAULT_SUBMIT_BUTTON_TEXT}
           className="max-w-[200px]"
           defaultValue={defaultConfig.submitButtonText}
         />

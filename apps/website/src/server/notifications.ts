@@ -12,7 +12,8 @@ import {
   notificationCategories,
 } from "@/data/notifications";
 
-import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
+import { escapeLinksForDiscord, getDiscordTimestamp } from "@/utils/discord";
+import { getLinkDisplayText } from "@/utils/link-display";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
@@ -203,7 +204,14 @@ async function sendDiscordNotifications({
   expiresAt,
   linkUrl,
   imageUrl,
+  scheduledStartAt,
+  scheduledEndAt,
 }: Notification) {
+  const notificationPageLink = new URL(
+    `/notifications/${id}`,
+    env.NEXT_PUBLIC_BASE_URL,
+  ).toString();
+
   let webhookUrls: string[] = [];
   let toEveryone = false;
   switch (tag) {
@@ -215,7 +223,18 @@ async function sendDiscordNotifications({
     case "announcements":
       webhookUrls =
         env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT || webhookUrls;
-      toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT;
+      toEveryone = false;
+      title = `Announcement: ${title}`;
+      if (scheduledStartAt) {
+        title += ` – ${getDiscordTimestamp(scheduledStartAt)}`;
+        if (scheduledEndAt) {
+          title += ` - ${getDiscordTimestamp(scheduledEndAt)}`;
+        }
+      }
+      if (linkUrl) {
+        message += ` @ [${getLinkDisplayText(linkUrl)}](${notificationPageLink})`;
+      }
+      linkUrl = null;
       break;
     default:
   }
@@ -228,7 +247,8 @@ async function sendDiscordNotifications({
       triggerDiscordChannelWebhook({
         contentTitle: title ?? undefined,
         contentMessage: message,
-        contentLink: linkUrl ?? undefined,
+        contentLink: linkUrl ? notificationPageLink : undefined,
+        contentLinkLabel: linkUrl ?? undefined,
         imageUrl: imageUrl ?? undefined,
         webhookUrl,
         expiresAt,

@@ -23,9 +23,9 @@ export function NotificationSettingsForm({
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
-      notificationCategories.forEach(({ tag }) => {
+      notificationCategories.forEach(({ tag, hidden }) => {
         tags[tag] = String(
-          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0",
+          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : hidden ? "1" : "0",
         );
       });
       await updateTags(tags);
@@ -70,7 +70,7 @@ export function NotificationSettingsForm({
         "pb-2 transition-opacity " +
         (enableSettings
           ? ""
-          : "pointer-none cursor-default opacity-50 select-none")
+          : "pointer-events-none cursor-default opacity-50 select-none")
       }
     >
       <fieldset className="mx-2 space-y-1">
@@ -83,18 +83,21 @@ export function NotificationSettingsForm({
           </p>
         )}
 
-        {notificationCategories.map((category) => (
-          <NotificationCategoryCheckbox
-            key={category.tag}
-            tag={category.tag}
-            label={category.label}
-            tags={tags}
-            enabled={enableSettings}
-            endpoint={endpoint}
-            handleChange={handleChange}
-            isRegistered={isRegistered}
-          />
-        ))}
+        {notificationCategories.map(
+          ({ tag, label, hidden }) =>
+            !hidden && (
+              <NotificationCategoryCheckbox
+                key={tag}
+                tag={tag}
+                label={label}
+                tags={tags}
+                enabled={enableSettings}
+                endpoint={endpoint}
+                handleChange={handleChange}
+                isRegistered={isRegistered}
+              />
+            ),
+        )}
       </fieldset>
     </form>
   );

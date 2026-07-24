@@ -24,7 +24,16 @@ type CarouselProps = {
   itemClassName?: string;
   buttonClassName?: string;
   itemsRef?: Ref<Record<string, HTMLDivElement>>;
+  variant?: "default" | "overlay";
+  overlayClassName?: string;
+  // When false, the user can't drag/swipe/scroll between items — navigation is
+  // only via the arrows or programmatic scrolling. Useful when items capture
+  // their own pointer gestures (e.g. a pannable canvas).
+  draggable?: boolean;
 };
+
+const overlayButtonClassName =
+  "pointer-events-auto rounded-full bg-alveus-green-900/50 p-1.5 text-white backdrop-blur-sm transition hover:bg-alveus-green-900/70";
 
 const Carousel = ({
   items,
@@ -35,6 +44,9 @@ const Carousel = ({
   buttonClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
   itemsRef,
+  variant = "default",
+  overlayClassName = "",
+  draggable = true,
 }: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
@@ -47,10 +59,14 @@ const Carousel = ({
 
     // Get the width of the first child
     const { width } = current.children[0].getBoundingClientRect();
+    const gap =
+      Number.parseFloat(getComputedStyle(current).columnGap) ||
+      Number.parseFloat(getComputedStyle(current).gap) ||
+      0;
 
     // Determine the new scroll offset
     let offset = Math.round(
-      current.scrollLeft + width * (direction === "left" ? -1 : 1),
+      current.scrollLeft + (width + gap) * (direction === "left" ? -1 : 1),
     );
 
     // If we're half a width before the start, scroll to the end
@@ -153,74 +169,100 @@ const Carousel = ({
   // Track refs for all the items
   const internalItemsRef = useRef<Record<string, HTMLDivElement>>({});
 
+  const carouselItems = Object.entries(items).map(([key, item]) => (
+    <div
+      key={key}
+      className={classes(`${itemClassName} shrink-0 snap-start`)}
+      draggable={false}
+      ref={(el) => {
+        if (el) internalItemsRef.current[key] = el;
+        else delete internalItemsRef.current[key];
+
+        if (itemsRef) {
+          if (typeof itemsRef === "function") {
+            itemsRef({ ...internalItemsRef.current });
+          } else {
+            itemsRef.current = { ...internalItemsRef.current };
+          }
+        }
+      }}
+    >
+      {item}
+    </div>
+  ));
+
+  const renderButton = (direction: "left" | "right") => {
+    const isLeft = direction === "left";
+
+    return (
+      <button
+        className={classes(
+          "shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
+          variant === "overlay" && overlayButtonClassName,
+          buttonClassName,
+          state === "none" && "hidden",
+        )}
+        type="button"
+        onClick={() => {
+          interacted();
+          move(direction);
+        }}
+        disabled={
+          state === "none" || (isLeft ? state === "start" : state === "end")
+        }
+      >
+        <span className="sr-only">{isLeft ? "Previous" : "Next"}</span>
+        {isLeft ? (
+          <IconChevronLeft size={24} />
+        ) : (
+          <IconChevronRight size={24} />
+        )}
+      </button>
+    );
+  };
+
+  const trackClassName = classes(
+    "scrollbar-none flex snap-x snap-mandatory flex-nowrap",
+    draggable ? "overflow-x-auto" : "overflow-x-hidden",
+    wrapperClassName,
+    state === "none" ? "justify-evenly" : draggable && "cursor-grab",
+  );
+
+  const trackProps = {
+    ref,
+    onScroll: scrolled,
+    onMouseDown: state === "none" || !draggable ? undefined : drag,
+  };
+
+  if (variant === "overlay") {
+    return (
+      <div id={id} className={classes("relative", className)}>
+        <div className={trackClassName} {...trackProps}>
+          {carouselItems}
+        </div>
+
+        <div
+          className={classes(
+            "pointer-events-none absolute inset-x-0 z-10 flex items-center justify-between px-1",
+            overlayClassName || "top-1/2 -translate-y-1/2",
+          )}
+        >
+          {renderButton("left")}
+          {renderButton("right")}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div id={id} className={classes("flex flex-nowrap", className)}>
-      <button
-        className={classes(
-          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
-          buttonClassName,
-          state === "none" && "hidden",
-        )}
-        type="button"
-        onClick={() => {
-          interacted();
-          move("left");
-        }}
-        disabled={state === "start" || state === "none"}
-      >
-        <span className="sr-only">Previous</span>
-        <IconChevronLeft size={24} />
-      </button>
+      {renderButton("left")}
 
-      <div
-        className={classes(
-          "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
-          wrapperClassName,
-          state === "none" ? "justify-evenly" : "cursor-grab",
-        )}
-        ref={ref}
-        onScroll={scrolled}
-        onMouseDown={state === "none" ? undefined : drag}
-      >
-        {Object.entries(items).map(([key, item]) => (
-          <div
-            key={key}
-            className={`${itemClassName} shrink-0 snap-start`}
-            draggable={false}
-            ref={(el) => {
-              if (el) internalItemsRef.current[key] = el;
-              else delete internalItemsRef.current[key];
-
-              if (itemsRef) {
-                if (typeof itemsRef === "function") {
-                  itemsRef({ ...internalItemsRef.current });
-                } else {
-                  itemsRef.current = { ...internalItemsRef.current };
-                }
-              }
-            }}
-          >
-            {item}
-          </div>
-        ))}
+      <div className={classes(trackClassName, "grow")} {...trackProps}>
+        {carouselItems}
       </div>
 
-      <button
-        className={classes(
-          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
-          buttonClassName,
-          state === "none" && "hidden",
-        )}
-        type="button"
-        onClick={() => {
-          interacted();
-          move("right");
-        }}
-        disabled={state === "end" || state === "none"}
-      >
-        <span className="sr-only">Next</span>
-        <IconChevronRight size={24} />
-      </button>
+      {renderButton("right")}
     </div>
   );
 };

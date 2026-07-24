@@ -5,6 +5,8 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
 import artAuction2022 from "@/assets/events/art-auction-2022.png";
 import artAuction2023 from "@/assets/events/art-auction-2023.png";
 import artAuction2024 from "@/assets/events/art-auction-2024.png";
@@ -657,17 +659,25 @@ const events: Event[] = (
         },
       },
       info: (
-        <p>
-          The event that started it all! A 20-hour-long mega-stream with a bunch
-          of donation goals along the way, aiming to raise as much money as
-          possible to kick-start Alveus. Each donor that donated $100 or more
-          got their name engraved on a golden leaf that form part of six donor
-          trees now affixed to the back of the studio building. The final goal
-          for the stream was that at $500k raised Maya would shave her head, and
-          we were able to reach that goal with $573,004 raised for Alveus over
-          the whole stream. Thank you to all the leafers, everyone that donated
-          and everyone that watched!
-        </p>
+        <>
+          <p>
+            The event that started it all! A 20-hour-long mega-stream with a
+            bunch of donation goals along the way, aiming to raise as much money
+            as possible to kick-start Alveus. Each donor that donated $100 or
+            more got their name engraved on a golden leaf that form part of six
+            donor trees now affixed to the walls of the Emu enclosure. The final
+            goal for the stream was that at $500k raised Maya would shave her
+            head, and we were able to reach that goal with $573,004 raised for
+            Alveus over the whole stream. Thank you to all the leafers, everyone
+            that donated and everyone that watched!
+          </p>
+          <p>
+            <Link href="/about/events/donor-trees">
+              Find your name on the donor trees
+              <IconArrowRight className="ml-1 inline-block size-4" />
+            </Link>
+          </p>
+        </>
       ),
     },
   ] as const

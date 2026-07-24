@@ -2,6 +2,8 @@ import { type DateObjectUnits } from "luxon";
 
 import { type CalendarEvent } from "@alveusgg/database";
 
+import { getLinkDisplayText } from "@/utils/link-display";
+
 type StandardCategory = {
   name: string;
   color: string;
@@ -87,7 +89,7 @@ export const getFormattedTitle = (
   const title = length ? truncate(event.title, length) : event.title;
   return channel && new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
     ? title
-    : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
+    : `${title} @ ${getLinkDisplayText(event.link)}`;
 };
 
 type RegularEvent = Pick<
@@ -123,8 +125,9 @@ export const regularEventsWeekly = [
   [
     mayaStream,
     {
-      title: "Dan Stream",
-      description: "Join Dan as he gets work done around the sanctuary.",
+      title: "Kayla Stream",
+      description:
+        "Join Kayla as she covers educational topics and answers all your questions.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
@@ -135,14 +138,15 @@ export const regularEventsWeekly = [
         "Join Evan as he chats all things bugs with chat and answers all your questions.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 20, minute: 0 },
+      startTime: { hour: 21, minute: 0 },
     },
   ],
   // Thursday
   [
     {
-      title: "Lukas Stream",
-      description: "Join Lukas as he gets work done around the sanctuary.",
+      title: "FAID Stream",
+      description:
+        "Join the Facilities and Infrastructure Department as they get work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
@@ -151,24 +155,24 @@ export const regularEventsWeekly = [
   // Friday
   [
     {
+      title: "Chandler Power Hour",
+      description:
+        "Join Chandler for an hour of chaos around the sanctuary to start your Friday.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 10, minute: 0 },
+    },
+    {
       title: "Show & Tell",
       description:
-        "Join Maya as she reviews this week's community submissions for Show and Tell.",
+        "Join us as we look at what the Alveus community has been doing recently.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 13, minute: 0 },
     },
   ],
   // Saturday
-  [
-    {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 13, minute: 0 },
-    },
-  ],
+  [],
   // Sunday
   [],
 ] as RegularEvent[][];

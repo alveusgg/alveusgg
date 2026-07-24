@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getRawBody from "raw-body";
+import { getRawBody } from "raw-body";
 
 import { getBucketUrl } from "@/server/utils/file-storage";
 

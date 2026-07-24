@@ -81,6 +81,11 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
       },
+      // S3 - Regular Streams
+      {
+        protocol: "https",
+        hostname: "files.alveus.site",
+      },
       // S3 - File Storage
       s3Pattern,
     ],
@@ -190,6 +195,16 @@ const config: NextConfig = {
     {
       source: "/collabs",
       destination: "/collaborations",
+      permanent: true,
+    },
+    {
+      source: "/contact",
+      destination: "/contact-us",
+      permanent: true,
+    },
+    {
+      source: "/grants",
+      destination: "/donate/grants",
       permanent: true,
     },
     {
@@ -308,6 +323,51 @@ const config: NextConfig = {
       destination: "/animal-quest/beef-edition",
       permanent: false,
     },
+    {
+      source: "/found-animal",
+      destination: "/help/found-animal",
+      permanent: false,
+    },
+    {
+      source: "/neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/report-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/neglect-surrender",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/surrender-neglect",
+      destination: "/help/report-neglect-surrender",
+      permanent: false,
+    },
+    {
+      source: "/trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/donor-trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/leafers",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
@@ -350,6 +410,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/census/:path*",
+      destination: "https://census.alveussanctuary.org/:path*",
+      permanent: true,
+    },
+    {
       source: "/wishlist",
       destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
       permanent: true,
@@ -361,9 +426,9 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/paypal/pixels",
+      source: "/donate/paypal",
       destination:
-        "https://www.paypal.com/donate/?hosted_button_id=AQ9RASYNG5ZWC",
+        "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
       permanent: true,
     },
     {
@@ -372,8 +437,33 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/donate/giving-block",
+      destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
+      permanent: true,
+    },
+    {
       source: "/twitch-charity",
       destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/twitch-charity",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/twitch",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/donate/direct",
+      destination: "https://alveussanctuary.app.neoncrm.com/forms/donate",
+      permanent: true,
+    },
+    {
+      source: "/donate/manage",
+      destination: "https://alveussanctuary.app.neoncrm.com",
       permanent: true,
     },
     {
@@ -497,8 +587,8 @@ const config: NextConfig = {
               "https://streamable.com/",
               // Prezi embeds:
               "https://prezi.com/",
-              // The Giving Block (donation widget):
-              "https://widget.thegivingblock.com/",
+              // Neon CRM (donation widget):
+              "https://alveussanctuary.app.neoncrm.com/",
               // Vote.org embeds:
               "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
               // Imgur embeds:

@@ -1,14 +1,14 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import staff from "@/data/staff";
+import staff, { departments } from "@/data/staff";
 
 import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
-import People from "@/components/content/People";
+import People, { type Person } from "@/components/content/People";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 
@@ -23,6 +23,25 @@ import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import nickElectricianImage from "@/assets/people/nick-electrician.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
+
+const staffWithDepartments = Object.fromEntries(
+  Object.entries(staff).map<[string, Person]>(([key, person]) => [
+    key,
+    {
+      ...person,
+      title: (
+        <span className="flex flex-col flex-wrap items-baseline lg:flex-row">
+          {person.title}
+          {!!departments[person.department] && (
+            <span className="font-sans text-base text-alveus-green-600 uppercase lg:ml-auto">
+              {departments[person.department]}
+            </span>
+          )}
+        </span>
+      ),
+    },
+  ]),
+);
 
 interface Member {
   name: string;
@@ -52,7 +71,7 @@ const team: Record<string, Member> = {
   },
 };
 
-const advisors = {
+const advisors: Record<string, Person> = {
   michele: {
     image: micheleRaffinImage,
     name: "Michele Raffin",
@@ -148,7 +167,7 @@ const advisors = {
   },
 };
 
-const directors = {
+const directors: Record<string, Person> = {
   maya: {
     image: mayaHigaImage,
     name: "Maya Higa",
@@ -251,7 +270,7 @@ const AboutTeamPage: NextPage = () => {
         />
 
         <Section>
-          <People people={staff} link />
+          <People people={staffWithDepartments} link />
 
           <p className="mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a

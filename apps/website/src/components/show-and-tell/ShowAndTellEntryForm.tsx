@@ -20,6 +20,7 @@ import type { ImageAttachment, ShowAndTellEntry } from "@alveusgg/database";
 
 import type {
   PublicShowAndTellEntryWithAttachments,
+  ShowAndTellEntryAttachments,
   ShowAndTellSubmitInput,
 } from "@/server/db/show-and-tell";
 
@@ -73,6 +74,7 @@ import { VideoLinksField } from "../shared/form/VideoLinksField";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
+  className?: string;
   isAnonymous?: boolean;
   entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
@@ -81,8 +83,7 @@ type ShowAndTellEntryFormProps = {
 };
 
 type LocalAttachment =
-  | { type: "image"; file: FileReference }
-  | { type: "video"; url: string };
+  { type: "image"; file: FileReference } | { type: "video"; url: string };
 
 const makeSavedFileRef = (
   imageAttachment: ImageAttachment,
@@ -102,6 +103,7 @@ function ImageAttachment({
   fileReference,
   onClick,
   children,
+  disabled = false,
   ...props
 }: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
   Pick<ShowAndTellEntryFormProps, "entry"> & {
@@ -131,12 +133,14 @@ function ImageAttachment({
       {...props}
       onClick={handlePreviewClick}
       fileReference={fileReference}
+      disabled={disabled}
     >
       <TextAreaField
         name={`image[${fileReference.id}][caption]`}
         label={<strong className="font-bold">Caption</strong>}
         maxLength={200}
         defaultValue={initialData?.caption}
+        isDisabled={disabled}
       />
 
       <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
@@ -154,12 +158,12 @@ function ImageAttachment({
           </strong>
 
           <IconChevronDown
-            className="box-content shrink-0 p-1 transition-transform group-data-[open]:-scale-y-100"
+            className="box-content shrink-0 p-1 transition-transform group-data-open:-scale-y-100"
             size={24}
           />
         </DisclosureButton>
 
-        <DisclosurePanel className="rounded bg-gray-100 p-2" static={hasAlt}>
+        <DisclosurePanel className="rounded-sm bg-gray-100 p-2" static={hasAlt}>
           <TextAreaField
             name={`image[${fileReference.id}][alternativeText]`}
             label={
@@ -176,6 +180,7 @@ function ImageAttachment({
             maxLength={300}
             defaultValue={initialData?.alternativeText}
             onChange={(val) => setHasAlt(!!val)}
+            isDisabled={disabled}
           />
         </DisclosurePanel>
       </Disclosure>
@@ -220,7 +225,29 @@ function GiveAnHourInput({
   );
 }
 
+const mapSavedAttachments = (
+  attachments: ShowAndTellEntryAttachments,
+): LocalAttachment[] =>
+  attachments.map((att) => {
+    if (att.attachmentType === "image" && att.imageAttachment) {
+      return {
+        type: "image",
+        file: makeSavedFileRef(att.imageAttachment),
+      };
+    }
+
+    if (att.attachmentType === "video" && att.linkAttachment) {
+      return {
+        type: "video",
+        url: att.linkAttachment.url,
+      };
+    }
+
+    throw new Error("Unknown attachment type");
+  });
+
 export function ShowAndTellEntryForm({
+  className,
   isAnonymous = false,
   action = "create",
   entry,
@@ -239,7 +266,7 @@ export function ShowAndTellEntryForm({
   const isLoading = create.isPending || update.isPending || review.isPending;
 
   // Only enable unsaved changes warning for admin review action
-  const { markAsChanged, resetChanges, confirmIfUnsaved } =
+  const { hasUnsavedChanges, markAsChanged, resetChanges, confirmIfUnsaved } =
     useFormChangeWarning(action === "review");
 
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
@@ -292,25 +319,8 @@ export function ShowAndTellEntryForm({
     [markAsChanged],
   );
 
-  const [attachments, setAttachments] = useState<LocalAttachment[]>(
-    () =>
-      entry?.attachments.map((att) => {
-        if (att.attachmentType === "image" && att.imageAttachment) {
-          return {
-            type: "image",
-            file: makeSavedFileRef(att.imageAttachment),
-          };
-        }
-
-        if (att.attachmentType === "video" && att.linkAttachment) {
-          return {
-            type: "video",
-            url: att.linkAttachment.url,
-          };
-        }
-
-        throw new Error("Unknown attachment type");
-      }) || [],
+  const [attachments, setAttachments] = useState<LocalAttachment[]>(() =>
+    entry ? mapSavedAttachments(entry.attachments) : [],
   );
   const swapAttachments = useCallback(
     (fromIdx: number, toIdx: number) => {
@@ -437,8 +447,11 @@ export function ShowAndTellEntryForm({
       dominantColor = [r, g, b].join();
     }
 
+    const pronouns = (formData.get("pronouns") as string | null)?.trim();
+
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
+      pronouns: pronouns || null,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
       attachments: [],
@@ -547,7 +560,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {
@@ -559,12 +572,16 @@ export function ShowAndTellEntryForm({
       update.mutate(
         { ...data, id: entry.id },
         {
-          onSuccess: () => {
+          onSuccess: (updatedEntry) => {
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            if (updatedEntry) {
+              setAttachments(mapSavedAttachments(updatedEntry.attachments));
+            }
           },
           onError: (err) => {
+            setSuccessMessage(null);
             setError(err.message);
             onUpdate?.();
           },
@@ -579,12 +596,16 @@ export function ShowAndTellEntryForm({
           notePublic: (formData.get("notePublic") as string) ?? "",
         },
         {
-          onSuccess: () => {
+          onSuccess: (updatedEntry) => {
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            if (updatedEntry) {
+              setAttachments(mapSavedAttachments(updatedEntry.attachments));
+            }
           },
           onError: (err) => {
+            setSuccessMessage(null);
             setError(err.message);
             onUpdate?.();
           },
@@ -609,8 +630,17 @@ export function ShowAndTellEntryForm({
 
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
+  const isMutationPending = update.isPending || review.isPending;
+
   return (
-    <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form
+      className={classes(
+        "flex flex-col gap-5 rounded-xs",
+        className,
+        hasUnsavedChanges && "ring-4 ring-yellow",
+      )}
+      onSubmit={handleSubmit}
+    >
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
           <IconWarningTriangle className="size-6 text-yellow-900" />
@@ -625,7 +655,7 @@ export function ShowAndTellEntryForm({
       )}
 
       <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
-        <div className="flex flex-[3] flex-col gap-5">
+        <div className="flex flex-3 flex-col gap-5">
           <Fieldset legend="About you">
             <TextField
               label="Name"
@@ -636,6 +666,16 @@ export function ShowAndTellEntryForm({
               maxLength={100}
               defaultValue={entry?.displayName || undefined}
               placeholder="What should we call you?"
+              onChange={markAsChanged}
+            />
+            <TextField
+              className="max-w-1/2"
+              label="Preferred Pronouns (optional)"
+              name="pronouns"
+              minLength={1}
+              maxLength={25}
+              defaultValue={entry?.pronouns || undefined}
+              placeholder="she/her, they/them, etc."
               onChange={markAsChanged}
             />
           </Fieldset>
@@ -666,7 +706,7 @@ export function ShowAndTellEntryForm({
             />
           </Fieldset>
         </div>
-        <div className="flex flex-[2] flex-col gap-5">
+        <div className="flex flex-2 flex-col gap-5">
           <Fieldset legend="Attachments">
             <VideoLinksField
               name="videoUrls"
@@ -683,6 +723,7 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
+              disabled={isMutationPending}
             />
 
             <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
@@ -692,7 +733,7 @@ export function ShowAndTellEntryForm({
                     <Button
                       size="small"
                       width="auto"
-                      disabled={idx === 0}
+                      disabled={isMutationPending || idx === 0}
                       onClick={() => swapAttachments(idx, idx - 1)}
                     >
                       <IconArrowUp className="size-5" />
@@ -701,7 +742,9 @@ export function ShowAndTellEntryForm({
                     <Button
                       size="small"
                       width="auto"
-                      disabled={idx === attachments.length - 1}
+                      disabled={
+                        isMutationPending || idx === attachments.length - 1
+                      }
                       onClick={() => swapAttachments(idx, idx + 1)}
                     >
                       <IconArrowDown className="size-5" />
@@ -713,6 +756,7 @@ export function ShowAndTellEntryForm({
                       onClick={() =>
                         setAttachments((prev) => prev.filter((a) => a !== att))
                       }
+                      disabled={isMutationPending}
                     >
                       <IconTrash className="size-5" />
                       Remove
@@ -727,6 +771,7 @@ export function ShowAndTellEntryForm({
                         entry={entry}
                         fileReference={att.file}
                         onClick={openModal}
+                        disabled={isMutationPending}
                       >
                         {buttons}
                       </ImageAttachment>
@@ -747,7 +792,7 @@ export function ShowAndTellEntryForm({
                       >
                         <div className="relative mr-5 size-32 rounded-lg bg-gray-200 text-alveus-green-900 transition-transform group-hover:scale-105">
                           <VideoPlatformIcon
-                            className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
+                            className="absolute top-1/2 left-1/2 size-12 -translate-1/2"
                             platform={parseVideoUrl(att.url)?.platform}
                           />
                         </div>

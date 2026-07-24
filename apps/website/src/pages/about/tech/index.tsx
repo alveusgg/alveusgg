@@ -45,6 +45,7 @@ const subCommandNames: (keyof typeof commands)[] = [
   "ptzfocus",
   "ptzautofocus",
   "swap",
+  "scenecams",
 ];
 
 const subCommands: NamedCommand[] = subCommandNames.map((name) => ({

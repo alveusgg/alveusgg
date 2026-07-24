@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import adapt from "@/assets/collaborations/adapt.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
@@ -30,7 +31,6 @@ import esfandtv from "@/assets/collaborations/esfandtv.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import extraEmily from "@/assets/collaborations/extra-emily.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
-import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -41,6 +41,7 @@ import hyoon from "@/assets/collaborations/hyoon.png";
 import ironmouse from "@/assets/collaborations/ironmouse.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import jackManifold from "@/assets/collaborations/jack-manifold.png";
+import jacksepticeye from "@/assets/collaborations/jacksepticeye.png";
 import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
@@ -50,10 +51,10 @@ import julien from "@/assets/collaborations/julien.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
-import lacari from "@/assets/collaborations/lacari.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
+import marlon from "@/assets/collaborations/marlon.png";
 import misterArther from "@/assets/collaborations/mister-arther.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
@@ -65,10 +66,12 @@ import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sketch from "@/assets/collaborations/sketch.png";
+import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
 import stableRonaldo from "@/assets/collaborations/stable-ronaldo.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
+import tedNivison from "@/assets/collaborations/ted-nivison.png";
 import thePrimeagen from "@/assets/collaborations/the-primeagen.png";
 import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import trihex from "@/assets/collaborations/trihex.png";
@@ -78,6 +81,7 @@ import xchocobars from "@/assets/collaborations/xchocobars.png";
 import yourRage from "@/assets/collaborations/your-rage.png";
 import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
+import zelinaVega from "@/assets/collaborations/zelina-vega.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
 export type Creator = {
@@ -99,11 +103,92 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Adapt",
+      link: "https://www.twitch.tv/adapt",
+      date: new Date("2026-06-26"),
+      videoId: "zxjdjHnHTWI",
+      creators: [
+        {
+          name: "Adapt",
+          image: adapt,
+          popularity: 1_500_000, // Twitch followers, 2026-06-28
+        },
+      ],
+    },
+    {
+      name: "Zelina Vega",
+      link: "https://www.twitch.tv/theatrinidad",
+      date: new Date("2026-06-09"),
+      videoId: "-wAICXiEDQ0",
+      creators: [
+        {
+          name: "Zelina Vega",
+          image: zelinaVega,
+          popularity: 117_000, // Twitch followers, 2026-06-12
+        },
+      ],
+    },
+    {
+      name: "Ted Nivison",
+      link: "https://www.youtube.com/@TedNivison",
+      date: new Date("2026-05-25"),
+      videoId: "FymAIdEYbQY",
+      vodId: "BbI8fAy9BH0",
+      creators: [
+        {
+          name: "Ted Nivison",
+          image: tedNivison,
+          popularity: 2_370_000, // YouTube subscribers, 2026-05-29
+        },
+      ],
+    },
+    {
+      name: "Jacksepticeye",
+      link: "https://www.youtube.com/@jacksepticeye",
+      date: new Date("2026-05-19"),
+      videoId: "U7hGfOk9eOU",
+      vodId: "qberatnwFhU",
+      creators: [
+        {
+          name: "Jacksepticeye",
+          image: jacksepticeye,
+          popularity: 31_200_000, // YouTube subscribers, 2026-05-24
+        },
+      ],
+    },
+    {
+      name: "Smosh",
+      link: "https://www.youtube.com/@smoshpit",
+      date: new Date("2026-05-05"),
+      videoId: "FtGGTno038k",
+      creators: [
+        {
+          name: "Smosh Pit",
+          image: smoshPit,
+          popularity: 9_350_000, // YouTube subscribers, 2026-05-05
+        },
+      ],
+    },
+    {
+      name: "Marlon",
+      link: "https://www.twitch.tv/marlon",
+      date: new Date("2026-04-05"),
+      videoId: "hi9TnKJfUVM",
+      vodId: "VgD4paUcUTs",
+      creators: [
+        {
+          name: "Marlon",
+          image: marlon,
+          popularity: 2_000_000, // Twitch followers, 2026-04-06
+        },
+      ],
+    },
+    {
       name: "Chrisnxtdoor",
       link: "https://www.twitch.tv/chrisnxtdoor",
       date: new Date("2026-03-10"),
       videoId: "fnW6n3Cvai4",
-      vodId: "ecZzRN-ZBDs", // Non-Alveus VoD
+      vodId: "Qi6oXKL516Q",
       creators: [
         {
           name: "Chrisnxtdoor",
@@ -130,7 +215,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/emiru",
       date: new Date("2026-01-22"),
       videoId: "vm6IVBA8Ke8",
-      vodId: "7SbZgLeUZk0", // Non-Alveus VoD
+      vodId: "ggIGmCZqB8k",
       creators: [
         {
           name: "Emiru",
@@ -476,11 +561,7 @@ const collaborations: Collaboration[] = (
           image: fazeSilky,
           popularity: 654_000, // Twitch followers, 2024-11-13
         },
-        {
-          name: "FaZe Adapt",
-          image: fazeAdapt,
-          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
-        },
+        // Adapt has a more recent collaboration
       ],
     },
     {
@@ -914,20 +995,6 @@ const collaborations: Collaboration[] = (
           name: "Caroline Kwan",
           image: carolineKwan,
           popularity: 136_000, // Twitch followers, 2024-10-4
-        },
-      ],
-    },
-    {
-      name: "Lacari",
-      link: "https://www.twitch.tv/lacari",
-      date: new Date("2023-05-02"),
-      videoId: "IssAfvy_bmo",
-      vodId: "mVOypbE5YNs",
-      creators: [
-        {
-          name: "Lacari",
-          image: lacari,
-          popularity: 349_000, // Twitch followers, 2024-10-4
         },
       ],
     },

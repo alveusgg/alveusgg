@@ -9,6 +9,8 @@ import den1inside from "@/assets/presets/wolf/den1inside.png";
 import den1l from "@/assets/presets/wolf/den1l.png";
 import den1r from "@/assets/presets/wolf/den1r.png";
 import den1t from "@/assets/presets/wolf/den1t.png";
+import den1tr from "@/assets/presets/wolf/den1tr.png";
+import den1tree from "@/assets/presets/wolf/den1tree.png";
 import den1tz from "@/assets/presets/wolf/den1tz.png";
 import den2 from "@/assets/presets/wolf/den2.png";
 import den2b from "@/assets/presets/wolf/den2b.png";
@@ -50,7 +52,6 @@ import switchpenl from "@/assets/presets/wolf/switchpenl.png";
 import switchpenr from "@/assets/presets/wolf/switchpenr.png";
 import switchramp from "@/assets/presets/wolf/switchramp.png";
 import tip from "@/assets/presets/wolf/tip.png";
-import tipmo from "@/assets/presets/wolf/tipmo.png";
 import tipt from "@/assets/presets/wolf/tipt.png";
 import trees from "@/assets/presets/wolf/trees.png";
 import waterfall from "@/assets/presets/wolf/waterfall.png";
@@ -130,6 +131,18 @@ const wolfPresets: Record<string, Preset> = {
     image: den1t,
     position: { pan: 87.79, tilt: 1.01, zoom: 861 },
     // modified: 2025-10-09T11:10:30.180Z
+  },
+  den1tr: {
+    description: "den1tr",
+    image: den1tr,
+    position: { pan: 89.7, tilt: 1, zoom: 2099 },
+    // modified: 2026-04-16T15:18:17.267Z
+  },
+  den1tree: {
+    description: "den1tree",
+    image: den1tree,
+    position: { pan: 100.27, tilt: -4.67, zoom: 1008 },
+    // modified: 2026-05-01T14:45:44.848Z
   },
   den1tz: {
     description: "Den 1 top zoomed",
@@ -371,17 +384,11 @@ const wolfPresets: Record<string, Preset> = {
     position: { pan: 108.07, tilt: -8.85, zoom: 415 },
     // modified: 2025-10-09T11:10:30.192Z
   },
-  tipmo: {
-    description: "Tip zoomed",
-    image: tipmo,
-    position: { pan: 114.38, tilt: -7.63, zoom: 4843 },
-    // modified: 2025-10-09T11:10:30.172Z
-  },
   tipt: {
     description: "tipt",
     image: tipt,
-    position: { pan: 118.81, tilt: -5.22, zoom: 819 },
-    // modified: 2026-03-12T15:06:11.956Z
+    position: { pan: 114.77, tilt: -4.58, zoom: 332 },
+    // modified: 2026-05-14T14:43:09.327Z
   },
   trees: {
     description: "middle trees",

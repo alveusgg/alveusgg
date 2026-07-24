@@ -9,19 +9,18 @@ import {
   useMemo,
   useState,
 } from "react";
+import { z } from "zod";
 
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
-import {
-  typeSafeObjectEntries,
-  typeSafeObjectFromEntries,
-} from "@/utils/helpers";
+import { typeSafeObjectFromEntries } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { type RouterOutputs, trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
+import useLocalStorage from "@/hooks/storage";
 
 import Video from "@/components/content/Video";
 
@@ -58,30 +57,29 @@ const transformChecks = (
 
       return {
         name: check.name,
-        description: `!check ${check.command}`,
         icon,
         status: statuses[check.command] ?? false,
       };
     })
     .filter(isNotNull);
 
-const useChecks = (channels: string[], users?: string[]) => {
+const useRoundsState = (channels: string[], users?: string[]) => {
+  const [enabled, setEnabled] = useLocalStorage(
+    "stream/overlay:rounds-enabled",
+    useMemo(() => z.boolean(), []),
+    false,
+  );
+
   const checks = trpc.stream.getRoundsChecks.useQuery(undefined, {
+    enabled,
     refetchInterval: 15_000,
   });
 
-  const [statuses, setStatuses] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    setStatuses((prev) =>
-      typeSafeObjectFromEntries(
-        (checks.data ?? []).map(({ command }) => [
-          command,
-          prev[command] ?? false,
-        ]),
-      ),
-    );
-  }, [checks.data]);
+  const [statuses, setStatuses] = useLocalStorage(
+    "stream/overlay:rounds-statuses",
+    useMemo(() => z.record(z.string(), z.boolean()), []),
+    {},
+  );
 
   useChat(
     channels,
@@ -97,25 +95,44 @@ const useChecks = (channels: string[], users?: string[]) => {
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
           if (command === "!check") {
-            setStatuses((prev) =>
-              typeSafeObjectFromEntries(
-                typeSafeObjectEntries(prev).map(([key, value]) => {
-                  if (keys[0] === "reset") return [key, false];
-                  return [key, keys.includes(key) ? !value : value];
-                }),
-              ),
-            );
+            if (keys[0] === "reset") {
+              setStatuses({});
+            } else {
+              setStatuses((prev) =>
+                typeSafeObjectFromEntries(
+                  checks.data?.map((check) => {
+                    const key = check.command;
+                    const value = prev[check.command] ?? false;
+                    return [key, keys.includes(key) ? !value : value];
+                  }) ?? [],
+                ),
+              );
+            }
+            return;
+          }
+
+          if (command === "!rounds") {
+            if (keys[0] === "off" || keys[0] === "stop") {
+              // reset checkmarks when rounds stop
+              setStatuses({});
+              setEnabled(false);
+            } else {
+              setEnabled(true);
+            }
             return;
           }
         }
       },
-      [users],
+      [checks.data, setEnabled, setStatuses, users],
     ),
   );
 
   return useMemo(
-    () => transformChecks(checks.data ?? [], statuses),
-    [checks.data, statuses],
+    () => ({
+      checks: transformChecks(checks.data ?? [], statuses),
+      enabled,
+    }),
+    [checks.data, enabled, statuses],
   );
 };
 
@@ -169,17 +186,15 @@ const Check = ({
   );
 };
 
-const Rounds = ({
-  channels,
-  users,
+const RoundsOverlayContent = ({
+  checks,
   timing = {
     duration: 750,
     delay: { item: -600, before: 1000, after: 9000 },
   },
   scale = { from: 1, to: 1.15 },
 }: {
-  channels: string[];
-  users?: string[];
+  checks: Check[];
   timing?: {
     duration: number;
     delay: { item: number; before: number; after: number };
@@ -199,9 +214,6 @@ const Rounds = ({
     return () => clearInterval(interval);
   }, []);
   const background = night ? roundsNightBackground : roundsDayBackground;
-
-  // Get the checks with chat command controls
-  const checks = useChecks(channels, users);
 
   // Define the animation keyframes
   const id = useId().replace(/:/g, "");
@@ -238,14 +250,22 @@ const Rounds = ({
         },
       }),
     };
-  }, [timing, checks.length, scale]);
+  }, [
+    checks.length,
+    timing.duration,
+    timing.delay.item,
+    timing.delay.before,
+    timing.delay.after,
+    scale.from,
+    scale.to,
+  ]);
 
   return (
     <>
       <Video
         sources={background.sources}
         poster={background.poster}
-        className="absolute inset-0 h-full w-full object-cover object-top-left"
+        className="absolute inset-0 size-full object-cover object-top-left"
         width={1920}
         height={1080}
         autoPlay
@@ -269,7 +289,11 @@ const Rounds = ({
           <Check
             key={`${check.name}-${idx}`}
             check={check}
-            className={classes(`checks-${id}-item`, idx % 2 !== 0 && "ml-32")}
+            className={classes(
+              // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
+              `checks-${id}-item`,
+              idx % 2 !== 0 && "ml-32",
+            )}
             style={{
               animationDelay: `${idx * animation.duration.item}ms`,
             }}
@@ -278,6 +302,23 @@ const Rounds = ({
       </div>
     </>
   );
+};
+
+const Rounds = ({
+  channels,
+  users,
+}: {
+  channels: string[];
+  users?: string[];
+}) => {
+  // Get the checks with chat command controls
+  const { enabled, checks } = useRoundsState(channels, users);
+
+  if (!enabled) {
+    return null;
+  }
+
+  return <RoundsOverlayContent checks={checks} />;
 };
 
 export default Rounds;

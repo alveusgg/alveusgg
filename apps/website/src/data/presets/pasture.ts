@@ -40,6 +40,7 @@ import penr from "@/assets/presets/pasture/penr.png";
 import pole from "@/assets/presets/pasture/pole.png";
 import pool from "@/assets/presets/pasture/pool.png";
 import pooll from "@/assets/presets/pasture/pooll.png";
+import poolpr from "@/assets/presets/pasture/poolpr.png";
 import poolr from "@/assets/presets/pasture/poolr.png";
 import purplebase from "@/assets/presets/pasture/purplebase.png";
 import purplebasel from "@/assets/presets/pasture/purplebasel.png";
@@ -166,8 +167,8 @@ const pasturePresets: Record<string, Preset> = {
   feederstatus: {
     description: "Feeder status window",
     image: feederstatus,
-    position: { pan: 74.91, tilt: -5.02, zoom: 9392 },
-    // modified: 2025-10-09T11:10:30.084Z
+    position: { pan: 75, tilt: -5.64, zoom: 9351 },
+    // modified: 2026-05-06T17:04:59.985Z
   },
   feedstall: {
     description: "Feed Stall",
@@ -307,6 +308,12 @@ const pasturePresets: Record<string, Preset> = {
     position: { pan: 32.52, tilt: -3.24, zoom: 1489 },
     // modified: 2025-11-18T17:32:45.969Z
   },
+  poolpr: {
+    description: "poolpr",
+    image: poolpr,
+    position: { pan: 47.23, tilt: -1.64, zoom: 1154 },
+    // modified: 2026-05-13T12:31:56.373Z
+  },
   poolr: {
     description: "Pool Right",
     image: poolr,
@@ -334,8 +341,8 @@ const pasturePresets: Record<string, Preset> = {
   purplenest: {
     description: "Purple Martin Nest",
     image: purplenest,
-    position: { pan: -1.58, tilt: -1.58, zoom: 8835 },
-    // modified: 2025-10-09T11:10:30.100Z
+    position: { pan: -1.17, tilt: -1.67, zoom: 5441 },
+    // modified: 2026-06-18T14:32:18.363Z
   },
   right: {
     description: "Right",

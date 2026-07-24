@@ -1,125 +1,90 @@
-import feeder from "@/assets/presets/emu/feeder.png";
-import feedwide from "@/assets/presets/emu/feedwide.png";
-import foodleft from "@/assets/presets/emu/foodleft.png";
-import foodright from "@/assets/presets/emu/foodright.png";
-import gate from "@/assets/presets/emu/gate.png";
-import gateleft from "@/assets/presets/emu/gateleft.png";
+import fargate from "@/assets/presets/emu/fargate.png";
+import food from "@/assets/presets/emu/food.png";
 import home from "@/assets/presets/emu/home.png";
-import marmgate from "@/assets/presets/emu/marmgate.png";
-import marmgater from "@/assets/presets/emu/marmgater.png";
-import pen1center from "@/assets/presets/emu/pen1center.png";
-import pen1centerright from "@/assets/presets/emu/pen1centerright.png";
-import pen1left from "@/assets/presets/emu/pen1left.png";
-import pen1right from "@/assets/presets/emu/pen1right.png";
-import pen1shelter from "@/assets/presets/emu/pen1shelter.png";
-import pen2left from "@/assets/presets/emu/pen2left.png";
-import pen2middleish from "@/assets/presets/emu/pen2middleish.png";
-import pen2right from "@/assets/presets/emu/pen2right.png";
+import left from "@/assets/presets/emu/left.png";
+import leftcorner from "@/assets/presets/emu/leftcorner.png";
+import leftgate from "@/assets/presets/emu/leftgate.png";
+import maingate from "@/assets/presets/emu/maingate.png";
+import pond from "@/assets/presets/emu/pond.png";
+import pondleft from "@/assets/presets/emu/pondleft.png";
+import right from "@/assets/presets/emu/right.png";
+import rightcorner from "@/assets/presets/emu/rightcorner.png";
+import shelter from "@/assets/presets/emu/shelter.png";
 
 import type { Preset } from "../tech/cameras.types";
 
 const emuPresets: Record<string, Preset> = {
   home: {
-    description: "Home",
+    description: "home",
     image: home,
-    position: { pan: -122.67, tilt: -4.79, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.328Z
+    position: { pan: -47.33, tilt: -8.19, zoom: 1 },
+    // modified: 2026-06-01T22:46:08.575Z
   },
-  feeder: {
-    description: "feeder",
-    image: feeder,
-    position: { pan: 71.02, tilt: -18.65, zoom: 1 },
-    // modified: 2025-10-25T18:38:15.313Z
+  fargate: {
+    description: "fargate",
+    image: fargate,
+    position: { pan: -96.34, tilt: -1.68, zoom: 813 },
+    // modified: 2026-06-01T22:21:14.756Z
   },
-  feedwide: {
-    description: "feedwide",
-    image: feedwide,
-    position: { pan: 85.54, tilt: -12.83, zoom: 1 },
-    // modified: 2025-10-28T22:40:32.291Z
+  food: {
+    description: "food",
+    image: food,
+    position: { pan: -50.91, tilt: -3.84, zoom: 1545 },
+    // modified: 2026-06-01T22:25:50.180Z
   },
-  foodleft: {
-    description: "Food Left",
-    image: foodleft,
-    position: { pan: -2.06, tilt: -15.16, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.324Z
+  left: {
+    description: "left",
+    image: left,
+    position: { pan: -172.51, tilt: -3.18, zoom: 1 },
+    // modified: 2026-06-01T22:34:14.756Z
   },
-  foodright: {
-    description: "Food Right",
-    image: foodright,
-    position: { pan: 92.46, tilt: -9.56, zoom: 572 },
-    // modified: 2025-10-09T11:10:30.324Z
+  leftcorner: {
+    description: "leftcorner",
+    image: leftcorner,
+    position: { pan: 178.82, tilt: -0.49, zoom: 399 },
+    // modified: 2026-06-01T22:37:35.851Z
   },
-  gate: {
-    description: "Gate",
-    image: gate,
-    position: { pan: -60.85, tilt: -1.48, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.324Z
+  leftgate: {
+    description: "leftgate",
+    image: leftgate,
+    position: { pan: -157.29, tilt: -0.38, zoom: 873 },
+    // modified: 2026-06-01T21:49:38.659Z
   },
-  gateleft: {
-    description: "Gate Left",
-    image: gateleft,
-    position: { pan: -94.69, tilt: -2.12, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.332Z
+  maingate: {
+    description: "maingate",
+    image: maingate,
+    position: { pan: -22.76, tilt: -6.83, zoom: 813 },
+    // modified: 2026-06-01T22:27:44.214Z
   },
-  marmgate: {
-    description: "Marmoset Gate",
-    image: marmgate,
-    position: { pan: 152.35, tilt: -1.82, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.328Z
+  pond: {
+    description: "pond",
+    image: pond,
+    position: { pan: -98.03, tilt: -14.03, zoom: 1 },
+    // modified: 2026-06-01T21:39:38.608Z
   },
-  marmgater: {
-    description: "marmgater",
-    image: marmgater,
-    position: { pan: 169.4, tilt: -0.8, zoom: 210 },
-    // modified: 2026-03-14T13:17:08.646Z
+  pondleft: {
+    description: "pondleft",
+    image: pondleft,
+    position: { pan: -145.11, tilt: -2.69, zoom: 1 },
+    // modified: 2026-06-01T22:43:15.068Z
   },
-  pen1center: {
-    description: "pen1center",
-    image: pen1center,
-    position: { pan: -179.53, tilt: -2.18, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.328Z
+  right: {
+    description: "right",
+    image: right,
+    position: { pan: -41.62, tilt: -6.09, zoom: 1 },
+    // modified: 2026-06-01T22:26:47.449Z
   },
-  pen1centerright: {
-    description: "pen1centerright",
-    image: pen1centerright,
-    position: { pan: -151.09, tilt: -2.95, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.332Z
+  rightcorner: {
+    description: "rightcorner",
+    image: rightcorner,
+    position: { pan: -26.16, tilt: -5.17, zoom: 1422 },
+    // modified: 2026-06-01T22:28:21.434Z
   },
-  pen1left: {
-    description: "Pen 1 Left",
-    image: pen1left,
-    position: { pan: 127.4, tilt: -3.14, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.328Z
-  },
-  pen1right: {
-    description: "Pen 1 Right",
-    image: pen1right,
-    position: { pan: -122.96, tilt: -2.52, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.328Z
-  },
-  pen1shelter: {
-    description: "Pen 1 Shelter",
-    image: pen1shelter,
-    position: { pan: 70.91, tilt: -30.11, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.332Z
-  },
-  pen2left: {
-    description: "Pen 2 Left",
-    image: pen2left,
-    position: { pan: -18.26, tilt: -5.05, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.324Z
-  },
-  pen2middleish: {
-    description: "Pen 2 Middle-ish",
-    image: pen2middleish,
-    position: { pan: -1.54, tilt: -3.28, zoom: 584 },
-    // modified: 2025-12-04T00:17:59.334Z
-  },
-  pen2right: {
-    description: "Pen 2 Right",
-    image: pen2right,
-    position: { pan: 99.54, tilt: -3.02, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.324Z
+  shelter: {
+    description: "shelter",
+    image: shelter,
+    position: { pan: -114.96, tilt: -1.84, zoom: 813 },
+    // modified: 2026-06-01T22:22:00.044Z
   },
 };
 

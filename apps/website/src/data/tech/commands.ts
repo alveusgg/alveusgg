@@ -29,8 +29,7 @@ export const isArguments = (args: unknown): args is Arguments =>
   Array.isArray(args) && args.length >= 1 && args.every(isArgument);
 
 export type OverloadedArguments =
-  | [Arguments, Arguments, ...Arguments[]]
-  | [Arguments, ...Arguments[], []];
+  [Arguments, Arguments, ...Arguments[]] | [Arguments, ...Arguments[], []];
 export const isOverloadedArguments = (
   args: unknown,
 ): args is OverloadedArguments =>
@@ -672,14 +671,13 @@ const commands = {
     ],
   },
   ptzlist: {
-    description:
-      "Get all preset positions for a camera, or get the cameras on stream currently",
+    description: "Get all preset positions for a camera",
     category: "Presets",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -913,6 +911,11 @@ const commands = {
   },
   camlist: {
     description: "Get all preset camera layouts",
+    category: "Scenes",
+    args: [],
+  },
+  scenecams: {
+    description: "Get names and slots of all cameras on stream currently",
     category: "Scenes",
     args: [],
   },
@@ -1237,6 +1240,11 @@ const commands = {
         },
       ],
     ],
+  },
+  nextclip: {
+    description: "Move to the next clip in the BRB screen with clips",
+    category: "Overlays",
+    args: [],
   },
   showchat: {
     description: "Show Twitch chat overlay (if enabled in the scene)",

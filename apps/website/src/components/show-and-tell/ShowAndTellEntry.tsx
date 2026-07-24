@@ -2,7 +2,6 @@ import parse, {
   type DOMNode,
   Element,
   type HTMLReactParserOptions,
-  Text,
   domToReact,
 } from "html-react-parser";
 import Image from "next/image";
@@ -46,7 +45,8 @@ const getTextContentRecursive = (node: DOMNode): string => {
       .join("");
   }
 
-  if (node instanceof Text) {
+  // FIXME: Switch back to `instanceof Text` once https://github.com/remarkablemark/html-react-parser/issues/2256 resolved
+  if (node.type === "text") {
     return node.data || "";
   }
 
@@ -119,14 +119,17 @@ const Header = ({
       </div>
 
       <p
-        className={` ${
+        className={classes(
           isPresentationView
             ? "text-4xl text-alveus-tan-200"
-            : "text-2xl text-alveus-green"
-        }`}
+            : "text-2xl text-alveus-green",
+        )}
       >
         <span className="mr-1 italic">by </span>
         {entry.displayName}
+        {entry.pronouns && (
+          <span className="ml-1 opacity-75">({entry.pronouns})</span>
+        )}
         {entry.location && (
           <>
             <span className="mr-1 italic"> near </span>
@@ -141,7 +144,7 @@ const Header = ({
         )}
         {entry.volunteeringMinutes ? (
           <>
-            {` — `}
+            {" — "}
             <Link
               href="/show-and-tell/give-an-hour"
               className={classes(
@@ -155,7 +158,7 @@ const Header = ({
             >
               <strong
                 className={classes(
-                  "bg-gradient-to-br to-green-600 bg-clip-text font-bold text-transparent",
+                  "bg-linear-to-br to-green-600 bg-clip-text font-bold text-transparent",
                   isPresentationView
                     ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
                     : "from-blue-800",
@@ -166,7 +169,7 @@ const Header = ({
               <IconWorld
                 className={classes(
                   "inline-block",
-                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                  isPresentationView ? "size-12" : "size-8",
                 )}
               />
             </Link>
@@ -212,7 +215,12 @@ const Content = ({
           }`}
         >
           {hasContent && (
-            <div className="alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl">
+            <div
+              className={
+                // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+                "alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl"
+              }
+            >
               <ErrorBoundary
                 FallbackComponent={Empty}
                 onError={(err) =>
@@ -233,7 +241,12 @@ const Content = ({
                 Mod Note
               </h3>
 
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+              <div
+                className={
+                  // eslint-disable-next-line better-tailwindcss/no-unknown-classes
+                  "alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg"
+                }
+              >
                 <ErrorBoundary
                   FallbackComponent={Empty}
                   onError={(err) =>
@@ -284,11 +297,13 @@ export const ShowAndTellEntry = ({
     <article
       key={entry.id}
       className={classes(
-        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-hidden",
+        "relative flex shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-hidden",
         isPresentationView &&
+          // eslint-disable-next-line better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support
           "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]",
         !isPresentationView &&
           "justify-center border-t border-alveus-green/50 first:border-t-0",
+        // eslint-disable-next-line better-tailwindcss/no-conflicting-classes -- intentional svh fallback to vh for browsers without small viewport unit support
         withHeight && !isPresentationView && "min-h-[70svh] min-h-[70vh]",
       )}
       onClick={(e) => {

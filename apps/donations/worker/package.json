@@ -2,33 +2,37 @@
   "name": "@alveusgg/donations-manager",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "cf-typegen": "wrangler types",
-    "lint": "eslint . --max-warnings 0"
+    "cf-typegen": "wrangler types --env-file .env.example",
+    "types": "wrangler types --env-file .env.example && tsc --noEmit",
+    "lint": "wrangler types --env-file .env.example && eslint . --max-warnings 0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^24.12.0",
+    "@types/node": "^24.13.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.2",
-    "globals": "^17.4.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.7.0",
     "jpeg-js": "^0.4.4",
-    "typescript": "^5.5.2",
-    "typescript-eslint": "^8.57.1",
-    "wrangler": "^4.76.0"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.64.0",
+    "wrangler": "^4.111.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@alveusgg/neon-crm-api": "workspace:*",
+    "@sentry/cloudflare": "^10.65.0",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",
-    "hono": "^4.12.8",
+    "hono": "^4.12.30",
     "superjson": "^2.2.6",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }

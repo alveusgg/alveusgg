@@ -2,7 +2,7 @@ import type { Donation } from "@alveusgg/donations-core";
 import { parse, stringify } from "superjson";
 
 export interface DonationStorage {
-  add: (...donations: Donation[]) => void;
+  add: (...donations: Donation[]) => Promise<number>;
   config: {
     set: (providerId: string, value: unknown | undefined) => void;
     get: <T>(providerId: string) => T | undefined;
@@ -18,11 +18,12 @@ export class DurableObjectDonationStorage implements DonationStorage {
   async add(...donations: Donation[]) {
     const messages: MessageSendRequest<string>[] = [];
     for (const donation of donations) {
-      const exists = doesDonationExist(
+      const reservation = reserveDonation(
         this.ctx.storage.sql,
+        donation.provider,
         donation.providerUniqueId,
       );
-      if (!exists) {
+      if (reservation.new) {
         messages.push({
           body: stringify(donation),
           contentType: "json",
@@ -30,7 +31,11 @@ export class DurableObjectDonationStorage implements DonationStorage {
       }
     }
 
-    this.ctx.waitUntil(this.queue.sendBatch(messages));
+    if (messages.length > 0) {
+      this.ctx.waitUntil(this.queue.sendBatch(messages));
+    }
+
+    return messages.length;
   }
 
   config = {
@@ -39,11 +44,11 @@ export class DurableObjectDonationStorage implements DonationStorage {
         `SELECT metadata FROM providerMetadata WHERE provider = ?`,
         providerId,
       );
-      if (cursor.rowsRead === 0) {
+      const result = cursor.next();
+      if (result.done) {
         return undefined;
       }
-      const result = cursor.one();
-      return parse(result.metadata as string) as T;
+      return parse(result.value.metadata as string) as T;
     },
     set: async (providerId: string, value: unknown | undefined) => {
       if (value === undefined) {
@@ -83,18 +88,29 @@ export async function createIfNotExistsProviderMetadataTable(sql: SqlStorage) {
   `);
 }
 
-function doesDonationExist(sql: SqlStorage, providerUniqueId: string) {
+function reserveDonation(
+  sql: SqlStorage,
+  provider: string,
+  providerUniqueId: string,
+): { new: true; date: string } | { new: false } {
+  const date = new Date().toISOString();
   const cursor = sql.exec(
-    `SELECT date FROM donations WHERE providerUniqueId = ? LIMIT 1`,
+    `
+      INSERT INTO donations (provider, providerUniqueId, date)
+      VALUES (?, ?, ?)
+      ON CONFLICT(providerUniqueId) DO NOTHING
+      RETURNING date
+    `,
+    provider,
     providerUniqueId,
+    date,
   );
 
-  if (cursor.rowsRead === 0) {
-    return false;
+  const result = cursor.next();
+  if (!result.done) {
+    return { new: true, date: result.value.date as string };
   }
-  const result = cursor.one();
-  console.log(
-    `Donation ${providerUniqueId} already exists, it was created at ${result.date}`,
-  );
-  return true;
+
+  console.log(`Donation ${providerUniqueId} already exists`);
+  return { new: false };
 }

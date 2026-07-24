@@ -14,22 +14,24 @@
   },
   "dependencies": {
     "@alveusgg/database": "workspace:*",
-    "@t3-oss/env-core": "^0.13.10",
+    "@t3-oss/env-core": "^0.13.11",
     "@twurple/api": "^8.0.3",
     "@twurple/auth": "^8.0.3",
     "@twurple/chat": "^8.0.3",
-    "@twurple/easy-bot": "^8.0.3",
+    "@twurple/easy-bot": "^8.1.4",
+    "luxon": "^3.7.2",
     "read-pkg": "^10.1.0",
-    "tsx": "^4.21.0",
-    "zod": "^4.3.6"
+    "tsx": "^4.23.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^24.12.0",
+    "@types/luxon": "^3.7.2",
+    "@types/node": "^24.13.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import-x": "^4.16.2",
-    "typescript-eslint": "^8.57.1"
+    "eslint-plugin-import-x": "^4.17.1",
+    "typescript-eslint": "^8.64.0"
   },
   "scripts": {
     "start": "tsx --env-file=.env src/server.ts",

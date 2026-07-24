@@ -11,12 +11,8 @@ import { createOptions } from "@/bot/commands/shared/options";
 
 const defaultNotificationTitle = "Live Now";
 
-type DateStr =
-  | `${number}-${number}-${number}`
-  | `${number}-${number}-${number}T${number}:${number}`;
-
 type PendingNotification = {
-  tag: "stream" | "announcements";
+  tag: "stream";
   text?: string;
   linkUrl?: string;
   imageUrl?: string;
@@ -25,8 +21,6 @@ type PendingNotification = {
   expiresAt: number;
   isPush: boolean;
   isDiscord: boolean;
-  start?: DateStr;
-  end?: DateStr;
 };
 
 // These URLs are likely not meant to be used as notification links without a path
@@ -77,37 +71,6 @@ function parseOptionalLinkUrl(broadcasterName: string, params: string[]) {
   return { linkUrl, restParams };
 }
 
-function parseOptionalStartAndEnd(params: string[]): {
-  start?: DateStr;
-  end?: DateStr;
-  restParams: string[];
-} {
-  // YYYY-MM-DD[ HH:II] YYYY-MM-DD[ HH:II]
-  if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
-    let endDateString;
-    let startDateString = params.shift();
-    if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-      startDateString += "T" + params.shift();
-    }
-
-    if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
-      endDateString = params.shift();
-
-      if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-        endDateString += "T" + params.shift();
-      }
-    }
-
-    return {
-      start: startDateString as DateStr,
-      end: endDateString as DateStr,
-      restParams: params,
-    };
-  }
-
-  return { restParams: params };
-}
-
 function parseTitleAndText(params: string[]) {
   const textParts = params.join(" ").split("|");
   const title = textParts[0]?.trim();
@@ -118,8 +81,6 @@ function parseTitleAndText(params: string[]) {
 function renderPendingNotification(notification: PendingNotification) {
   return [
     notification.tag,
-    notification.start,
-    notification.end,
     notification.title,
     notification.text,
     notification.linkUrl,
@@ -200,73 +161,6 @@ export async function createNotificationCommands() {
     );
   };
 
-  const announcementCommand: CommandHandler = async (
-    params,
-    { broadcasterId, broadcasterName, userName, reply },
-  ) => {
-    const isMod = await checkUserIsAllowedToSendNotifications(userName);
-    if (!isMod) {
-      reply("mayaHalt you are not allowed to send announcements");
-      return;
-    }
-
-    const {
-      restParams: paramsWithoutOptions,
-      values: optionValues,
-      errors,
-    } = options.parseParams(params);
-
-    if (optionValues.help) {
-      reply(
-        `Usage: !announce [link] [start] [end] [title] [|text] | ` +
-          `Arguments: link = URL, start/end = YYYY-MM-DD[ HH:II] | ` +
-          `Options: ${options.renderHelp()}`,
-      );
-      return;
-    }
-
-    if (errors.length) {
-      reply(`Error: ${errors.join(", ")}`);
-      return;
-    }
-
-    const { linkUrl, restParams } = parseOptionalLinkUrl(
-      broadcasterName,
-      paramsWithoutOptions,
-    );
-    const {
-      start,
-      end,
-      restParams: restParams2,
-    } = parseOptionalStartAndEnd(restParams);
-    const { title, text } = parseTitleAndText(restParams2);
-
-    if (!title) {
-      reply("WeirdCat add some title to your announcement");
-      return;
-    }
-
-    const pendingNotification = createPendingNotification({
-      tag: "announcements",
-      text,
-      linkUrl,
-      title,
-      start,
-      end,
-      isPush: !optionValues["no-push"],
-      isDiscord: !optionValues["no-discord"],
-      imageUrl: optionValues.image,
-      vodUrl: optionValues.vod,
-    });
-    pendingNotifications.set(broadcasterId, pendingNotification);
-
-    reply(
-      `PauseChamp please !confirm: ${renderPendingNotification(
-        pendingNotification,
-      )}`,
-    );
-  };
-
   const confirmCommand: CommandHandler = async (
     params,
     { broadcasterId, userName, reply },
@@ -310,8 +204,6 @@ export async function createNotificationCommands() {
   return [
     createBotCommand("notify", notificationCommand),
     createBotCommand("notification", notificationCommand),
-    createBotCommand("announce", announcementCommand),
-    createBotCommand("announcement", announcementCommand),
     createBotCommand("confirm", confirmCommand),
   ];
 }

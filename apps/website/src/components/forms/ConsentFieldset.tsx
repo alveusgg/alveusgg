@@ -1,4 +1,4 @@
-import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
+import { DEFAULT_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
 
 import Link from "@/components/content/Link";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
@@ -26,7 +26,7 @@ export function ConsentFieldset({
 
       {askMarketingEmails && (
         <CheckboxField name="allowMarketingEmails" value="yes">
-          {askMarketingEmailsLabel || PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL}
+          {askMarketingEmailsLabel || DEFAULT_ASK_MARKETING_EMAILS_LABEL}
         </CheckboxField>
       )}
     </Fieldset>

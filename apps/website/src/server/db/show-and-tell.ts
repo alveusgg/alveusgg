@@ -30,8 +30,7 @@ import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
   fileStorageObject:
-    | (FileStorageObject & { imageMetadata: ImageMetadata | null })
-    | null;
+    (FileStorageObject & { imageMetadata: ImageMetadata | null }) | null;
 };
 
 export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {
@@ -44,6 +43,7 @@ export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
 const PublicShowAndTellFields = [
   "id",
   "displayName",
+  "pronouns",
   "title",
   "text",
   "createdAt",
@@ -179,6 +179,12 @@ const showAndTellSharedInputSchema = z.object({
     .regex(/^\d{1,3},\d{1,3},\d{1,3}$/)
     .refine((val) => val.split(",").every((num) => Number(num) < 256))
     .nullable(),
+  pronouns: z
+    .string()
+    .trim()
+    .max(25)
+    .nullable()
+    .transform((val) => (val === "" ? null : val)),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -311,6 +317,7 @@ export async function createPost(
         : {}),
       user: authorUserId ? { connect: { id: authorUserId } } : undefined,
       displayName: input.displayName,
+      pronouns: input.pronouns,
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
@@ -371,6 +378,10 @@ export async function getUserPosts(authorUserId: string, postId?: string) {
       createdAt: "desc",
     },
   });
+}
+
+export async function getUserPost(authorUserId: string, postId: string) {
+  return getUserPosts(authorUserId, postId).then((posts) => posts[0] ?? null);
 }
 
 export async function getPostsCount() {
@@ -522,6 +533,7 @@ export async function updatePost(
     },
     data: {
       displayName: input.displayName,
+      pronouns: input.pronouns,
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
