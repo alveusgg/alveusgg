@@ -83,8 +83,9 @@ If you aren't working on features related to Twitch authentication, you can set 
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 7. Copy `apps/database/.env.example` to `apps/database/.env`
 8. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
-9. Start the dev server using `pnpm dev` from within `apps/website`
-10. The website should be running at `http://localhost:3000/` (open in browser)
+9. Optionally, seed the database with example content (users with roles, forms, show-and-tell posts) using `pnpm seed` from within `apps/database`. The seed is idempotent, so it is safe to run again at any time.
+10. Start the dev server using `pnpm dev` from within `apps/website`
+11. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio` from within `apps/database`
