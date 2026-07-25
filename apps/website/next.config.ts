@@ -624,9 +624,9 @@ const config: NextConfig = {
       type: "asset/source",
     });
 
-    // Load PDF files as URLs
+    // Load PDF + audio files as URLs
     config.module.rules.push({
-      test: /\.pdf$/,
+      test: /\.(pdf|mp3)$/,
       type: "asset/resource",
     });
 

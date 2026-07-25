@@ -17,10 +17,7 @@ import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
 } from "@alveusgg/data/build/ambassadors/images";
-import {
-  type AmbassadorSounds,
-  getAmbassadorSounds,
-} from "@alveusgg/data/build/ambassadors/sounds";
+import { getAmbassadorSounds } from "@alveusgg/data/build/ambassadors/sounds";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import {
   type AnimalQuestWithRelation,
@@ -185,7 +182,6 @@ type AmbassadorPageProps = {
   merchImage?: AmbassadorImage;
   iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
-  sounds?: AmbassadorSounds;
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
@@ -209,7 +205,6 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
         getAmbassadorBadgeImage(ambassadorKey) ??
         getAmbassadorEmoteImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
-      sounds: getAmbassadorSounds(ambassadorKey),
     },
   };
 };
@@ -225,9 +220,12 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   merchImage,
   iconImage,
   animalQuest,
-  sounds,
 }) => {
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
+  const sounds = useMemo(
+    () => getAmbassadorSounds(ambassadorKey),
+    [ambassadorKey],
+  );
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
 
@@ -424,6 +422,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                         <audio
                           controls
                           src={src}
+                          // @ts-expect-error -- loading="lazy" is support by Chromium, but not Firefox
                           loading="lazy"
                           preload="none"
                         />
