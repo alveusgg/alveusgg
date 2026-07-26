@@ -57,8 +57,8 @@ const marmoutPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: 135.7, tilt: -18.09, zoom: 1 },
-    // modified: 2025-11-07T22:34:48.564Z
+    position: { pan: 135.7, tilt: -18.14, zoom: 1 },
+    // modified: 2026-07-25T13:46:01.796Z
   },
   basket: {
     description: "basket",
@@ -189,8 +189,8 @@ const marmoutPresets: Record<string, Preset> = {
   farrightshelf: {
     description: "farrightshelf",
     image: farrightshelf,
-    position: { pan: 178.48, tilt: -7.38, zoom: 664 },
-    // modified: 2026-02-26T16:50:34.144Z
+    position: { pan: 178.64, tilt: -6, zoom: 664 },
+    // modified: 2026-07-25T13:47:31.109Z
   },
   farrightshelfb: {
     description: "farrightshelfb",
@@ -339,8 +339,8 @@ const marmoutPresets: Record<string, Preset> = {
   tablet: {
     description: "Tablet",
     image: tablet,
-    position: { pan: 164.94, tilt: -1.91, zoom: 1537 },
-    // modified: 2025-11-07T22:38:33.372Z
+    position: { pan: 164.95, tilt: -1.91, zoom: 1350 },
+    // modified: 2026-07-25T13:44:45.742Z
   },
   upleft: {
     description: "Up Left",
