@@ -14,6 +14,8 @@ import platform from "@/assets/presets/crowin/platform.png";
 import rightperch from "@/assets/presets/crowin/rightperch.png";
 import table from "@/assets/presets/crowin/table.png";
 import top from "@/assets/presets/crowin/top.png";
+import topl from "@/assets/presets/crowin/topl.png";
+import topr from "@/assets/presets/crowin/topr.png";
 import training from "@/assets/presets/crowin/training.png";
 import water from "@/assets/presets/crowin/water.png";
 import window from "@/assets/presets/crowin/window.png";
@@ -117,6 +119,18 @@ const crowinPresets: Record<string, Preset> = {
     image: top,
     position: { pan: 48.19, tilt: -13.71, zoom: 1 },
     // modified: 2025-10-09T11:10:29.828Z
+  },
+  topl: {
+    description: "topl",
+    image: topl,
+    position: { pan: 29.56, tilt: -13.17, zoom: 1 },
+    // modified: 2026-07-27T17:53:04.989Z
+  },
+  topr: {
+    description: "topr",
+    image: topr,
+    position: { pan: 65.07, tilt: -10.93, zoom: 1 },
+    // modified: 2026-07-27T17:53:42.490Z
   },
   training: {
     description: "Training",
