@@ -290,7 +290,7 @@ const RoundsOverlayContent = ({
             key={`${check.name}-${idx}`}
             check={check}
             className={classes(
-              // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
+              // eslint-disable-next-line better-tailwindcss/no-concatenated-classes -- dynamic class name generated alongside the inline @keyframes above
               `checks-${id}-item`,
               idx % 2 !== 0 && "ml-32",
             )}
