@@ -35,6 +35,7 @@ import nearleft from "@/assets/presets/fox/nearleft.png";
 import right from "@/assets/presets/fox/right.png";
 import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
+import rightplatformb from "@/assets/presets/fox/rightplatformb.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
 import rivert from "@/assets/presets/fox/rivert.png";
@@ -266,6 +267,12 @@ const foxPresets: Record<string, Preset> = {
     image: rightplatform,
     position: { pan: -15.87, tilt: -1.38, zoom: 691 },
     // modified: 2026-04-18T13:54:32.290Z
+  },
+  rightplatformb: {
+    description: "rightplatformb",
+    image: rightplatformb,
+    position: { pan: -16.15, tilt: -7.21, zoom: 3538 },
+    // modified: 2026-07-29T19:55:17.635Z
   },
   rightramp: {
     description: "rightramp",
