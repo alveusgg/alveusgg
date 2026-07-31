@@ -1,3 +1,4 @@
+import appastick from "@/assets/presets/marmout/appastick.png";
 import basket from "@/assets/presets/marmout/basket.png";
 import blueball from "@/assets/presets/marmout/blueball.png";
 import bridgeb from "@/assets/presets/marmout/bridgeb.png";
@@ -59,6 +60,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 135.7, tilt: -18.14, zoom: 1 },
     // modified: 2026-07-25T13:46:01.796Z
+  },
+  appastick: {
+    description: "appastick",
+    image: appastick,
+    position: { pan: 122.85, tilt: 6.36, zoom: 1191 },
+    // modified: 2026-07-30T12:45:51.589Z
   },
   basket: {
     description: "basket",
