@@ -52,18 +52,18 @@ export const TwitchDonationEventPayload = z.object({
 
 export const TwitchSubscriptionDonationEventPayload = z.object({
   broadcaster_user_id: z.string(),
-  user_id: z.string(),
-  user_login: z.string(),
-  user_name: z.string(),
+  user_id: z.string().optional().nullable(),
+  user_login: z.string().optional().nullable(),
+  user_name: z.string().optional().nullable(),
   tier: z.literal(["1000", "2000", "3000"]),
   is_gift: z.boolean().optional(),
-  total: z.number().optional(),
-  cumulative_total: z.number().optional(),
-  cumulative_months: z.number().optional(),
+  total: z.number().optional().nullable(),
+  cumulative_total: z.number().optional().nullable(),
+  cumulative_months: z.number().optional().nullable(),
   is_anonymous: z.boolean().optional(),
-  message: z.object().optional(),
-  streak_months: z.number().optional(),
-  duration_months: z.number().optional(),
+  message: z.record(z.string(), z.unknown()).optional().nullable(),
+  streak_months: z.number().optional().nullable(),
+  duration_months: z.number().optional().nullable(),
 });
 
 export const TwitchNotificationPayload = z.object({

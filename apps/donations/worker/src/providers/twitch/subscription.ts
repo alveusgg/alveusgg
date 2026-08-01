@@ -117,7 +117,6 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
 
     const uniqueMessageId = request.headers.get(TwitchEventHubMessageIdHeader);
     if (!uniqueMessageId) {
-      await this.clear();
       return new Response(null, { status: 400 });
     }
 
@@ -169,11 +168,17 @@ export class TwitchSubscriptionDonationProvider implements DonationProvider {
         receivedAt: messageTimestamp ? new Date(messageTimestamp) : new Date(),
         donatedBy: {
           primary: "username",
-          username: payload.data.event.user_login,
+          username: payload.data.event.is_anonymous
+            ? "Anonymous"
+            : (payload.data.event.user_login ?? "Anonymous"),
         },
         tags: {
           twitchBroadcasterId: payload.data.event.broadcaster_user_id,
         },
+        note:
+          payload.data.event.message && payload.data.event.message.text
+            ? (payload.data.event.message?.text as string)
+            : undefined,
       } satisfies TwitchSubscriptionDonation;
 
       await this.service.add(donation);
