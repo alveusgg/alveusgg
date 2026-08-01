@@ -1,5 +1,6 @@
 import bigbushytree from "@/assets/presets/pasturelower/bigbushytree.png";
 import bigbushytreer from "@/assets/presets/pasturelower/bigbushytreer.png";
+import bugtmp1 from "@/assets/presets/pasturelower/bugtmp1.png";
 import down from "@/assets/presets/pasturelower/down.png";
 import downleft from "@/assets/presets/pasturelower/downleft.png";
 import downright from "@/assets/presets/pasturelower/downright.png";
@@ -38,6 +39,12 @@ const pasturelowerPresets: Record<string, Preset> = {
     image: bigbushytreer,
     position: { pan: -35.29, tilt: 0.78, zoom: 332 },
     // modified: 2026-06-19T13:42:24.695Z
+  },
+  bugtmp1: {
+    description: "bugtmp1",
+    image: bugtmp1,
+    position: { pan: -46.58, tilt: 3.68, zoom: 10749 },
+    // modified: 2026-07-31T23:33:10.687Z
   },
   down: {
     description: "down",
