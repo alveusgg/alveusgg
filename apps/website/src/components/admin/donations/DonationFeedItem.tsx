@@ -32,19 +32,33 @@ const formatTwitchSubTier = (tier?: string) => {
   return "";
 };
 
-const formatTwitchSub = (donation: TwitchSubscriptionDonation) => {
-  const metadata = donation.providerMetadata;
-
+const formatTwitchSub = (
+  metadata: TwitchSubscriptionDonation["providerMetadata"],
+) => {
   if (!metadata.twitchSubscription) return null;
 
   const formattedTier = formatTwitchSubTier(metadata.twitchSubscription.tier);
 
   if (metadata.twitchSubscription.type === "gift") {
-    return `Gifted ${metadata.twitchSubscription.total} T${formattedTier}`;
+    return `Gifted ${metadata.twitchSubscription.total}x Tier ${formattedTier}`;
   } else if (metadata.twitchSubscription.type === "resubscription") {
-    return `Resub T${formattedTier} ${metadata.twitchSubscription.durationMonths}X`;
+    if (
+      metadata.twitchSubscription.durationMonths &&
+      metadata.twitchSubscription.durationMonths > 1 &&
+      metadata.twitchSubscription.cumulativeMonths &&
+      metadata.twitchSubscription.cumulativeMonths > 0
+    ) {
+      return `Resub · Tier ${formattedTier} · +${metadata.twitchSubscription.durationMonths} mo (${metadata.twitchSubscription.cumulativeMonths} total)`;
+    } else if (
+      metadata.twitchSubscription.cumulativeMonths &&
+      metadata.twitchSubscription.cumulativeMonths > 0
+    ) {
+      return `Resub · Tier ${formattedTier} (${metadata.twitchSubscription.cumulativeMonths} mo)`;
+    } else {
+      return `Resub · Tier ${formattedTier}`;
+    }
   } else {
-    return `New T${formattedTier}`;
+    return `New · Tier ${formattedTier}`;
   }
 };
 
@@ -159,7 +173,9 @@ function DonationFeedItem({
           }
         >
           {donation.provider === "twitchsubscription"
-            ? formatTwitchSub(donation as unknown as TwitchSubscriptionDonation)
+            ? formatTwitchSub(
+                donation.providerMetadata as TwitchSubscriptionDonation["providerMetadata"],
+              )
             : formatDonationAmount(donation.amount)}
         </Badge>
         {donation.pixels > 0 && (
