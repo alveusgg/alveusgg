@@ -1,4 +1,5 @@
 import fargate from "@/assets/presets/emu/fargate.png";
+import feeder from "@/assets/presets/emu/feeder.png";
 import food from "@/assets/presets/emu/food.png";
 import home from "@/assets/presets/emu/home.png";
 import left from "@/assets/presets/emu/left.png";
@@ -26,6 +27,12 @@ const emuPresets: Record<string, Preset> = {
     position: { pan: -96.34, tilt: -1.68, zoom: 813 },
     // modified: 2026-06-01T22:21:14.756Z
   },
+  feeder: {
+    description: "feeder",
+    image: feeder,
+    position: { pan: -55.32, tilt: -3.47, zoom: 1545 },
+    // modified: 2026-08-03T16:52:20.559Z
+  },
   food: {
     description: "food",
     image: food,
@@ -35,8 +42,8 @@ const emuPresets: Record<string, Preset> = {
   left: {
     description: "left",
     image: left,
-    position: { pan: -172.51, tilt: -3.18, zoom: 1 },
-    // modified: 2026-06-01T22:34:14.756Z
+    position: { pan: -176.89, tilt: -3.31, zoom: 1 },
+    // modified: 2026-08-03T17:03:16.186Z
   },
   leftcorner: {
     description: "leftcorner",
