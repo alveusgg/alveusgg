@@ -18,11 +18,11 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.17.1",
-    "globals": "^17.7.0",
+    "globals": "^17.8.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.65.0",
-    "wrangler": "^4.113.0"
+    "wrangler": "^4.115.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
