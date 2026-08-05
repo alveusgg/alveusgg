@@ -75,7 +75,7 @@
     "linkify-it": "^6.1.0",
     "lodash": "^4.18.1",
     "luxon": "^3.7.2",
-    "maplibre-gl": "^5.23.0",
+    "maplibre-gl": "^6.0.0",
     "motion": "^12.43.0",
     "next": "^16.2.12",
     "next-auth": "^4.24.15",
