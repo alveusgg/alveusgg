@@ -1,5 +1,5 @@
-import { type GeoJSONSource, Map, Popup } from "maplibre-gl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Map, Popup } from "maplibre-gl";
+import { useEffect, useState } from "react";
 
 import type { LocationFeature } from "@/server/db/show-and-tell";
 
@@ -31,36 +31,6 @@ export function CommunityMap({
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
-  const mapRef = useRef<Map>(null);
-
-  const renderFeaturesOnMap = useCallback(
-    async (features?: Array<LocationFeature>) => {
-      const map = mapRef.current;
-      if (!map || !features) return;
-
-      map.on("load", async () => {
-        const source = map.getSource("features") as GeoJSONSource | undefined;
-        if (!source) return;
-
-        source.setData({
-          type: "FeatureCollection",
-          features: features.map((feature) => ({
-            type: "Feature",
-            properties: {
-              id: feature.id,
-              name: feature.location,
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [feature.longitude, feature.latitude],
-            },
-          })),
-        });
-      });
-    },
-    [],
-  );
-
   useEffect(() => {
     const popup = new Popup({
       closeButton: false,
@@ -86,11 +56,19 @@ export function CommunityMap({
         type: "geojson",
         data: {
           type: "FeatureCollection",
-          features: [],
+          features: features?.map((feature) => ({
+            type: "Feature",
+            properties: {
+              id: feature.id,
+              name: feature.location,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [feature.longitude, feature.latitude],
+            },
+          })),
         },
       });
-
-      renderFeaturesOnMap(features);
 
       // Use the default marker to create a custom image for the map markers
       const markerElement = getDefaultMarker()
@@ -183,17 +161,11 @@ export function CommunityMap({
       popup.remove();
     });
 
-    mapRef.current = map;
-
     // Clean up on component unmount
     return () => {
       map.remove();
     };
-  }, [features, renderFeaturesOnMap]);
-
-  useEffect(() => {
-    renderFeaturesOnMap(features);
-  }, [features, renderFeaturesOnMap]);
+  }, [features]);
 
   const entryQuery = trpc.showAndTell.getEntry.useQuery(
     String(selectedMarkerId),
