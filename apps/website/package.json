@@ -71,7 +71,7 @@
     "heic-to": "^1.5.2",
     "html-react-parser": "^6.1.5",
     "ioredis": "^5.11.1",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "linkify-it": "^6.0.0",
     "lodash": "^4.18.1",
     "luxon": "^3.7.2",
