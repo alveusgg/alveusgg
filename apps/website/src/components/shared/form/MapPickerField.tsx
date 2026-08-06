@@ -1,8 +1,9 @@
 import MaplibreGeocoder, {
   type CarmenGeojsonFeature,
 } from "@maplibre/maplibre-gl-geocoder";
-import maplibregl, {
+import {
   GeolocateControl,
+  type GeolocatePositionEvent,
   Map,
   type MapMouseEvent,
   type Marker,
@@ -211,7 +212,6 @@ export const MapPickerField = ({
 
       // Add, or update the callback for, the geocoder input
       geocoderRef.current ??= new MaplibreGeocoder(geocoderApi, {
-        maplibregl,
         marker: false,
         showResultsWhileTyping: true,
         showResultMarkers: {
@@ -239,7 +239,7 @@ export const MapPickerField = ({
         showAccuracyCircle: false,
         showUserLocation: false,
       });
-      const geolocateHandle = ({ coords }: GeolocationPosition) => {
+      const geolocateHandle = ({ coords }: GeolocatePositionEvent) => {
         handleLocationSet(coords.latitude, coords.longitude);
       };
       geolocateRef.current.on("geolocate", geolocateHandle);
