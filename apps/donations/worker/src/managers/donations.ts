@@ -17,6 +17,7 @@ import {
   createSharedKeyMiddleware,
   setSentryTagsMiddleware,
 } from "../utils/middleware";
+import { TwitchSubscriptionDonationProvider } from "../providers/twitch/subscription";
 import { getSentryConfig } from "../utils/sentry";
 
 type DonationProviders = Partial<
@@ -100,13 +101,20 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
       this.env.DONATION_QUEUE,
     );
 
-    const [twitchProvider, paypalProvider, neonProvider] = await Promise.all([
+    const [
+      twitchSubscriptionProvider,
+      twitchProvider,
+      paypalProvider,
+      neonProvider,
+    ] = await Promise.all([
+      TwitchSubscriptionDonationProvider.init(storage, this.env),
       TwitchDonationProvider.init(storage, this.env),
       PaypalDonationProvider.init(storage, this.env),
       NeonDonationProvider.init(storage, this.env),
     ]);
 
     this.providers = {
+      twitchsubscription: twitchSubscriptionProvider,
       twitch: twitchProvider,
       paypal: paypalProvider,
       neon: neonProvider,
