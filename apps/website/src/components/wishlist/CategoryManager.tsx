@@ -1,10 +1,6 @@
-/**
- * apps/website/src/components/wishlist/CategoryManager.tsx
- */
-
 import { useState } from "react";
-import type { WishlistCategory } from "@prisma/client";
-import { trpc } from "../../utils/trpc";
+import type { WishlistCategory } from "@alveusgg/database";
+import { trpc } from "@/utils/trpc";
 
 type CategoryWithCount = WishlistCategory & { _count: { items: number } };
 

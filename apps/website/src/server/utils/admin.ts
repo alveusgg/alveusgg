@@ -2,12 +2,9 @@ import { getSession } from "next-auth/react";
 import type { GetSessionParams } from "next-auth/react";
 
 import { env } from "@/env";
-
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
-
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
-
 import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
 import { notEmpty } from "@/utils/helpers";
 
@@ -53,6 +50,11 @@ const menuItems = [
     permission: permissions.manageRoundsChecks,
   },
   {
+    label: "Wishlist",
+    href: "/admin/wishlist",
+    permission: permissions.manageWishlist,
+  },
+  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,
@@ -89,7 +91,6 @@ export async function getAdminSSP(
   }
 
   const isSuperUser = checkIsSuperUserSession(session);
-
   const filteredMenuItems = menuItems
     .map((item) =>
       isSuperUser || checkRolesGivePermission(user.roles, item.permission)

@@ -1,3 +1,17 @@
+/**
+ * apps/website/src/server/trpc/router/wishlist.ts
+ *
+ * Supports the full donor/staff workflow:
+ *   - PRODUCT items (URL-linked, quantity-based) AND custom GOAL items (dollar-based)
+ *   - Combined funding: any donation amount stacks toward a GOAL's target
+ *   - Donor personal messages, surfaced to staff for on-stream shoutouts
+ *   - Two-stage fulfillment: FULFILLED (funded/purchased) -> OPENED (unboxed)
+ *
+ * Follows the same conventions as router/donations.ts: public procedures for
+ * donor-facing actions, protectedProcedure + createCheckPermissionMiddleware
+ * for staff-only actions, prisma imported directly (not via ctx).
+ */
+
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -15,8 +29,10 @@ import { permissions } from "@/data/permissions";
 import { fetchUrlMeta } from "@/utils/fetchUrlMeta";
 import { createPayPalOrder, capturePayPalOrder } from "@/utils/paypal";
 import { logDonationToNeonCrm } from "@/utils/neonCrm";
-import { notifyDiscord } from "@/utils/discord";
+import { notifyWishlistDonation } from "@/utils/discord";
 import { buildAmazonCartUrl } from "@/utils/amazonCart";
+
+// ─── Validators ───────────────────────────────────────────────────────────────
 
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
 const statusEnum = z.enum(["NEEDED", "PARTIALLY_FULFILLED", "FULFILLED", "OPENED", "ARCHIVED"]);
@@ -80,7 +96,11 @@ const categoryInput = z.object({
   sortOrder: z.number().int().default(0),
 });
 
+// ─── Router ───────────────────────────────────────────────────────────────────
+
 export const wishlistRouter = router({
+
+  // ── Public: Items ────────────────────────────────────────────────────────────
 
   getPublicItems: publicProcedure
     .input(z.object({
@@ -106,6 +126,8 @@ export const wishlistRouter = router({
       },
     });
   }),
+
+  // ── Public: PayPal donate flow ────────────────────────────────────────────────
 
   createDonateOrder: publicProcedure
     .input(z.object({
@@ -231,7 +253,7 @@ export const wishlistRouter = router({
         },
       });
 
-      void notifyDiscord({
+      void notifyWishlistDonation({
         itemTitle: item.title,
         amount: capture.amount,
         donorName: existing.donorName,
@@ -240,6 +262,8 @@ export const wishlistRouter = router({
 
       return { success: true, amount: capture.amount };
     }),
+
+  // ── Staff (protected): Items ────────────────────────────────────────────────
 
   fetchUrlMeta: protectedProcedure
     .use(createCheckPermissionMiddleware(permissions.manageWishlist))
@@ -347,6 +371,8 @@ export const wishlistRouter = router({
       return { success: true };
     }),
 
+  // ── Staff (protected): Categories ─────────────────────────────────────────────
+
   createCategory: protectedProcedure
     .use(createCheckPermissionMiddleware(permissions.manageWishlist))
     .input(categoryInput)
@@ -368,6 +394,8 @@ export const wishlistRouter = router({
       await prisma.wishlistCategory.delete({ where: { id: input.id } });
       return { success: true };
     }),
+
+  // ── Staff (protected): Donations ──────────────────────────────────────────────
 
   adminGetDonations: protectedProcedure
     .use(createCheckPermissionMiddleware(permissions.manageWishlist))

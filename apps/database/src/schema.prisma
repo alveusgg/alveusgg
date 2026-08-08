@@ -511,3 +511,98 @@ model Pixel {
   @@index([donationId], name: "Pixel_donationId")
   @@index([muralId], name: "Pixel_muralId")
 }
+
+model WishlistCategory {
+  id        String         @id @default(cuid())
+  name      String
+  slug      String         @unique
+  sortOrder Int            @default(0)
+  items     WishlistItem[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("wishlist_categories")
+}
+
+model WishlistItem {
+  id                String                  @id @default(cuid())
+  title             String
+  description       String?                 @db.Text
+  imageUrl          String?                 @db.Text
+  notes             String?                 @db.Text
+
+  itemType ItemType @default(PRODUCT)
+
+  url               String?                 @db.Text
+  price             String?
+  quantity          Int                     @default(1)
+  quantityFulfilled Int                     @default(0)
+
+  goalAmountCents   Int?
+  raisedAmountCents Int                     @default(0)
+
+  priority   WishlistPriority @default(MEDIUM)
+  status     WishlistStatus   @default(NEEDED)
+  sortOrder  Int              @default(0)
+  categoryId String?
+  category   WishlistCategory? @relation(fields: [categoryId], references: [id])
+
+  donationOrders WishlistDonationOrder[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([itemType])
+  @@map("wishlist_items")
+}
+
+model WishlistDonationOrder {
+  id             String       @id @default(cuid())
+  paypalOrderId  String       @unique
+  wishlistItemId String
+  wishlistItem   WishlistItem @relation(fields: [wishlistItemId], references: [id])
+
+  amount         Float
+  capturedAmount Float?
+
+  donorName    String?
+  donorEmail   String?
+  donorMessage String? @db.Text
+
+  status              String    @default("PENDING")
+  capturedAt           DateTime?
+  paypalTransactionId  String?
+  neonDonationId       String?
+
+  messageReadAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([wishlistItemId])
+  @@index([paypalOrderId])
+  @@index([status])
+  @@map("wishlist_donation_orders")
+}
+
+enum ItemType {
+  PRODUCT
+  GOAL
+}
+
+enum WishlistPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum WishlistStatus {
+  NEEDED
+  PARTIALLY_FULFILLED
+  FULFILLED
+  OPENED
+  ARCHIVED
+}
