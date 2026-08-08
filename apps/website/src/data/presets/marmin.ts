@@ -9,6 +9,8 @@ import domerl from "@/assets/presets/marmin/domerl.png";
 import domerr from "@/assets/presets/marmin/domerr.png";
 import domert from "@/assets/presets/marmin/domert.png";
 import downleft from "@/assets/presets/marmin/downleft.png";
+import flapl from "@/assets/presets/marmin/flapl.png";
+import flapr from "@/assets/presets/marmin/flapr.png";
 import flaps from "@/assets/presets/marmin/flaps.png";
 import floor from "@/assets/presets/marmin/floor.png";
 import floorbranch from "@/assets/presets/marmin/floorbranch.png";
@@ -99,6 +101,18 @@ const marminPresets: Record<string, Preset> = {
     image: downleft,
     position: { pan: 15.05, tilt: -49.51, zoom: 1 },
     // modified: 2025-11-30T18:54:42.538Z
+  },
+  flapl: {
+    description: "flapl",
+    image: flapl,
+    position: { pan: 45.9, tilt: -44.44, zoom: 172 },
+    // modified: 2026-08-07T22:40:26.378Z
+  },
+  flapr: {
+    description: "flapr",
+    image: flapr,
+    position: { pan: 60.21, tilt: -34.66, zoom: 172 },
+    // modified: 2026-08-07T22:39:46.396Z
   },
   flaps: {
     description: "Flaps",
