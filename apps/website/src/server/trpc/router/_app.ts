@@ -14,6 +14,7 @@ import { bingosRouter } from "./bingos";
 import { calendarEventsRouter } from "./calendar-events";
 import { donationsRouter } from "./donations";
 import { wishlistRouter } from "./wishlist";
+import { adminWishlistRouter } from "./admin/wishlist";
 import { formsRouter } from "./forms";
 import { notificationsRouter } from "./notifications";
 import { pushSubscriptionRouter } from "./push/subscription";
@@ -34,6 +35,7 @@ export const appRouter = router({
   adminUsersRouter: adminUsersRouter,
   donations: donationsRouter,
   wishlist: wishlistRouter,
+  adminWishlist: adminWishlistRouter,
   auth: authRouter,
   bingos: bingosRouter,
   calendarEvents: calendarEventsRouter,

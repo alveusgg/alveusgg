@@ -31,6 +31,9 @@ const DonatSuccessPage: NextPage = () => {
         setError(err instanceof Error ? err.message : "Something went wrong");
         setState("error");
       });
+    // `capture` (the tRPC mutation object) is intentionally excluded: it gets
+    // a new identity on every render, so including it would re-fire this
+    // effect continuously and risk double-submitting the capture request.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, itemId, router.isReady]);
 

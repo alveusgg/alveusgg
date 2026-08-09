@@ -8,7 +8,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 export function WishlistDonationsAdmin() {
-  const donationsQuery = trpc.wishlist.adminGetDonations.useQuery({});
+  const donationsQuery = trpc.adminWishlist.adminGetDonations.useQuery({});
 
   const donations = donationsQuery.data ?? [];
   const total = donations

@@ -39,9 +39,9 @@ export default function CategoryManager({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [slug, setSlug] = useState("");
 
-  const createMutation = trpc.wishlist.createCategory.useMutation();
-  const updateMutation = trpc.wishlist.updateCategory.useMutation();
-  const deleteMutation = trpc.wishlist.deleteCategory.useMutation();
+  const createMutation = trpc.adminWishlist.createCategory.useMutation();
+  const updateMutation = trpc.adminWishlist.updateCategory.useMutation();
+  const deleteMutation = trpc.adminWishlist.deleteCategory.useMutation();
 
   const editingCategory = editingId
     ? categories.find((c) => c.id === editingId)

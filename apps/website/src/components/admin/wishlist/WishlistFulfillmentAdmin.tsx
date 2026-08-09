@@ -11,10 +11,10 @@ import IconExternal from "@/icons/IconExternal";
 export function WishlistFulfillmentAdmin() {
   const [tab, setTab] = useState<"funded" | "messages">("funded");
 
-  const fundedQuery = trpc.wishlist.adminGetFullyFundedProducts.useQuery();
-  const messagesQuery = trpc.wishlist.adminGetDonations.useQuery({ unreadMessagesOnly: true });
-  const markOpened = trpc.wishlist.markAsOpened.useMutation();
-  const markRead = trpc.wishlist.markMessageRead.useMutation();
+  const fundedQuery = trpc.adminWishlist.adminGetFullyFundedProducts.useQuery();
+  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({ unreadMessagesOnly: true });
+  const markOpened = trpc.adminWishlist.markAsOpened.useMutation();
+  const markRead = trpc.adminWishlist.markMessageRead.useMutation();
 
   return (
     <div>

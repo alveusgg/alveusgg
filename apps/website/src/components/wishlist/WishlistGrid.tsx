@@ -6,6 +6,9 @@ import { classes } from "@/utils/classes";
 import IconCheck from "@/icons/IconCheck";
 import IconGift from "@/icons/IconGift";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
+import IconArrowRight from "@/icons/IconArrowRight";
+import Link from "@/components/content/Link";
+import useLocaleString from "@/hooks/locale";
 
 type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
 
@@ -38,8 +41,8 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
 
 function GoalProgressBar({ raisedCents, goalCents }: { raisedCents: number; goalCents: number }) {
   const pct = goalCents > 0 ? Math.min(100, Math.round((raisedCents / goalCents) * 100)) : 0;
-  const raised = (raisedCents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 });
-  const goal = (goalCents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 });
+  const raised = useLocaleString(Math.round(raisedCents / 100));
+  const goal = useLocaleString(Math.round(goalCents / 100));
   return (
     <div className="mt-1">
       <div className="flex justify-between text-xs text-gray-400 mb-1">
@@ -152,8 +155,9 @@ export default function WishlistGrid({ items, loading }: Props) {
 
               <div className="mt-auto pt-1 flex flex-col gap-1">
                 {isFulfilled ? (
-                  <button disabled className="w-full text-center text-xs font-medium py-2 px-4 rounded-lg bg-gray-100 text-gray-400 cursor-default">
-                    Fulfilled ✓
+                  <button disabled className="w-full flex items-center justify-center gap-1 text-xs font-medium py-2 px-4 rounded-lg bg-gray-100 text-gray-400 cursor-default">
+                    <IconCheck className="size-3.5" />
+                    Fulfilled
                   </button>
                 ) : isGoal ? (
                   <WishlistDonateButton
@@ -163,14 +167,15 @@ export default function WishlistGrid({ items, loading }: Props) {
                   />
                 ) : (
                   <>
-                    <a
+                    <Link
                       href={item.url ?? "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full text-center text-xs font-medium py-2 px-4 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors"
+                      external
+                      custom
+                      className="flex items-center justify-center gap-1 w-full text-center text-xs font-medium py-2 px-4 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors"
                     >
-                      View &amp; purchase →
-                    </a>
+                      View &amp; purchase
+                      <IconArrowRight className="size-3" />
+                    </Link>
                     <div className="flex items-center gap-2 my-0.5">
                       <div className="flex-1 h-px bg-gray-100" />
                       <span className="text-xs text-gray-300">or</span>

@@ -14,7 +14,7 @@ export function WishlistItemsAdmin() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const itemsQuery = trpc.wishlist.adminGetAllItems.useQuery({});
+  const itemsQuery = trpc.adminWishlist.adminGetAllItems.useQuery({});
   const categoriesQuery = trpc.wishlist.getCategories.useQuery();
 
   const handleEdit = useCallback((id: string) => {

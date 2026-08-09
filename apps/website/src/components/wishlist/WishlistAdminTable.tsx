@@ -1,6 +1,7 @@
 import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import Link from "@/components/content/Link";
 import IconPencil from "@/icons/IconPencil";
 import IconArchive from "@/icons/IconArchive";
 import IconTrash from "@/icons/IconTrash";
@@ -33,7 +34,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh }: Props) {
-  const deleteItem = trpc.wishlist.deleteItem.useMutation();
+  const deleteItem = trpc.adminWishlist.deleteItem.useMutation();
 
   const handleArchive = async (id: string) => {
     if (!confirm("Archive this item? It will be hidden from the public wishlist.")) return;
@@ -140,42 +141,36 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-2">
                     {!isGoal && item.url && (
-                      <a
+                      <Link
                         href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        external
+                        custom
                         className="text-gray-400 hover:text-gray-600 transition-colors"
                         title="Open product link"
                       >
                         <IconExternal className="w-4 h-4" />
-                      </a>
+                      </Link>
                     )}
                     <button
                       onClick={() => onEdit(item.id)}
                       className="text-gray-400 hover:text-blue-600 transition-colors"
                       title="Edit"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
+                      <IconPencil className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => void handleArchive(item.id)}
                       className="text-gray-400 hover:text-orange-500 transition-colors"
                       title="Archive"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                      </svg>
+                      <IconArchive className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => void handleDelete(item.id)}
                       className="text-gray-400 hover:text-red-500 transition-colors"
                       title="Delete permanently"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      <IconTrash className="w-4 h-4" />
                     </button>
                   </div>
                 </td>
