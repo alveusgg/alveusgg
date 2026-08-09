@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
@@ -91,10 +93,11 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     {item.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={item.imageUrl}
                         alt=""
+                        width={40}
+                        height={40}
                         className="w-10 h-10 object-cover rounded-lg border border-gray-200 flex-shrink-0"
                         onError={(e) => { e.currentTarget.style.display = "none"; }}
                       />
