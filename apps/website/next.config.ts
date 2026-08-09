@@ -457,11 +457,6 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/wishlist",
-      destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
-      permanent: true,
-    },
-    {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
