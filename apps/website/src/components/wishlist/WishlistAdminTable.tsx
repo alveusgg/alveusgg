@@ -1,12 +1,11 @@
-/**
- * apps/website/src/components/wishlist/WishlistAdminTable.tsx
- *
- * v2: shows a Type column (Product vs Goal) and the "Progress" column now
- * displays dollar progress for GOAL items instead of a quantity fraction.
- */
-
-import type { WishlistItem, WishlistCategory } from "@prisma/client";
-import { trpc } from "../../utils/trpc";
+import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
+import { trpc } from "@/utils/trpc";
+import IconPencil from "@/icons/IconPencil";
+import IconArchive from "@/icons/IconArchive";
+import IconTrash from "@/icons/IconTrash";
+import IconExternal from "@/icons/IconExternal";
+import IconGift from "@/icons/IconGift";
+import IconBox from "@/icons/IconBox";
 
 type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
 
@@ -60,9 +59,7 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
   if (items.length === 0) {
     return (
       <div className="text-center py-16 text-gray-400">
-        <svg className="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-        </svg>
+        <IconGift className="w-12 h-12 mx-auto mb-3 opacity-30" />
         <p className="text-sm">No wishlist items yet. Add one to get started.</p>
       </div>
     );
@@ -97,13 +94,11 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                         src={item.imageUrl}
                         alt=""
                         className="w-10 h-10 object-cover rounded-lg border border-gray-200 flex-shrink-0"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        onError={(e) => { e.currentTarget.style.display = "none"; }}
                       />
                     ) : (
                       <div className="w-10 h-10 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                        <IconGift className="w-5 h-5 text-gray-300" />
                       </div>
                     )}
                     <div className="min-w-0">
@@ -117,7 +112,9 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                     isGoal ? "bg-amber-50 text-amber-800" : "bg-indigo-50 text-indigo-700"
                   }`}>
-                    {isGoal ? "🎯 Goal" : "📦 Product"}
+                    {isGoal
+                      ? <><IconGift className="inline size-3 mr-0.5" /> Goal</>
+                      : <><IconBox className="inline size-3 mr-0.5" /> Product</>}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-gray-600">
@@ -148,9 +145,7 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                         className="text-gray-400 hover:text-gray-600 transition-colors"
                         title="Open product link"
                       >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
+                        <IconExternal className="w-4 h-4" />
                       </a>
                     )}
                     <button

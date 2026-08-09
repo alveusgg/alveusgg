@@ -1,13 +1,6 @@
-/**
- * apps/website/src/components/wishlist/WishlistDonateButton.tsx
- *
- * "Donate monetary value" button shown on each wishlist card.
- * v2: now includes an optional personal message field — shown to staff
- * in the admin donor-message dashboard and optionally read aloud on stream.
- */
-
 import { useState } from "react";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "@/utils/trpc";
+import IconPayPal from "@/icons/IconPayPal";
 
 interface Props {
   itemId: string;

@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { trpc } from "@/utils/trpc";
 
 import WishlistAdminTable from "@/components/wishlist/WishlistAdminTable";
-import WishlistItemForm from "@/components/wishlist/WishlistItemForm";
+import { WishlistItemForm } from "@/components/wishlist/WishlistItemForm";
 import CategoryManager from "@/components/wishlist/CategoryManager";
 
 type Tab = "items" | "categories";
@@ -21,7 +21,7 @@ export function WishlistItemsAdmin() {
     setShowForm(true);
   }, []);
 
-  const handleClose = useCallback(() => {
+  const handleCreateSuccess = useCallback(() => {
     setShowForm(false);
     setEditingId(null);
     void itemsQuery.refetch();
@@ -63,7 +63,7 @@ export function WishlistItemsAdmin() {
         </nav>
       </div>
 
-      {activeTab === "items" && (
+      {activeTab === "items" && !showForm && (
         <WishlistAdminTable
           items={itemsQuery.data ?? []}
           isLoading={itemsQuery.isLoading}
@@ -78,12 +78,26 @@ export function WishlistItemsAdmin() {
         />
       )}
 
-      {showForm && (
-        <WishlistItemForm
-          item={editingItem}
-          categories={categoriesQuery.data ?? []}
-          onClose={handleClose}
-        />
+      {activeTab === "items" && showForm && (
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {editingItem ? "Edit item" : "Add item"}
+            </h2>
+            <button
+              onClick={() => { setShowForm(false); setEditingId(null); }}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+          <WishlistItemForm
+            action={editingItem ? "edit" : "create"}
+            item={editingItem}
+            categories={categoriesQuery.data ?? []}
+            onCreate={handleCreateSuccess}
+          />
+        </div>
       )}
     </div>
   );

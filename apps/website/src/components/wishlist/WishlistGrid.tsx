@@ -1,13 +1,9 @@
-/**
- * apps/website/src/components/wishlist/WishlistGrid.tsx
- *
- * Public-facing card grid — includes PayPal donate button on each card.
- * v2: renders a dollar-based progress bar for GOAL items (e.g. "$1,200 of
- * $2,000 raised") instead of the quantity-based bar used for PRODUCT items.
- */
-
-import type { WishlistItem, WishlistCategory } from "@prisma/client";
-import WishlistDonateButton from "./WishlistDonateButton";
+import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
+import WishlistDonateButton from "@/components/wishlist/WishlistDonateButton";
+import { classes } from "@/utils/classes";
+import IconCheck from "@/icons/IconCheck";
+import IconGift from "@/icons/IconGift";
+import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
 
@@ -97,9 +93,7 @@ export default function WishlistGrid({ items, loading }: Props) {
             {isFulfilled && (
               <div className="absolute inset-0 bg-white/75 z-10 flex items-center justify-center pointer-events-none">
                 <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.172l7.879-7.879a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+                  <IconCheck className="w-3 h-3" />
                   Fulfilled — Thank you!
                 </span>
               </div>
@@ -112,12 +106,10 @@ export default function WishlistGrid({ items, loading }: Props) {
                   src={item.imageUrl}
                   alt={item.title}
                   className="w-full h-full object-contain p-3"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               ) : (
-                <svg className="w-14 h-14 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                </svg>
+                <IconGift className="w-14 h-14 text-gray-200" />
               )}
             </div>
 
@@ -130,7 +122,7 @@ export default function WishlistGrid({ items, loading }: Props) {
                 )}
                 {isGoal && (
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                    🎯 Funding Goal
+                    <IconGift className="inline-block size-3 mr-0.5" /> Funding Goal
                   </span>
                 )}
                 {item.category && (

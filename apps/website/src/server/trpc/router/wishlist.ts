@@ -26,7 +26,6 @@ import {
 
 import { permissions } from "@/data/permissions";
 
-import { fetchUrlMeta } from "@/utils/fetchUrlMeta";
 import { createPayPalOrder, capturePayPalOrder } from "@/utils/paypal";
 import { logDonationToNeonCrm } from "@/utils/neonCrm";
 import { notifyWishlistDonation } from "@/utils/discord";
@@ -264,11 +263,6 @@ export const wishlistRouter = router({
     }),
 
   // ── Staff (protected): Items ────────────────────────────────────────────────
-
-  fetchUrlMeta: protectedProcedure
-    .use(createCheckPermissionMiddleware(permissions.manageWishlist))
-    .input(z.object({ url: z.string().url() }))
-    .query(async ({ input }) => fetchUrlMeta(input.url)),
 
   adminGetAllItems: protectedProcedure
     .use(createCheckPermissionMiddleware(permissions.manageWishlist))
