@@ -1,138 +1,164 @@
-import { useState } from "react";
+import type { FormEvent } from "react";
+import { useCallback, useState } from "react";
+
 import type { WishlistCategory } from "@alveusgg/database";
+
+import { classes } from "@/utils/classes";
+import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
+
+import { MessageBox } from "@/components/shared/MessageBox";
+import {
+  Button,
+  defaultButtonClasses,
+  secondaryButtonClasses,
+} from "@/components/shared/form/Button";
+import { FieldGroup } from "@/components/shared/form/FieldGroup";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { TextField } from "@/components/shared/form/TextField";
+
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
 
 type CategoryWithCount = WishlistCategory & { _count: { items: number } };
 
-interface Props {
+type CategoryManagerProps = {
   categories: CategoryWithCount[];
   onRefresh: () => void;
-}
-
-interface FormState {
-  name: string;
-  slug: string;
-  sortOrder: number;
-}
+  className?: string;
+};
 
 const toSlug = (name: string) =>
   name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
-export default function CategoryManager({ categories, onRefresh }: Props) {
-  const [form, setForm] = useState<FormState>({ name: "", slug: "", sortOrder: 0 });
+export default function CategoryManager({
+  categories,
+  onRefresh,
+  className,
+}: CategoryManagerProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [slug, setSlug] = useState("");
 
-  const create = trpc.wishlist.createCategory.useMutation();
-  const update = trpc.wishlist.updateCategory.useMutation();
-  const deleteCategory = trpc.wishlist.deleteCategory.useMutation();
+  const createMutation = trpc.wishlist.createCategory.useMutation();
+  const updateMutation = trpc.wishlist.updateCategory.useMutation();
+  const deleteMutation = trpc.wishlist.deleteCategory.useMutation();
 
-  const handleNameChange = (name: string) => {
-    setForm((f) => ({ ...f, name, slug: editingId ? f.slug : toSlug(name) }));
-  };
+  const editingCategory = editingId
+    ? categories.find((c) => c.id === editingId)
+    : undefined;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    try {
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+
+      const name = getStringFromFormData(formData, "name");
+      const slugValue = getStringFromFormData(formData, "slug") || toSlug(name);
+      const sortOrder = Number(getStringFromFormData(formData, "sortOrder")) || 0;
+
       if (editingId) {
-        await update.mutateAsync({ id: editingId, ...form });
+        updateMutation.mutate(
+          { id: editingId, name, slug: slugValue, sortOrder },
+          {
+            onSuccess: () => {
+              setEditingId(null);
+              setSlug("");
+              onRefresh();
+            },
+          },
+        );
       } else {
-        await create.mutateAsync(form);
+        createMutation.mutate(
+          { name, slug: slugValue, sortOrder },
+          {
+            onSuccess: () => {
+              setSlug("");
+              onRefresh();
+            },
+          },
+        );
       }
-      setForm({ name: "", slug: "", sortOrder: 0 });
-      setEditingId(null);
-      onRefresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
-    }
-  };
+    },
+    [editingId, createMutation, updateMutation, onRefresh],
+  );
 
   const startEdit = (cat: CategoryWithCount) => {
     setEditingId(cat.id);
-    setForm({ name: cat.name, slug: cat.slug, sortOrder: cat.sortOrder });
+    setSlug(cat.slug);
   };
 
-  const handleDelete = async (id: string, count: number) => {
-    const msg = count > 0
-      ? `Delete this category? The ${count} item(s) in it will become uncategorized.`
-      : "Delete this category?";
-    if (!confirm(msg)) return;
-    await deleteCategory.mutateAsync({ id });
-    onRefresh();
+  const cancelEdit = () => {
+    setEditingId(null);
+    setSlug("");
   };
 
-  const isSaving = create.isLoading || update.isLoading;
+  const isSaving = createMutation.isLoading || updateMutation.isLoading;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Form */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">
-          {editingId ? "Edit Category" : "Add Category"}
-        </h3>
-        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Name</label>
-            <input
-              required
-              value={form.name}
-              onChange={(e) => handleNameChange(e.target.value)}
+    <div className={classes("grid grid-cols-1 md:grid-cols-2 gap-6", className)}>
+      <div>
+        {createMutation.error && (
+          <MessageBox variant="failure" className="mb-3">
+            <pre>{createMutation.error.message}</pre>
+          </MessageBox>
+        )}
+        {updateMutation.error && (
+          <MessageBox variant="failure" className="mb-3">
+            <pre>{updateMutation.error.message}</pre>
+          </MessageBox>
+        )}
+
+        <form
+          key={editingId ?? "create"}
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+        >
+          <Fieldset legend={editingId ? "Edit Category" : "Add Category"}>
+            <TextField
+              label="Name"
+              name="name"
+              defaultValue={editingCategory?.name ?? ""}
               placeholder="e.g. Food & Enrichment"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              isRequired
             />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Slug</label>
-            <input
-              required
-              value={form.slug}
-              onChange={(e) => setForm((f) => ({ ...f, slug: toSlug(e.target.value) }))}
+            <TextField
+              label="Slug"
+              name="slug"
+              inputClassName="font-mono"
+              value={slug}
+              onChange={(value) => setSlug(toSlug(value))}
               placeholder="food-enrichment"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 font-mono"
+              isRequired
             />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Sort Order</label>
-            <input
-              type="number"
-              value={form.sortOrder}
-              onChange={(e) => setForm((f) => ({ ...f, sortOrder: Number(e.target.value) }))}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-            />
-          </div>
+            <FieldGroup>
+              <TextField
+                label="Sort order"
+                name="sortOrder"
+                type="number"
+                inputMode="numeric"
+                defaultValue={String(editingCategory?.sortOrder ?? 0)}
+              />
+            </FieldGroup>
+          </Fieldset>
 
-          {error && (
-            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-2 py-1">{error}</p>
-          )}
-
-          <div className="flex gap-2 pt-1">
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="flex-1 px-3 py-2 text-sm font-medium text-white bg-green-700 rounded-lg hover:bg-green-800 disabled:opacity-50 transition-colors"
-            >
+          <div className="flex gap-2">
+            <Button type="submit" className={defaultButtonClasses} disabled={isSaving}>
               {isSaving ? "Saving…" : editingId ? "Save" : "Add Category"}
-            </button>
+            </Button>
             {editingId && (
-              <button
-                type="button"
-                onClick={() => { setEditingId(null); setForm({ name: "", slug: "", sortOrder: 0 }); }}
-                className="px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-              >
+              <Button type="button" className={secondaryButtonClasses} onClick={cancelEdit}>
                 Cancel
-              </button>
+              </Button>
             )}
           </div>
         </form>
       </div>
 
-      {/* List */}
       <div>
         {categories.length === 0 ? (
           <p className="text-sm text-gray-400 py-8 text-center">No categories yet.</p>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {categories.map((cat) => (
               <div
                 key={cat.id}
@@ -140,19 +166,34 @@ export default function CategoryManager({ categories, onRefresh }: Props) {
               >
                 <div>
                   <p className="text-sm font-medium text-gray-900">{cat.name}</p>
-                  <p className="text-xs text-gray-400">{cat.slug} · {cat._count.items} items</p>
+                  <p className="text-xs text-gray-400">
+                    {cat.slug} · {cat._count.items} items
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => startEdit(cat)} className="text-gray-400 hover:text-blue-600 transition-colors">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                  <button onClick={() => void handleDelete(cat.id, cat._count.items)} className="text-gray-400 hover:text-red-500 transition-colors">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                <div className="flex items-center gap-1">
+                  <Button
+                    type="button"
+                    size="small"
+                    width="auto"
+                    className="bg-transparent text-gray-400 hover:text-blue-600"
+                    onClick={() => startEdit(cat)}
+                  >
+                    <IconPencil className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="small"
+                    width="auto"
+                    className="bg-transparent text-gray-400 hover:text-red-500"
+                    confirmationMessage={
+                      cat._count.items > 0
+                        ? `Delete this category? The ${cat._count.items} item(s) in it will become uncategorized.`
+                        : "Delete this category?"
+                    }
+                    onClick={() => deleteMutation.mutate({ id: cat.id }, { onSuccess: onRefresh })}
+                  >
+                    <IconTrash className="size-4" />
+                  </Button>
                 </div>
               </div>
             ))}

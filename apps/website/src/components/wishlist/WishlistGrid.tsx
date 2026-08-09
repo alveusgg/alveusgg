@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
 import WishlistDonateButton from "@/components/wishlist/WishlistDonateButton";
 import { classes } from "@/utils/classes";
@@ -86,9 +88,10 @@ export default function WishlistGrid({ items, loading }: Props) {
         return (
           <div
             key={item.id}
-            className={`relative rounded-2xl border bg-white overflow-hidden flex flex-col transition-shadow hover:shadow-md ${
-              isFulfilled ? "border-green-200" : "border-gray-100"
-            }`}
+            className={classes(
+              "relative rounded-2xl border bg-white overflow-hidden flex flex-col transition-shadow hover:shadow-md",
+              isFulfilled ? "border-green-200" : "border-gray-100",
+            )}
           >
             {isFulfilled && (
               <div className="absolute inset-0 bg-white/75 z-10 flex items-center justify-center pointer-events-none">
@@ -99,13 +102,14 @@ export default function WishlistGrid({ items, loading }: Props) {
               </div>
             )}
 
-            <div className="h-44 bg-gray-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="relative h-44 bg-gray-50 flex items-center justify-center overflow-hidden flex-shrink-0">
               {item.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={item.imageUrl}
                   alt={item.title}
-                  className="w-full h-full object-contain p-3"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 320px"
+                  className="object-contain p-3"
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               ) : (
@@ -116,7 +120,7 @@ export default function WishlistGrid({ items, loading }: Props) {
             <div className="p-4 flex flex-col flex-1 gap-2">
               <div className="flex flex-wrap items-center gap-1.5">
                 {priority && (
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${priority.cls}`}>
+                  <span className={classes("text-xs font-medium px-2 py-0.5 rounded-full border", priority.cls)}>
                     {priority.label}
                   </span>
                 )}

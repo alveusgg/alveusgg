@@ -1,18 +1,11 @@
-/**
- * apps/website/src/pages/wishlist/index.tsx
- *
- * Public-facing wishlist page for alveussanctuary.org.
- * Follows the site's existing page layout conventions.
- */
-
 import type { NextPage } from "next";
-import Head from "next/head";
+import Meta from "@/components/content/Meta";
 import Link from "next/link";
 import { useState } from "react";
-import { trpc } from "../../utils/trpc";
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
-import WishlistGrid from "../../components/wishlist/WishlistGrid";
+import { trpc } from "@/utils/trpc";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import WishlistGrid from "@/components/wishlist/WishlistGrid";
 
 const PRIORITY_ORDER = { URGENT: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 
@@ -40,13 +33,10 @@ const WishlistPage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Wishlist | Alveus Sanctuary</title>
-        <meta
-          name="description"
-          content="Help support Alveus Sanctuary's animal ambassadors by purchasing items from our wishlist. Every contribution makes a difference!"
-        />
-      </Head>
+      <Meta
+        title="Wishlist"
+        description="Help support Alveus Sanctuary's animal ambassadors by purchasing items from our wishlist. Every contribution makes a difference!"
+      />
 
       <Section>
         {/* Hero */}

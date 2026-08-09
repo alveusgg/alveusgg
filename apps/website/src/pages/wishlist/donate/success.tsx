@@ -1,17 +1,10 @@
-/**
- * apps/website/src/pages/wishlist/donate/success.tsx
- *
- * Landing page after PayPal redirects the donor back.
- * Captures the payment and shows a thank-you message.
- */
-
 import type { NextPage } from "next";
-import Head from "next/head";
+import Meta from "@/components/content/Meta";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { trpc } from "../../../utils/trpc";
-import Section from "../../../components/content/Section";
+import { trpc } from "@/utils/trpc";
+import Section from "@/components/content/Section";
 
 type State = "loading" | "success" | "error";
 
@@ -43,9 +36,7 @@ const DonatSuccessPage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Thank You | Alveus Sanctuary</title>
-      </Head>
+      <Meta title="Thank You" />
       <Section>
         <div className="max-w-md mx-auto text-center py-16">
           {state === "loading" && (

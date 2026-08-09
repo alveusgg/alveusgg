@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 import WishlistAdminTable from "@/components/wishlist/WishlistAdminTable";
@@ -51,11 +52,12 @@ export function WishlistItemsAdmin() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`pb-3 text-sm font-medium capitalize border-b-2 transition-colors ${
+              className={classes(
+                "pb-3 text-sm font-medium capitalize border-b-2 transition-colors",
                 activeTab === tab
                   ? "border-green-700 text-green-700"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
+                  : "border-transparent text-gray-500 hover:text-gray-700",
+              )}
             >
               {tab}
             </button>

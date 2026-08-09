@@ -1,4 +1,5 @@
 import type { WishlistItem, WishlistCategory } from "@alveusgg/database";
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 import IconPencil from "@/icons/IconPencil";
 import IconArchive from "@/icons/IconArchive";
@@ -109,9 +110,10 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                    isGoal ? "bg-amber-50 text-amber-800" : "bg-indigo-50 text-indigo-700"
-                  }`}>
+                  <span className={classes(
+                    "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
+                    isGoal ? "bg-amber-50 text-amber-800" : "bg-indigo-50 text-indigo-700",
+                  )}>
                     {isGoal
                       ? <><IconGift className="inline size-3 mr-0.5" /> Goal</>
                       : <><IconBox className="inline size-3 mr-0.5" /> Product</>}
@@ -121,12 +123,12 @@ export default function WishlistAdminTable({ items, isLoading, onEdit, onRefresh
                   {item.category?.name ?? <span className="text-gray-300">—</span>}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${PRIORITY_BADGE[item.priority] ?? ""}`}>
+                  <span className={classes("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_BADGE[item.priority])}>
                     {item.priority.charAt(0) + item.priority.slice(1).toLowerCase()}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[item.status] ?? ""}`}>
+                  <span className={classes("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium", STATUS_BADGE[item.status])}>
                     {item.status === "PARTIALLY_FULFILLED" ? "Partial" : item.status.charAt(0) + item.status.slice(1).toLowerCase()}
                   </span>
                 </td>

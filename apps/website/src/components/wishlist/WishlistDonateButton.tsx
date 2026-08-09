@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 import IconPayPal from "@/icons/IconPayPal";
 
@@ -112,11 +113,12 @@ export default function WishlistDonateButton({ itemId, itemTitle, suggestedAmoun
                   <button
                     key={preset}
                     onClick={() => setAmount(preset)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    className={classes(
+                      "px-3 py-1 rounded-full text-xs font-medium border transition-colors",
                       amount === preset
                         ? "bg-blue-900 text-white border-blue-900"
-                        : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50"
-                    }`}
+                        : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50",
+                    )}
                   >
                     ${preset}
                   </button>
@@ -143,9 +145,10 @@ export default function WishlistDonateButton({ itemId, itemTitle, suggestedAmoun
               onChange={(e) => { setEmail(e.target.value); validateEmail(e.target.value); }}
               onBlur={(e) => validateEmail(e.target.value)}
               placeholder="you@example.com"
-              className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-1 ${
-                emailError ? "border-red-400" : "border-gray-300"
-              }`}
+              className={classes(
+                "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-1",
+                emailError ? "border-red-400" : "border-gray-300",
+              )}
             />
             {emailError && <p className="text-xs text-red-500 mb-2">{emailError}</p>}
 

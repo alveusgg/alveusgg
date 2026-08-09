@@ -1,6 +1,12 @@
 import { useState } from "react";
 
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+
+import { Button, defaultButtonClasses, secondaryButtonClasses } from "@/components/shared/form/Button";
+
+import IconAmazon from "@/icons/IconAmazon";
+import IconExternal from "@/icons/IconExternal";
 
 export function WishlistFulfillmentAdmin() {
   const [tab, setTab] = useState<"funded" | "messages">("funded");
@@ -10,33 +16,29 @@ export function WishlistFulfillmentAdmin() {
   const markOpened = trpc.wishlist.markAsOpened.useMutation();
   const markRead = trpc.wishlist.markMessageRead.useMutation();
 
-  const handleMarkOpened = async (id: string) => {
-    await markOpened.mutateAsync({ id });
-    void fundedQuery.refetch();
-  };
-
-  const handleMarkRead = async (donationOrderId: string) => {
-    await markRead.mutateAsync({ donationOrderId });
-    void messagesQuery.refetch();
-  };
-
   return (
     <div>
       <div className="border-b border-gray-200 mb-6">
         <nav className="-mb-px flex gap-6">
           <button
             onClick={() => setTab("funded")}
-            className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
-              tab === "funded" ? "border-green-700 text-green-700" : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
+            className={classes(
+              "pb-3 text-sm font-medium border-b-2 transition-colors",
+              tab === "funded"
+                ? "border-green-700 text-green-700"
+                : "border-transparent text-gray-500 hover:text-gray-700",
+            )}
           >
             Fully funded ({fundedQuery.data?.items.length ?? 0})
           </button>
           <button
             onClick={() => setTab("messages")}
-            className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
-              tab === "messages" ? "border-green-700 text-green-700" : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
+            className={classes(
+              "pb-3 text-sm font-medium border-b-2 transition-colors",
+              tab === "messages"
+                ? "border-green-700 text-green-700"
+                : "border-transparent text-gray-500 hover:text-gray-700",
+            )}
           >
             Unread donor messages ({messagesQuery.data?.length ?? 0})
           </button>
@@ -57,9 +59,10 @@ export function WishlistFulfillmentAdmin() {
                 href={fundedQuery.data.amazonCartUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors flex-shrink-0"
+                className="flex items-center gap-1.5 px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors flex-shrink-0"
               >
-                Open pre-filled cart →
+                <IconAmazon className="size-4" />
+                Open pre-filled cart
               </a>
             </div>
           )}
@@ -80,18 +83,28 @@ export function WishlistFulfillmentAdmin() {
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {item.url && (
-                      <a href={item.url} target="_blank" rel="noopener noreferrer"
-                        className="px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <IconExternal className="size-3.5" />
                         View item
                       </a>
                     )}
-                    <button
-                      onClick={() => void handleMarkOpened(item.id)}
+                    <Button
+                      type="button"
+                      size="small"
+                      width="auto"
+                      className={defaultButtonClasses}
                       disabled={markOpened.isLoading}
-                      className="px-3 py-1.5 text-xs font-medium text-white bg-green-700 rounded-lg hover:bg-green-800 disabled:opacity-50 transition-colors"
+                      onClick={() =>
+                        markOpened.mutate({ id: item.id }, { onSuccess: () => void fundedQuery.refetch() })
+                      }
                     >
                       Mark as opened
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -119,13 +132,18 @@ export function WishlistFulfillmentAdmin() {
                       </p>
                       <p className="text-xs text-gray-400">for {d.wishlistItem?.title}</p>
                     </div>
-                    <button
-                      onClick={() => void handleMarkRead(d.id)}
+                    <Button
+                      type="button"
+                      size="small"
+                      width="auto"
+                      className={secondaryButtonClasses}
                       disabled={markRead.isLoading}
-                      className="px-3 py-1.5 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 disabled:opacity-50 transition-colors flex-shrink-0"
+                      onClick={() =>
+                        markRead.mutate({ donationOrderId: d.id }, { onSuccess: () => void messagesQuery.refetch() })
+                      }
                     >
                       Mark as read on stream
-                    </button>
+                    </Button>
                   </div>
                   <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 italic">&ldquo;{d.donorMessage}&rdquo;</p>
                 </div>

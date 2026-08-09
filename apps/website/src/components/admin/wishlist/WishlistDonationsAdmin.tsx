@@ -1,3 +1,4 @@
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -32,7 +33,7 @@ export function WishlistDonationsAdmin() {
         ].map((stat) => (
           <div key={stat.label} className="bg-gray-50 rounded-xl px-4 py-3">
             <p className="text-xs text-gray-500 mb-1">{stat.label}</p>
-            <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
+            <p className={classes("text-xl font-bold", stat.color)}>{stat.value}</p>
           </div>
         ))}
       </div>
@@ -75,7 +76,7 @@ export function WishlistDonationsAdmin() {
                     ${(d.capturedAmount ?? d.amount).toFixed(2)}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[d.status] ?? ""}`}>
+                    <span className={classes("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium", STATUS_BADGE[d.status])}>
                       {d.status === "CAPTURED" ? "Captured" : d.status}
                     </span>
                     {d.paypalTransactionId && (
