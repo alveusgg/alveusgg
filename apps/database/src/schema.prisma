@@ -1,4 +1,4 @@
-generator client {
+﻿generator client {
   provider   = "prisma-client"
   engineType = "client"
   output     = "./generated"

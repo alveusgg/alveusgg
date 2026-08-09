@@ -1,4 +1,4 @@
-import { resolve } from "node:path";
+﻿import { resolve } from "node:path";
 
 import type { NextConfig } from "next";
 import { withSuperjson } from "next-superjson";
@@ -88,7 +88,7 @@ const config: NextConfig = {
       },
       // S3 - File Storage
       s3Pattern,
-      // Wishlist — retailer product image CDNs
+      // Wishlist â€” retailer product image CDNs
       {
         protocol: "https",
         hostname: "m.media-amazon.com",
@@ -129,7 +129,6 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "i.ibb.co",
       },
-    ],
     ],
     // Allow localhost requests if the S3 pattern requires it
     dangerouslyAllowLocalIP: s3Pattern.hostname === "localhost",
