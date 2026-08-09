@@ -12,7 +12,7 @@ export function WishlistFulfillmentAdmin() {
   const [tab, setTab] = useState<"funded" | "messages">("funded");
 
   const fundedQuery = trpc.adminWishlist.adminGetFullyFundedProducts.useQuery();
-  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({ unreadMessagesOnly: true });
+  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({ status: "CAPTURED", unreadMessagesOnly: true });
   const markOpened = trpc.adminWishlist.markAsOpened.useMutation();
   const markRead = trpc.adminWishlist.markMessageRead.useMutation();
 

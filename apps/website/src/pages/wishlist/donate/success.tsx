@@ -8,7 +8,7 @@ import Section from "@/components/content/Section";
 
 type State = "loading" | "success" | "error";
 
-const DonatSuccessPage: NextPage = () => {
+const DonateSuccessPage: NextPage = () => {
   const router = useRouter();
   const { orderId, itemId } = router.query as { orderId?: string; itemId?: string };
 
@@ -108,4 +108,4 @@ const DonatSuccessPage: NextPage = () => {
   );
 };
 
-export default DonatSuccessPage;
+export default DonateSuccessPage;

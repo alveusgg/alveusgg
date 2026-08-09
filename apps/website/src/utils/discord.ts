@@ -66,11 +66,18 @@ export async function notifyWishlistDonation(
   };
 
   try {
-    await fetch(webhookUrl, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "Wishlist Bot", embeds: [embed] }),
     });
+    // fetch() only rejects on network failure — a rejected payload,
+    // invalid webhook URL, or rate limit still resolves normally with a
+    // non-2xx status, so it must be checked explicitly or those failures
+    // are silently treated as successful notifications.
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned ${response.status}`);
+    }
   } catch (err) {
     // Never let a Discord failure break the donation flow — just log it.
     console.error("Discord wishlist webhook failed:", err);
@@ -103,11 +110,14 @@ export async function sendWishlistDigest(
   };
 
   try {
-    await fetch(webhookUrl, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "Wishlist Bot", embeds: [embed] }),
     });
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned ${response.status}`);
+    }
   } catch (err) {
     console.error("Discord wishlist digest webhook failed:", err);
   }

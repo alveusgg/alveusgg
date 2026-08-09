@@ -1,53 +1,84 @@
 /**
- * apps/website/src/lib/paypal.ts
+ * PayPal Orders v2 API integration + webhook signature verification.
  *
- * PayPal Orders API v2 integration for wishlist item donations.
- * Uses PayPal's server-side SDK pattern — no new npm packages needed,
- * just fetch calls to PayPal's REST API.
+ * NOTE: createPayPalOrder/capturePayPalOrder implement PayPal's documented
+ * REST API shape but have not been exercised against live PayPal
+ * credentials/sandbox — same caveat as the rest of this integration.
+ * verifyPayPalWebhook follows PayPal's documented verify-webhook-signature
+ * endpoint: https://developer.paypal.com/api/rest/webhooks/rest/
  */
 
-const PAYPAL_BASE =
-  process.env.PAYPAL_ENV === "production"
+const PAYPAL_API_BASE =
+  process.env.PAYPAL_ENV === "live"
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
-// ─── Token cache (in-memory, reused across requests) ─────────────────────────
-
-let _token: { value: string; expiresAt: number } | null = null;
-
 async function getAccessToken(): Promise<string> {
-  if (_token && Date.now() < _token.expiresAt - 60_000) return _token.value;
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+  if (!clientId || !clientSecret) {
+    throw new Error("PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET not configured");
+  }
 
-  const credentials = Buffer.from(
-    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
-  ).toString("base64");
-
-  const res = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
+  const res = await fetch(`${PAYPAL_API_BASE}/v1/oauth2/token`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${credentials}`,
+      Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: "grant_type=client_credentials",
   });
 
   if (!res.ok) throw new Error(`PayPal auth failed: ${res.status}`);
-
-  const data = (await res.json()) as { access_token: string; expires_in: number };
-  _token = { value: data.access_token, expiresAt: Date.now() + data.expires_in * 1000 };
-  return _token.value;
+  const data = (await res.json()) as { access_token: string };
+  return data.access_token;
 }
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface CreateOrderOptions {
   wishlistItemId: string;
   wishlistItemTitle: string;
-  amount: number; // in USD
+  amount: number;
   donorName?: string;
   donorEmail?: string;
   returnUrl: string;
   cancelUrl: string;
+}
+
+export async function createPayPalOrder(
+  opts: CreateOrderOptions,
+): Promise<{ orderId: string; approvalUrl: string }> {
+  const token = await getAccessToken();
+
+  const res = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          custom_id: opts.wishlistItemId,
+          description: `Wishlist donation: ${opts.wishlistItemTitle}`.slice(0, 127),
+          amount: { currency_code: "USD", value: opts.amount.toFixed(2) },
+        },
+      ],
+      application_context: {
+        return_url: opts.returnUrl,
+        cancel_url: opts.cancelUrl,
+        user_action: "PAY_NOW",
+      },
+    }),
+  });
+
+  if (!res.ok) throw new Error(`PayPal order creation failed: ${res.status}`);
+  const data = (await res.json()) as { id: string; links: { rel: string; href: string }[] };
+
+  const approvalUrl = data.links.find((l) => l.rel === "approve")?.href;
+  if (!approvalUrl) throw new Error("PayPal response missing approval link");
+
+  return { orderId: data.id, approvalUrl };
 }
 
 export interface CaptureResult {
@@ -59,78 +90,10 @@ export interface CaptureResult {
   transactionId: string | null;
 }
 
-// ─── Create a PayPal order ────────────────────────────────────────────────────
-
-export async function createPayPalOrder(opts: CreateOrderOptions): Promise<{
-  orderId: string;
-  approvalUrl: string;
-}> {
-  const token = await getAccessToken();
-
-  const body = {
-    intent: "CAPTURE",
-    purchase_units: [
-      {
-        reference_id: opts.wishlistItemId,
-        description: `Donation for Alveus Sanctuary wishlist item: ${opts.wishlistItemTitle}`,
-        custom_id: opts.wishlistItemId,
-        amount: {
-          currency_code: "USD",
-          value: opts.amount.toFixed(2),
-        },
-        payee: {
-          // Your PayPal merchant email, set in env
-          email_address: process.env.PAYPAL_MERCHANT_EMAIL,
-        },
-        soft_descriptor: "ALVEUS SANCTUARY",
-      },
-    ],
-    payment_source: {
-      paypal: {
-        experience_context: {
-          brand_name: "Alveus Sanctuary",
-          locale: "en-US",
-          landing_page: "BILLING",
-          user_action: "PAY_NOW",
-          return_url: opts.returnUrl,
-          cancel_url: opts.cancelUrl,
-        },
-      },
-    },
-  };
-
-  const res = await fetch(`${PAYPAL_BASE}/v2/checkout/orders`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "PayPal-Request-Id": `alveus-${opts.wishlistItemId}-${Date.now()}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`PayPal createOrder failed: ${err}`);
-  }
-
-  const data = (await res.json()) as {
-    id: string;
-    links: Array<{ rel: string; href: string }>;
-  };
-
-  const approvalLink = data.links.find((l) => l.rel === "payer-action");
-  if (!approvalLink) throw new Error("No approval URL in PayPal response");
-
-  return { orderId: data.id, approvalUrl: approvalLink.href };
-}
-
-// ─── Capture a PayPal order (called after payer approves) ─────────────────────
-
 export async function capturePayPalOrder(orderId: string): Promise<CaptureResult> {
   const token = await getAccessToken();
 
-  const res = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${orderId}/capture`, {
+  const res = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -138,73 +101,90 @@ export async function capturePayPalOrder(orderId: string): Promise<CaptureResult
     },
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`PayPal capture failed: ${err}`);
-  }
-
   const data = (await res.json()) as {
     status: string;
-    purchase_units: Array<{
-      reference_id: string;
-      payments: {
-        captures: Array<{
-          id: string;
-          amount: { value: string };
-        }>;
+    payer?: { email_address?: string; name?: { given_name?: string; surname?: string } };
+    purchase_units?: {
+      payments?: {
+        captures?: { id: string; amount: { value: string } }[];
       };
-    }>;
-    payer: {
-      email_address?: string;
-      name?: { given_name?: string; surname?: string };
-    };
+    }[];
   };
 
-  const capture = data.purchase_units[0]?.payments?.captures?.[0];
+  const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
 
   return {
     orderId,
     status: data.status,
-    amount: parseFloat(capture?.amount?.value ?? "0"),
+    amount: capture ? parseFloat(capture.amount.value) : 0,
     payerEmail: data.payer?.email_address ?? null,
     payerName: data.payer?.name
-      ? `${data.payer.name.given_name ?? ""} ${data.payer.name.surname ?? ""}`.trim()
+      ? [data.payer.name.given_name, data.payer.name.surname].filter(Boolean).join(" ")
       : null,
     transactionId: capture?.id ?? null,
   };
 }
 
-// ─── Verify webhook signature ─────────────────────────────────────────────────
-
+/**
+ * Verifies an incoming PayPal webhook actually came from PayPal, using
+ * PayPal's server-side verify-webhook-signature endpoint (recommended over
+ * manual signature verification, since PayPal's key rotation is handled
+ * for you). Requires PAYPAL_WEBHOOK_ID — the ID assigned when the webhook
+ * is registered in the PayPal Developer Dashboard.
+ */
 export async function verifyPayPalWebhook(
   headers: Record<string, string | string[] | undefined>,
-  rawBody: string
+  rawBody: string,
 ): Promise<boolean> {
-  const token = await getAccessToken();
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID;
+  if (!webhookId) {
+    console.error("PAYPAL_WEBHOOK_ID not configured — rejecting webhook");
+    return false;
+  }
 
-  const verifyBody = {
-    auth_algo: headers["paypal-auth-algo"],
-    cert_url: headers["paypal-cert-url"],
-    transmission_id: headers["paypal-transmission-id"],
-    transmission_sig: headers["paypal-transmission-sig"],
-    transmission_time: headers["paypal-transmission-time"],
-    webhook_id: process.env.PAYPAL_WEBHOOK_ID,
-    webhook_event: JSON.parse(rawBody),
+  const header = (name: string) => {
+    const val = headers[name.toLowerCase()];
+    return Array.isArray(val) ? val[0] : val;
   };
 
-  const res = await fetch(
-    `${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(verifyBody),
-    }
-  );
+  const transmissionId = header("paypal-transmission-id");
+  const transmissionTime = header("paypal-transmission-time");
+  const certUrl = header("paypal-cert-url");
+  const authAlgo = header("paypal-auth-algo");
+  const transmissionSig = header("paypal-transmission-sig");
+
+  if (!transmissionId || !transmissionTime || !certUrl || !authAlgo || !transmissionSig) {
+    console.warn("PayPal webhook: missing required verification headers");
+    return false;
+  }
+
+  let webhookEvent: unknown;
+  try {
+    webhookEvent = JSON.parse(rawBody);
+  } catch {
+    return false;
+  }
+
+  const token = await getAccessToken();
+
+  const res = await fetch(`${PAYPAL_API_BASE}/v1/notifications/verify-webhook-signature`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      transmission_id: transmissionId,
+      transmission_time: transmissionTime,
+      cert_url: certUrl,
+      auth_algo: authAlgo,
+      transmission_sig: transmissionSig,
+      webhook_id: webhookId,
+      webhook_event: webhookEvent,
+    }),
+  });
 
   if (!res.ok) return false;
-  const result = (await res.json()) as { verification_status: string };
-  return result.verification_status === "SUCCESS";
+  const data = (await res.json()) as { verification_status: string };
+  return data.verification_status === "SUCCESS";
 }

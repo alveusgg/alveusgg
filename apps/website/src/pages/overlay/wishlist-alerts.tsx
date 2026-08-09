@@ -1,6 +1,4 @@
 /**
- * apps/website/src/pages/overlay/wishlist-alerts.tsx
- *
  * Stream overlay page — add this URL as a Browser Source in OBS/Streamlabs.
  * Transparent background, polls for new donations, pops up an animated
  * alert card for ~8 seconds whenever a new wishlist donation comes in.
@@ -13,9 +11,10 @@
  */
 
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
-import { trpc } from "../../utils/trpc";
+
+import { trpc } from "@/utils/trpc";
+import Meta from "@/components/content/Meta";
 
 interface AlertItem {
   id: string;
@@ -33,8 +32,7 @@ const OverlayPage: NextPage = () => {
   const seenIds = useRef<Set<string>>(new Set());
   const isFirstLoad = useRef(true);
 
-  // Poll for recently captured donations
-  const recentQuery = trpc.wishlist.adminGetDonations.useQuery(
+  const recentQuery = trpc.adminWishlist.adminGetDonations.useQuery(
     { status: "CAPTURED" },
     { refetchInterval: POLL_INTERVAL_MS }
   );
@@ -42,7 +40,6 @@ const OverlayPage: NextPage = () => {
   useEffect(() => {
     if (!recentQuery.data) return;
 
-    // On first load, just remember what already exists — don't alert for old donations
     if (isFirstLoad.current) {
       recentQuery.data.forEach((d) => seenIds.current.add(d.id));
       isFirstLoad.current = false;
@@ -65,22 +62,31 @@ const OverlayPage: NextPage = () => {
     ]);
   }, [recentQuery.data]);
 
-  // Pop the next queued alert when there's no current one showing
+  // Pop the next queued alert into `current` when nothing is showing.
+  // Deliberately does NOT start the dismiss timer here — see below.
   useEffect(() => {
     if (current || queue.length === 0) return;
     const [next, ...rest] = queue;
     setCurrent(next ?? null);
     setQueue(rest);
+  }, [current, queue]);
 
+  // Auto-dismiss the currently showing alert. This is a SEPARATE effect,
+  // keyed only on `current` — not `[current, queue]` like the effect
+  // above. If this timer lived in the same effect that sets `current`,
+  // the state change would immediately re-run that effect (since `current`
+  // is in its own dependency array), tearing down this timer via its
+  // cleanup function before it ever had a chance to fire, leaving the
+  // first alert stuck on screen permanently.
+  useEffect(() => {
+    if (!current) return;
     const timer = setTimeout(() => setCurrent(null), ALERT_DURATION_MS);
     return () => clearTimeout(timer);
-  }, [current, queue]);
+  }, [current]);
 
   return (
     <>
-      <Head>
-        <title>Wishlist Donation Alerts</title>
-      </Head>
+      <Meta title="Wishlist Donation Alerts" noindex />
       <div style={{
         margin: 0,
         width: "100vw",
