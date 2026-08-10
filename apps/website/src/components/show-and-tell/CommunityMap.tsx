@@ -1,4 +1,4 @@
-import { Map, Popup } from "maplibre-gl";
+import { Map, Popup, setWorkerUrl } from "maplibre-gl";
 import { useEffect, useState } from "react";
 
 import type { LocationFeature } from "@/server/db/show-and-tell";
@@ -15,6 +15,8 @@ import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { getDefaultMarker } from "@/utils/geolocation";
+
+setWorkerUrl("/maplibre-gl/maplibre-gl-worker.mjs");
 
 const MAX_ZOOM = 8;
 const TOOLTIP_MIN_ZOOM = 3;

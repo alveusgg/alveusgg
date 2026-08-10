@@ -7,6 +7,7 @@ import {
   Map,
   type MapMouseEvent,
   type Marker,
+  setWorkerUrl,
 } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -28,6 +29,8 @@ import { CheckboxField } from "./CheckboxField";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+
+setWorkerUrl("/maplibre-gl/maplibre-gl-worker.mjs");
 
 /**
  * @param name Unique name of the element
