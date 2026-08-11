@@ -1,3 +1,4 @@
+import abovedoor from "@/assets/presets/marmin/abovedoor.png";
 import behind from "@/assets/presets/marmin/behind.png";
 import domel from "@/assets/presets/marmin/domel.png";
 import domell from "@/assets/presets/marmin/domell.png";
@@ -35,6 +36,12 @@ const marminPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 107.61, tilt: -22.9, zoom: 1 },
     // modified: 2025-11-07T22:27:17.457Z
+  },
+  abovedoor: {
+    description: "abovedoor",
+    image: abovedoor,
+    position: { pan: -158.55, tilt: -38.38, zoom: 1 },
+    // modified: 2026-08-10T21:06:57.870Z
   },
   behind: {
     description: "Behind",

@@ -17,6 +17,7 @@ import middleplatform from "@/assets/presets/serval/middleplatform.png";
 import middleplatformbz from "@/assets/presets/serval/middleplatformbz.png";
 import middleplatformt from "@/assets/presets/serval/middleplatformt.png";
 import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
+import middleplatformtlz from "@/assets/presets/serval/middleplatformtlz.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
@@ -148,6 +149,12 @@ const servalPresets: Record<string, Preset> = {
     image: middleplatformtl,
     position: { pan: -103.13, tilt: -7.61, zoom: 395 },
     // modified: 2026-04-08T14:51:46.501Z
+  },
+  middleplatformtlz: {
+    description: "middleplatformtlz",
+    image: middleplatformtlz,
+    position: { pan: -97.42, tilt: -8.96, zoom: 3032 },
+    // modified: 2026-08-10T21:27:54.916Z
   },
   middleplatformtr: {
     description: "middleplatformtr",

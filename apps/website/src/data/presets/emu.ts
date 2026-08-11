@@ -6,6 +6,7 @@ import left from "@/assets/presets/emu/left.png";
 import leftcorner from "@/assets/presets/emu/leftcorner.png";
 import leftgate from "@/assets/presets/emu/leftgate.png";
 import maingate from "@/assets/presets/emu/maingate.png";
+import pedro from "@/assets/presets/emu/pedro.png";
 import pond from "@/assets/presets/emu/pond.png";
 import pondleft from "@/assets/presets/emu/pondleft.png";
 import right from "@/assets/presets/emu/right.png";
@@ -62,6 +63,12 @@ const emuPresets: Record<string, Preset> = {
     image: maingate,
     position: { pan: -22.76, tilt: -6.83, zoom: 813 },
     // modified: 2026-06-01T22:27:44.214Z
+  },
+  pedro: {
+    description: "pedro",
+    image: pedro,
+    position: { pan: -55.5, tilt: -4.33, zoom: 2559 },
+    // modified: 2026-08-10T07:34:52.403Z
   },
   pond: {
     description: "pond",
