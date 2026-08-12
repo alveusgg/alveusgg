@@ -31,7 +31,7 @@
     "@sentry/cloudflare": "^10.69.0",
     "@trpc/client": "^11.18.0",
     "@trpc/server": "^11.18.0",
-    "hono": "^4.12.34",
+    "hono": "^4.13.0",
     "superjson": "^2.2.6",
     "zod": "^4.4.3"
   }
