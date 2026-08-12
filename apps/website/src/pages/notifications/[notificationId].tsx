@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-location-assign-relative-destination -- notification links are almost always external */
 import { DateTime } from "luxon";
 import type {
   GetStaticPropsContext,
