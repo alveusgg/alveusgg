@@ -65,6 +65,7 @@ import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sidemen from "@/assets/collaborations/sidemen.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
@@ -102,6 +103,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Sidemen",
+      link: "https://www.youtube.com/@Sidemen",
+      date: new Date("2026-07-26"),
+      videoId: "SPqt2U92mEE",
+      creators: [
+        {
+          name: "Sidemen",
+          image: sidemen,
+          popularity: 23_400_000, // YouTube subscribers, 2026-08-15
+        },
+      ],
+    },
     {
       name: "Adapt",
       link: "https://www.twitch.tv/adapt",
