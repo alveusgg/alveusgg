@@ -1,4 +1,5 @@
 import cubby from "@/assets/presets/foxindoor/cubby.png";
+import cubbyz from "@/assets/presets/foxindoor/cubbyz.png";
 import den from "@/assets/presets/foxindoor/den.png";
 import home from "@/assets/presets/foxindoor/home.png";
 import leftcorner from "@/assets/presets/foxindoor/leftcorner.png";
@@ -23,6 +24,12 @@ const foxindoorPresets: Record<string, Preset> = {
     image: cubby,
     position: { pan: 51.42, tilt: 3.33, zoom: 7731 },
     // modified: 2026-04-18T13:11:04.772Z
+  },
+  cubbyz: {
+    description: "cubbyz",
+    image: cubbyz,
+    position: { pan: 40.83, tilt: 17.91, zoom: 9068 },
+    // modified: 2026-08-14T17:38:56.098Z
   },
   den: {
     description: "den",
