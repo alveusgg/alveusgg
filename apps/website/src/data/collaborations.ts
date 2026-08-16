@@ -19,6 +19,7 @@ import carlyIncontro from "@/assets/collaborations/carly-incontro.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
 import cdawg from "@/assets/collaborations/cdawg.png";
 import chrisnxtdoor from "@/assets/collaborations/chrisnxtdoor.png";
+import christinaAmber from "@/assets/collaborations/christina-amber.png";
 import cinna from "@/assets/collaborations/cinna.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import dailyDose from "@/assets/collaborations/daily-dose.png";
@@ -65,6 +66,7 @@ import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sidemen from "@/assets/collaborations/sidemen.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
@@ -102,6 +104,32 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Christina & Amber",
+      link: "https://www.twitch.tv/christinaandamber",
+      date: new Date("2026-08-11"),
+      videoId: "MLalNcDbE80",
+      creators: [
+        {
+          name: "Christina & Amber",
+          image: christinaAmber,
+          popularity: 146_000, // Twitch followers, 2026-08-15
+        },
+      ],
+    },
+    {
+      name: "Sidemen",
+      link: "https://www.youtube.com/@Sidemen",
+      date: new Date("2026-07-26"),
+      videoId: "SPqt2U92mEE",
+      creators: [
+        {
+          name: "Sidemen",
+          image: sidemen,
+          popularity: 23_400_000, // YouTube subscribers, 2026-08-15
+        },
+      ],
+    },
     {
       name: "Adapt",
       link: "https://www.twitch.tv/adapt",
