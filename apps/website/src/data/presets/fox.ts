@@ -4,6 +4,7 @@ import bed from "@/assets/presets/fox/bed.png";
 import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
 import belowleftplatformr from "@/assets/presets/fox/belowleftplatformr.png";
 import den1 from "@/assets/presets/fox/den1.png";
+import den1b from "@/assets/presets/fox/den1b.png";
 import den1r from "@/assets/presets/fox/den1r.png";
 import den1rampb from "@/assets/presets/fox/den1rampb.png";
 import den1t from "@/assets/presets/fox/den1t.png";
@@ -87,6 +88,12 @@ const foxPresets: Record<string, Preset> = {
     image: den1,
     position: { pan: -88.47, tilt: -2.29, zoom: 3005 },
     // modified: 2026-04-18T13:45:39.801Z
+  },
+  den1b: {
+    description: "den1b",
+    image: den1b,
+    position: { pan: -88.06, tilt: -3.01, zoom: 10297 },
+    // modified: 2026-08-15T18:24:30.824Z
   },
   den1r: {
     description: "den1r",
