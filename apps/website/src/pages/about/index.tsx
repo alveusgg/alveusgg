@@ -41,6 +41,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
+import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
 import youtube from "@/assets/in-the-news/youtube.svg";
 
@@ -177,6 +178,13 @@ const news: Record<string, News> = {
       type: "youtube",
       id: "8TieP5VgieE",
     },
+  },
+  rnz: {
+    title: "Radio New Zealand",
+    href: "https://www.rnz.co.nz/life/people/gen-z-s-jane-goodall-has-an-online-only-wildlife-sanctuary-in-texas",
+    quote:
+      "'Gen Z's Jane Goodall' has an online-only wildlife sanctuary in Texas",
+    logo: radioNewZealand,
   },
   amazon: {
     title: "Amazon Ads",
