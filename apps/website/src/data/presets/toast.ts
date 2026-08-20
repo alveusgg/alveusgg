@@ -65,8 +65,8 @@ const toastPresets: Record<string, Preset> = {
   rocksandwich: {
     description: "Rock Sandwich",
     image: rocksandwich,
-    position: { pan: -41.23, tilt: -11.32, zoom: 9800 },
-    // modified: 2025-11-30T18:58:30.610Z
+    position: { pan: -41.38, tilt: -13.95, zoom: 6727 },
+    // modified: 2026-08-19T20:27:02.553Z
   },
   toastsleep: {
     description: "toastsleep",
