@@ -81,8 +81,8 @@ const servalPresets: Record<string, Preset> = {
   insidecrate: {
     description: "insidecrate",
     image: insidecrate,
-    position: { pan: -63.96, tilt: -57.51, zoom: 3174 },
-    // modified: 2026-05-12T19:48:50.588Z
+    position: { pan: -64.19, tilt: -56.42, zoom: 2457 },
+    // modified: 2026-08-19T13:37:50.294Z
   },
   left: {
     description: "left",
