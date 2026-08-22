@@ -105,6 +105,19 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Julien",
+      link: "https://www.twitch.tv/julien",
+      date: new Date("2026-08-06"),
+      videoId: "rzka0Zdo324",
+      creators: [
+        {
+          name: "Julien",
+          image: julien,
+          popularity: 791_000, // Twitch followers, 2026-08-23
+        },
+      ],
+    },
+    {
       name: "Christina & Amber",
       link: "https://www.twitch.tv/christinaandamber",
       date: new Date("2026-08-11"),
@@ -700,13 +713,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2024-04-25"),
       videoId: "46ECIvC4MUo",
       vodId: "yWtkfbfmNGs",
-      creators: [
-        {
-          name: "Julien",
-          image: julien,
-          popularity: 760_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Julien has a more recent collaboration
     },
     {
       name: "Fuslie",
