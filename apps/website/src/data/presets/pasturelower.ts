@@ -72,8 +72,8 @@ const pasturelowerPresets: Record<string, Preset> = {
   grove2l: {
     description: "grove2l",
     image: grove2l,
-    position: { pan: -72.73, tilt: 4.75, zoom: 864 },
-    // modified: 2026-06-19T13:34:47.232Z
+    position: { pan: -72.72, tilt: 4.09, zoom: 1103 },
+    // modified: 2026-08-22T15:28:34.044Z
   },
   grove2r: {
     description: "grove2r",
