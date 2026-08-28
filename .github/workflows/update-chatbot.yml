@@ -1,5 +1,7 @@
 name: Update Chatbot
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - "main"
@@ -10,6 +12,10 @@ on:
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - ".github/workflows/update-chatbot.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   COMPOSE_PROJECT_NAME: ${{ vars.CHATBOT_COMPOSE_PROJECT_NAME }}
@@ -22,36 +28,14 @@ permissions:
   packages: read
 
 jobs:
-  update-chatbot-production:
-    name: Update Chatbot (Production)
+  deploy:
+    name: Deploy (${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }})
+    environment: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
     runs-on: ubuntu-latest
-    environment: production
-    if: github.repository == 'alveusgg/alveusgg' && github.ref == 'refs/heads/main'
+    if: github.repository == 'alveusgg/alveusgg'
+    timeout-minutes: 10
     steps:
-      - name: Update Chatbot SSH (Production)
-        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
-        with:
-          envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA,GITHUB_TOKEN
-          host: ${{ secrets.CHATBOT_HOST }}
-          username: ${{ secrets.CHATBOT_USERNAME }}
-          key: ${{ secrets.CHATBOT_KEY }}
-          port: ${{ secrets.CHATBOT_PORT }}
-          passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
-          script: |
-            set -e
-            cd $CHATBOT_PATH
-            git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
-            cd apps/chatbot
-            CHATBOT_REF_SHA=$REF_SHA docker compose up --build --detach
-            docker system prune --force
-
-  update-chatbot-preview:
-    name: Update Chatbot (Preview)
-    runs-on: ubuntu-latest
-    environment: preview
-    if: github.ref == 'refs/heads/preview'
-    steps:
-      - name: Update Chatbot SSH (Preview)
+      - name: Update Chatbot via SSH
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         with:
           envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA,GITHUB_TOKEN
