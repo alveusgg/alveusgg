@@ -43,6 +43,7 @@ jobs:
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
             CHATBOT_REF_SHA=$REF_SHA docker compose up --build --detach
+            docker system prune --force
 
   update-chatbot-preview:
     name: Update Chatbot (Preview)
@@ -65,3 +66,4 @@ jobs:
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
             CHATBOT_REF_SHA=$REF_SHA docker compose up --build --detach
+            docker system prune --force
