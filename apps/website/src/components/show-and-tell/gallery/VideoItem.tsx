@@ -1,4 +1,5 @@
 import type { JSX, ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { LinkAttachment } from "@alveusgg/database";
 
@@ -119,9 +120,43 @@ const embeds: Record<
 export const VideoItemEmbed = ({ videoAttachment }: VideoItemEmbedProps) => {
   const parsed = parseVideoUrl(videoAttachment.url);
   const config = parsed && videoPlatformConfigs[parsed.platform];
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const isScrollable = (el: Element) =>
+      ["auto", "scroll", "hidden"].includes(getComputedStyle(el).overflowX);
+
+    let scrollContainer = node.parentElement;
+    while (scrollContainer && !isScrollable(scrollContainer)) {
+      scrollContainer = scrollContainer.parentElement;
+    }
+    if (!scrollContainer) return;
+
+    const check = () => {
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      setVisible(
+        nodeRect.right > containerRect.left &&
+          nodeRect.left < containerRect.right,
+      );
+    };
+
+    check();
+    scrollContainer.addEventListener("scroll", check);
+    return () => scrollContainer.removeEventListener("scroll", check);
+  }, []);
+
   if (config) {
     const Embed = embeds[config.key];
-    return <Embed videoId={parsed.id} />;
+    return (
+      <div ref={containerRef} className="h-full">
+        {visible && <Embed videoId={parsed.id} />}
+      </div>
+    );
   }
 
   return (
