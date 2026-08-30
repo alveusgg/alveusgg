@@ -29,9 +29,15 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
     setScrollTo(open);
   }, [open]);
 
+  // Track which item is currently scrolled into view
+  const [activeKey, setActiveKey] = useState<string>();
+  const itemRefs = useRef<Record<string, HTMLDivElement>>({});
+
   // When items render in the carousel, scroll to the item that was opened
   const itemsRef = useCallback(
     (refs: Record<string, HTMLDivElement>) => {
+      itemRefs.current = refs;
+
       if (!scrollTo) return;
 
       const item = refs[scrollTo];
@@ -42,6 +48,32 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
     },
     [scrollTo],
   );
+
+  // Pause any video iframes that aren't in the item currently scrolled into view
+  useEffect(() => {
+    if (!activeKey) return;
+
+    Object.entries(itemRefs.current).forEach(([key, el]) => {
+      if (key === activeKey) return;
+
+      el.querySelectorAll("iframe").forEach((iframe) => {
+        if (!iframe.src) return;
+        const { hostname } = new URL(iframe.src);
+
+        if (hostname.endsWith("youtube-nocookie.com")) {
+          iframe.contentWindow?.postMessage(
+            JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
+            "*",
+          );
+        } else if (hostname.endsWith("streamable.com")) {
+          iframe.contentWindow?.postMessage(
+            JSON.stringify({ context: "player.js", method: "pause" }),
+            "*",
+          );
+        }
+      });
+    });
+  }, [activeKey]);
 
   // Allow clicks that go through to the backdrop to close the lightbox
   // Except when the click is part of a drag operation
@@ -112,6 +144,7 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
             buttonClassName="px-0 py-6 my-auto text-alveus-tan [&>svg]:size-8 lg:[&>svg]:size-12 hover:text-alveus-green-400"
             itemClassName="basis-full max-w-full"
             itemsRef={itemsRef}
+            onActiveKeyChange={setActiveKey}
           />
 
           <button
