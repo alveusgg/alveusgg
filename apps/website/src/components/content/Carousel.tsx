@@ -30,6 +30,8 @@ type CarouselProps = {
   // only via the arrows or programmatic scrolling. Useful when items capture
   // their own pointer gestures (e.g. a pannable canvas).
   draggable?: boolean;
+  // Tells you which item is currently visible, by its key
+  onActiveKeyChange?: (key: string | undefined) => void;
 };
 
 const overlayButtonClassName =
@@ -47,6 +49,7 @@ const Carousel = ({
   variant = "default",
   overlayClassName = "",
   draggable = true,
+  onActiveKeyChange,
 }: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
@@ -141,7 +144,18 @@ const Carousel = ({
     else if (nearLeft) setState("start");
     else if (nearRight) setState("end");
     else setState("scrolling");
-  }, [interacted]);
+
+    // Work out which item is currently scrolled into view
+    if (onActiveKeyChange) {
+      const gap =
+        Number.parseFloat(getComputedStyle(current).columnGap) ||
+        Number.parseFloat(getComputedStyle(current).gap) ||
+        0;
+      const keys = Object.keys(items);
+      const index = Math.round(current.scrollLeft / (width + gap));
+      onActiveKeyChange(keys[Math.max(0, Math.min(index, keys.length - 1))]);
+    }
+  }, [interacted, items, onActiveKeyChange]);
 
   // Run the scroll handler on load to check our current state
   // Run it on any window resize to check our state
