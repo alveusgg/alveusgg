@@ -144,7 +144,7 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
             buttonClassName="px-0 py-6 my-auto text-alveus-tan [&>svg]:size-8 lg:[&>svg]:size-12 hover:text-alveus-green-400"
             itemClassName="basis-full max-w-full"
             itemsRef={itemsRef}
-            onActiveKeyChange={setActiveKey}
+            onChange={setActiveKey}
           />
 
           <button

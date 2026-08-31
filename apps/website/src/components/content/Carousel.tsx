@@ -31,7 +31,8 @@ type CarouselProps = {
   // their own pointer gestures (e.g. a pannable canvas).
   draggable?: boolean;
   // Tells you which item is currently visible, by its key
-  onActiveKeyChange?: (key: string | undefined) => void;
+  // undefined if more than one item is visible at once
+  onChange?: (key: string | undefined) => void;
 };
 
 const overlayButtonClassName =
@@ -49,9 +50,15 @@ const Carousel = ({
   variant = "default",
   overlayClassName = "",
   draggable = true,
-  onActiveKeyChange,
+  onChange,
 }: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
+
+  // Track the latest items in a ref, so scrolled doesn't need it as a dependency
+  const latestItems = useRef(items);
+  useEffect(() => {
+    latestItems.current = items;
+  }, [items]);
 
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
@@ -146,16 +153,21 @@ const Carousel = ({
     else setState("scrolling");
 
     // Work out which item is currently scrolled into view
-    if (onActiveKeyChange) {
+    if (onChange) {
       const gap =
         Number.parseFloat(getComputedStyle(current).columnGap) ||
         Number.parseFloat(getComputedStyle(current).gap) ||
         0;
-      const keys = Object.keys(items);
-      const index = Math.round(current.scrollLeft / (width + gap));
-      onActiveKeyChange(keys[Math.max(0, Math.min(index, keys.length - 1))]);
+      const perPage = Math.round(current.clientWidth / (width + gap));
+      if (perPage > 1) {
+        onChange(undefined);
+      } else {
+        const keys = Object.keys(latestItems.current);
+        const index = Math.round(current.scrollLeft / (width + gap));
+        onChange(keys[Math.max(0, Math.min(index, keys.length - 1))]);
+      }
     }
-  }, [interacted, items, onActiveKeyChange]);
+  }, [interacted, onChange]);
 
   // Run the scroll handler on load to check our current state
   // Run it on any window resize to check our state
