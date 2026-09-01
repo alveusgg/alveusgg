@@ -19,7 +19,6 @@ import foxindoor from "../presets/foxindoor";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
-import hank from "../presets/hank";
 import littles from "../presets/littles";
 import littlesmulti from "../presets/littlesmulti";
 import macaws from "../presets/macaws";
@@ -78,7 +77,6 @@ const cameras = {
   garden,
   georgie,
   georgiewater,
-  hank,
   marmin,
   marmout,
   marmmulti,
