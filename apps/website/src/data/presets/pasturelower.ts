@@ -1,3 +1,4 @@
+import backrightcorner from "@/assets/presets/pasturelower/backrightcorner.png";
 import bigbushytree from "@/assets/presets/pasturelower/bigbushytree.png";
 import bigbushytreer from "@/assets/presets/pasturelower/bigbushytreer.png";
 import down from "@/assets/presets/pasturelower/down.png";
@@ -26,6 +27,12 @@ const pasturelowerPresets: Record<string, Preset> = {
     image: home,
     position: { pan: -74.39, tilt: 1.22, zoom: 1 },
     // modified: 2026-06-19T13:09:46.639Z
+  },
+  backrightcorner: {
+    description: "backrightcorner",
+    image: backrightcorner,
+    position: { pan: -0.03, tilt: -1.05, zoom: 332 },
+    // modified: 2026-08-31T22:12:22.358Z
   },
   bigbushytree: {
     description: "bigbushytree",
@@ -90,8 +97,8 @@ const pasturelowerPresets: Record<string, Preset> = {
   grover: {
     description: "grover",
     image: grover,
-    position: { pan: -95.47, tilt: 1.98, zoom: 166 },
-    // modified: 2026-06-19T13:26:51.852Z
+    position: { pan: -95.26, tilt: 0, zoom: 166 },
+    // modified: 2026-08-30T15:52:19.888Z
   },
   left: {
     description: "left",

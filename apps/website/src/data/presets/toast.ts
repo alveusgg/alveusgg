@@ -18,7 +18,7 @@ const toastPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
     position: { pan: -29.39, tilt: -47.47, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:50:39.363Z
   },
   closerock: {
     description: "Close Rock",
@@ -48,19 +48,19 @@ const toastPresets: Record<string, Preset> = {
     description: "Food",
     image: food,
     position: { pan: -47.36, tilt: -58.27, zoom: 2500 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:49:15.383Z
   },
   log: {
     description: "Log",
     image: log,
     position: { pan: -56.48, tilt: -46.35, zoom: 2500 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:47:45.311Z
   },
   logz: {
     description: "Log zoomed",
     image: logz,
     position: { pan: -59.38, tilt: -41.02, zoom: 7499 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:46:59.773Z
   },
   rocksandwich: {
     description: "Rock Sandwich",
