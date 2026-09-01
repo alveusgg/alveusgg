@@ -45,6 +45,9 @@ export const permissions = {
   manageDonations: {
     requiredRole: "donations",
   },
+  manageWishlist: {
+    requiredRole: "wishlist",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(
