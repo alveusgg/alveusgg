@@ -190,22 +190,7 @@ const data: RootNetworkItem[] = [
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
-                links: [
-                  {
-                    type: "camera",
-                    name: "Hank",
-                    model: "AXIS M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "camera",
-                    name: "Hank Corner",
-                    model: "AXIS M1065-LW (Fixed)",
-                    url: "https://www.axis.com/products/axis-m1065-lw",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                ],
+                links: [],
               },
             ],
           },
