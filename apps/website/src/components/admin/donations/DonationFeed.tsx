@@ -36,6 +36,11 @@ export function DonationFeed() {
     boolSchema,
     false,
   );
+  const [includeSubscriptions, setIncludeSubscriptions] = useLocalStorage(
+    "stream/donation-feed/include-subscriptions",
+    boolSchema,
+    false,
+  );
   const [lastSeen, setLastSeen] = useLocalStorage(
     "stream/donation-feed/last-seen",
     nullableDateSchema,
@@ -57,6 +62,7 @@ export function DonationFeed() {
   const donationsQuery = trpc.donations.getDonationFeed.useInfiniteQuery(
     {
       onlyPixels,
+      includeSubscriptions,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -107,15 +113,30 @@ export function DonationFeed() {
           </summary>
           <div className="absolute top-full right-0 z-10 flex w-64 flex-col gap-2 rounded-sm border border-gray-400 bg-white p-4 text-black shadow-lg">
             <form>
-              <input
-                type="checkbox"
-                id="onlyPixels"
-                checked={onlyPixels}
-                onChange={() => setOnlyPixels(!onlyPixels)}
-              />
-              <label htmlFor="onlyPixels" className="ml-2">
-                Only pixel donations
-              </label>
+              <div>
+                <input
+                  type="checkbox"
+                  id="onlyPixels"
+                  checked={onlyPixels}
+                  onChange={() => setOnlyPixels(!onlyPixels)}
+                />
+                <label htmlFor="onlyPixels" className="ml-2">
+                  Only pixel donations
+                </label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="subscriptions"
+                  checked={includeSubscriptions}
+                  onChange={() =>
+                    setIncludeSubscriptions(!includeSubscriptions)
+                  }
+                />
+                <label htmlFor="subscriptions" className="ml-2">
+                  Include twitch new/resub/gift subscriptions
+                </label>
+              </div>
             </form>
           </div>
         </details>
