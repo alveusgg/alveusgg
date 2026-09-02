@@ -21,17 +21,17 @@
     "globals": "^17.11.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.67.0",
-    "wrangler": "^4.124.0"
+    "typescript-eslint": "^8.68.0",
+    "wrangler": "^4.126.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@alveusgg/neon-crm-api": "workspace:*",
-    "@sentry/cloudflare": "^10.70.0",
+    "@sentry/cloudflare": "^10.71.0",
     "@trpc/client": "^11.18.0",
     "@trpc/server": "^11.18.0",
-    "hono": "^4.13.3",
+    "hono": "^4.13.5",
     "superjson": "^2.2.6",
     "zod": "^4.4.3"
   }
