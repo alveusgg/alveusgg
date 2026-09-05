@@ -40,7 +40,14 @@ const unitsSchema = z
     precipRate: z.number().nullable(),
     precipTotal: z.number().nullable(),
     pressure: z.number().nullable(),
-    temp: z.number().nullable(),
+    temp: z
+      .number()
+      .refine(
+        // something between the weather station and the service is sometimes reporting -40, consider temps -40 and below to be invalid
+        (t) => t > -39.99,
+        { error: "temperature value not sane" },
+      )
+      .nullable(),
     windChill: z.number().nullable(),
     windGust: z.number().nullable(),
     windSpeed: z.number().nullable(),
