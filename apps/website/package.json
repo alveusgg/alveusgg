@@ -130,7 +130,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "file-type": "^22.0.2",
-    "globals": "^17.11.0",
+    "globals": "^17.12.0",
     "loader-utils": "^3.3.1",
     "postcss": "^8.5.26",
     "prettier-plugin-tailwindcss": "^0.8.1",
@@ -138,9 +138,9 @@
     "ts-morph": "^28.0.0",
     "tsdown": "^0.22.14",
     "tsx": "^4.23.12",
-    "typescript-eslint": "^8.68.0",
+    "typescript-eslint": "^8.69.0",
     "vitest": "^4.1.11",
-    "webpack": "^5.109.2"
+    "webpack": "^5.110.3"
   },
   "prettier": {
     "plugins": [
