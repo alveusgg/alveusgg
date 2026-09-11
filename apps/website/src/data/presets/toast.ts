@@ -7,6 +7,7 @@ import home from "@/assets/presets/toast/home.png";
 import log from "@/assets/presets/toast/log.png";
 import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
+import rocksandwicht from "@/assets/presets/toast/rocksandwicht.png";
 import toastsleep from "@/assets/presets/toast/toastsleep.png";
 import tunnel from "@/assets/presets/toast/tunnel.png";
 import water from "@/assets/presets/toast/water.png";
@@ -67,6 +68,12 @@ const toastPresets: Record<string, Preset> = {
     image: rocksandwich,
     position: { pan: -41.38, tilt: -13.95, zoom: 6727 },
     // modified: 2026-08-19T20:27:02.553Z
+  },
+  rocksandwicht: {
+    description: "rocksandwicht",
+    image: rocksandwicht,
+    position: { pan: -42.13, tilt: -7.08, zoom: 10021 },
+    // modified: 2026-09-10T21:45:57.317Z
   },
   toastsleep: {
     description: "toastsleep",
