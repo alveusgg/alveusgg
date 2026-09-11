@@ -1,7 +1,13 @@
 FROM node:24-alpine
-ENV PNPM_HOME="/pnpm"
 ENV CI="true"
-ENV PATH="$PNPM_HOME:$PATH"
+
+## Install pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME/bin:$PATH"
+RUN wget -qO /tmp/install-pnpm.sh https://get.pnpm.io/install.sh && \
+  echo "44dfbba11a70a9751090894a07f8d64c9f7954cb782dfe39a1f2b2753e1d5eea  /tmp/install-pnpm.sh" | sha256sum -c - && \
+  ENV="$HOME/.shrc" SHELL="$(which sh)" sh /tmp/install-pnpm.sh && \
+  rm /tmp/install-pnpm.sh
 
 ## Copy root files
 WORKDIR /app
@@ -25,7 +31,6 @@ COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
 
 ## Install dependencies
-RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
 		--mount=type=cache,id=pnpm,target=/pnpm/store \
     set -eu; \
