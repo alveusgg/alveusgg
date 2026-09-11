@@ -17,6 +17,7 @@ import purplebasel from "@/assets/presets/pasturelower/purplebasel.png";
 import purplenest from "@/assets/presets/pasturelower/purplenest.png";
 import right from "@/assets/presets/pasturelower/right.png";
 import rightcorner from "@/assets/presets/pasturelower/rightcorner.png";
+import sunset from "@/assets/presets/pasturelower/sunset.png";
 import upperpasture from "@/assets/presets/pasturelower/upperpasture.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -135,6 +136,12 @@ const pasturelowerPresets: Record<string, Preset> = {
     image: rightcorner,
     position: { pan: 12.46, tilt: -7.76, zoom: 1 },
     // modified: 2026-06-28T14:30:00.944Z
+  },
+  sunset: {
+    description: "sunset",
+    image: sunset,
+    position: { pan: -78.36, tilt: 11.78, zoom: 199 },
+    // modified: 2026-09-08T00:30:17.511Z
   },
   upperpasture: {
     description: "upperpasture",
