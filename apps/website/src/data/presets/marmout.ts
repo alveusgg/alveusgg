@@ -13,6 +13,7 @@ import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import domerl from "@/assets/presets/marmout/domerl.png";
 import domerr from "@/assets/presets/marmout/domerr.png";
+import door from "@/assets/presets/marmout/door.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
@@ -151,6 +152,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: domerr,
     position: { pan: 151.57, tilt: -7.67, zoom: 1662 },
     // modified: 2026-06-22T13:40:20.947Z
+  },
+  door: {
+    description: "door",
+    image: door,
+    position: { pan: 166.51, tilt: -18.64, zoom: 464 },
+    // modified: 2026-09-11T13:14:16.323Z
   },
   down: {
     description: "Down",
