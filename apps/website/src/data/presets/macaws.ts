@@ -1,3 +1,4 @@
+import backright from "@/assets/presets/macaws/backright.png";
 import bowld from "@/assets/presets/macaws/bowld.png";
 import bowlr from "@/assets/presets/macaws/bowlr.png";
 import closebranches from "@/assets/presets/macaws/closebranches.png";
@@ -26,6 +27,12 @@ const macawsPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 175.04, tilt: -23.15, zoom: 1 },
     // modified: 2025-10-13T21:22:42.909Z
+  },
+  backright: {
+    description: "backright",
+    image: backright,
+    position: { pan: -134.34, tilt: -9.85, zoom: 516 },
+    // modified: 2026-09-12T14:02:14.875Z
   },
   bowld: {
     description: "bowld",
