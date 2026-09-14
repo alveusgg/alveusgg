@@ -501,6 +501,21 @@ export async function getClips(
   return clipsResponseSchema.parseAsync(json);
 }
 
+const sendChatMessageResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      message_id: z.string().optional(),
+      is_sent: z.boolean().optional(),
+      drop_reason: z
+        .object({
+          code: z.string().optional(),
+          message: z.string().optional(),
+        })
+        .optional(),
+    }),
+  ),
+});
+
 export async function sendChatMessage(
   userAccessToken: string,
   userId: string,
@@ -520,10 +535,16 @@ export async function sendChatMessage(
     }),
   });
 
-  if (response.status !== 200) {
-    const json = await response.json();
+  const json: unknown = await response.json();
+
+  const { data } = await sendChatMessageResponseSchema.safeParseAsync(json);
+
+  if (response.status !== 200 || !data?.data?.[0]?.is_sent) {
     console.error(json);
-    throw new Error("Failed to send chat message!");
+    throw new Error(
+      "Failed to send chat message! " +
+        data?.data.map((m) => m.drop_reason?.message || "").join(" ") || "",
+    );
   }
 }
 
