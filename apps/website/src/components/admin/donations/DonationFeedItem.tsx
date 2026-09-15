@@ -2,6 +2,8 @@ import { DateTime } from "luxon";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
+import { type TwitchSubscriptionDonation } from "@alveusgg/donations-core";
+
 import type { DonationFeed } from "@/server/trpc/router/donations";
 
 import { classes } from "@/utils/classes";
@@ -22,6 +24,43 @@ const currencyFormatter = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 });
+
+const formatTwitchSubTier = (tier?: string) => {
+  if (tier == "1000") return 1;
+  if (tier == "2000") return 2;
+  if (tier == "3000") return 3;
+  return "";
+};
+
+const formatTwitchSub = (
+  metadata: TwitchSubscriptionDonation["providerMetadata"],
+) => {
+  if (!metadata.twitchSubscription) return null;
+
+  const formattedTier = formatTwitchSubTier(metadata.twitchSubscription.tier);
+
+  if (metadata.twitchSubscription.type === "gift") {
+    return `Gifted ${metadata.twitchSubscription.total}x Tier ${formattedTier}`;
+  } else if (metadata.twitchSubscription.type === "resubscription") {
+    if (
+      metadata.twitchSubscription.durationMonths &&
+      metadata.twitchSubscription.durationMonths > 1 &&
+      metadata.twitchSubscription.cumulativeMonths &&
+      metadata.twitchSubscription.cumulativeMonths > 0
+    ) {
+      return `Resub · Tier ${formattedTier} · +${metadata.twitchSubscription.durationMonths} mo (${metadata.twitchSubscription.cumulativeMonths} total)`;
+    } else if (
+      metadata.twitchSubscription.cumulativeMonths &&
+      metadata.twitchSubscription.cumulativeMonths > 0
+    ) {
+      return `Resub · Tier ${formattedTier} (${metadata.twitchSubscription.cumulativeMonths} mo)`;
+    } else {
+      return `Resub · Tier ${formattedTier}`;
+    }
+  } else {
+    return `New · Tier ${formattedTier}`;
+  }
+};
 
 const formatDonationAmount = (amount: number) =>
   currencyFormatter.format(Math.round(amount / 100));
@@ -133,7 +172,11 @@ function DonationFeedItem({
             />
           }
         >
-          {formatDonationAmount(donation.amount)}
+          {donation.provider === "twitchsubscription"
+            ? formatTwitchSub(
+                donation.providerMetadata as TwitchSubscriptionDonation["providerMetadata"],
+              )
+            : formatDonationAmount(donation.amount)}
         </Badge>
         {donation.pixels > 0 && (
           <Badge
