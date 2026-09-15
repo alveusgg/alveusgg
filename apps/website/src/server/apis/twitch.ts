@@ -502,18 +502,17 @@ export async function getClips(
 }
 
 const sendChatMessageResponseSchema = z.object({
-  data: z.array(
-    z.object({
-      message_id: z.string().optional(),
-      is_sent: z.boolean().optional(),
-      drop_reason: z
-        .object({
-          code: z.string().optional(),
-          message: z.string().optional(),
-        })
-        .optional(),
-    }),
-  ),
+  data: z
+    .array(
+      z.object({
+        message_id: z.string(),
+        is_sent: z.boolean(),
+        drop_reason: z
+          .object({ code: z.string(), message: z.string() })
+          .nullable(),
+      }),
+    )
+    .length(1),
 });
 
 export async function sendChatMessage(
@@ -535,15 +534,17 @@ export async function sendChatMessage(
     }),
   });
 
-  const json: unknown = await response.json();
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to send chat message");
+  }
 
   const { data } = await sendChatMessageResponseSchema.safeParseAsync(json);
-
-  if (response.status !== 200 || !data?.data?.[0]?.is_sent) {
+  if (!data?.data[0]?.is_sent) {
     console.error(json);
     throw new Error(
-      "Failed to send chat message! " +
-        data?.data.map((m) => m.drop_reason?.message || "").join(" ") || "",
+      `Failed to send chat message: ${data?.data[0]?.drop_reason?.message || ""}`,
     );
   }
 }
