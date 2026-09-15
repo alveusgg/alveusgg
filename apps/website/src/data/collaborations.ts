@@ -54,6 +54,7 @@ import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
+import mAndJTV from "@/assets/collaborations/m-and-j-tv.png";
 import mari from "@/assets/collaborations/mari.png";
 import marlon from "@/assets/collaborations/marlon.png";
 import misterArther from "@/assets/collaborations/mister-arther.png";
@@ -104,6 +105,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "MandJTV",
+      link: "https://www.youtube.com/@MandJTV",
+      date: new Date("2026-09-10"),
+      videoId: "0moCZWpYsOc",
+      creators: [
+        {
+          name: "MandJTV",
+          image: mAndJTV,
+          popularity: 2_670_000, // YouTube subscribers, 2026-09-10
+        },
+      ],
+    },
     {
       name: "Julien",
       link: "https://www.twitch.tv/julien",
