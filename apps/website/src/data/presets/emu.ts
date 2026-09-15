@@ -91,8 +91,8 @@ const emuPresets: Record<string, Preset> = {
   rightcorner: {
     description: "rightcorner",
     image: rightcorner,
-    position: { pan: -26.16, tilt: -5.17, zoom: 1422 },
-    // modified: 2026-06-01T22:28:21.434Z
+    position: { pan: -31.8, tilt: -5.37, zoom: 1422 },
+    // modified: 2026-09-14T21:38:20.611Z
   },
   shelter: {
     description: "shelter",
