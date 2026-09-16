@@ -46,6 +46,7 @@ jobs:
           passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
           script: |
             set -e
+            uname -i
             cd $CHATBOT_PATH
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
