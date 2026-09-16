@@ -324,8 +324,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(next@16.3.4)(react@19.2.8)
       '@vercel/functions':
-        specifier: ^3.9.5
-        version: 3.9.5(@aws-sdk/credential-provider-web-identity@3.972.76)(ws@8.21.0)
+        specifier: ^3.9.6
+        version: 3.9.6(@aws-sdk/credential-provider-web-identity@3.972.76)(ws@8.21.0)
       '@xyflow/react':
         specifier: ^12.11.6
         version: 12.11.6(@types/react-dom@19.2.5)(@types/react@19.2.18)(react-dom@19.2.8)(react@19.2.8)
@@ -3078,15 +3078,15 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/cli-config@0.2.4':
-    resolution: {integrity: sha512-kZ5SojbrV06GHoU6QIWGwDXLov+s9rWZ7QqdqKfJfBGCNUieGfgaCjeeenNy8Y+QC0bwC0dZ2B4l5Hvdmrgpdw==}
+  '@vercel/cli-config@0.2.5':
+    resolution: {integrity: sha512-WniFxgznIPZ3h1USCLxArTyvR2a3/lvZW5mSSkuI2r8rQWEzUV8qnKXJEOFrVnVWe2YDxeCVMgZoxIH4kHA92Q==}
 
   '@vercel/cli-exec@1.0.1':
     resolution: {integrity: sha512-g9XerViJ/paZujufXYcu5XYI2vU2rtB4sgdpjUHde5RnOkdmpu0ngH46LCFGHoPXO/C+qDPSczIHIRN+8Q2YKQ==}
     engines: {node: '>= 18'}
 
-  '@vercel/functions@3.9.5':
-    resolution: {integrity: sha512-EUfqlb7AzoEh7URlMNAO4jbJiLWz9grDBHvfjKTDvEP9c8y3DqX3SWPvfaQkUjtkm3b83flhaUUMuewdHa+qmw==}
+  '@vercel/functions@3.9.6':
+    resolution: {integrity: sha512-00NG7F+VItu1UygM0IL6QqmGrzUAeHMCUNMq89bcsbnBqoE3Gpya9yn3g+TBGDbAFjuaojJCzLNYUVFt+reSnQ==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -3097,8 +3097,8 @@ packages:
       ws:
         optional: true
 
-  '@vercel/oidc@3.8.5':
-    resolution: {integrity: sha512-RwXYtnt6za+5UO4IaLywN/6B95AlLqynPRUWRJxeJ/qufwkcLUbZNUxYtzT0uMpuraWhlNcGqPNGkTnZr4BGBw==}
+  '@vercel/oidc@3.8.6':
+    resolution: {integrity: sha512-0gAPrFB1eVCLBVDDG1PUxs+G5OS97260GK2TEcUB2TeEeWM+17P4U9xC7ASp6f9rv/pu8tBceH5cmRV0MpUhGA==}
     engines: {node: '>= 20'}
 
   '@visx/curve@4.0.1-alpha.0':
@@ -8686,7 +8686,7 @@ snapshots:
       next: 16.3.4(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8)(react@19.2.8)
       react: 19.2.8
 
-  '@vercel/cli-config@0.2.4':
+  '@vercel/cli-config@0.2.5':
     dependencies:
       xdg-app-paths: 5.5.1
       zod: 4.1.11
@@ -8695,16 +8695,16 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/functions@3.9.5(@aws-sdk/credential-provider-web-identity@3.972.76)(ws@8.21.0)':
+  '@vercel/functions@3.9.6(@aws-sdk/credential-provider-web-identity@3.972.76)(ws@8.21.0)':
     dependencies:
-      '@vercel/oidc': 3.8.5
+      '@vercel/oidc': 3.8.6
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.76
       ws: 8.21.0
 
-  '@vercel/oidc@3.8.5':
+  '@vercel/oidc@3.8.6':
     dependencies:
-      '@vercel/cli-config': 0.2.4
+      '@vercel/cli-config': 0.2.5
       '@vercel/cli-exec': 1.0.1
       jose: 5.10.0
 
