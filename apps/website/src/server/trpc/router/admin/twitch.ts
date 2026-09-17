@@ -162,17 +162,16 @@ export const adminTwitchRouter = router({
   setupWebhookSubscription: sharedKeyProcedure
     .input(
       z.object({
+        alveusOnly: z.boolean().default(false),
         event: z.object({ type: z.string(), version: z.string() }),
         url: z.string(),
         secret: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
-      const supportedChannels = [
-        channels.alveusgg.id,
-        channels.maya.id,
-        channels.alveus.id,
-      ];
+      const supportedChannels = input.alveusOnly
+        ? [channels.alveus.id]
+        : [channels.alveusgg.id, channels.maya.id, channels.alveus.id];
 
       for (const channel of supportedChannels) {
         try {
