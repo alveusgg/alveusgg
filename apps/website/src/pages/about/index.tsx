@@ -792,6 +792,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/about/staff",
         },
       },
+      {
+        key: "chris",
+        date: "2026-06",
+        content: [
+          "Chris joins the Alveus team",
+          "Chris joins the FAID department as a Facilities Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
   {
