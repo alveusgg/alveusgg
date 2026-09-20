@@ -11,6 +11,7 @@ import leftplatform from "@/assets/presets/servalindoor/leftplatform.png";
 import leftplatformb from "@/assets/presets/servalindoor/leftplatformb.png";
 import middle from "@/assets/presets/servalindoor/middle.png";
 import topleft from "@/assets/presets/servalindoor/topleft.png";
+import windowr from "@/assets/presets/servalindoor/windowr.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -78,8 +79,8 @@ const servalindoorPresets: Record<string, Preset> = {
   leftplatformb: {
     description: "leftplatformb",
     image: leftplatformb,
-    position: { pan: -164.46, tilt: -30.87, zoom: 172 },
-    // modified: 2026-09-12T09:37:47.159Z
+    position: { pan: -164.46, tilt: -30.86, zoom: 172 },
+    // modified: 2026-09-18T23:39:32.167Z
   },
   middle: {
     description: "middle",
@@ -90,8 +91,14 @@ const servalindoorPresets: Record<string, Preset> = {
   topleft: {
     description: "topleft",
     image: topleft,
-    position: { pan: 167.08, tilt: 0, zoom: 1 },
-    // modified: 2026-09-16T18:32:48.817Z
+    position: { pan: 167.07, tilt: 0, zoom: 1 },
+    // modified: 2026-09-18T23:40:05.617Z
+  },
+  windowr: {
+    description: "windowr",
+    image: windowr,
+    position: { pan: -94.95, tilt: -23.34, zoom: 201 },
+    // modified: 2026-09-18T16:36:40.910Z
   },
 };
 
