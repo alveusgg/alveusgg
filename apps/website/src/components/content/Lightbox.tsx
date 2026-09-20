@@ -49,29 +49,33 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
     [scrollTo],
   );
 
-  // Pause any video iframes that aren't in the item currently scrolled into view
+  // Pause video iframes in the item that just scrolled out of view
+  const previousActiveKey = useRef<string | undefined>(undefined);
   useEffect(() => {
-    if (!activeKey) return;
+    const keyToPause = previousActiveKey.current;
+    previousActiveKey.current = activeKey;
+    if (!keyToPause || keyToPause === activeKey) return;
 
-    Object.entries(itemRefs.current).forEach(([key, el]) => {
-      if (key === activeKey) return;
+    const item = itemRefs.current[keyToPause];
+    if (!item) return;
 
-      el.querySelectorAll("iframe").forEach((iframe) => {
-        if (!iframe.src) return;
-        const { hostname } = new URL(iframe.src);
+    item.querySelectorAll("iframe").forEach((iframe) => {
+      if (!iframe.src) return;
+      const { hostname } = new URL(iframe.src);
 
-        if (hostname.endsWith("youtube-nocookie.com")) {
-          iframe.contentWindow?.postMessage(
-            JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
-            "*",
-          );
-        } else if (hostname.endsWith("streamable.com")) {
-          iframe.contentWindow?.postMessage(
-            JSON.stringify({ context: "player.js", method: "pause" }),
-            "*",
-          );
-        }
-      });
+      if (hostname.endsWith("youtube-nocookie.com")) {
+        iframe.contentWindow?.postMessage(
+          JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
+          "*",
+        );
+      }
+
+      if (hostname.endsWith("streamable.com")) {
+        iframe.contentWindow?.postMessage(
+          JSON.stringify({ context: "player.js", method: "pause" }),
+          "*",
+        );
+      }
     });
   }, [activeKey]);
 
