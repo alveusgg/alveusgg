@@ -39,24 +39,16 @@ import Heading from "@/components/content/Heading";
 import PresetCard from "@/components/ptz/PresetCard";
 import PresetMap from "@/components/ptz/PresetMap";
 
-import IconChevronVertical from "@/icons/IconChevronVertical";
 import IconMapPin from "@/icons/IconMapPin";
 import IconMenu from "@/icons/IconMenu";
 import IconXCircle from "@/icons/IconXCircle";
+import IconZoomIn from "@/icons/IconZoomIn";
+import IconZoomOut from "@/icons/IconZoomOut";
 
 type PresetView = "list" | "map";
 
-const zoomLevels = [
-  "10",
-  "50",
-  "70",
-  "90",
-  "125",
-  "150",
-  "200",
-  "400",
-  "600",
-] as const;
+const zoomOutLevels = ["10", "50", "70", "90"] as const;
+const zoomInLevels = ["125", "150", "200", "400", "600"] as const;
 
 const PresetToolsTab = ({
   tooltip,
@@ -120,6 +112,14 @@ const PresetTools = ({
     [runCommand, camera],
   );
 
+  const zoomButtonClasses = classes(
+    "inline-block p-1 text-alveus-green-400 hover:text-black focus:outline-none",
+    isPending && "opacity-60",
+  );
+
+  const zoomOptionsClasses =
+    "absolute top-full z-30 mt-1 flex max-h-60 min-w-18 flex-col gap-0.5 overflow-auto rounded-md border border-alveus-green-200 bg-alveus-green-50 p-1 text-alveus-green-900 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0";
+
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       <Heading
@@ -136,47 +136,71 @@ const PresetTools = ({
       {isCameraPTZ(cameras[camera]) && (
         <>
           {zoom && hasScopes && (
-            <Listbox
-              value={zoomValue}
-              onChange={onZoomChange}
-              disabled={isPending}
-            >
-              <div className="relative">
-                <ListboxButton
-                  className={classes(
-                    "relative rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 py-1 pr-7 pl-2.5 text-left font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset",
-                    isPending && "opacity-60",
-                  )}
-                >
-                  <span className="block">
-                    {isPending ? "Sending..." : "Zoom"}
-                  </span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-                    <IconChevronVertical
-                      className="size-4 opacity-75"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </ListboxButton>
+            <div className="flex items-center">
+              <Listbox
+                value={zoomValue}
+                onChange={onZoomChange}
+                disabled={isPending}
+              >
+                <div className="relative">
+                  <ListboxButton
+                    className={zoomButtonClasses}
+                    aria-label="Zoom out"
+                  >
+                    <IconZoomOut className="size-5" />
+                  </ListboxButton>
 
-                <ListboxOptions
-                  transition
-                  className="absolute top-full z-30 mt-1 flex max-h-60 min-w-18 flex-col gap-0.5 overflow-auto rounded-md border border-alveus-green-200 bg-alveus-green-50 p-1 text-alveus-green-900 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0"
-                  as="ul"
-                >
-                  {zoomLevels.map((level) => (
-                    <ListboxOption
-                      key={level}
-                      value={level}
-                      className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
-                      as="li"
-                    >
-                      {level}
-                    </ListboxOption>
-                  ))}
-                </ListboxOptions>
-              </div>
-            </Listbox>
+                  <ListboxOptions
+                    transition
+                    className={zoomOptionsClasses}
+                    as="ul"
+                  >
+                    {zoomOutLevels.map((level) => (
+                      <ListboxOption
+                        key={level}
+                        value={level}
+                        className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
+                        as="li"
+                      >
+                        {level}
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </div>
+              </Listbox>
+
+              <Listbox
+                value={zoomValue}
+                onChange={onZoomChange}
+                disabled={isPending}
+              >
+                <div className="relative">
+                  <ListboxButton
+                    className={zoomButtonClasses}
+                    aria-label="Zoom in"
+                  >
+                    <IconZoomIn className="size-5" />
+                  </ListboxButton>
+
+                  <ListboxOptions
+                    transition
+                    className={zoomOptionsClasses}
+                    as="ul"
+                  >
+                    {zoomInLevels.map((level) => (
+                      <ListboxOption
+                        key={level}
+                        value={level}
+                        className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
+                        as="li"
+                      >
+                        {level}
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </div>
+              </Listbox>
+            </div>
           )}
 
           <div className="relative grow">
