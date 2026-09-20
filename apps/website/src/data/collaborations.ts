@@ -137,6 +137,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/julien",
       date: new Date("2026-08-06"),
       videoId: "rzka0Zdo324",
+      vodId: "acQCPHDxKN4",
       creators: [
         {
           name: "Julien",
