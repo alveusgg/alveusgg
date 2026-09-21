@@ -8,7 +8,6 @@ import {
   TabGroup,
   TabList,
 } from "@headlessui/react";
-import { useSession } from "next-auth/react";
 import {
   type ReactNode,
   useCallback,
@@ -24,7 +23,6 @@ import {
   isCameraMulti,
   isCameraPTZ,
 } from "@/data/tech/cameras.types";
-import { scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -33,6 +31,7 @@ import { camelToKebab } from "@/utils/string-case";
 import { trpc } from "@/utils/trpc";
 
 import useLocalStorage from "@/hooks/storage";
+import useSubscriberAccess from "@/hooks/subscription";
 import useTooltip from "@/hooks/tooltip";
 
 import Heading from "@/components/content/Heading";
@@ -92,10 +91,8 @@ const PresetTools = ({
   view: PresetView;
   onView: (value: PresetView) => void;
 }) => {
-  const { data: session } = useSession();
-  const hasScopes = scopeGroups.chat.every((scope) =>
-    session?.user?.scopes?.includes(scope),
-  );
+  const { hasScopes, subscription } = useSubscriberAccess();
+  const canZoom = hasScopes && !!subscription.data;
 
   const { mutate: runCommand, status } = trpc.stream.runCommand.useMutation();
   const isPending = status === "pending";
@@ -135,7 +132,7 @@ const PresetTools = ({
 
       {isCameraPTZ(cameras[camera]) && (
         <>
-          {zoom && hasScopes && (
+          {zoom && canZoom && (
             <div className="flex items-center">
               <Listbox
                 value={zoomValue}
