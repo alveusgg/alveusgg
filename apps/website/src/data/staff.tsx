@@ -9,6 +9,8 @@ import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import chandlerImage from "@/assets/people/chandler.jpg";
+import chrisFunImage from "@/assets/people/chris-fun.jpg";
+import chrisImage from "@/assets/people/chris.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import jacobIckesFunImage from "@/assets/people/jacob-ickes-fun.jpg";
@@ -298,6 +300,31 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-08",
+    department: "facilities",
+  },
+  chris: {
+    image: [chrisImage, chrisFunImage],
+    name: "Chris",
+    title: "Facilities Specialist",
+    description: (
+      <>
+        <p>
+          Chris grew up in southeast Texas with a passion for the outdoors and
+          environmental conservation. He became an Environmental Analyst for a
+          local water authority and performed water chemistry and field analysis
+          for 5 years before moving to Austin for water chemistry, microbiology,
+          and serology at the state lab. He moved from there, on a whim, to
+          train dolphins for the U.S. Navy in San Diego for 5 years where he met
+          his now-wife Randi. He became Dive Safety Officer for the same Navy
+          Marine Mammal Program and ran dive operations across San Diego,
+          Washington, and Georgia. From there, he transitioned to an engineering
+          technician role for Navy unmanned surface vehicles until he moved back
+          to Austin, Texas with Randi and was ultimately hired on at Alveus as
+          part of the FAID department.
+        </p>
+      </>
+    ),
+    joined: "2026-06",
     department: "facilities",
   },
   space: {

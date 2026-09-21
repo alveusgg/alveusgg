@@ -38,6 +38,7 @@ import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
 import roaches from "../presets/roaches";
 import serval from "../presets/serval";
+import servalindoor from "../presets/servalindoor";
 import tarantula from "../presets/tarantula";
 import tarantulaptz from "../presets/tarantulaptz";
 import toast from "../presets/toast";
@@ -96,6 +97,7 @@ const cameras = {
   pushpopindoor,
   roaches,
   serval,
+  servalindoor,
   tarantula,
   tarantulaptz,
   toast,
