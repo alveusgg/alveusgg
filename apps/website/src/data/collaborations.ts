@@ -49,6 +49,7 @@ import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
 import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
+import jynxzi from "@/assets/collaborations/jynxzi.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
@@ -106,6 +107,19 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Jynxzi",
+      link: "https://www.twitch.tv/jynxzi",
+      date: new Date("2026-09-17"),
+      videoId: "HDe20xr-RJ4",
+      creators: [
+        {
+          name: "Jynxzi",
+          image: jynxzi,
+          popularity: 11_300_000, // Twitch followers, 2026-09-20
+        },
+      ],
+    },
+    {
       name: "MandJTV",
       link: "https://www.youtube.com/@MandJTV",
       date: new Date("2026-09-10"),
@@ -123,6 +137,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/julien",
       date: new Date("2026-08-06"),
       videoId: "rzka0Zdo324",
+      vodId: "acQCPHDxKN4",
       creators: [
         {
           name: "Julien",
