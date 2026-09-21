@@ -10,6 +10,9 @@ import leftdoor from "@/assets/presets/servalindoor/leftdoor.png";
 import leftplatform from "@/assets/presets/servalindoor/leftplatform.png";
 import leftplatformb from "@/assets/presets/servalindoor/leftplatformb.png";
 import middle from "@/assets/presets/servalindoor/middle.png";
+import pit1 from "@/assets/presets/servalindoor/pit1.png";
+import pit2 from "@/assets/presets/servalindoor/pit2.png";
+import pit3 from "@/assets/presets/servalindoor/pit3.png";
 import topleft from "@/assets/presets/servalindoor/topleft.png";
 import windowr from "@/assets/presets/servalindoor/windowr.png";
 
@@ -87,6 +90,24 @@ const servalindoorPresets: Record<string, Preset> = {
     image: middle,
     position: { pan: -136.67, tilt: -43.28, zoom: 1 },
     // modified: 2026-09-10T23:47:36.526Z
+  },
+  pit1: {
+    description: "pit1",
+    image: pit1,
+    position: { pan: -144.09, tilt: -50.69, zoom: 1 },
+    // modified: 2026-09-20T01:23:14.641Z
+  },
+  pit2: {
+    description: "pit2",
+    image: pit2,
+    position: { pan: -139.58, tilt: -30.23, zoom: 87 },
+    // modified: 2026-09-20T01:24:02.596Z
+  },
+  pit3: {
+    description: "pit3",
+    image: pit3,
+    position: { pan: -116.84, tilt: -31.28, zoom: 87 },
+    // modified: 2026-09-20T01:24:36.730Z
   },
   topleft: {
     description: "topleft",
