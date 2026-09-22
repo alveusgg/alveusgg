@@ -189,7 +189,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   }, [clips]);
 
   // Iterate through clips
-  const [details, setDetails] = useState<"overlay" | "below">();
+  const [details, setDetails] = useState<"overlay" | "above">();
   const [idx, setIdx] = useState<number>(0);
   const clip = randomClips[idx];
   const increment = useCallback(() => {
@@ -210,7 +210,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   }, [clip, increment]);
 
   // As soon as the clip loads, start a timer for when the clip ends
-  // Also, after a short while, hide the details of the clip
+  // Also, after a short while, move the details above the clip
   const loadedTimer = useRef<NodeJS.Timeout>(null);
   const detailsTimer = useRef<NodeJS.Timeout>(null);
   const onLoad = useCallback(() => {
@@ -225,13 +225,13 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
 
-    // After 1s overlay the clip details, and 10s later place them below the clip
+    // After 1s overlay the clip details, and 10s later place them above the clip
     if (detailsTimer.current) clearTimeout(detailsTimer.current);
     detailsTimer.current = setTimeout(() => {
       setDetails("overlay");
 
       detailsTimer.current = setTimeout(() => {
-        setDetails("below");
+        setDetails("above");
       }, 10000);
     }, 1000);
   }, [clip, increment]);
@@ -304,12 +304,29 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="relative flex aspect-video w-full items-center justify-center">
             <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
-            <Transition show={!!title}>
-              {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
-                <p className="text-center text-3xl font-bold">{title}</p>
-              </div>
-            </Transition>
+            <div className="absolute inset-x-0 bottom-full flex flex-col items-start gap-2 pb-4">
+              <Transition show={!!title}>
+                {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
+                <div className="self-center rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
+                  <p className="text-center text-3xl font-bold">{title}</p>
+                </div>
+              </Transition>
+
+              <Transition show={details === "above"}>
+                {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
+                <div className="flex items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
+                  <p className="text-lg">{clip.title}</p>
+                  <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                  <p>
+                    {new Date(clip.created).toLocaleDateString(undefined, {
+                      dateStyle: "long",
+                    })}
+                  </p>
+                  <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                  <p>Clipped by {clip.creator}</p>
+                </div>
+              </Transition>
+            </div>
 
             <Transition show={details === "overlay"}>
               <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-300">
@@ -337,21 +354,6 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               onError={onError}
               className="size-full rounded-lg"
             />
-
-            <Transition show={details === "below"}>
-              {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
-              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
-                <p className="text-lg">{clip.title}</p>
-                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
-                <p>
-                  {new Date(clip.created).toLocaleDateString(undefined, {
-                    dateStyle: "long",
-                  })}
-                </p>
-                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
-                <p>Clipped by {clip.creator}</p>
-              </div>
-            </Transition>
           </div>
         </div>
       )}
