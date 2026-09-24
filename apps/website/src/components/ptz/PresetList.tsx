@@ -37,6 +37,7 @@ import useTooltip from "@/hooks/tooltip";
 import Heading from "@/components/content/Heading";
 import PresetCard from "@/components/ptz/PresetCard";
 import PresetMap from "@/components/ptz/PresetMap";
+import ActionPreviewTooltip from "@/components/shared/actions/ActionPreviewTooltip";
 
 import IconMapPin from "@/icons/IconMapPin";
 import IconMenu from "@/icons/IconMenu";
@@ -45,6 +46,7 @@ import IconZoomIn from "@/icons/IconZoomIn";
 import IconZoomOut from "@/icons/IconZoomOut";
 
 type PresetView = "list" | "map";
+type ZoomDirection = "in" | "out";
 
 const zoomOutLevels = ["10", "50", "70", "90"] as const;
 const zoomInLevels = ["125", "150", "200", "400", "600"] as const;
@@ -76,6 +78,42 @@ const PresetToolsTab = ({
   );
 };
 
+const ZoomOption = ({
+  camera,
+  level,
+  direction,
+}: {
+  camera: string;
+  level: string;
+  direction: ZoomDirection;
+}) => {
+  const percent =
+    direction === "out" ? 100 - Number(level) : Number(level) - 100;
+  const sign = direction === "out" ? "-" : "+";
+
+  const { props, element } = useTooltip({
+    content: (
+      <ActionPreviewTooltip preview={`!ptzzoom ${camera} ${level}`}>
+        {`Zoom ${direction} by ${sign}${percent}%`}
+      </ActionPreviewTooltip>
+    ),
+    aria: `Zoom ${direction} by ${sign}${percent}%`,
+    placement: "right",
+  });
+
+  return (
+    <ListboxOption
+      value={level}
+      className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
+      as="li"
+      {...props}
+    >
+      {element}
+      {level}%
+    </ListboxOption>
+  );
+};
+
 const PresetTools = ({
   camera,
   zoom,
@@ -93,6 +131,7 @@ const PresetTools = ({
 }) => {
   const { hasScopes, subscription } = useSubscriberAccess();
   const canZoom = hasScopes && !!subscription.data;
+  const cameraSlug = camera.toLowerCase();
 
   const { mutate: runCommand, status } = trpc.stream.runCommand.useMutation();
   const isPending = status === "pending";
@@ -101,13 +140,47 @@ const PresetTools = ({
 
   const onZoomChange = useCallback(
     (value: string) => {
-      runCommand({ command: "ptzzoom", args: [camera.toLowerCase(), value] });
+      runCommand({ command: "ptzzoom", args: [cameraSlug, value] });
       // Reset back to the placeholder, the dropdown is an action trigger,
       // not a reflection of the camera's actual zoom state
       setZoomValue("");
     },
-    [runCommand, camera],
+    [runCommand, cameraSlug],
   );
+
+  const [statusText, setStatusText] = useState<string>();
+  useEffect(() => {
+    if (status === "idle") {
+      setStatusText(undefined);
+      return;
+    }
+
+    if (status === "pending") {
+      setStatusText("Sending command...");
+      return;
+    }
+
+    if (status === "success") {
+      setStatusText("Command sent!");
+      const timeout = setTimeout(() => setStatusText(undefined), 2000);
+      return () => clearTimeout(timeout);
+    }
+
+    if (status === "error") {
+      setStatusText("Error sending command");
+      const timeout = setTimeout(() => setStatusText(undefined), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [status]);
+
+  const zoomOutTooltip = useTooltip({
+    content: statusText ?? "Zoom out",
+    force: !!statusText,
+  });
+  const zoomInTooltip = useTooltip({
+    content: statusText ?? "Zoom in",
+    force: !!statusText,
+  });
 
   const zoomButtonClasses = classes(
     "inline-block p-1 text-alveus-green-400 hover:text-black focus:outline-none",
@@ -126,7 +199,7 @@ const PresetTools = ({
       >
         {cameras[camera].title}
         <span className="text-sm text-alveus-green-400 italic">
-          {` (${camera.toLowerCase()})`}
+          {` (${cameraSlug})`}
         </span>
       </Heading>
 
@@ -142,10 +215,11 @@ const PresetTools = ({
                 <div className="relative">
                   <ListboxButton
                     className={zoomButtonClasses}
-                    aria-label="Zoom out"
+                    {...zoomOutTooltip.props}
                   >
                     <IconZoomOut className="size-5" />
                   </ListboxButton>
+                  {zoomOutTooltip.element}
 
                   <ListboxOptions
                     transition
@@ -153,18 +227,18 @@ const PresetTools = ({
                     as="ul"
                   >
                     {zoomOutLevels.map((level) => (
-                      <ListboxOption
+                      <ZoomOption
                         key={level}
-                        value={level}
-                        className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
-                        as="li"
-                      >
-                        {level}
-                      </ListboxOption>
+                        camera={cameraSlug}
+                        level={level}
+                        direction="out"
+                      />
                     ))}
                   </ListboxOptions>
                 </div>
               </Listbox>
+
+              <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
 
               <Listbox
                 value={zoomValue}
@@ -174,10 +248,11 @@ const PresetTools = ({
                 <div className="relative">
                   <ListboxButton
                     className={zoomButtonClasses}
-                    aria-label="Zoom in"
+                    {...zoomInTooltip.props}
                   >
                     <IconZoomIn className="size-5" />
                   </ListboxButton>
+                  {zoomInTooltip.element}
 
                   <ListboxOptions
                     transition
@@ -185,14 +260,12 @@ const PresetTools = ({
                     as="ul"
                   >
                     {zoomInLevels.map((level) => (
-                      <ListboxOption
+                      <ZoomOption
                         key={level}
-                        value={level}
-                        className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
-                        as="li"
-                      >
-                        {level}
-                      </ListboxOption>
+                        camera={cameraSlug}
+                        level={level}
+                        direction="in"
+                      />
                     ))}
                   </ListboxOptions>
                 </div>
