@@ -48,7 +48,7 @@ import IconZoomOut from "@/icons/IconZoomOut";
 type PresetView = "list" | "map";
 type ZoomDirection = "in" | "out";
 
-const zoomOutLevels = ["10", "50", "70", "90"] as const;
+const zoomOutLevels = ["90", "70", "50", "10"] as const;
 const zoomInLevels = ["125", "150", "200", "400", "600"] as const;
 
 const PresetToolsTab = ({
@@ -114,38 +114,28 @@ const ZoomOption = ({
   );
 };
 
-const PresetTools = ({
+const ZoomControl = ({
   camera,
-  zoom,
-  search,
-  onSearch,
-  view,
-  onView,
+  direction,
+  levels,
 }: {
-  camera: Camera;
-  zoom: boolean;
-  search: string;
-  onSearch: (value: string) => void;
-  view: PresetView;
-  onView: (value: PresetView) => void;
+  camera: string;
+  direction: ZoomDirection;
+  levels: readonly string[];
 }) => {
-  const { hasScopes, subscription } = useSubscriberAccess();
-  const canZoom = hasScopes && !!subscription.data;
-  const cameraSlug = camera.toLowerCase();
-
   const { mutate: runCommand, status } = trpc.stream.runCommand.useMutation();
   const isPending = status === "pending";
 
-  const [zoomValue, setZoomValue] = useState("");
+  const [value, setValue] = useState("");
 
-  const onZoomChange = useCallback(
-    (value: string) => {
-      runCommand({ command: "ptzzoom", args: [cameraSlug, value] });
+  const onChange = useCallback(
+    (level: string) => {
+      runCommand({ command: "ptzzoom", args: [camera, level] });
       // Reset back to the placeholder, the dropdown is an action trigger,
       // not a reflection of the camera's actual zoom state
-      setZoomValue("");
+      setValue("");
     },
-    [runCommand, cameraSlug],
+    [runCommand, camera],
   );
 
   const [statusText, setStatusText] = useState<string>();
@@ -173,22 +163,64 @@ const PresetTools = ({
     }
   }, [status]);
 
-  const zoomOutTooltip = useTooltip({
-    content: statusText ?? "Zoom out",
-    force: !!statusText,
-  });
-  const zoomInTooltip = useTooltip({
-    content: statusText ?? "Zoom in",
+  const tooltip = useTooltip({
+    content: statusText ?? `Zoom ${direction}`,
     force: !!statusText,
   });
 
-  const zoomButtonClasses = classes(
-    "inline-block p-1 text-alveus-green-400 hover:text-black focus:outline-none",
-    isPending && "opacity-60",
+  const Icon = direction === "out" ? IconZoomOut : IconZoomIn;
+
+  return (
+    <Listbox value={value} onChange={onChange} disabled={isPending}>
+      <div className="relative">
+        <ListboxButton
+          className={classes(
+            "inline-block p-1 text-alveus-green-400 hover:text-black focus:outline-none",
+            isPending && "opacity-60",
+          )}
+          {...tooltip.props}
+        >
+          <Icon className="size-5" />
+        </ListboxButton>
+        {tooltip.element}
+
+        <ListboxOptions
+          transition
+          className="absolute top-full z-30 mt-1 flex max-h-60 min-w-18 flex-col gap-0.5 overflow-auto rounded-md border border-alveus-green-200 bg-alveus-green-50 p-1 text-alveus-green-900 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0"
+          as="ul"
+        >
+          {levels.map((level) => (
+            <ZoomOption
+              key={level}
+              camera={camera}
+              level={level}
+              direction={direction}
+            />
+          ))}
+        </ListboxOptions>
+      </div>
+    </Listbox>
   );
+};
 
-  const zoomOptionsClasses =
-    "absolute top-full z-30 mt-1 flex max-h-60 min-w-18 flex-col gap-0.5 overflow-auto rounded-md border border-alveus-green-200 bg-alveus-green-50 p-1 text-alveus-green-900 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0";
+const PresetTools = ({
+  camera,
+  zoom,
+  search,
+  onSearch,
+  view,
+  onView,
+}: {
+  camera: Camera;
+  zoom: boolean;
+  search: string;
+  onSearch: (value: string) => void;
+  view: PresetView;
+  onView: (value: PresetView) => void;
+}) => {
+  const { hasScopes, subscription } = useSubscriberAccess();
+  const canZoom = hasScopes && !!subscription.data;
+  const cameraSlug = camera.toLowerCase();
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -207,69 +239,19 @@ const PresetTools = ({
         <>
           {zoom && canZoom && (
             <div className="flex items-center">
-              <Listbox
-                value={zoomValue}
-                onChange={onZoomChange}
-                disabled={isPending}
-              >
-                <div className="relative">
-                  <ListboxButton
-                    className={zoomButtonClasses}
-                    {...zoomOutTooltip.props}
-                  >
-                    <IconZoomOut className="size-5" />
-                  </ListboxButton>
-                  {zoomOutTooltip.element}
-
-                  <ListboxOptions
-                    transition
-                    className={zoomOptionsClasses}
-                    as="ul"
-                  >
-                    {zoomOutLevels.map((level) => (
-                      <ZoomOption
-                        key={level}
-                        camera={cameraSlug}
-                        level={level}
-                        direction="out"
-                      />
-                    ))}
-                  </ListboxOptions>
-                </div>
-              </Listbox>
+              <ZoomControl
+                camera={cameraSlug}
+                direction="out"
+                levels={zoomOutLevels}
+              />
 
               <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
 
-              <Listbox
-                value={zoomValue}
-                onChange={onZoomChange}
-                disabled={isPending}
-              >
-                <div className="relative">
-                  <ListboxButton
-                    className={zoomButtonClasses}
-                    {...zoomInTooltip.props}
-                  >
-                    <IconZoomIn className="size-5" />
-                  </ListboxButton>
-                  {zoomInTooltip.element}
-
-                  <ListboxOptions
-                    transition
-                    className={zoomOptionsClasses}
-                    as="ul"
-                  >
-                    {zoomInLevels.map((level) => (
-                      <ZoomOption
-                        key={level}
-                        camera={cameraSlug}
-                        level={level}
-                        direction="in"
-                      />
-                    ))}
-                  </ListboxOptions>
-                </div>
-              </Listbox>
+              <ZoomControl
+                camera={cameraSlug}
+                direction="in"
+                levels={zoomInLevels}
+              />
             </div>
           )}
 
