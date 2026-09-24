@@ -14,6 +14,7 @@ import home from "@/assets/presets/pasturelower/home.png";
 import left from "@/assets/presets/pasturelower/left.png";
 import owlbox from "@/assets/presets/pasturelower/owlbox.png";
 import purplebasel from "@/assets/presets/pasturelower/purplebasel.png";
+import purplemartins from "@/assets/presets/pasturelower/purplemartins.png";
 import purplenest from "@/assets/presets/pasturelower/purplenest.png";
 import right from "@/assets/presets/pasturelower/right.png";
 import rightcorner from "@/assets/presets/pasturelower/rightcorner.png";
@@ -118,6 +119,12 @@ const pasturelowerPresets: Record<string, Preset> = {
     image: purplebasel,
     position: { pan: -86.32, tilt: 2.94, zoom: 665 },
     // modified: 2026-06-19T13:46:25.647Z
+  },
+  purplemartins: {
+    description: "purplemartins",
+    image: purplemartins,
+    position: { pan: -83.02, tilt: 8.16, zoom: 4308 },
+    // modified: 2026-09-20T00:40:37.802Z
   },
   purplenest: {
     description: "purplenest",
