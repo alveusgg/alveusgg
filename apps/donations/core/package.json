@@ -10,11 +10,11 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "zod": "^4.6.0"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^24.13.4",
+    "@types/node": "^24.13.5",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",

@@ -16,18 +16,18 @@
     "@alveusgg/database": "workspace:*",
     "@t3-oss/env-core": "^0.13.11",
     "@twurple/api": "^8.0.3",
-    "@twurple/auth": "^8.0.3",
+    "@twurple/auth": "^8.2.0",
     "@twurple/chat": "^8.0.3",
-    "@twurple/easy-bot": "^8.1.4",
+    "@twurple/easy-bot": "^8.2.0",
     "luxon": "^3.7.2",
     "read-pkg": "^10.1.0",
     "tsx": "^4.23.13",
-    "zod": "^4.6.0"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/luxon": "^3.7.5",
-    "@types/node": "^24.13.4",
+    "@types/node": "^24.13.5",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.17.1",
