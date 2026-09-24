@@ -1,18 +1,19 @@
 import { Field, Label, Switch } from "@headlessui/react";
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
-import { channels, scopeGroups } from "@/data/twitch";
+import { channels } from "@/data/twitch";
 import { channels as youtubeChannels } from "@/data/youtube";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
-import { trpc } from "@/utils/trpc";
 
 import useLocalStorage from "@/hooks/storage";
+import useSubscriberAccess from "@/hooks/subscription";
 
 import Consent from "@/components/Consent";
 import Heading from "@/components/content/Heading";
@@ -58,12 +59,8 @@ const getPositionIcon = (position: number) => {
 };
 
 const AboutTechPresetsPage: NextPage = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
-  const subscription = trpc.stream.getSubscription.useQuery(undefined, {
-    enabled: scopeGroups.chat.every((scope) =>
-      session?.user?.scopes?.includes(scope),
-    ),
-  });
+  const { data: session } = useSession();
+  const { subscription } = useSubscriberAccess();
 
   // Allow the camera UI to be focused with other page UI hidden
   const [focused, setFocused] = useLocalStorage(
