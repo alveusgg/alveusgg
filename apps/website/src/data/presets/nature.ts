@@ -1,5 +1,6 @@
 import home from "@/assets/presets/nature/home.png";
 import pond from "@/assets/presets/nature/pond.png";
+import sunset2 from "@/assets/presets/nature/sunset2.png";
 import sunset from "@/assets/presets/nature/sunset.png";
 import sunsetz from "@/assets/presets/nature/sunsetz.png";
 
@@ -23,6 +24,12 @@ const naturePresets: Record<string, Preset> = {
     image: sunset,
     position: { pan: 91.89, tilt: 8.75, zoom: 480 },
     // modified: 2026-08-15T01:29:48.179Z
+  },
+  sunset2: {
+    description: "sunset2",
+    image: sunset2,
+    position: { pan: 82.16, tilt: 5.43, zoom: 977 },
+    // modified: 2026-09-24T00:21:16.559Z
   },
   sunsetz: {
     description: "sunsetz",
