@@ -3,6 +3,7 @@ import cratetop from "@/assets/presets/servalindoor/cratetop.png";
 import cubby from "@/assets/presets/servalindoor/cubby.png";
 import cubbyt from "@/assets/presets/servalindoor/cubbyt.png";
 import down from "@/assets/presets/servalindoor/down.png";
+import floorr from "@/assets/presets/servalindoor/floorr.png";
 import home from "@/assets/presets/servalindoor/home.png";
 import left from "@/assets/presets/servalindoor/left.png";
 import leftcorner from "@/assets/presets/servalindoor/leftcorner.png";
@@ -14,6 +15,7 @@ import pit1 from "@/assets/presets/servalindoor/pit1.png";
 import pit2 from "@/assets/presets/servalindoor/pit2.png";
 import pit3 from "@/assets/presets/servalindoor/pit3.png";
 import topleft from "@/assets/presets/servalindoor/topleft.png";
+import windowl from "@/assets/presets/servalindoor/windowl.png";
 import windowr from "@/assets/presets/servalindoor/windowr.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -55,6 +57,12 @@ const servalindoorPresets: Record<string, Preset> = {
     position: { pan: -130.45, tilt: -76.26, zoom: 1 },
     // modified: 2026-09-10T22:28:06.770Z
   },
+  floorr: {
+    description: "floorr",
+    image: floorr,
+    position: { pan: -108.63, tilt: -42.8, zoom: 1 },
+    // modified: 2026-09-25T15:51:08.813Z
+  },
   left: {
     description: "left",
     image: left,
@@ -95,25 +103,31 @@ const servalindoorPresets: Record<string, Preset> = {
     description: "pit1",
     image: pit1,
     position: { pan: -144.09, tilt: -50.69, zoom: 1 },
-    // modified: 2026-09-20T01:23:14.641Z
+    // modified: 2026-09-25T15:48:12.865Z
   },
   pit2: {
     description: "pit2",
     image: pit2,
     position: { pan: -139.58, tilt: -30.23, zoom: 87 },
-    // modified: 2026-09-20T01:24:02.596Z
+    // modified: 2026-09-25T15:48:35.010Z
   },
   pit3: {
     description: "pit3",
     image: pit3,
     position: { pan: -116.84, tilt: -31.28, zoom: 87 },
-    // modified: 2026-09-20T01:24:36.730Z
+    // modified: 2026-09-25T15:49:02.903Z
   },
   topleft: {
     description: "topleft",
     image: topleft,
     position: { pan: 167.07, tilt: 0, zoom: 1 },
     // modified: 2026-09-18T23:40:05.617Z
+  },
+  windowl: {
+    description: "windowl",
+    image: windowl,
+    position: { pan: 141.46, tilt: -56.31, zoom: 1 },
+    // modified: 2026-09-25T15:52:36.836Z
   },
   windowr: {
     description: "windowr",

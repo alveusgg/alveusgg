@@ -1,3 +1,4 @@
+import brush from "@/assets/presets/pushpop/brush.png";
 import crunchwide from "@/assets/presets/pushpop/crunchwide.png";
 import cubby from "@/assets/presets/pushpop/cubby.png";
 import cubbyl from "@/assets/presets/pushpop/cubbyl.png";
@@ -17,6 +18,7 @@ import insidedoor from "@/assets/presets/pushpop/insidedoor.png";
 import left from "@/assets/presets/pushpop/left.png";
 import pondt from "@/assets/presets/pushpop/pondt.png";
 import right from "@/assets/presets/pushpop/right.png";
+import rightcorner from "@/assets/presets/pushpop/rightcorner.png";
 import water from "@/assets/presets/pushpop/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -27,6 +29,12 @@ const pushpopPresets: Record<string, Preset> = {
     image: home,
     position: { pan: -90.12, tilt: -21.63, zoom: 1 },
     // modified: 2025-10-09T11:10:30.332Z
+  },
+  brush: {
+    description: "brush",
+    image: brush,
+    position: { pan: -78.83, tilt: -18.43, zoom: 429 },
+    // modified: 2026-09-25T21:52:15.086Z
   },
   crunchwide: {
     description: "Crunch Wide",
@@ -135,6 +143,12 @@ const pushpopPresets: Record<string, Preset> = {
     image: right,
     position: { pan: -68.73, tilt: -18.7, zoom: 1 },
     // modified: 2025-10-09T11:10:30.348Z
+  },
+  rightcorner: {
+    description: "rightcorner",
+    image: rightcorner,
+    position: { pan: -90.02, tilt: -5.12, zoom: 3101 },
+    // modified: 2026-07-28T17:18:37.942Z
   },
   water: {
     description: "Water",
