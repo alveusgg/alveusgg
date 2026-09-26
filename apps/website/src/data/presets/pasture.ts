@@ -30,11 +30,13 @@ import grove from "@/assets/presets/pasture/grove.png";
 import grovefl from "@/assets/presets/pasture/grovefl.png";
 import grovel from "@/assets/presets/pasture/grovel.png";
 import grover from "@/assets/presets/pasture/grover.png";
+import haystack from "@/assets/presets/pasture/haystack.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
 import insidebarnz from "@/assets/presets/pasture/insidebarnz.png";
 import middle from "@/assets/presets/pasture/middle.png";
 import pen from "@/assets/presets/pasture/pen.png";
+import penb from "@/assets/presets/pasture/penb.png";
 import penl from "@/assets/presets/pasture/penl.png";
 import penr from "@/assets/presets/pasture/penr.png";
 import pole from "@/assets/presets/pasture/pole.png";
@@ -52,6 +54,7 @@ import sky from "@/assets/presets/pasture/sky.png";
 import stompyfood from "@/assets/presets/pasture/stompyfood.png";
 import sunrise from "@/assets/presets/pasture/sunrise.png";
 import water from "@/assets/presets/pasture/water.png";
+import winniebush from "@/assets/presets/pasture/winniebush.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -254,6 +257,12 @@ const pasturePresets: Record<string, Preset> = {
     position: { pan: -11.95, tilt: -5.48, zoom: 1851 },
     // modified: 2026-01-03T20:40:36.816Z
   },
+  haystack: {
+    description: "haystack",
+    image: haystack,
+    position: { pan: 135, tilt: 8.1, zoom: 464 },
+    // modified: 2026-09-25T14:38:30.777Z
+  },
   insidebarn: {
     description: "Inside Barn",
     image: insidebarn,
@@ -277,6 +286,12 @@ const pasturePresets: Record<string, Preset> = {
     image: pen,
     position: { pan: 20.62, tilt: -3.61, zoom: 682 },
     // modified: 2025-11-12T14:02:16.520Z
+  },
+  penb: {
+    description: "penb",
+    image: penb,
+    position: { pan: 21.49, tilt: -4.68, zoom: 1662 },
+    // modified: 2026-09-25T14:40:04.781Z
   },
   penl: {
     description: "Pen Left",
@@ -379,6 +394,12 @@ const pasturePresets: Record<string, Preset> = {
     image: water,
     position: { pan: 59.39, tilt: -4.64, zoom: 1599 },
     // modified: 2026-03-05T12:42:38.559Z
+  },
+  winniebush: {
+    description: "winniebush",
+    image: winniebush,
+    position: { pan: 30.8, tilt: -5.09, zoom: 1455 },
+    // modified: 2026-09-25T14:46:44.770Z
   },
 };
 

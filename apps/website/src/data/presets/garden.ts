@@ -1,6 +1,5 @@
 import barn1r from "@/assets/presets/garden/barn1r.png";
 import barn2 from "@/assets/presets/garden/barn2.png";
-import beetles from "@/assets/presets/garden/beetles.png";
 import bughotel2 from "@/assets/presets/garden/bughotel2.png";
 import bughotel from "@/assets/presets/garden/bughotel.png";
 import butterflyplant from "@/assets/presets/garden/butterflyplant.png";
@@ -8,7 +7,6 @@ import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
 import milkweed from "@/assets/presets/garden/milkweed.png";
 import milkweedtop from "@/assets/presets/garden/milkweedtop.png";
-import orbweb from "@/assets/presets/garden/orbweb.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
 import pasturefarright from "@/assets/presets/garden/pasturefarright.png";
 import pasturegrove from "@/assets/presets/garden/pasturegrove.png";
@@ -23,7 +21,6 @@ import sunriser from "@/assets/presets/garden/sunriser.png";
 import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
-import waspnest from "@/assets/presets/garden/waspnest.png";
 import water from "@/assets/presets/garden/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -46,12 +43,6 @@ const gardenPresets: Record<string, Preset> = {
     image: barn2,
     position: { pan: -135.38, tilt: -9.03, zoom: 3798 },
     // modified: 2026-04-29T15:06:55.825Z
-  },
-  beetles: {
-    description: "beetles",
-    image: beetles,
-    position: { pan: 20.88, tilt: -18.31, zoom: 11830 },
-    // modified: 2026-09-18T10:32:49.541Z
   },
   bughotel: {
     description: "Bug Hotel",
@@ -88,12 +79,6 @@ const gardenPresets: Record<string, Preset> = {
     image: milkweedtop,
     position: { pan: 79.38, tilt: -13.42, zoom: 4425 },
     // modified: 2026-09-18T22:45:46.499Z
-  },
-  orbweb: {
-    description: "orbweb",
-    image: orbweb,
-    position: { pan: 82.1, tilt: -5.18, zoom: 2421 },
-    // modified: 2026-09-03T02:16:39.371Z
   },
   pasturebrush: {
     description: "Pasture Brush",
@@ -178,12 +163,6 @@ const gardenPresets: Record<string, Preset> = {
     image: tcright,
     position: { pan: 107.8, tilt: -6.38, zoom: 154 },
     // modified: 2025-10-09T11:10:30.316Z
-  },
-  waspnest: {
-    description: "waspnest",
-    image: waspnest,
-    position: { pan: 126.5, tilt: -21.26, zoom: 11107 },
-    // modified: 2026-07-07T15:40:09.689Z
   },
   water: {
     description: "water",
