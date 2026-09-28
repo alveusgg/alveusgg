@@ -21,16 +21,11 @@ type PendingNotification = {
   timeout?: ReturnType<typeof setTimeout>;
   isPush: boolean;
   isDiscord: boolean;
+  reply: (message: string) => void;
 };
 
 // These URLs are likely not meant to be used as notification links without a path
 const partialUrlFilterList = ["https://twitch.tv/", "https://youtube.com/"];
-
-function createPendingNotification(
-  data: Omit<PendingNotification, "timeout">,
-): PendingNotification {
-  return data;
-}
 
 const options = createOptions({
   help: {
@@ -116,7 +111,10 @@ function sendPendingNotification(
 export async function createNotificationCommands() {
   const pendingNotifications = new Map<string, PendingNotification>();
 
-  function clearPendingNotification(broadcasterId: string) {
+  function clearPendingNotification(
+    broadcasterId: string,
+    notifyPreviousCommand = false,
+  ) {
     const pendingNotification = pendingNotifications.get(broadcasterId);
     if (!pendingNotification) return false;
 
@@ -124,6 +122,11 @@ export async function createNotificationCommands() {
       clearTimeout(pendingNotification.timeout);
     }
     pendingNotifications.delete(broadcasterId);
+
+    if (notifyPreviousCommand) {
+      pendingNotification.reply("poggSpin cancelled notification");
+    }
+
     return true;
   }
 
@@ -175,31 +178,47 @@ export async function createNotificationCommands() {
       broadcasterName,
       paramsWithoutOptions,
     );
-    let { title, text } = parseTitleAndText(restParams);
+    const { title, text } = parseTitleAndText(restParams);
 
-    if (!title) {
-      const channelInfo = await getChannelInfoById(broadcasterId);
-      if (channelInfo) {
-        title = channelInfo.title.split("|")[0];
-        text = channelInfo.gameName;
-      }
-    }
-
-    title = title || defaultNotificationTitle;
-
-    const pendingNotification = createPendingNotification({
+    const pendingNotification: PendingNotification = {
       tag: "stream",
       linkUrl,
-      title,
+      title: title || defaultNotificationTitle,
       text,
       isPush: !optionValues["no-push"],
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
       vodUrl: optionValues.vod,
-    });
+      reply,
+    };
 
-    clearPendingNotification(broadcasterId);
+    clearPendingNotification(broadcasterId, true);
     pendingNotifications.set(broadcasterId, pendingNotification);
+
+    if (!title) {
+      try {
+        const channelInfo = await getChannelInfoById(broadcasterId);
+        if (channelInfo) {
+          pendingNotification.title =
+            channelInfo.title.split("|")[0]?.trim() || defaultNotificationTitle;
+          pendingNotification.text = channelInfo.gameName;
+        }
+      } catch (error) {
+        if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+          return;
+        }
+
+        pendingNotifications.delete(broadcasterId);
+        console.error(error);
+        reply("MADGIES failed to fetch stream information");
+        return;
+      }
+    }
+
+    if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+      return;
+    }
+
     pendingNotification.timeout = setTimeout(() => {
       if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
         return;
