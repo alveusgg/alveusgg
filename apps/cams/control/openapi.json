@@ -1,0 +1,2737 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Control API",
+    "description": "API for controlling cameras",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/ptz/load": {
+      "post": {
+        "operationId": "postPtzLoad",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Load",
+        "tags": ["PTZ"],
+        "description": "Make requests to change the pan, zoom and tilt of a camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pan": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -180
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 180
+                      }
+                    ]
+                  },
+                  "tilt": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -180
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 180
+                      }
+                    ]
+                  },
+                  "zoom": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 19999
+                      }
+                    ]
+                  },
+                  "focus": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 19999
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/move": {
+      "post": {
+        "operationId": "postPtzMove",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Move",
+        "tags": ["PTZ"],
+        "description": "Move the camera in a cardinal direction",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "upleft",
+                      "up",
+                      "upright",
+                      "left",
+                      "home",
+                      "right",
+                      "downleft",
+                      "down",
+                      "downright",
+                      "stop"
+                    ]
+                  }
+                },
+                "required": ["direction"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/pan": {
+      "post": {
+        "operationId": "postPtzPan",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Pan",
+        "tags": ["PTZ"],
+        "description": "Set absolute pan of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "degrees": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -180
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 180
+                      }
+                    ]
+                  }
+                },
+                "required": ["degrees"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/tilt": {
+      "post": {
+        "operationId": "postPtzTilt",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Tilt",
+        "tags": ["PTZ"],
+        "description": "Set absolute tilt of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "degrees": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -180
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 180
+                      }
+                    ]
+                  }
+                },
+                "required": ["degrees"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/zoom": {
+      "post": {
+        "operationId": "postPtzZoom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Zoom",
+        "tags": ["PTZ"],
+        "description": "Set absolute zoom of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 19999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/areazoom": {
+      "post": {
+        "operationId": "postPtzAreazoom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Areazoom",
+        "tags": ["PTZ"],
+        "description": "Zoom to an area defined by x, y, and z",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "z": {
+                    "type": "number",
+                    "minimum": 1
+                  }
+                },
+                "required": ["x", "y", "z"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/spin": {
+      "post": {
+        "operationId": "postPtzSpin",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Spin",
+        "tags": ["PTZ"],
+        "description": "Set continuous pan, tilt, and zoom movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pan": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  },
+                  "tilt": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  },
+                  "zoom": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["pan", "tilt", "zoom"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/rptz": {
+      "post": {
+        "operationId": "postPtzRptz",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative PTZ",
+        "tags": ["PTZ"],
+        "description": "Set relative pan, tilt, and zoom values",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pan": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -360
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 360
+                      }
+                    ]
+                  },
+                  "tilt": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -360
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 360
+                      }
+                    ]
+                  },
+                  "zoom": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -19999
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 19999
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/rpan": {
+      "post": {
+        "operationId": "postPtzRpan",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Pan",
+        "tags": ["PTZ"],
+        "description": "Set relative pan movement of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "degrees": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -360
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 360
+                      }
+                    ]
+                  }
+                },
+                "required": ["degrees"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/rtilt": {
+      "post": {
+        "operationId": "postPtzRtilt",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Tilt",
+        "tags": ["PTZ"],
+        "description": "Set relative tilt movement of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "degrees": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -360
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 360
+                      }
+                    ]
+                  }
+                },
+                "required": ["degrees"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ptz/rzoom": {
+      "post": {
+        "operationId": "postPtzRzoom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Zoom",
+        "tags": ["PTZ"],
+        "description": "Set relative zoom movement of the camera",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -19999
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 19999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ir": {
+      "post": {
+        "operationId": "postIr",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "IR",
+        "tags": ["DayNight"],
+        "description": "Set IR filter and light state together",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "light": {
+                    "type": "string",
+                    "pattern": "^led\\d$"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": ["on", "off", "auto"]
+                  }
+                },
+                "required": ["light", "state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ir/filter": {
+      "post": {
+        "operationId": "postIrFilter",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "IR Filter",
+        "tags": ["DayNight"],
+        "description": "Set IR cut filter state",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": ["on", "off", "auto"]
+                  }
+                },
+                "required": ["state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ir/light": {
+      "post": {
+        "operationId": "postIrLight",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "IR Light",
+        "tags": ["DayNight"],
+        "description": "Set IR light state",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "light": {
+                    "type": "string",
+                    "pattern": "^led\\d$"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": ["on", "off"]
+                  }
+                },
+                "required": ["light", "state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/position": {
+      "get": {
+        "operationId": "getInfoPosition",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get Info",
+        "tags": ["Info"],
+        "description": "Get information about a specific camera",
+        "responses": {
+          "200": {
+            "description": "Information about a camera",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/speed": {
+      "get": {
+        "operationId": "getInfoSpeed",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get Speed",
+        "tags": ["Info"],
+        "description": "Get the speed of the camera",
+        "responses": {
+          "200": {
+            "description": "Speed of the camera",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/screenshot": {
+      "get": {
+        "operationId": "getInfoScreenshot",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "width",
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "in": "query",
+            "name": "height",
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        ],
+        "summary": "Get Screenshot",
+        "tags": ["Info"],
+        "description": "Get a screenshot of the current view of the camera",
+        "responses": {
+          "200": {
+            "description": "Base64 encoded image",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/resolution": {
+      "get": {
+        "operationId": "getInfoResolution",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get Resolution",
+        "tags": ["Info"],
+        "description": "Get the camera's output resolution",
+        "responses": {
+          "200": {
+            "description": "Current resolution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/focus": {
+      "post": {
+        "operationId": "postImagingFocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Focus",
+        "tags": ["Imaging"],
+        "description": "Set absolute focus level",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/brightness": {
+      "post": {
+        "operationId": "postImagingBrightness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Brightness",
+        "tags": ["Imaging"],
+        "description": "Set absolute brightness level",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/iris": {
+      "post": {
+        "operationId": "postImagingIris",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Iris",
+        "tags": ["Imaging"],
+        "description": "Set absolute iris level",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/rfocus": {
+      "post": {
+        "operationId": "postImagingRfocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Focus",
+        "tags": ["Imaging"],
+        "description": "Set relative focus movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -9999
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/rbrightness": {
+      "post": {
+        "operationId": "postImagingRbrightness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Brightness",
+        "tags": ["Imaging"],
+        "description": "Set relative brightness movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -9999
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/riris": {
+      "post": {
+        "operationId": "postImagingRiris",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Relative Iris",
+        "tags": ["Imaging"],
+        "description": "Set relative iris movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -9999
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 9999
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/autofocus": {
+      "post": {
+        "operationId": "postImagingAutofocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Autofocus",
+        "tags": ["Imaging"],
+        "description": "Set autofocus mode",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": ["on", "off"]
+                  }
+                },
+                "required": ["state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/autoiris": {
+      "post": {
+        "operationId": "postImagingAutoiris",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Auto Iris",
+        "tags": ["Imaging"],
+        "description": "Set auto iris mode",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": ["on", "off"]
+                  }
+                },
+                "required": ["state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/cfocus": {
+      "post": {
+        "operationId": "postImagingCfocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Continuous Focus",
+        "tags": ["Imaging"],
+        "description": "Set continuous focus movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/cbrightness": {
+      "post": {
+        "operationId": "postImagingCbrightness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Continuous Brightness",
+        "tags": ["Imaging"],
+        "description": "Set continuous brightness movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imaging/ciris": {
+      "post": {
+        "operationId": "postImagingCiris",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Continuous Iris",
+        "tags": ["Imaging"],
+        "description": "Set continuous iris movement",
+        "responses": {
+          "200": {
+            "description": "Successfully submitted to the camera",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": -100
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/quickzoom": {
+      "get": {
+        "operationId": "getSettingsQuickzoom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postSettingsQuickzoom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set a boolean camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["enabled"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/focusautotype": {
+      "get": {
+        "operationId": "getSettingsFocusautotype",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postSettingsFocusautotype",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an enumerated camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": ["normal", "assisted"]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/spotfocus": {
+      "get": {
+        "operationId": "getSettingsSpotfocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postSettingsSpotfocus",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set a boolean camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["enabled"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/saturation": {
+      "post": {
+        "operationId": "postSettingsSaturation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsSaturation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/brightness": {
+      "post": {
+        "operationId": "postSettingsBrightness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsBrightness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/contrast": {
+      "post": {
+        "operationId": "postSettingsContrast",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsContrast",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/sharpness": {
+      "post": {
+        "operationId": "postSettingsSharpness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsSharpness",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/localcontrast": {
+      "post": {
+        "operationId": "postSettingsLocalcontrast",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsLocalcontrast",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/tonemapping": {
+      "post": {
+        "operationId": "postSettingsTonemapping",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsTonemapping",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/proportionalspeed": {
+      "post": {
+        "operationId": "postSettingsProportionalspeed",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Set an integer camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 1000
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSettingsProportionalspeed",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "tags": ["Settings"],
+        "description": "Get a camera parameter",
+        "responses": {
+          "200": {
+            "description": "Parameter state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/speed": {
+      "get": {
+        "operationId": "getSettingsSpeed",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get Speed",
+        "tags": ["Info"],
+        "description": "Get the speed of the camera",
+        "responses": {
+          "200": {
+            "description": "Speed of the camera",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "postSettingsSpeed",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-camera-name",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true
+          }
+        ],
+        "summary": "Set Speed",
+        "tags": ["Settings"],
+        "description": "Set camera speed and return updated speed",
+        "responses": {
+          "200": {
+            "description": "Updated camera speed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      {
+                        "type": "number",
+                        "maximum": 100
+                      }
+                    ]
+                  }
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/capabilities/{camera}": {
+      "get": {
+        "operationId": "getConfigCapabilitiesByCamera",
+        "summary": "Get Capabilities",
+        "tags": ["Config"],
+        "description": "Get capabilities for a specific camera",
+        "responses": {
+          "200": {
+            "description": "Camera capabilities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "camera": {
+                      "type": "string"
+                    },
+                    "capabilities": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": ["camera", "capabilities"]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/config/specs/{camera}": {
+      "get": {
+        "operationId": "getConfigSpecsByCamera",
+        "summary": "Get Specs",
+        "tags": ["Config"],
+        "description": "Get specifications for a specific camera",
+        "responses": {
+          "200": {
+            "description": "Camera specs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "camera": {
+                      "type": "string"
+                    },
+                    "specs": {
+                      "type": "object",
+                      "properties": {}
+                    }
+                  },
+                  "required": ["camera", "specs"]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "camera",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

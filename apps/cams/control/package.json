@@ -1,0 +1,32 @@
+{
+  "name": "@alveusgg/cams-control-client",
+  "version": "0.1.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alveusgg/alveusgg.git",
+    "directory": "apps/cams/control"
+  },
+  "bugs": {
+    "url": "https://github.com/alveusgg/alveusgg/issues"
+  },
+  "scripts": {
+    "generate": "openapi-ts",
+    "postinstall": "pnpm generate",
+    "types": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/generated/index.ts",
+    "./client": "./src/client.ts",
+    "./zod": "./src/generated/zod.gen.ts"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}
