@@ -1,0 +1,23 @@
+{
+  "name": "manager",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cf dev",
+    "build": "cf build",
+    "deploy": "cf deploy",
+    "types": "cf workers types && tsc"
+  },
+  "dependencies": {
+    "@alveusgg/cams-control-client": "workspace:*",
+    "hono": "^4.13.8",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "beta",
+    "cf": "^1.0.0-beta.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  }
+}

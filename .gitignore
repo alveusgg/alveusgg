@@ -35,3 +35,4 @@ yarn-error.log*
 !.env.example
 .wrangler/
 worker-configuration.d.ts
+.cloudflare
