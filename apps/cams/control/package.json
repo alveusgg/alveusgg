@@ -13,8 +13,7 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "scripts": {
-    "generate": "openapi-ts",
-    "postinstall": "pnpm generate",
+    "generate": "openapi-ts && prettier --write src/generated",
     "types": "tsc --noEmit"
   },
   "exports": {

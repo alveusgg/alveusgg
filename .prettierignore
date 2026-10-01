@@ -7,5 +7,3 @@ apps/website/public/push/alveus/
 
 apps/database/dist/
 apps/database/src/generated/
-
-apps/cams/control-client/src/generated/
