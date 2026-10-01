@@ -1,5 +1,5 @@
 {
-  "name": "manager",
+  "name": "@alveusgg/cams-manager",
   "private": true,
   "type": "module",
   "scripts": {
