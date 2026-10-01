@@ -1,9 +1,9 @@
 import { bindings, defineConfig, exports } from "cf/config";
 import * as entrypoint from "./src/index.ts" with { type: "cf-worker" };
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   worker: {
-    name: "manager",
+    name: mode === "preview" ? "manager-preview" : "manager",
     compatibilityDate: "2026-09-25",
     entrypoint,
     exports: {
@@ -18,4 +18,4 @@ export default defineConfig({
       ALVEUS_AUTH_ISSUER: bindings.text("https://www.alveussanctuary.org"),
     },
   },
-});
+}));
