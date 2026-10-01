@@ -46,6 +46,10 @@ export const userRoles = {
     label: "Donations",
     description: "Can view and manage donations",
   },
+  wishlist: {
+    label: "Wishlist",
+    description: "Can manage wishlist items and view donations",
+  },
   census_admin: {
     label: "Pollinator Census Admin",
     description: "Can administer the pollinator census",
