@@ -9,18 +9,15 @@ services:
       - db:/var/lib/mysql
 
   s3:
-    image: minio/minio:latest
+    image: andrewgaul/s3proxy:4.1.1
     ports:
       - 9000:9000
-      - 9001:9001
     environment:
-      MINIO_ROOT_USER: alveusgg_key
-      MINIO_ROOT_PASSWORD: alveusgg_secret
-    command: server /data --console-address ":9001"
+      S3PROXY_IDENTITY: alveusgg_key
+      S3PROXY_CREDENTIAL: alveusgg_secret
+      S3PROXY_ENDPOINT: http://0.0.0.0:9000
     post_start:
-      - command: sh -c "/usr/bin/mc mb local/alveusgg --ignore-existing; /usr/bin/mc anonymous set download local/alveusgg;"
-        environment:
-          - MC_HOST_local=http://alveusgg_key:alveusgg_secret@localhost:9000
+      - command: mkdir -p /data/alveusgg
     volumes:
       - s3:/data
 

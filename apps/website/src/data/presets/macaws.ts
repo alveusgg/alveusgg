@@ -11,6 +11,7 @@ import postmb from "@/assets/presets/macaws/postmb.png";
 import postmbb from "@/assets/presets/macaws/postmbb.png";
 import postmt from "@/assets/presets/macaws/postmt.png";
 import right from "@/assets/presets/macaws/right.png";
+import table from "@/assets/presets/macaws/table.png";
 import water from "@/assets/presets/macaws/water.png";
 import window from "@/assets/presets/macaws/window.png";
 import windowz from "@/assets/presets/macaws/windowz.png";
@@ -98,6 +99,12 @@ const macawsPresets: Record<string, Preset> = {
     image: right,
     position: { pan: -135.16, tilt: -22.19, zoom: 1 },
     // modified: 2026-05-31T12:45:59.232Z
+  },
+  table: {
+    description: "table",
+    image: table,
+    position: { pan: -157.2, tilt: -33.18, zoom: 211 },
+    // modified: 2026-09-25T15:41:40.837Z
   },
   water: {
     description: "Water",

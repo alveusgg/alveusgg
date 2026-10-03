@@ -9,7 +9,7 @@ const tarantulaPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
     position: { pan: -13.36, tilt: 14.05, zoom: 790 },
-    // modified: 2025-12-04T00:20:52.944Z
+    // modified: 2026-09-25T21:40:59.074Z
   },
   eva: {
     description: "Eva",
