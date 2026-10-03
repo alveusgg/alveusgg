@@ -14,8 +14,8 @@ For general questions about the project unrelated to a specific issue, please st
 
 - To start a local dev environment, follow this [guide](https://github.com/alveusgg/alveusgg#development-setup).
 - To setup a production instance of the website, follow this [guide](https://github.com/alveusgg/alveusgg#production-deployment)
-- Overview of architecture, refer to [systems overview](https://github.com/alveusgg/alveusgg#systems-overview).
-- More detailed overview the architecture, refer to [#9](https://github.com/alveusgg/alveusgg/issues/9).
+- For an overview of the repository and its architecture, refer to the [repository overview](https://github.com/alveusgg/alveusgg#repository-overview) and [systems overview](https://github.com/alveusgg/alveusgg#systems-overview).
+- For deep dives into specific features, see the [`docs`](docs) folder.
 
 ### Commit Messages
 
