@@ -1,7 +1,14 @@
+import { useRouter } from "next/router";
 import Script from "next/script";
 import { useCallback, useEffect, useState } from "react";
 
 const getTheme = (): "light" | "dark" => {
+  // Allow the theme to be forced via the URL (e.g. `?theme=dark`)
+  try {
+    const param = new URLSearchParams(window.location.search).get("theme");
+    if (param === "light" || param === "dark") return param;
+  } catch (_e) {}
+
   try {
     const stored = localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
@@ -40,6 +47,7 @@ export const ThemeScript = () => (
 );
 
 const useTheme = () => {
+  const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">();
 
   useEffect(() => {
@@ -47,12 +55,17 @@ const useTheme = () => {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "light" ? "dark" : "light";
-      updateTheme(next, true);
-      return next;
-    });
-  }, []);
+    const next = (theme ?? getTheme()) === "light" ? "dark" : "light";
+    updateTheme(next, true);
+    setTheme(next);
+
+    // Reflect the theme in the URL, so it can be shared (e.g. as a browser source URL)
+    if (router.isReady) {
+      router.replace({ query: { ...router.query, theme: next } }, undefined, {
+        shallow: true,
+      });
+    }
+  }, [theme, router]);
 
   return [theme, toggleTheme] as const;
 };
