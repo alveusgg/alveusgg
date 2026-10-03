@@ -16,13 +16,13 @@
   },
   "engines": {
     "node": ">=24.11.0",
-    "pnpm": "^11.22.0"
+    "pnpm": "^11.25.0"
   },
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@11.25.0",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^17.3.0",
-    "prettier": "^3.9.6",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.8",
     "typescript": "^6.0.2"
   },
   "scripts": {

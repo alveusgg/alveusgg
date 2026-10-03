@@ -108,7 +108,8 @@ export async function createFileStorageUpload({
 
   const signedUrlString = await getSignedUrl(getS3Client(), command, {
     expiresIn: expires,
-    signableHeaders: new Set(["content-type", "acl"]),
+    signableHeaders: new Set(["content-type", "x-amz-acl"]),
+    unhoistableHeaders: new Set(["x-amz-acl"]),
   });
 
   const fileStorageObject = await prisma.fileStorageObject.create({

@@ -23,6 +23,7 @@ import leftcornert from "@/assets/presets/marmin/leftcornert.png";
 import nearrightshelf from "@/assets/presets/marmin/nearrightshelf.png";
 import right from "@/assets/presets/marmin/right.png";
 import table from "@/assets/presets/marmin/table.png";
+import tablel from "@/assets/presets/marmin/tablel.png";
 import win1 from "@/assets/presets/marmin/win1.png";
 import win2 from "@/assets/presets/marmin/win2.png";
 import win3 from "@/assets/presets/marmin/win3.png";
@@ -180,6 +181,12 @@ const marminPresets: Record<string, Preset> = {
     image: table,
     position: { pan: 115.86, tilt: -31.87, zoom: 689 },
     // modified: 2025-10-09T11:10:29.916Z
+  },
+  tablel: {
+    description: "tablel",
+    image: tablel,
+    position: { pan: 71.25, tilt: -62.19, zoom: 1 },
+    // modified: 2026-09-15T14:52:53.445Z
   },
   win1: {
     description: "Window 1",

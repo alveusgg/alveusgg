@@ -7,6 +7,7 @@ import home from "@/assets/presets/toast/home.png";
 import log from "@/assets/presets/toast/log.png";
 import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
+import rocksandwicht from "@/assets/presets/toast/rocksandwicht.png";
 import toastsleep from "@/assets/presets/toast/toastsleep.png";
 import tunnel from "@/assets/presets/toast/tunnel.png";
 import water from "@/assets/presets/toast/water.png";
@@ -18,7 +19,7 @@ const toastPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
     position: { pan: -29.39, tilt: -47.47, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:50:39.363Z
   },
   closerock: {
     description: "Close Rock",
@@ -48,25 +49,31 @@ const toastPresets: Record<string, Preset> = {
     description: "Food",
     image: food,
     position: { pan: -47.36, tilt: -58.27, zoom: 2500 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:49:15.383Z
   },
   log: {
     description: "Log",
     image: log,
     position: { pan: -56.48, tilt: -46.35, zoom: 2500 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:47:45.311Z
   },
   logz: {
     description: "Log zoomed",
     image: logz,
     position: { pan: -59.38, tilt: -41.02, zoom: 7499 },
-    // modified: 2025-10-09T11:10:30.364Z
+    // modified: 2026-08-30T15:46:59.773Z
   },
   rocksandwich: {
     description: "Rock Sandwich",
     image: rocksandwich,
     position: { pan: -41.38, tilt: -13.95, zoom: 6727 },
     // modified: 2026-08-19T20:27:02.553Z
+  },
+  rocksandwicht: {
+    description: "rocksandwicht",
+    image: rocksandwicht,
+    position: { pan: -42.13, tilt: -7.08, zoom: 10021 },
+    // modified: 2026-09-10T21:45:57.317Z
   },
   toastsleep: {
     description: "toastsleep",

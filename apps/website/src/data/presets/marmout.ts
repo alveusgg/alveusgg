@@ -3,6 +3,8 @@ import basket from "@/assets/presets/marmout/basket.png";
 import blueball from "@/assets/presets/marmout/blueball.png";
 import bridgeb from "@/assets/presets/marmout/bridgeb.png";
 import bridgem from "@/assets/presets/marmout/bridgem.png";
+import brownball from "@/assets/presets/marmout/brownball.png";
+import brownballtop from "@/assets/presets/marmout/brownballtop.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellb from "@/assets/presets/marmout/domellb.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
@@ -13,6 +15,7 @@ import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import domerl from "@/assets/presets/marmout/domerl.png";
 import domerr from "@/assets/presets/marmout/domerr.png";
+import door from "@/assets/presets/marmout/door.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
@@ -30,11 +33,11 @@ import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
 import hose from "@/assets/presets/marmout/hose.png";
 import left from "@/assets/presets/marmout/left.png";
-import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
 import lefthammock from "@/assets/presets/marmout/lefthammock.png";
 import leftpostbranch from "@/assets/presets/marmout/leftpostbranch.png";
 import leftpostshelf from "@/assets/presets/marmout/leftpostshelf.png";
+import leftpostshelfb from "@/assets/presets/marmout/leftpostshelfb.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
 import leftshelfl from "@/assets/presets/marmout/leftshelfl.png";
 import leftshelfr from "@/assets/presets/marmout/leftshelfr.png";
@@ -46,6 +49,7 @@ import right from "@/assets/presets/marmout/right.png";
 import rightcorner from "@/assets/presets/marmout/rightcorner.png";
 import rightpost from "@/assets/presets/marmout/rightpost.png";
 import table from "@/assets/presets/marmout/table.png";
+import tableropes from "@/assets/presets/marmout/tableropes.png";
 import tablet from "@/assets/presets/marmout/tablet.png";
 import upleft from "@/assets/presets/marmout/upleft.png";
 import upleftbranch from "@/assets/presets/marmout/upleftbranch.png";
@@ -90,6 +94,18 @@ const marmoutPresets: Record<string, Preset> = {
     image: bridgem,
     position: { pan: 159.34, tilt: 7.44, zoom: 664 },
     // modified: 2026-05-23T17:37:41.860Z
+  },
+  brownball: {
+    description: "brownball",
+    image: brownball,
+    position: { pan: 86.75, tilt: -18.08, zoom: 997 },
+    // modified: 2026-09-25T16:07:20.800Z
+  },
+  brownballtop: {
+    description: "brownballtop",
+    image: brownballtop,
+    position: { pan: 86.74, tilt: -16.44, zoom: 997 },
+    // modified: 2026-09-25T16:07:35.045Z
   },
   domell: {
     description: "Dome Left Lower",
@@ -150,6 +166,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: domerr,
     position: { pan: 151.57, tilt: -7.67, zoom: 1662 },
     // modified: 2026-06-22T13:40:20.947Z
+  },
+  door: {
+    description: "door",
+    image: door,
+    position: { pan: 166.51, tilt: -18.64, zoom: 464 },
+    // modified: 2026-09-11T13:14:16.323Z
   },
   down: {
     description: "Down",
@@ -247,12 +269,6 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 104.97, tilt: -19.18, zoom: 1 },
     // modified: 2025-11-07T22:54:41.336Z
   },
-  leftcornerhideb: {
-    description: "Left Corner Hide Bottom",
-    image: leftcornerhideb,
-    position: { pan: 87.49, tilt: -16.48, zoom: 998 },
-    // modified: 2025-11-09T15:49:08.621Z
-  },
   leftcornershelf: {
     description: "leftcornershelf",
     image: leftcornershelf,
@@ -276,6 +292,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: leftpostshelf,
     position: { pan: 110.42, tilt: -15.72, zoom: 239 },
     // modified: 2026-05-17T13:10:21.032Z
+  },
+  leftpostshelfb: {
+    description: "leftpostshelfb",
+    image: leftpostshelfb,
+    position: { pan: 107.05, tilt: -24.5, zoom: 1 },
+    // modified: 2026-09-01T21:23:58.201Z
   },
   leftposttop: {
     description: "Left Post Top",
@@ -342,6 +364,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: table,
     position: { pan: 136.27, tilt: -21.57, zoom: 665 },
     // modified: 2025-12-18T21:17:08.440Z
+  },
+  tableropes: {
+    description: "tableropes",
+    image: tableropes,
+    position: { pan: 124.75, tilt: -24.5, zoom: 593 },
+    // modified: 2026-09-25T16:04:14.821Z
   },
   tablet: {
     description: "Tablet",

@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import {
   type ReactNode,
   useCallback,
@@ -7,10 +6,9 @@ import {
   useState,
 } from "react";
 
-import { scopeGroups } from "@/data/twitch";
-
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import useSubscriberAccess from "@/hooks/subscription";
 import type { UseTooltipProps } from "@/hooks/tooltip";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
@@ -41,14 +39,7 @@ const RunCommandButton = ({
   onClick,
   className,
 }: RunCommandButtonProps) => {
-  const { data: session } = useSession();
-  const hasScopes = scopeGroups.chat.every((scope) =>
-    session?.user?.scopes?.includes(scope),
-  );
-
-  const subscription = trpc.stream.getSubscription.useQuery(undefined, {
-    enabled: subOnly && hasScopes,
-  });
+  const { hasScopes, subscription } = useSubscriberAccess(subOnly);
 
   const { mutateAsync: runCommand, status } =
     trpc.stream.runCommand.useMutation();
