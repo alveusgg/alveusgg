@@ -5,22 +5,86 @@ You can access the site at [alveussanctuary.org](https://alveussanctuary.org/) (
 
 ## See also
 
-- [Data repository](https://github.com/alveusgg/data)
+- [Data repository](https://github.com/alveusgg/data): ambassador, enclosure, and other shared data, published as the `@alveusgg/data` package
 - [Twitch extension](https://github.com/alveusgg/extension)
+
+## Repository overview
+
+This repository holds more than the public website. It also contains the admin dashboard, the stream overlays, a Twitch chat bot, and the donations service behind features like the pixel mural.
+It is a [pnpm workspace](https://pnpm.io/workspaces) monorepo, and most work happens in `apps/website`.
+
+| Path                                                         | What it is                                                                                                                            | Runs on            |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| [`apps/website`](apps/website)                               | Next.js app: public pages, admin dashboard, stream overlays, and the API (tRPC and REST) that the other apps talk to                  | Vercel             |
+| [`apps/database`](apps/database)                             | Prisma schema and client (`@alveusgg/database`), shared by the website and the chat bot                                               | _library_          |
+| [`apps/chatbot`](apps/chatbot)                               | Twitch chat bot that lets mods send "live now" notifications from chat                                                                | Docker             |
+| [`apps/donations/worker`](apps/donations/worker)             | Donations manager: takes in donations from Twitch Charity, PayPal, and Neon CRM, saves them via the website, and runs the pixel mural | Cloudflare Workers |
+| [`apps/donations/core`](apps/donations/core)                 | Shared donation types                                                                                                                 | _library_          |
+| [`apps/donations/neon-crm-api`](apps/donations/neon-crm-api) | Neon CRM API client and webhook schemas                                                                                               | _library_          |
+| [`docs`](docs)                                               | Deep dives into specific features, e.g. [file uploads and attachments](docs/file-upload-and-attachments.md)                           |                    |
+
+### Systems overview
+
+```mermaid
+flowchart TB
+  chat(["Twitch chat"])
+  people(["Visitors, staff & mods<br/>browser, PWA, stream overlays"])
+  donations(["Donation sources<br/>Twitch Charity, PayPal, Neon CRM"])
+
+  subgraph repo["This repository"]
+    chatbot["<b>Chat bot</b><br/>apps/chatbot<br/><i>Docker</i>"]
+    worker["<b>Donations worker</b><br/>apps/donations/worker<br/><i>Cloudflare Workers</i>"]
+    website["<b>Website & API</b><br/>apps/website<br/><i>Vercel</i>"]
+  end
+
+  data["@alveusgg/data<br/>ambassadors & enclosures"]
+
+  subgraph services["Infrastructure & external services"]
+    db[("MySQL<br/>schema in apps/database")]
+    storage[("S3 storage<br/>file uploads")]
+    upstash["Upstash<br/>QStash, Redis"]
+    push["Web push services"]
+    apis["External APIs<br/>Twitch, YouTube, Discord,<br/>Weather, Cloudflare Stream"]
+  end
+
+  chat <-- "commands" --> chatbot
+  people -- "pages, tRPC" --> website
+  people -- "live pixels" --> worker
+  donations -- "webhooks, sync" --> worker
+  chatbot -- "send notification" --> website
+  worker -- "new donations" --> website
+  data -. "npm package" .-> website
+  chatbot --> db
+  website --> db & storage & upstash & push & apis
+```
+
+- **Website** (`apps/website`) is the hub. It serves the pages and the tRPC API, signs people in with Twitch, keeps data in MySQL and uploads in S3-compatible storage, and sends notifications through web push and Discord. A Vercel cron job calls `/api/cron` every 10 minutes to run the [scheduled tasks](apps/website/src/data/scheduled-tasks.ts), such as syncing calendar events and retrying notification pushes.
+- **Chat bot** (`apps/chatbot`) listens to Twitch chat. When a mod sends a notification command, the bot passes it to the website API. It reads its own Twitch token and user roles from the shared database.
+- **Donations worker** (`apps/donations/worker`) receives donation webhooks (Twitch Charity via EventSub, PayPal IPN, Neon CRM) and syncs with Neon CRM every hour. It queues the donations, saves them via the website's tRPC API, and keeps the pixel mural state that browsers follow live over a WebSocket.
+- **Ambassador and enclosure data** comes from [`@alveusgg/data`](https://github.com/alveusgg/data), which is installed from the GitHub Package Registry. This is why the setup below needs a GitHub token.
+
+### Finding your way around `apps/website/src`
+
+- `pages/`: most site pages (Next.js Pages Router), plus API routes in `pages/api/`
+- `app/`: App Router route handlers for newer API endpoints, RSS feeds, and the OAuth endpoints
+- `components/`: React components, grouped by feature (`admin/`, `overlay/`, `content/`, …)
+- `server/`: server-only code, including tRPC routers (`server/trpc/router/`), database access (`server/db/`), and clients for external APIs (`server/apis/`)
+- `data/`: static content and configuration, such as navigation, staff, events, and scheduled tasks
+- `sw/`: the service worker that shows push notifications
+- `env/`: the environment variable schema (keep it in sync with `.env.example`)
 
 ## Tech stack
 
-This project uses PNPM workspaces. The main app is the website package (`apps/website`), which is a Next.js app.
-
 For development:
 
-- Node.js
-- PNPM with workspaces
+- Node.js (see `engines` in `package.json`)
+- pnpm with workspaces
 - Prettier (code formatting)
 - ESLint (code linting)
-- Docker (Compose) (local MySQL + S3)
+- Vitest (unit tests)
+- Docker Compose (local MySQL, Redis, and S3)
 
-Website stack (based on [T3 Stack](https://create.t3.gg/)):
+Website stack (based on the [T3 Stack](https://create.t3.gg/)):
 
 - TypeScript
 - Next.js (framework)
@@ -29,23 +93,27 @@ Website stack (based on [T3 Stack](https://create.t3.gg/)):
 - Auth.js aka NextAuth.js (auth via OAuth)
 - Tailwind CSS (styling)
 
+Other apps:
+
+- Chat bot: Node.js with [Twurple](https://twurple.js.org/)
+- Donations worker: Cloudflare Workers with Hono, Durable Objects, and Queues
+
 Hosting (production):
 
+- Vercel (website)
 - PlanetScale (MySQL database)
-- Vercel (serverless hosting)
 - DigitalOcean Spaces (S3-compatible storage)
-- Upstash QStash (Simple Queue Service)
+- Upstash QStash (queue for push notifications) and Upstash Redis (rate limiting, OAuth codes)
+- Cloudflare Workers (donations worker) and Cloudflare Stream (low-latency cams)
+- A Docker host (chat bot)
 
 ## External APIs
 
-- Twitch OAuth (application)
-- Twitch Helix
-
-## Systems overview
-
-For a more complete overview see: [#9](https://github.com/alveusgg/alveusgg/issues/9)
-
-![alveusgg-infra](https://user-images.githubusercontent.com/684458/217618231-6fb9078d-8d77-4c64-9b92-c2ebe8e58c3c.png)
+- Twitch: OAuth (sign-in), Helix API, chat, and EventSub (charity donations)
+- YouTube Data API
+- Discord (calendar events and webhooks)
+- Weather.com / Wunderground (on-site weather station)
+- Neon CRM and PayPal (donations)
 
 ## How to contribute
 
@@ -137,6 +205,13 @@ We use Cloudflare Stream to host a low-latency variation of the live cams specif
 
 For the Neon CRM donation embed to load successfully, the site needs to be running with SSL on a domain that is trusted by Neon CRM. To aid local development with this, we've configured `local.alveussanctuary.org` to be trusted by Neon CRM and set it to resolve to `127.0.0.1` (localhost). Next.js can be started with HTTPS support bound to that hostname via `pnpm dev:next --experimental-https --hostname local.alveussanctuary.org --port 443` in `apps/website`, allowing [`https://local.alveussanctuary.org`](https://local.alveussanctuary.org) to be accessed to test the Neon CRM donation embed locally.
 
+### Chat bot and donations worker (optional)
+
+You only need these when working on the chat bot or on donations and the pixel mural.
+
+- **Chat bot**: Copy `apps/chatbot/.env.example` to `apps/chatbot/.env`. Set `API_SECRET` to the website's `ACTION_API_SECRET`, and fill in the same Twitch client ID and secret as the website. The bot reads its Twitch token from the database, but a normal sign-in only grants basic scopes. So first sign in to your local website as the bot account (`BOT_USER_ID`) using the _Log in_ button under _Provide auth_ on the admin Twitch API page (`/admin/twitch`), which also grants the chat scopes (`chat:read` and `chat:edit`). That page is admin-only, so set `DISABLE_ADMIN_AUTH` to `true` (see step 6.i) or add your user to `SUPER_USER_IDS` before opening it. Then start it using `pnpm start` from within `apps/chatbot`.
+- **Donations worker**: After step 8 above, start it using `pnpm dev` from within `apps/donations/worker`. It runs at `http://localhost:8787`. To have the worker save donations to your local website, set `SITE_URL` to `http://localhost:3000` in `apps/donations/worker/.env`. To connect the website to the worker for the pixel mural, set `NEXT_PUBLIC_DONATIONS_MANAGER_URL` to `http://localhost:8787` in `apps/website/.env`.
+
 ## Production deployment
 
 ### Website
@@ -150,7 +225,7 @@ but has only been tested on Vercel (and PlanetScale) for now.
 4. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see [Development setup](#development-setup) above) and also:
    1. Fill the Prisma section with the database info (DSN)
    2. Fill in the S3 section with your S3-compatible storage info
-5. Push the database schema to the new database using `pnpm prisma db push`.
+5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
 6. Get your own domain (optional)
 7. Create a Vercel account
 8. Create a new Vercel project with these settings:
@@ -160,4 +235,11 @@ but has only been tested on Vercel (and PlanetScale) for now.
      - _Node.js Version_: See `engines` in `package.json` for the required version
    - _Domains_: add your domains
    - _Git_: connect your Git repo
-   - _Environment Variables_: Copy your `apps/website/.env.production` here
+   - _Environment Variables_: Copy your `apps/website/.env.production` here, and add `GH_PKG_REGISTRY_TOKEN`: a GitHub personal access token with the `read:packages` scope. The install command in `apps/website/vercel.json` uses it to install `@alveusgg/data`.
+
+### Chat bot and donations worker
+
+Both deploy automatically through GitHub Actions when a push to `main` (production) or `preview` changes their files (each workflow has a `paths` filter). They can also be started manually from the Actions tab.
+
+- The chat bot is rebuilt and restarted with Docker Compose over SSH, see [`update-chatbot.yml`](.github/workflows/update-chatbot.yml).
+- The donations worker is deployed to Cloudflare with Wrangler, see [`update-donations-worker.yml`](.github/workflows/update-donations-worker.yml).
