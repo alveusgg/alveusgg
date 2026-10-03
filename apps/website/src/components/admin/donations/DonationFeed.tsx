@@ -10,6 +10,7 @@ import useLocaleString from "@/hooks/locale";
 import { PixelProvider, usePixels } from "@/hooks/pixels";
 import { usePrependScrollLock } from "@/hooks/prepend-scroll-lock";
 import useLocalStorage from "@/hooks/storage";
+import useUrlOption from "@/hooks/url-option";
 
 import { LoadMoreTrigger } from "@/components/LoadMoreTrigger";
 
@@ -20,7 +21,6 @@ import DonationFeedItem from "./DonationFeedItem";
 const newestMuralId = typeSafeObjectKeys(murals).at(-1);
 
 const nullableDateSchema = z.coerce.date().nullable();
-const boolSchema = z.boolean();
 
 function PixelsCount() {
   return (
@@ -31,10 +31,15 @@ function PixelsCount() {
 }
 
 export function DonationFeed() {
-  const [onlyPixels, setOnlyPixels] = useLocalStorage(
+  const [onlyPixels, setOnlyPixels] = useUrlOption(
     "stream/donation-feed/only-pixels",
-    boolSchema,
+    "pixels",
     false,
+  );
+  const [showNotes, setShowNotes] = useUrlOption(
+    "stream/donation-feed/show-notes",
+    "notes",
+    true,
   );
   const [lastSeen, setLastSeen] = useLocalStorage(
     "stream/donation-feed/last-seen",
@@ -106,17 +111,34 @@ export function DonationFeed() {
             <IconFunnel />
           </summary>
           <div className="absolute top-full right-0 z-10 flex w-64 flex-col gap-2 rounded-sm border border-gray-400 bg-white p-4 text-black shadow-lg">
-            <form>
-              <input
-                type="checkbox"
-                id="onlyPixels"
-                checked={onlyPixels}
-                onChange={() => setOnlyPixels(!onlyPixels)}
-              />
-              <label htmlFor="onlyPixels" className="ml-2">
-                Only pixel donations
-              </label>
+            <form className="flex flex-col gap-2">
+              <div>
+                <input
+                  type="checkbox"
+                  id="onlyPixels"
+                  checked={onlyPixels}
+                  onChange={() => setOnlyPixels(!onlyPixels)}
+                />
+                <label htmlFor="onlyPixels" className="ml-2">
+                  Only pixel donations
+                </label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="showNotes"
+                  checked={showNotes}
+                  onChange={() => setShowNotes(!showNotes)}
+                />
+                <label htmlFor="showNotes" className="ml-2">
+                  Show donation notes
+                </label>
+              </div>
             </form>
+            <p className="text-xs text-gray-600">
+              Options can also be set via the URL, e.g.{" "}
+              <code>{"?pixels=1&notes=0&theme=dark"}</code>
+            </p>
           </div>
         </details>
       </div>
@@ -139,6 +161,7 @@ export function DonationFeed() {
               key={donation.id}
               donation={donation}
               odd={i % 2 === 0}
+              showNotes={showNotes}
               lastSeen={lastSeen}
               setLastSeen={setLastSeen}
             />

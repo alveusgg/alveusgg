@@ -72,6 +72,7 @@ function Badge({
 function DonationFeedItem({
   donation,
   odd,
+  showNotes,
   lastSeen,
   setLastSeen,
 }: {
@@ -79,6 +80,7 @@ function DonationFeedItem({
   lastSeen: Date | null;
   setLastSeen: (date: Date | null) => void;
   odd: boolean;
+  showNotes: boolean;
 }) {
   const renderTime = useTimestamp(10_000);
   const timeDiff = renderTime - donation.donatedAt.getTime();
@@ -153,7 +155,7 @@ function DonationFeedItem({
         </div>
         <div className="text-right text-sm">{timeFormatted}</div>
       </div>
-      {donation.note ? (
+      {showNotes && donation.note ? (
         <div className="ml-6 overflow-hidden px-2 py-1 text-base text-ellipsis text-black/80 italic dark:text-white/80">
           {donation.note}
         </div>
