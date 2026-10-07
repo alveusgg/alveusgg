@@ -107,6 +107,7 @@ export const donationsRouter = router({
       z.object({
         cursor: z.string().nullish(),
         onlyPixels: z.boolean().default(false),
+        includeSubscriptions: z.boolean().default(false),
       }),
     )
     .query(async ({ input }) => {
@@ -116,6 +117,7 @@ export const donationsRouter = router({
         take: DONATION_FEED_ENTRIES_PER_PAGE + 1,
         cursor: cursor || undefined,
         onlyPixels: input.onlyPixels,
+        includeSubscriptions: input.includeSubscriptions,
       });
 
       let nextCursor: typeof cursor | undefined = undefined;

@@ -10,6 +10,8 @@ function DonationProviderIcon({
   switch (provider) {
     case "twitch":
       return <IconTwitch {...iconProps} />;
+    case "twitchsubscription":
+      return <IconTwitch {...iconProps} />;
     case "paypal":
       return <IconPayPal {...iconProps} />;
     default:
