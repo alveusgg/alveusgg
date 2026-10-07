@@ -300,7 +300,11 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
-        <div className="flex aspect-video h-full max-w-full items-center justify-center">
+        <div
+          className={`flex aspect-video max-w-full items-center justify-center ${
+            title ? "h-[calc(100%-6rem)]" : "h-full"
+          }`}
+        >
           <div className="relative flex aspect-video w-full items-center justify-center">
             <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
@@ -329,8 +333,8 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
 
             <Transition show={details === "overlay"}>
-              <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-300">
-                <h1 className="text-5xl">
+              <div className="absolute top-2 left-2 max-w-[calc(100%-1rem)] rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-300">
+                <h1 className="text-5xl wrap-break-word">
                   {clip.title}
                   <span className="ml-1 text-4xl">
                     {" "}
