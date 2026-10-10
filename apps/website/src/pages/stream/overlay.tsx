@@ -24,9 +24,12 @@ import Text from "@/components/overlay/Text";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
+import border2cam from "@/assets/stream/border-2cam.png";
+import border3cam from "@/assets/stream/border-3cam.png";
 import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
+import border6camHalloween from "@/assets/stream/border-6cam-halloween.png";
 import border6cam from "@/assets/stream/border-6cam.png";
 import borderPipChristmas from "@/assets/stream/border-pip-christmas.png";
 import borderPip from "@/assets/stream/border-pip.png";
@@ -37,6 +40,8 @@ const disclaimerText =
 
 const layouts = [
   "fullscreen",
+  "2cam",
+  "3cam",
   "4cam",
   "6cam",
   "pipbl",
@@ -48,11 +53,21 @@ type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
 
+const debug = [
+  "bg-red",
+  "bg-green",
+  "bg-blue",
+  "bg-yellow",
+  "bg-pink",
+  "bg-gray",
+];
+
 interface Grid {
   grid: string;
   border?: {
     default: StaticImageData;
-    xmas?: StaticImageData;
+    christmas?: StaticImageData;
+    halloween?: StaticImageData;
     flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
@@ -63,11 +78,32 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-1 grid-rows-1",
     slots: ["1 / 1 / span 1 / span 1"],
   },
+  "2cam": {
+    grid: "grid-cols-2 grid-rows-4",
+    border: {
+      default: border2cam,
+    },
+    slots: [
+      "2 / 1 / span 2 / span 1", // left
+      "2 / 2 / span 2 / span 1", // right
+    ],
+  },
+  "3cam": {
+    grid: "grid-cols-4 grid-rows-2",
+    border: {
+      default: border3cam,
+    },
+    slots: [
+      "1 / 2 / span 1 / span 2", // top
+      "2 / 1 / span 1 / span 2", // left
+      "2 / 3 / span 1 / span 2", // right
+    ],
+  },
   "4cam": {
     grid: "grid-cols-2 grid-rows-2",
     border: {
       default: border4cam,
-      xmas: border4camChristmas,
+      christmas: border4camChristmas,
     },
     slots: [
       "1 / 1 / span 1 / span 1", // top-left
@@ -80,7 +116,8 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: border6cam,
-      xmas: border6camChristmas,
+      christmas: border6camChristmas,
+      halloween: border6camHalloween,
     },
     slots: [
       "1 / 2 / span 2 / span 2", // top-right
@@ -95,7 +132,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
     },
     slots: [
       "1 / 1 / span 3 / span 3", // full
@@ -106,7 +143,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: true, y: false },
     },
     slots: [
@@ -118,7 +155,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: false, y: true },
     },
     slots: [
@@ -130,7 +167,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: true, y: true },
     },
     slots: [
@@ -302,7 +339,7 @@ const OverlayPage: NextPage = () => {
     ),
   );
 
-  // Track the current date to switch 6cam borders during December
+  // Track the current date to switch borders to non-default variants
   const [date, setDate] = useState<`${number}-${number}`>();
   useEffect(() => {
     const updateDate = () => {
@@ -340,7 +377,10 @@ const OverlayPage: NextPage = () => {
           {grid[layout].slots.map((slot, index) => (
             <div
               key={`${layout}-${index}`}
-              className="relative size-full"
+              className={classes(
+                "relative size-full",
+                "debug" in query && debug[index % debug.length],
+              )}
               style={{
                 gridArea: slot,
               }}
@@ -374,6 +414,12 @@ const OverlayPage: NextPage = () => {
                   layout={layout}
                 />
               )}
+
+              {"debug" in query && (
+                <p className="absolute top-1/2 left-1/2 -translate-1/2 transform font-mono text-4xl font-medium text-white text-stroke-2">
+                  {index + 1}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -381,7 +427,8 @@ const OverlayPage: NextPage = () => {
         {!hide.has("border") && grid[layout].border && (
           <Image
             src={
-              (date?.startsWith("12-") && grid[layout].border.xmas) ||
+              (date?.startsWith("12-") && grid[layout].border.christmas) ||
+              (date?.startsWith("10-") && grid[layout].border.halloween) ||
               grid[layout].border.default
             }
             alt=""
@@ -391,6 +438,7 @@ const OverlayPage: NextPage = () => {
               "pointer-events-none select-none",
               grid[layout].border?.flip?.x && "-scale-x-100",
               grid[layout].border?.flip?.y && "-scale-y-100",
+              "debug" in query && "opacity-75",
             )}
           />
         )}
