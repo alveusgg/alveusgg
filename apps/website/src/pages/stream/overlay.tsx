@@ -24,6 +24,8 @@ import Text from "@/components/overlay/Text";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
+import border2cam from "@/assets/stream/border-2cam.png";
+import border3cam from "@/assets/stream/border-3cam.png";
 import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
@@ -37,6 +39,8 @@ const disclaimerText =
 
 const layouts = [
   "fullscreen",
+  "2cam",
+  "3cam",
   "4cam",
   "6cam",
   "pipbl",
@@ -71,6 +75,27 @@ const grid: Record<Layout, Grid> = {
   fullscreen: {
     grid: "grid-cols-1 grid-rows-1",
     slots: ["1 / 1 / span 1 / span 1"],
+  },
+  "2cam": {
+    grid: "grid-cols-2 grid-rows-4",
+    border: {
+      default: border2cam,
+    },
+    slots: [
+      "2 / 1 / span 2 / span 1", // left
+      "2 / 2 / span 2 / span 1", // right
+    ],
+  },
+  "3cam": {
+    grid: "grid-cols-4 grid-rows-2",
+    border: {
+      default: border3cam,
+    },
+    slots: [
+      "1 / 2 / span 1 / span 2", // top
+      "2 / 1 / span 1 / span 2", // left
+      "2 / 3 / span 1 / span 2", // right
+    ],
   },
   "4cam": {
     grid: "grid-cols-2 grid-rows-2",
