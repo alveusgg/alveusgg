@@ -29,6 +29,7 @@ import border3cam from "@/assets/stream/border-3cam.png";
 import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
+import border6camHalloween from "@/assets/stream/border-6cam-halloween.png";
 import border6cam from "@/assets/stream/border-6cam.png";
 import borderPipChristmas from "@/assets/stream/border-pip-christmas.png";
 import borderPip from "@/assets/stream/border-pip.png";
@@ -65,7 +66,8 @@ interface Grid {
   grid: string;
   border?: {
     default: StaticImageData;
-    xmas?: StaticImageData;
+    christmas?: StaticImageData;
+    halloween?: StaticImageData;
     flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
@@ -101,7 +103,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-2 grid-rows-2",
     border: {
       default: border4cam,
-      xmas: border4camChristmas,
+      christmas: border4camChristmas,
     },
     slots: [
       "1 / 1 / span 1 / span 1", // top-left
@@ -114,7 +116,8 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: border6cam,
-      xmas: border6camChristmas,
+      christmas: border6camChristmas,
+      halloween: border6camHalloween,
     },
     slots: [
       "1 / 2 / span 2 / span 2", // top-right
@@ -129,7 +132,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
     },
     slots: [
       "1 / 1 / span 3 / span 3", // full
@@ -140,7 +143,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: true, y: false },
     },
     slots: [
@@ -152,7 +155,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: false, y: true },
     },
     slots: [
@@ -164,7 +167,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
-      xmas: borderPipChristmas,
+      christmas: borderPipChristmas,
       flip: { x: true, y: true },
     },
     slots: [
@@ -336,7 +339,7 @@ const OverlayPage: NextPage = () => {
     ),
   );
 
-  // Track the current date to switch 6cam borders during December
+  // Track the current date to switch borders to non-default variants
   const [date, setDate] = useState<`${number}-${number}`>();
   useEffect(() => {
     const updateDate = () => {
@@ -424,7 +427,8 @@ const OverlayPage: NextPage = () => {
         {!hide.has("border") && grid[layout].border && (
           <Image
             src={
-              (date?.startsWith("12-") && grid[layout].border.xmas) ||
+              (date?.startsWith("12-") && grid[layout].border.christmas) ||
+              (date?.startsWith("10-") && grid[layout].border.halloween) ||
               grid[layout].border.default
             }
             alt=""
