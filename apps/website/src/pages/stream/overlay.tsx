@@ -48,6 +48,15 @@ type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
 
+const debug = [
+  "bg-red",
+  "bg-green",
+  "bg-blue",
+  "bg-yellow",
+  "bg-pink",
+  "bg-gray",
+];
+
 interface Grid {
   grid: string;
   border?: {
@@ -340,7 +349,10 @@ const OverlayPage: NextPage = () => {
           {grid[layout].slots.map((slot, index) => (
             <div
               key={`${layout}-${index}`}
-              className="relative size-full"
+              className={classes(
+                "relative size-full",
+                "debug" in query && debug[index % debug.length],
+              )}
               style={{
                 gridArea: slot,
               }}
@@ -374,6 +386,12 @@ const OverlayPage: NextPage = () => {
                   layout={layout}
                 />
               )}
+
+              {"debug" in query && (
+                <p className="absolute top-1/2 left-1/2 -translate-1/2 transform font-mono text-4xl font-medium text-white text-stroke-2">
+                  {index + 1}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -391,6 +409,7 @@ const OverlayPage: NextPage = () => {
               "pointer-events-none select-none",
               grid[layout].border?.flip?.x && "-scale-x-100",
               grid[layout].border?.flip?.y && "-scale-y-100",
+              "debug" in query && "opacity-75",
             )}
           />
         )}
