@@ -13,7 +13,6 @@ import posterPasturePals from "@/assets/merch/poster-pasture-pals.png";
 import totePushpop from "@/assets/merch/tote-pushpop.png";
 import tshirtAmbassadorFaces from "@/assets/merch/tshirt-ambassador-faces.png";
 import tshirtHankTheTank from "@/assets/merch/tshirt-hank-the-tank.png";
-import tshirtPushpopStory from "@/assets/merch/tshirt-pushpop-story.png";
 import georgieImage from "@/assets/plushies/georgie.png";
 import mayaImage from "@/assets/plushies/maya.png";
 import sirenImage from "@/assets/plushies/siren.png";
@@ -70,10 +69,6 @@ const allItems = {
     mugGeorgie: {
       src: mugGeorgie,
       alt: "Maya holding the Georgie Mug",
-    },
-    tshirtPushpopStory: {
-      src: tshirtPushpopStory,
-      alt: "Daniel wearing the Pushpop Story T-Shirt",
     },
     hatMartyParty: {
       src: hatMartyParty,
