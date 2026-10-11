@@ -13,6 +13,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [current, latest]
+
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -24,14 +29,30 @@ jobs:
 
       - name: Update pnpm
         id: update
+        env:
+          VERSION: ${{ matrix.version }}
         run: |
-          echo "old=$(pnpm --version)" >> $GITHUB_OUTPUT
-          pnpm self-update
-          echo "new=$(pnpm --version)" >> $GITHUB_OUTPUT
+          OLD=$(pnpm --version)
+          echo "old=$OLD" >> $GITHUB_OUTPUT
+
+          if [ "$VERSION" = "current" ]; then
+            pnpm self-update "latest-${OLD%%.*}"
+          else
+            pnpm self-update
+          fi
+
+          NEW=$(pnpm --version)
+          echo "new=$NEW" >> $GITHUB_OUTPUT
+
+          # Skip the latest PR if it's the same major, as the current job will cover it
+          if [ "$VERSION" = "latest" ] && [ "${OLD%%.*}" = "${NEW%%.*}" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          fi
+
           cat <<< $(jq '.engines.pnpm = "^" + (.packageManager | split("@")[1])' package.json) > package.json
 
       - name: Create PR
-        if: steps.update.outputs.old != steps.update.outputs.new
+        if: steps.update.outputs.old != steps.update.outputs.new && steps.update.outputs.skip != 'true'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GH_PR_TOKEN }}
@@ -40,6 +61,8 @@ jobs:
           body: |
             Generated via `pnpm self-update`.
 
-            Check this workflow's logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}.
+            See the pnpm changelog at <https://github.com/pnpm/pnpm/releases>.
+
+            Check this workflow's logs at <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
           commit-message: Bump pnpm from ${{ steps.update.outputs.old }} to ${{ steps.update.outputs.new }}
-          branch: automated/pnpm
+          branch: ${{ matrix.version == 'latest' && 'automated/pnpm-latest' || 'automated/pnpm' }}
