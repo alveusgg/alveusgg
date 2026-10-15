@@ -19,7 +19,9 @@ import {
 } from "./schema";
 import type { TwitchDonationProviderConfig } from "./twitch";
 
-const subscriptionType = (type: string) => {
+const subscriptionType = (
+  type: string,
+): TwitchSubscriptionDonation["providerMetadata"]["twitchSubscription"]["type"] => {
   if (type === "channel.subscription.gift") return "gift";
   if (type === "channel.subscription.message") return "resubscription";
   return "subscription";
