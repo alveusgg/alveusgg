@@ -1,0 +1,70 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "manager",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-25",
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "invocation_logs": true,
+    },
+  },
+  "exports": {
+    "CamControllerDurableObject": {
+      "type": "durable-object",
+      "storage": "sqlite",
+    },
+  },
+  "vpc_services": [
+    {
+      "binding": "CONTROL_API",
+      "service_id": "01a0f446-3517-7a73-9542-da6a00a1b0e5",
+      "remote": true,
+    },
+  ],
+  "secrets": {
+    "required": ["CONTROL_API_TOKEN"],
+  },
+  "vars": {
+    "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+  },
+
+  "env": {
+    "production": {
+      "name": "manager",
+      "vpc_services": [
+        {
+          "binding": "CONTROL_API",
+          "service_id": "01a0f446-3517-7a73-9542-da6a00a1b0e5",
+          "remote": true,
+        },
+      ],
+      "secrets": {
+        "required": ["CONTROL_API_TOKEN"],
+      },
+      "vars": {
+        "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+      },
+    },
+    "preview": {
+      "name": "manager-preview",
+      "vpc_services": [
+        {
+          "binding": "CONTROL_API",
+          "service_id": "01a0f446-3517-7a73-9542-da6a00a1b0e5",
+          "remote": true,
+        },
+      ],
+      "secrets": {
+        "required": ["CONTROL_API_TOKEN"],
+      },
+      "vars": {
+        "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+      },
+    },
+  },
+}

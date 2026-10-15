@@ -3,10 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cf dev",
-    "build": "cf build",
-    "deploy": "cf deploy",
-    "types": "cf workers types && tsc"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types && tsc"
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
@@ -15,9 +14,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "beta",
-    "cf": "^1.0.0-beta.5",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0"
+    "wrangler": "^4.151.0"
   }
 }
