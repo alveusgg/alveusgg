@@ -9,6 +9,9 @@ const AuthProviderMetadata = z.object({
 });
 
 const TokenPayload = z.object({
+  // The issuer signs refresh tokens with the same key, so only accept tokens
+  // that are explicitly access tokens.
+  type: z.literal("access"),
   sub: z.string(),
   roles: z.array(z.string()),
 });
@@ -16,27 +19,42 @@ const TokenPayload = z.object({
 type AuthProvider = ReturnType<typeof createRemoteJWKSet>;
 
 const unauthorized = (message: string) => new HTTPException(401, { message });
+// The issuer being unreachable says nothing about the caller's token, so it
+// must not be reported as a 401 that clients treat as "discard credentials".
+const unavailable = () =>
+  new HTTPException(503, {
+    message:
+      "Could not reach the authentication provider to verify your token.",
+  });
 
 const fetchAuthProvider = async (
   configuredIssuer: string,
 ): Promise<AuthProvider> => {
   const response = await fetch(
     new URL("/.well-known/oauth-authorization-server", configuredIssuer),
-  );
+  ).catch(() => {
+    throw unavailable();
+  });
   if (!response.ok) {
-    throw unauthorized(
-      "Could not reach the authentication provider to verify your token.",
-    );
+    throw unavailable();
   }
 
-  const data = await response.json();
-  const provider = AuthProviderMetadata.parse(data);
-
-  return createRemoteJWKSet(new URL(provider.jwks_uri, provider.issuer), {
-    cacheMaxAge: 10 * 60 * 1000,
-    cooldownDuration: 30_000,
-    timeoutDuration: 5_000,
+  const data = await response.json().catch(() => {
+    throw unavailable();
   });
+  const provider = AuthProviderMetadata.safeParse(data);
+  if (!provider.success) {
+    throw unavailable();
+  }
+
+  return createRemoteJWKSet(
+    new URL(provider.data.jwks_uri, provider.data.issuer),
+    {
+      cacheMaxAge: 10 * 60 * 1000,
+      cooldownDuration: 30_000,
+      timeoutDuration: 5_000,
+    },
+  );
 };
 
 let authProvider: Promise<AuthProvider> | undefined;
@@ -81,10 +99,22 @@ const validateJWT = async (token: string, issuer: string) => {
     if (error instanceof joseErrors.JWKSNoMatchingKey) {
       throw unauthorized("Your token was signed with an unknown key.");
     }
+    // Fetching the JWKS failed: it timed out, returned a non-200 or unparsable
+    // response (the base JOSEError), or was not a valid key set.
+    if (
+      error instanceof joseErrors.JWKSTimeout ||
+      error instanceof joseErrors.JWKSInvalid ||
+      (error instanceof joseErrors.JOSEError &&
+        error.code === joseErrors.JOSEError.code)
+    ) {
+      throw unavailable();
+    }
     if (error instanceof joseErrors.JOSEError) {
       throw unauthorized(`Your token could not be verified: ${error.code}.`);
     }
-    throw unauthorized("Your token could not be verified.");
+    // Anything else is not about the token, e.g. a network error while
+    // fetching the JWKS.
+    throw unavailable();
   }
 };
 
@@ -97,8 +127,9 @@ export function requireRole(
       throw unauthorized("You are not authenticated.");
     }
 
+    // The auth scheme is case-insensitive (RFC 9110 section 11.1).
     const [type, token] = authorization.split(" ");
-    if (type !== "Bearer" || !token) {
+    if (type?.toLowerCase() !== "bearer" || !token) {
       throw unauthorized("You are using an invalid authentication method.");
     }
 
