@@ -7,6 +7,8 @@
   "name": "cams-manager",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-25",
+  // Only reachable through the custom domains below, not *.workers.dev.
+  "workers_dev": false,
   "observability": {
     "logs": {
       "enabled": true,
