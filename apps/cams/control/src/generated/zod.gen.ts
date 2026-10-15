@@ -245,10 +245,16 @@ export const zGetInfoPositionHeaders = z.object({
 /**
  * Information about a camera
  */
-export const zGetInfoPositionResponse = z.record(
-  z.string(),
-  z.union([z.number(), z.string()]),
-);
+export const zGetInfoPositionResponse = z.object({
+  fov: z.object({
+    hFOV: z.number(),
+    vFOV: z.number(),
+    focalLength: z.number(),
+    x: z.number(),
+    y: z.number(),
+    multiplier: z.number(),
+  }),
+});
 
 export const zGetInfoSpeedHeaders = z.object({
   "x-camera-name": z.string().min(1).max(100),

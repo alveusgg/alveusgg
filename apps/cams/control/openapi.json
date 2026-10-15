@@ -892,9 +892,40 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "propertyNames": {
-                    "type": "string"
+                  "properties": {
+                    "fov": {
+                      "type": "object",
+                      "properties": {
+                        "hFOV": {
+                          "type": "number"
+                        },
+                        "vFOV": {
+                          "type": "number"
+                        },
+                        "focalLength": {
+                          "type": "number"
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        },
+                        "multiplier": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "hFOV",
+                        "vFOV",
+                        "focalLength",
+                        "x",
+                        "y",
+                        "multiplier"
+                      ]
+                    }
                   },
+                  "required": ["fov"],
                   "additionalProperties": {
                     "anyOf": [
                       {
