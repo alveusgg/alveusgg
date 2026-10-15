@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "types": "wrangler types && tsc"
+    "types": "wrangler types && tsc",
+    "test": "vitest"
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
+    "vitest": "^5.0.3",
     "wrangler": "^4.151.0"
   }
 }
