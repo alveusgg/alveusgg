@@ -29,7 +29,7 @@ export type SetPtzLoadResponses = {
 export type SetPtzLoadResponse = SetPtzLoadResponses[keyof SetPtzLoadResponses];
 
 export type SetPtzMoveData = {
-  body?: {
+  body: {
     direction:
       | "upleft"
       | "up"
@@ -60,7 +60,7 @@ export type SetPtzMoveResponses = {
 export type SetPtzMoveResponse = SetPtzMoveResponses[keyof SetPtzMoveResponses];
 
 export type SetPtzPanData = {
-  body?: {
+  body: {
     degrees: number & number;
   };
   headers: {
@@ -81,7 +81,7 @@ export type SetPtzPanResponses = {
 export type SetPtzPanResponse = SetPtzPanResponses[keyof SetPtzPanResponses];
 
 export type SetPtzTiltData = {
-  body?: {
+  body: {
     degrees: number & number;
   };
   headers: {
@@ -102,7 +102,7 @@ export type SetPtzTiltResponses = {
 export type SetPtzTiltResponse = SetPtzTiltResponses[keyof SetPtzTiltResponses];
 
 export type SetPtzZoomData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -123,7 +123,7 @@ export type SetPtzZoomResponses = {
 export type SetPtzZoomResponse = SetPtzZoomResponses[keyof SetPtzZoomResponses];
 
 export type SetPtzAreazoomData = {
-  body?: {
+  body: {
     x: number;
     y: number;
     z: number;
@@ -149,7 +149,7 @@ export type SetPtzAreazoomResponse =
   SetPtzAreazoomResponses[keyof SetPtzAreazoomResponses];
 
 export type SetPtzSpinData = {
-  body?: {
+  body: {
     pan: number & number;
     tilt: number & number;
     zoom: number & number;
@@ -195,7 +195,7 @@ export type SetPtzRptzResponses = {
 export type SetPtzRptzResponse = SetPtzRptzResponses[keyof SetPtzRptzResponses];
 
 export type SetPtzRpanData = {
-  body?: {
+  body: {
     degrees: number & number;
   };
   headers: {
@@ -216,7 +216,7 @@ export type SetPtzRpanResponses = {
 export type SetPtzRpanResponse = SetPtzRpanResponses[keyof SetPtzRpanResponses];
 
 export type SetPtzRtiltData = {
-  body?: {
+  body: {
     degrees: number & number;
   };
   headers: {
@@ -238,7 +238,7 @@ export type SetPtzRtiltResponse =
   SetPtzRtiltResponses[keyof SetPtzRtiltResponses];
 
 export type SetPtzRzoomData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -260,7 +260,7 @@ export type SetPtzRzoomResponse =
   SetPtzRzoomResponses[keyof SetPtzRzoomResponses];
 
 export type SetIrData = {
-  body?: {
+  body: {
     light: string;
     state: "on" | "off" | "auto";
   };
@@ -282,7 +282,7 @@ export type SetIrResponses = {
 export type SetIrResponse = SetIrResponses[keyof SetIrResponses];
 
 export type SetIrFilterData = {
-  body?: {
+  body: {
     state: "on" | "off" | "auto";
   };
   headers: {
@@ -304,7 +304,7 @@ export type SetIrFilterResponse =
   SetIrFilterResponses[keyof SetIrFilterResponses];
 
 export type SetIrLightData = {
-  body?: {
+  body: {
     light: string;
     state: "on" | "off";
   };
@@ -415,7 +415,7 @@ export type GetInfoResolutionResponse =
   GetInfoResolutionResponses[keyof GetInfoResolutionResponses];
 
 export type SetImagingFocusData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -437,7 +437,7 @@ export type SetImagingFocusResponse =
   SetImagingFocusResponses[keyof SetImagingFocusResponses];
 
 export type SetImagingBrightnessData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -459,7 +459,7 @@ export type SetImagingBrightnessResponse =
   SetImagingBrightnessResponses[keyof SetImagingBrightnessResponses];
 
 export type SetImagingIrisData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -481,7 +481,7 @@ export type SetImagingIrisResponse =
   SetImagingIrisResponses[keyof SetImagingIrisResponses];
 
 export type SetImagingRfocusData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -503,7 +503,7 @@ export type SetImagingRfocusResponse =
   SetImagingRfocusResponses[keyof SetImagingRfocusResponses];
 
 export type SetImagingRbrightnessData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -525,7 +525,7 @@ export type SetImagingRbrightnessResponse =
   SetImagingRbrightnessResponses[keyof SetImagingRbrightnessResponses];
 
 export type SetImagingRirisData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -547,7 +547,7 @@ export type SetImagingRirisResponse =
   SetImagingRirisResponses[keyof SetImagingRirisResponses];
 
 export type SetImagingAutofocusData = {
-  body?: {
+  body: {
     state: "on" | "off";
   };
   headers: {
@@ -569,7 +569,7 @@ export type SetImagingAutofocusResponse =
   SetImagingAutofocusResponses[keyof SetImagingAutofocusResponses];
 
 export type SetImagingAutoirisData = {
-  body?: {
+  body: {
     state: "on" | "off";
   };
   headers: {
@@ -591,7 +591,7 @@ export type SetImagingAutoirisResponse =
   SetImagingAutoirisResponses[keyof SetImagingAutoirisResponses];
 
 export type SetImagingCfocusData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -613,7 +613,7 @@ export type SetImagingCfocusResponse =
   SetImagingCfocusResponses[keyof SetImagingCfocusResponses];
 
 export type SetImagingCbrightnessData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -635,7 +635,7 @@ export type SetImagingCbrightnessResponse =
   SetImagingCbrightnessResponses[keyof SetImagingCbrightnessResponses];
 
 export type SetImagingCirisData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -679,7 +679,7 @@ export type GetSettingsQuickzoomResponse =
   GetSettingsQuickzoomResponses[keyof GetSettingsQuickzoomResponses];
 
 export type SetSettingsQuickzoomData = {
-  body?: {
+  body: {
     enabled: boolean;
   };
   headers: {
@@ -725,7 +725,7 @@ export type GetSettingsFocusautotypeResponse =
   GetSettingsFocusautotypeResponses[keyof GetSettingsFocusautotypeResponses];
 
 export type SetSettingsFocusautotypeData = {
-  body?: {
+  body: {
     value: "normal" | "assisted";
   };
   headers: {
@@ -771,7 +771,7 @@ export type GetSettingsSpotfocusResponse =
   GetSettingsSpotfocusResponses[keyof GetSettingsSpotfocusResponses];
 
 export type SetSettingsSpotfocusData = {
-  body?: {
+  body: {
     enabled: boolean;
   };
   headers: {
@@ -817,7 +817,7 @@ export type GetSettingsSaturationResponse =
   GetSettingsSaturationResponses[keyof GetSettingsSaturationResponses];
 
 export type SetSettingsSaturationData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -863,7 +863,7 @@ export type GetSettingsBrightnessResponse =
   GetSettingsBrightnessResponses[keyof GetSettingsBrightnessResponses];
 
 export type SetSettingsBrightnessData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -909,7 +909,7 @@ export type GetSettingsContrastResponse =
   GetSettingsContrastResponses[keyof GetSettingsContrastResponses];
 
 export type SetSettingsContrastData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -955,7 +955,7 @@ export type GetSettingsSharpnessResponse =
   GetSettingsSharpnessResponses[keyof GetSettingsSharpnessResponses];
 
 export type SetSettingsSharpnessData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -1001,7 +1001,7 @@ export type GetSettingsLocalcontrastResponse =
   GetSettingsLocalcontrastResponses[keyof GetSettingsLocalcontrastResponses];
 
 export type SetSettingsLocalcontrastData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -1047,7 +1047,7 @@ export type GetSettingsTonemappingResponse =
   GetSettingsTonemappingResponses[keyof GetSettingsTonemappingResponses];
 
 export type SetSettingsTonemappingData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -1093,7 +1093,7 @@ export type GetSettingsProportionalspeedResponse =
   GetSettingsProportionalspeedResponses[keyof GetSettingsProportionalspeedResponses];
 
 export type SetSettingsProportionalspeedData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
@@ -1139,7 +1139,7 @@ export type GetSettingsSpeedResponse =
   GetSettingsSpeedResponses[keyof GetSettingsSpeedResponses];
 
 export type SetSettingsSpeedData = {
-  body?: {
+  body: {
     value: number & number;
   };
   headers: {
