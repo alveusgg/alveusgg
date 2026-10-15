@@ -27,11 +27,16 @@ const unavailable = () =>
       "Could not reach the authentication provider to verify your token.",
   });
 
-const fetchAuthProvider = async (
+// Applies to both discovery and the JWKS fetch.
+const ISSUER_TIMEOUT_MS = 5_000;
+
+const discoverAuthProvider = async (
   configuredIssuer: string,
+  signal: AbortSignal,
 ): Promise<AuthProvider> => {
   const response = await fetch(
     new URL("/.well-known/oauth-authorization-server", configuredIssuer),
+    { signal },
   ).catch(() => {
     throw unavailable();
   });
@@ -52,9 +57,25 @@ const fetchAuthProvider = async (
     {
       cacheMaxAge: 10 * 60 * 1000,
       cooldownDuration: 30_000,
-      timeoutDuration: 5_000,
+      timeoutDuration: ISSUER_TIMEOUT_MS,
     },
   );
+};
+
+// Every request waits on the same discovery promise, so a stalled issuer must
+// fail it within the deadline (covering the response body too) instead of
+// leaving all of them hanging.
+const fetchAuthProvider = (configuredIssuer: string): Promise<AuthProvider> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ISSUER_TIMEOUT_MS);
+  const deadline = new Promise<never>((_, reject) => {
+    controller.signal.addEventListener("abort", () => reject(unavailable()));
+  });
+
+  return Promise.race([
+    discoverAuthProvider(configuredIssuer, controller.signal),
+    deadline,
+  ]).finally(() => clearTimeout(timer));
 };
 
 let authProvider: Promise<AuthProvider> | undefined;

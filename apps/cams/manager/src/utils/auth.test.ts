@@ -42,12 +42,14 @@ const accessToken = (roles: string[], options?: Parameters<typeof sign>[1]) =>
 
 // Serves the issuer's discovery document and JWKS, with per-test overrides.
 let routes: Record<string, () => Promise<Response>>;
-const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
-  const url = input instanceof Request ? input.url : input.toString();
-  const route = routes[url];
-  if (!route) throw new TypeError(`Unexpected fetch: ${url}`);
-  return route();
-});
+const fetchMock = vi.fn(
+  async (input: RequestInfo | URL, _init?: RequestInit) => {
+    const url = input instanceof Request ? input.url : input.toString();
+    const route = routes[url];
+    if (!route) throw new TypeError(`Unexpected fetch: ${url}`);
+    return route();
+  },
+);
 
 // The auth module caches the issuer per isolate, so load a fresh copy per test.
 const createApp = async () => {
@@ -197,6 +199,63 @@ describe("requireRole", () => {
 
       routes[discoveryUrl] = healthyDiscovery;
       expect((await send()).status).toBe(200);
+    });
+
+    it("responds 503 when the JWKS fetch times out", async () => {
+      routes[jwksUrl] = async () => {
+        throw new DOMException("The operation timed out.", "TimeoutError");
+      };
+      const res = await request(`Bearer ${await accessToken(["ptzControl"])}`);
+      expect(res.status).toBe(503);
+    });
+
+    describe("when discovery stalls", () => {
+      // Only fake timers, so token timestamps still use the real clock.
+      beforeEach(() => {
+        vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      });
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      const waitForFetch = async (url: string) => {
+        for (let i = 0; i < 100; i++) {
+          if (fetchMock.mock.calls.some(([input]) => String(input) === url)) {
+            return;
+          }
+          // The auth module is imported per request; let it load, then let
+          // the request run up to its next await.
+          await vi.dynamicImportSettled();
+          await Promise.resolve();
+        }
+        throw new Error(`Timed out waiting for a fetch to ${url}`);
+      };
+
+      const stalls: Record<string, () => Promise<Response>> = {
+        // Never settles, not even on abort: the deadline alone must end it.
+        "before responding": () => new Promise<Response>(() => {}),
+        "while sending the body": async () =>
+          new Response(new ReadableStream({ start() {} })),
+      };
+
+      for (const [name, stall] of Object.entries(stalls)) {
+        it(`responds 503 after the timeout when it stalls ${name}`, async () => {
+          routes[discoveryUrl] = stall;
+          const pending = request(
+            `Bearer ${await accessToken(["ptzControl"])}`,
+          );
+
+          await waitForFetch(discoveryUrl);
+          await vi.advanceTimersByTimeAsync(5_000);
+          expect((await pending).status).toBe(503);
+
+          // The aborted discovery was passed an abort signal.
+          const [, init] = fetchMock.mock.calls.find(
+            ([input]) => String(input) === discoveryUrl,
+          )!;
+          expect(init?.signal?.aborted).toBe(true);
+        });
+      }
     });
   });
 });
