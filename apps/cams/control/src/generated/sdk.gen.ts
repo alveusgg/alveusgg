@@ -425,7 +425,7 @@ export const setPtzZoom = <ThrowOnError extends boolean = false>(
 /**
  * Areazoom
  *
- * Zoom to an area defined by x, y, and z
+ * Zoom to an area defined by x, y, and z. x and y are pixel coordinates in an image of the camera's default size, unless imagewidth and imageheight give the size of the image they were taken from
  */
 export const setPtzAreazoom = <ThrowOnError extends boolean = false>(
   options: Options<SetPtzAreazoomData, ThrowOnError>,

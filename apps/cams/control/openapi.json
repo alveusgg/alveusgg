@@ -341,7 +341,7 @@
         ],
         "summary": "Areazoom",
         "tags": ["PTZ"],
-        "description": "Zoom to an area defined by x, y, and z",
+        "description": "Zoom to an area defined by x, y, and z. x and y are pixel coordinates in an image of the camera's default size, unless imagewidth and imageheight give the size of the image they were taken from",
         "responses": {
           "200": {
             "description": "Successfully submitted to the camera",
@@ -369,6 +369,16 @@
                   "z": {
                     "type": "number",
                     "minimum": 1
+                  },
+                  "imagewidth": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "imageheight": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
                   }
                 },
                 "required": ["x", "y", "z"]
