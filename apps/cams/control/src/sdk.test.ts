@@ -6,6 +6,23 @@ import { createClient, createConfig } from "./generated/client";
 const baseUrl = "https://cams.test/direct";
 const headers = { "x-camera-name": "garden" };
 
+// Shape of a real GET /info/position response (from the control-api mock).
+const position = {
+  pan: 10,
+  tilt: 0,
+  zoom: 4000,
+  focus: 5000,
+  autofocus: "on",
+  fov: {
+    hFOV: 5.62,
+    vFOV: 3.16,
+    focalLength: 72,
+    x: -2.81,
+    y: 1.58,
+    multiplier: 10.4,
+  },
+};
+
 // A client whose fetch records each request and answers with `respond`.
 const setup = (respond: () => Response) => {
   const requests: Request[] = [];
@@ -25,14 +42,12 @@ const setup = (respond: () => Response) => {
 
 describe("generated SDK", () => {
   it("sends a GET with the camera header and returns the parsed body", async () => {
-    const { client, requests } = setup(() =>
-      Response.json({ pan: 10.5, tilt: -3, zoom: 1 }),
-    );
+    const { client, requests } = setup(() => Response.json(position));
 
     const result = await getInfoPosition({ client, headers });
 
     expect(result.error).toBeUndefined();
-    expect(result.data).toEqual({ pan: 10.5, tilt: -3, zoom: 1 });
+    expect(result.data).toEqual(position);
 
     expect(requests).toHaveLength(1);
     const [request] = requests;

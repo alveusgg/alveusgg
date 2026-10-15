@@ -340,7 +340,25 @@ export type GetInfoPositionResponses = {
    * Information about a camera
    */
   200: {
-    [key: string]: number | string;
+    fov: {
+      hFOV: number;
+      vFOV: number;
+      focalLength: number;
+      x: number;
+      y: number;
+      multiplier: number;
+    };
+    [key: string]:
+      | number
+      | string
+      | {
+          hFOV: number;
+          vFOV: number;
+          focalLength: number;
+          x: number;
+          y: number;
+          multiplier: number;
+        };
   };
 };
 
