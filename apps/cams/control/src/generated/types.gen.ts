@@ -127,6 +127,8 @@ export type SetPtzAreazoomData = {
     x: number;
     y: number;
     z: number;
+    imagewidth?: number;
+    imageheight?: number;
   };
   headers: {
     "x-camera-name": string;

@@ -95,6 +95,8 @@ export const zSetPtzAreazoomBody = z.object({
   x: z.number(),
   y: z.number(),
   z: z.number().gte(1),
+  imagewidth: z.int().gt(0).lte(9007199254740991).optional(),
+  imageheight: z.int().gt(0).lte(9007199254740991).optional(),
 });
 
 export type SetPtzAreazoomParams = z.infer<typeof zSetPtzAreazoomBody>;
