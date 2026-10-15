@@ -139,6 +139,12 @@ const validateJWT = async (token: string, issuer: string) => {
   }
 };
 
+// The website is the single source of accounts and roles, so any token it
+// issues with the role is accepted, whichever OAuth client it was issued to:
+// trusted clients can mint role tokens via client credentials, and a user's
+// token for any client carries all of that user's roles. Tokens are not bound
+// to this service (no audience check); `client_id` is in the token if that
+// ever needs an allowlist.
 export function requireRole(
   role: string,
 ): MiddlewareHandler<{ Bindings: Env }> {

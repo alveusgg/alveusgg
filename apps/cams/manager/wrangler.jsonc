@@ -4,12 +4,12 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "manager",
+  "name": "cams-manager",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-25",
   "observability": {
     "logs": {
-      "enabled": false,
+      "enabled": true,
       "invocation_logs": true,
     },
   },
@@ -35,7 +35,13 @@
 
   "env": {
     "production": {
-      "name": "manager",
+      "name": "cams-manager",
+      "routes": [
+        {
+          "pattern": "cams-manager.workers.alveussanctuary.org",
+          "custom_domain": true,
+        },
+      ],
       "vpc_services": [
         {
           "binding": "CONTROL_API",
@@ -50,8 +56,17 @@
         "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
       },
     },
+    // Preview deliberately talks to the same rack and trusts the production
+    // issuer: there is only one set of cameras, and preview site deployments
+    // don't have their own signing keys.
     "preview": {
-      "name": "manager-preview",
+      "name": "cams-manager-preview",
+      "routes": [
+        {
+          "pattern": "cams-manager.preview.workers.alveussanctuary.org",
+          "custom_domain": true,
+        },
+      ],
       "vpc_services": [
         {
           "binding": "CONTROL_API",
