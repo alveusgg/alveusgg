@@ -83,9 +83,10 @@ export async function getDonationFeed({
     // That can be baked into the database schema in the future
     // with prisma-json-types-generator.
     const donatedBy = donation.donatedBy as Donator;
-    const providerMetadata = includeSubscriptions
-      ? (donation.providerMetadata as Record<string, unknown>)
-      : {};
+    const providerMetadata =
+      includeSubscriptions && donation.provider == "twitchsubscription"
+        ? (donation.providerMetadata as Record<string, unknown>)
+        : {};
     const tags = (donation.tags || {}) as Record<string, string>;
 
     return {

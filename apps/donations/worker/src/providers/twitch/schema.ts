@@ -24,7 +24,6 @@ export const TwitchSubscriptionPayload = z.object({
     method: z.string(),
     callback: z.string(),
   }),
-  created_at: z.iso.datetime(),
 });
 
 export const TwitchAmountPayload = z.object({

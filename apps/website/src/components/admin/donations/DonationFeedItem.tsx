@@ -40,7 +40,7 @@ const formatTwitchSub = (
   const formattedTier = formatTwitchSubTier(metadata.twitchSubscription.tier);
 
   if (metadata.twitchSubscription.type === "gift") {
-    return `Gifted ${metadata.twitchSubscription.total}x Tier ${formattedTier}`;
+    return `Gifted ${metadata.twitchSubscription.total}× Tier ${formattedTier}`;
   } else if (metadata.twitchSubscription.type === "resubscription") {
     if (
       metadata.twitchSubscription.durationMonths &&
