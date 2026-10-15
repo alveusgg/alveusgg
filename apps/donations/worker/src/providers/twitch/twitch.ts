@@ -8,7 +8,7 @@ import { TwitchEventHubMessageTypeHeader } from "./const";
 import { verifySignature } from "./crypto";
 import { TwitchChallengePayload, TwitchNotificationPayload } from "./schema";
 
-interface TwitchDonationProviderConfig {
+export interface TwitchDonationProviderConfig {
   secret: string;
 }
 
