@@ -57,6 +57,7 @@ export const env = createEnv({
       "http://localhost:3000/api/",
     ),
     API_SECRET: z.string(),
+    PRESETS_SITE_KEY_FILE: z.string().trim().min(1).optional(),
 
     // Database
     DATABASE_URL: z.url(),
