@@ -11,25 +11,31 @@ import { presetsRouter } from "@/server/trpc/router/presets";
 import type * as AuthModule from "@/server/utils/auth";
 import { ExpiredAccessTokenError } from "@/server/utils/oauth2";
 
-const { db, subscription, account, execute, setPolicy } = vi.hoisted(() => ({
-  db: {
-    cameraPresetOperation: { findUnique: vi.fn() },
-    cameraPresetPolicy: { findMany: vi.fn() },
-  },
-  subscription: vi.fn(),
-  account: vi.fn(),
-  execute: vi.fn(),
-  setPolicy: vi.fn(),
+import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
+
+const { db, subscription, account, execute, setPolicy, realSession, testEnv } =
+  vi.hoisted(() => ({
+    db: {
+      cameraPresetOperation: { findUnique: vi.fn() },
+      cameraPresetPolicy: { findMany: vi.fn() },
+    },
+    subscription: vi.fn(),
+    account: vi.fn(),
+    execute: vi.fn(),
+    setPolicy: vi.fn(),
+    realSession: vi.fn(),
+    testEnv: {
+      NODE_ENV: "test",
+      SUPER_USER_IDS: "super-user",
+      DISABLE_ADMIN_AUTH: false,
+      TRPC_API_SHARED_KEY: ["local-worker-key"],
+    },
+  }));
+vi.mock("@/server/common/get-server-auth-session", () => ({
+  getServerAuthSession: realSession,
 }));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
-vi.mock("@/env", () => ({
-  env: {
-    NODE_ENV: "test",
-    SUPER_USER_IDS: "super-user",
-    DISABLE_ADMIN_AUTH: false,
-    TRPC_API_SHARED_KEY: ["local-worker-key"],
-  },
-}));
+vi.mock("@/env", () => ({ env: testEnv }));
 vi.mock("@/server/apis/twitch", () => ({
   getUserSubscribedToBroadcaster: subscription,
 }));
@@ -96,6 +102,9 @@ function stored(actorId = "user") {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  testEnv.NODE_ENV = "test";
+  testEnv.DISABLE_ADMIN_AUTH = false;
+  realSession.mockResolvedValue(null);
   db.cameraPresetOperation.findUnique.mockResolvedValue(null);
   db.cameraPresetPolicy.findMany.mockResolvedValue([
     { scope: "global", paused: false, resumeAt: null },
@@ -388,4 +397,71 @@ describe("subscriber control policy authorization", () => {
       "operator",
     );
   });
+});
+
+test("development admin bypass grants no preset permissions without a real login", async () => {
+  testEnv.NODE_ENV = "development";
+  testEnv.DISABLE_ADMIN_AUTH = true;
+  const { api } = caller(DEV_ADMIN_SESSION);
+  expect(await api.access()).toMatchObject({
+    canLoad: false,
+    canManage: false,
+    reason: "login",
+  });
+  for (const action of ["save", "load", "clear"] as const) {
+    await expect(
+      api.userCommand({
+        id,
+        action,
+        camera: "garden",
+        ...(action !== "clear" ? { name: "home" } : {}),
+      }),
+    ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  }
+  await expect(
+    api.setSubscriberControl({ paused: true }),
+  ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  await expect(api.userOperation({ id })).rejects.toMatchObject({
+    code: "UNAUTHORIZED",
+  });
+  expect(realSession).toHaveBeenCalledWith(expect.anything(), {
+    allowDevAdmin: false,
+  });
+  expect(execute).not.toHaveBeenCalled();
+  expect(setPolicy).not.toHaveBeenCalled();
+});
+
+test("development auth uses actual roles or configured superusers, never the bypass", async () => {
+  testEnv.NODE_ENV = "development";
+  testEnv.DISABLE_ADMIN_AUTH = true;
+  const { api } = caller(DEV_ADMIN_SESSION);
+  realSession.mockResolvedValue(session("ordinary", [], []));
+  expect(await api.access()).toMatchObject({ canManage: false });
+  await expect(
+    api.userCommand({ ...input, action: "save" }),
+  ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  for (const authenticated of [
+    session("operator", ["ptzControl"]),
+    session("super-user"),
+  ]) {
+    realSession.mockResolvedValue(authenticated);
+    expect(await api.access()).toMatchObject({
+      canLoad: true,
+      canManage: true,
+    });
+    await api.userCommand({ ...input, action: "save" });
+    expect(execute).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        actor: expect.objectContaining({ id: authenticated.user!.id }),
+        authorization: "operator",
+      }),
+      expect.anything(),
+    );
+  }
+});
+
+test("dispatch claims cannot be obtained with a browser session alone", async () => {
+  await expect(
+    caller(session("operator", ["ptzControl"])).api.claimLoad({ id }),
+  ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
 });

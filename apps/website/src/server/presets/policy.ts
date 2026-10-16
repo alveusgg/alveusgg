@@ -85,13 +85,14 @@ export async function setSubscriberPolicy(
         where: {
           action: "load",
           status: "pending",
+          dispatchedAt: null,
           ...(input.camera ? { camera: input.camera } : {}),
         },
       });
       const ids = pending.filter(isSubscriberLoad).map(({ id }) => id);
       if (ids.length)
         await tx.cameraPresetOperation.updateMany({
-          where: { id: { in: ids }, status: "pending" },
+          where: { id: { in: ids }, status: "pending", dispatchedAt: null },
           data: {
             status: "failed",
             error:
