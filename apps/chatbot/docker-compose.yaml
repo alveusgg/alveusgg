@@ -8,6 +8,7 @@ services:
     restart: always
     environment:
       - CHATBOT_REF_SHA=$CHATBOT_REF_SHA
+      - PRESETS_SITE_KEY_FILE
     volumes:
       - type: bind
         source: ${PRESETS_SITE_KEY_FILE:-/dev/null}

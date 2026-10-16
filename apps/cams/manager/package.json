@@ -4,9 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "dev:mock": "node dev/run.mjs",
-    "mock:token": "node dev/token.mjs",
-    "mock:check": "node dev/check.mjs",
     "deploy": "wrangler deploy",
     "types": "wrangler types && tsc",
     "test": "vitest"
