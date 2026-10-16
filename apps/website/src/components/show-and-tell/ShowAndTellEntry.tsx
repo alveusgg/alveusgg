@@ -2,6 +2,7 @@ import parse, {
   type DOMNode,
   Element,
   type HTMLReactParserOptions,
+  Text,
   domToReact,
 } from "html-react-parser";
 import Image from "next/image";
@@ -45,8 +46,7 @@ const getTextContentRecursive = (node: DOMNode): string => {
       .join("");
   }
 
-  // FIXME: Switch back to `instanceof Text` once https://github.com/remarkablemark/html-react-parser/issues/2256 resolved
-  if (node.type === "text") {
+  if (node instanceof Text) {
     return node.data || "";
   }
 
