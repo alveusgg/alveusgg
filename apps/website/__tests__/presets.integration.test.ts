@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { afterAll, describe, expect, test, vi } from "vitest";
 
 import { prisma } from "@alveusgg/database";
@@ -15,7 +16,12 @@ import {
   pendingPresetOperations,
   preparePresetCapture,
 } from "@/server/presets/service";
-import { deleteFileStorageObject } from "@/server/utils/file-storage";
+import { stageVerifiedCaptureUpload } from "@/server/presets/storage";
+import {
+  deleteExpiredFileStorageObject,
+  deleteFileStorageObject,
+  getFileStorageClient,
+} from "@/server/utils/file-storage";
 
 // Explicit opt-in only. These tests may write solely to the isolated local test database/bucket.
 const database = process.env.PRESET_INTEGRATION_DATABASE_URL;
@@ -119,6 +125,15 @@ describe.skipIf(!enabled)(
           },
         },
       });
+      const files = await prisma.fileStorageObject.findMany({
+        where: {
+          name: {
+            in: captures.flatMap(({ id }) => [`${id}.png`, `${id}.jpg`]),
+          },
+          prefix: { in: ["presets/captures/", "presets/published/"] },
+        },
+        select: { id: true },
+      });
       await prisma.cameraPreset.deleteMany({
         where: { camera: { in: cameras } },
       });
@@ -147,14 +162,12 @@ describe.skipIf(!enabled)(
       await prisma.cameraPresetCamera.deleteMany({
         where: { camera: { in: cameras } },
       });
-      for (const capture of captures) {
-        await deleteFileStorageObject(capture.fileStorageObjectId);
+      for (const file of files) {
+        await deleteFileStorageObject(file.id);
         await prisma.imageMetadata.deleteMany({
-          where: { fileStorageObjectId: capture.fileStorageObjectId },
+          where: { fileStorageObjectId: file.id },
         });
-        await prisma.fileStorageObject.delete({
-          where: { id: capture.fileStorageObjectId },
-        });
+        await prisma.fileStorageObject.delete({ where: { id: file.id } });
       }
       await prisma.$disconnect();
     });
@@ -219,6 +232,105 @@ describe.skipIf(!enabled)(
       await expect(
         commandPreset({ ...command, name: "other" }),
       ).rejects.toMatchObject({ code: "CONFLICT" });
+    }, 30000);
+
+    test("an old upload URL cannot overwrite the published capture after commit", async () => {
+      const cam = camera();
+      const { operation, capture } = await save(cam);
+      const prepared = await preparePresetCapture(operation.id, capture);
+      await upload(prepared);
+      await commitPresetCapture(operation.id, capture.id);
+      const receipt = await prisma.presetCapture.findUniqueOrThrow({
+        where: { id: capture.id },
+        include: { fileStorageObject: true },
+      });
+      if (prepared.delivered) throw new Error("Expected initial upload URL");
+      expect(new URL(prepared.uploadUrl).pathname).not.toContain(
+        receipt.fileStorageObject.key,
+      );
+      const corrupt = Buffer.from(png);
+      corrupt[corrupt.length - 1] = (corrupt[corrupt.length - 1] ?? 0) ^ 1;
+      await upload(prepared, corrupt);
+      expect(await commitPresetCapture(operation.id, capture.id)).toMatchObject(
+        { delivered: true, status: "completed" },
+      );
+      const object = await getFileStorageClient().send(
+        new GetObjectCommand({
+          Bucket: "alveusgg",
+          Key: receipt.fileStorageObject.key,
+        }),
+      );
+      expect(Buffer.from(await object.Body!.transformToByteArray())).toEqual(
+        png,
+      );
+      expect(
+        await prisma.cameraPreset.findUniqueOrThrow({
+          where: { camera_name: { camera: cam, name: "home" } },
+        }),
+      ).toMatchObject({ fileStorageObjectId: receipt.fileStorageObjectId });
+    }, 30000);
+
+    test("publication and expiry deletion claims serialize on the real storage row", async () => {
+      const cam = camera();
+      const { operation, capture } = await save(cam);
+      await upload(await preparePresetCapture(operation.id, capture));
+      const staging = await prisma.presetCapture.findUniqueOrThrow({
+        where: { id: capture.id },
+        include: { fileStorageObject: true },
+      });
+      const candidate = await stageVerifiedCaptureUpload(
+        staging.fileStorageObject.key,
+        capture,
+      );
+      // Model a cleanup selection made from the old committed expiry while
+      // publication still holds its row lock. No elapsed-time margin is used.
+      const cutoff = new Date(
+        candidate.fileStorageObject.expiresAt!.getTime() + 1,
+      );
+      let cleanup: Promise<void> | undefined;
+      await prisma.$transaction(async (tx) => {
+        expect(
+          await tx.$executeRaw`
+          UPDATE FileStorageObject SET uploadedAt = ${new Date()}, expiresAt = NULL
+          WHERE id = ${candidate.fileStorageObject.id} AND deletedAt IS NULL AND expiresAt > ${new Date()}
+        `,
+        ).toBe(1);
+        cleanup = deleteExpiredFileStorageObject(
+          candidate.fileStorageObject.id,
+          cutoff,
+        );
+      });
+      await cleanup;
+      expect(
+        await prisma.fileStorageObject.findUniqueOrThrow({
+          where: { id: candidate.fileStorageObject.id },
+        }),
+      ).toMatchObject({ deletedAt: null, expiresAt: null });
+      const object = await getFileStorageClient().send(
+        new GetObjectCommand({
+          Bucket: "alveusgg",
+          Key: candidate.fileStorageObject.key,
+        }),
+      );
+      expect(Buffer.from(await object.Body!.transformToByteArray())).toEqual(
+        png,
+      );
+
+      const expired = await stageVerifiedCaptureUpload(
+        staging.fileStorageObject.key,
+        capture,
+      );
+      await deleteExpiredFileStorageObject(
+        expired.fileStorageObject.id,
+        new Date(expired.fileStorageObject.expiresAt!.getTime() + 1),
+      );
+      // A cleanup tombstone cannot be revived even if the clock/read is stale.
+      expect(
+        await prisma.$executeRaw`
+        UPDATE FileStorageObject SET uploadedAt = ${new Date()}, expiresAt = NULL
+        WHERE id = ${expired.fileStorageObject.id} AND deletedAt IS NULL AND expiresAt > ${new Date()}
+      `,
+      ).toBe(0);
     }, 30000);
 
     test("clear fences an in-flight save while preserving a durable capture receipt", async () => {
