@@ -42,6 +42,7 @@ export const isOverloadedArguments = (
 
 export interface Command {
   description: string;
+  aliases?: string[];
   category: CommandCategoryId;
   args: [] | Arguments | OverloadedArguments;
 }
