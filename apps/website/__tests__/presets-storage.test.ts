@@ -3,9 +3,18 @@ import { createHash, randomUUID } from "node:crypto";
 import { beforeEach, expect, test, vi } from "vitest";
 
 import { type CaptureMetadata } from "@/server/presets/schema";
-import { verifyCaptureUpload } from "@/server/presets/storage";
+import {
+  stageVerifiedCaptureUpload,
+  verifyCaptureUpload,
+} from "@/server/presets/storage";
 
-const { send } = vi.hoisted(() => ({ send: vi.fn() }));
+const { send, createFile } = vi.hoisted(() => ({
+  send: vi.fn(),
+  createFile: vi.fn(),
+}));
+vi.mock("@alveusgg/database", () => ({
+  prisma: { fileStorageObject: { create: createFile } },
+}));
 vi.mock("@/env", () => ({
   env: { FILE_STORAGE_BUCKET: "local-presets-test" },
 }));
@@ -39,7 +48,10 @@ function object(
     })(),
   };
 }
-beforeEach(() => send.mockReset());
+beforeEach(() => {
+  send.mockReset();
+  createFile.mockReset();
+});
 
 test("checks bytes from the configured bucket and extracts actual image dimensions", async () => {
   send.mockResolvedValue(object(png));
@@ -75,4 +87,31 @@ test("rejects a body that exceeds its declared length instead of buffering it in
   await expect(verifyCaptureUpload("test", metadata)).rejects.toThrow(
     "declared size",
   );
+});
+
+test("publishes exactly the verified bytes under a server-only key", async () => {
+  const destination = "presets/published/server-only.png";
+  send.mockResolvedValueOnce(object(png)).mockResolvedValueOnce({});
+  createFile.mockResolvedValue({ id: "published", key: destination });
+  expect(
+    await stageVerifiedCaptureUpload(
+      "presets/captures/client-upload.png",
+      metadata,
+    ),
+  ).toMatchObject({
+    fileStorageObject: { id: "published", key: destination },
+    image: { width: 1, height: 1 },
+  });
+  expect(send.mock.calls[1]?.[0].input).toMatchObject({
+    Bucket: "local-presets-test",
+    Key: destination,
+    Body: png,
+    ContentType: "image/png",
+  });
+  expect(createFile).toHaveBeenCalledWith({
+    data: expect.objectContaining({
+      prefix: "presets/published/",
+      expiresAt: expect.any(Date),
+    }),
+  });
 });

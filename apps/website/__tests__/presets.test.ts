@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
   captureMatchesOperation,
@@ -16,50 +16,54 @@ import {
   presetCatalog,
 } from "@/server/presets/service";
 
-const { db, verifyUpload, createUpload, signUpload } = vi.hoisted(() => {
-  const db = {
-    $transaction: vi.fn(),
-    cameraPresetCamera: {
-      upsert: vi.fn(),
-      findUniqueOrThrow: vi.fn(),
-      update: vi.fn(),
-    },
-    cameraPresetCooldown: { createMany: vi.fn(), updateMany: vi.fn() },
-    cameraPresetName: { upsert: vi.fn(), findUnique: vi.fn() },
-    cameraPresetOperation: {
-      findUnique: vi.fn(),
-      findUniqueOrThrow: vi.fn(),
-      create: vi.fn(),
-      update: vi.fn(),
-    },
-    cameraPreset: {
-      findMany: vi.fn(),
-      findUnique: vi.fn(),
-      upsert: vi.fn(),
-      update: vi.fn(),
-      updateMany: vi.fn(),
-    },
-    presetCapture: {
-      findUnique: vi.fn(),
-      findUniqueOrThrow: vi.fn(),
-      upsert: vi.fn(),
-      update: vi.fn(),
-    },
-    fileStorageObject: { update: vi.fn() },
-    imageMetadata: { upsert: vi.fn() },
-  };
-  return {
-    db,
-    verifyUpload: vi.fn(),
-    createUpload: vi.fn(),
-    signUpload: vi.fn(),
-  };
-});
+const { db, verifyUpload, createUpload, signUpload, testEnv, dispatchFetch } =
+  vi.hoisted(() => {
+    const db = {
+      $transaction: vi.fn(),
+      $executeRaw: vi.fn(),
+      cameraPresetCamera: {
+        upsert: vi.fn(),
+        findUniqueOrThrow: vi.fn(),
+        update: vi.fn(),
+      },
+      cameraPresetCooldown: { createMany: vi.fn(), updateMany: vi.fn() },
+      cameraPresetName: { upsert: vi.fn(), findUnique: vi.fn() },
+      cameraPresetOperation: {
+        findUnique: vi.fn(),
+        findUniqueOrThrow: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+      },
+      cameraPreset: {
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        upsert: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn(),
+      },
+      presetCapture: {
+        findUnique: vi.fn(),
+        findUniqueOrThrow: vi.fn(),
+        upsert: vi.fn(),
+        update: vi.fn(),
+      },
+      fileStorageObject: { update: vi.fn() },
+      imageMetadata: { upsert: vi.fn() },
+    };
+    return {
+      db,
+      verifyUpload: vi.fn(),
+      createUpload: vi.fn(),
+      signUpload: vi.fn(),
+      testEnv: { CAM_MANAGER_URL: undefined as string | undefined },
+      dispatchFetch: vi.fn(),
+    };
+  });
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
-vi.mock("@/env", () => ({ env: {} }));
+vi.mock("@/env", () => ({ env: testEnv }));
 vi.mock("@/server/oauth/tokens", () => ({ issueAccessToken: vi.fn() }));
 vi.mock("@/server/presets/storage", () => ({
-  verifyCaptureUpload: verifyUpload,
+  stageVerifiedCaptureUpload: verifyUpload,
 }));
 vi.mock("@/server/utils/file-storage", () => ({
   createFileStorageUpload: createUpload,
@@ -108,6 +112,11 @@ const file = {
   deletedAt: null,
   expiresAt: new Date("2099-01-01T00:00:00Z"),
 };
+const publishedFile = {
+  ...file,
+  id: "published-file",
+  key: "presets/published/file.jpg",
+};
 const savedCapture = {
   id,
   operationId: id,
@@ -120,6 +129,10 @@ const savedCapture = {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  testEnv.CAM_MANAGER_URL = undefined;
+  vi.stubGlobal("fetch", dispatchFetch);
+  dispatchFetch.mockResolvedValue(new Response(null, { status: 200 }));
+  db.$executeRaw.mockResolvedValue(1);
   db.$transaction.mockImplementation(async (fn) => fn(db));
   db.cameraPresetCamera.findUniqueOrThrow.mockResolvedValue({
     camera: "garden",
@@ -148,11 +161,16 @@ beforeEach(() => {
   db.presetCapture.findUnique.mockResolvedValue(savedCapture);
   db.presetCapture.findUniqueOrThrow.mockResolvedValue(savedCapture);
   verifyUpload.mockResolvedValue({
-    width: 1920,
-    height: 1080,
-    mimeType: "image/jpeg",
+    fileStorageObject: publishedFile,
+    image: {
+      width: 1920,
+      height: 1080,
+      mimeType: "image/jpeg",
+    },
   });
 });
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe("durable preset commands", () => {
   test("a repeated command returns its existing result; UUID reuse for another payload conflicts", async () => {
@@ -271,13 +289,19 @@ describe("capture delivery and publication", () => {
     expect(result).toMatchObject({ delivered: true, status: "failed" });
     expect(db.presetCapture.update).toHaveBeenCalledWith({
       where: { id },
-      data: { deliveredAt: expect.any(Date) },
+      data: {
+        deliveredAt: expect.any(Date),
+        fileStorageObjectId: publishedFile.id,
+      },
     });
     expect(db.cameraPreset.upsert).not.toHaveBeenCalled();
-    expect(db.fileStorageObject.update).toHaveBeenCalledWith({
-      where: { id: file.id },
-      data: { uploadedAt: expect.any(Date), expiresAt: null },
-    });
+    const [sql, ...values] = db.$executeRaw.mock.calls[0]!;
+    expect(sql.join("?")).toContain("AND deletedAt IS NULL AND expiresAt > ?");
+    expect(values).toEqual([
+      expect.any(Date),
+      publishedFile.id,
+      expect.any(Date),
+    ]);
   });
 
   test("a failed upload cannot publish, finalize or acknowledge delivery", async () => {
@@ -364,4 +388,40 @@ test("archived zero-zoom presets remain readable but cannot be captured or loade
   ).rejects.toMatchObject({
     code: "PRECONDITION_FAILED",
   });
+});
+
+test("a pending UUID replay recovers intent without submitting another Worker job", async () => {
+  testEnv.CAM_MANAGER_URL = "https://manager.test/";
+  expect(await commandPreset(command)).toMatchObject({ id });
+  expect(dispatchFetch).not.toHaveBeenCalled();
+});
+
+test("unique-key conflict recovery does not redispatch the winning pending UUID", async () => {
+  testEnv.CAM_MANAGER_URL = "https://manager.test/";
+  db.$transaction.mockRejectedValueOnce({ code: "P2002" });
+  expect(await commandPreset(command)).toMatchObject({ id });
+  expect(dispatchFetch).not.toHaveBeenCalled();
+});
+
+test("only creation submits a pending operation to the Worker", async () => {
+  testEnv.CAM_MANAGER_URL = "https://manager.test/";
+  db.cameraPresetOperation.findUnique.mockResolvedValueOnce(null);
+  db.cameraPresetOperation.create.mockResolvedValueOnce(operation);
+  expect(await commandPreset(command)).toMatchObject({ id });
+  expect(dispatchFetch).toHaveBeenCalledTimes(1);
+  expect(dispatchFetch).toHaveBeenCalledWith(
+    new URL("https://manager.test/presets/jobs"),
+    expect.objectContaining({ body: JSON.stringify({ operationId: id }) }),
+  );
+  expect(await commandPreset(command)).toMatchObject({ id });
+  expect(dispatchFetch).toHaveBeenCalledTimes(1);
+});
+
+test("a cleanup claim prevents publication of its candidate without a delivery receipt", async () => {
+  db.$executeRaw.mockResolvedValueOnce(0);
+  await expect(commitPresetCapture(id, id)).rejects.toMatchObject({
+    code: "CONFLICT",
+  });
+  expect(db.presetCapture.update).not.toHaveBeenCalled();
+  expect(db.cameraPreset.upsert).not.toHaveBeenCalled();
 });
