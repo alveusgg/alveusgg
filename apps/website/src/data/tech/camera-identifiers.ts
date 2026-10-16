@@ -72,7 +72,7 @@ export function resolveControlCamera(name: string): ControlCamera | undefined {
   const normalized = name.trim().toLowerCase().replace(/cam$/, "");
   if ((controlCameraNames as readonly string[]).includes(normalized))
     return normalized as ControlCamera;
-  return aliases[normalized];
+  return Object.hasOwn(aliases, normalized) ? aliases[normalized] : undefined;
 }
 
 export function presetCatalogCamera(name: string) {
