@@ -861,7 +861,7 @@ const commands = {
    * Scenes
    */
   customcams: {
-    // TODO: Aliases of ccams, ccam
+    aliases: ["ccams", "ccam"],
     description: "Set cameras to show in layout",
     category: "Scenes",
     args: [
@@ -874,7 +874,7 @@ const commands = {
     ],
   },
   customcamsbig: {
-    // TODO: Aliases of ccamsbig, ccamb
+    aliases: ["ccamsbig", "ccamb"],
     description: "Set cameras to show in layout, with the first being larger",
     category: "Scenes",
     args: [
@@ -1014,7 +1014,8 @@ const commands = {
     ],
   },
   piptl: {
-    // TODO: Aliases of customcamstl, pipul, and variations thereof
+    aliases: ["customcamstl", "pipul"],
+    // TODO: Add the remaining variations of the aliases above
     description:
       "Show two cameras, with the second picture-in-picture top-left",
     category: "Scenes",
