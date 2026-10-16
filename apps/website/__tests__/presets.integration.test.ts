@@ -4,11 +4,13 @@ import { afterAll, describe, expect, test, vi } from "vitest";
 
 import { prisma } from "@alveusgg/database";
 
+import { setSubscriberPolicy } from "@/server/presets/policy";
 import { type CaptureMetadata } from "@/server/presets/schema";
 import {
   commandPreset,
   commitPresetCapture,
   completePresetOperation,
+  getPresetOperation,
   pendingPresetOperations,
   preparePresetCapture,
 } from "@/server/presets/service";
@@ -49,6 +51,12 @@ const png = Buffer.from(
   "base64",
 );
 const cameras: string[] = [];
+const cooldownUsers: string[] = [];
+function rateUser() {
+  const id = `integration-${randomUUID()}`;
+  cooldownUsers.push(id);
+  return id;
+}
 function camera() {
   const value = `integration-${randomUUID().slice(0, 8)}`;
   cameras.push(value);
@@ -118,6 +126,19 @@ describe.skipIf(!enabled)(
       });
       await prisma.cameraPresetOperation.deleteMany({
         where: { camera: { in: cameras } },
+      });
+      await prisma.cameraPresetPolicy.deleteMany({
+        where: { scope: { in: cameras.map((camera) => `camera:${camera}`) } },
+      });
+      await prisma.cameraPresetCooldown.deleteMany({
+        where: {
+          key: {
+            in: [
+              ...cameras.map((camera) => `camera:${camera}`),
+              ...cooldownUsers.map((user) => `user:${user}`),
+            ],
+          },
+        },
       });
       await prisma.cameraPresetName.deleteMany({
         where: { camera: { in: cameras } },
@@ -362,6 +383,218 @@ describe.skipIf(!enabled)(
           orderBy: { name: "asc" },
         }),
       ).toEqual(before);
+    }, 30000);
+
+    test("durable cooldowns serialize users across cameras and retry the original UUID without charging again", async () => {
+      const firstCamera = camera();
+      const secondCamera = camera();
+      const actorId = rateUser();
+      for (const cam of [firstCamera, secondCamera])
+        await prisma.cameraPreset.create({
+          data: {
+            camera: cam,
+            name: "home",
+            description: "Home",
+            position: { pan: 0, tilt: 0, zoom: 1 },
+            provenance: "control-api-import",
+          },
+        });
+      const commands = [firstCamera, secondCamera].map((camera) => ({
+        id: randomUUID(),
+        action: "load" as const,
+        camera,
+        name: "home",
+        authorization: "operator" as const,
+        actor: { id: actorId, name: "Old Name" },
+      }));
+      const results = await Promise.allSettled(
+        commands.map((command) =>
+          commandPreset(command, { cooldownUserId: actorId }),
+        ),
+      );
+      expect(
+        results.filter(({ status }) => status === "fulfilled"),
+      ).toHaveLength(1);
+      expect(
+        results
+          .filter(({ status }) => status === "rejected")
+          .map((result) =>
+            result.status === "rejected" ? result.reason.code : null,
+          ),
+      ).toEqual(["TOO_MANY_REQUESTS"]);
+      const winnerIndex = results.findIndex(
+        ({ status }) => status === "fulfilled",
+      );
+      const accepted = commands[winnerIndex]!;
+      const keys = [`user:${actorId}`, `camera:${accepted.camera}`];
+      const before = await prisma.cameraPresetCooldown.findMany({
+        where: { key: { in: keys } },
+        orderBy: { key: "asc" },
+      });
+      expect(
+        await commandPreset(
+          {
+            ...accepted,
+            authorization: undefined,
+            actor: { id: actorId, name: "New Name" },
+          },
+          { cooldownUserId: actorId },
+        ),
+      ).toMatchObject({ id: accepted.id });
+      expect(
+        await prisma.cameraPresetCooldown.findMany({
+          where: { key: { in: keys } },
+          orderBy: { key: "asc" },
+        }),
+      ).toEqual(before);
+      const foreign = rateUser();
+      await expect(
+        commandPreset(
+          { ...accepted, actor: { id: foreign } },
+          { cooldownUserId: foreign },
+        ),
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+      await expect(
+        commandPreset(
+          { ...accepted, id: randomUUID(), actor: { id: foreign } },
+          { cooldownUserId: foreign },
+        ),
+      ).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+      expect(
+        await prisma.cameraPresetCooldown.findUnique({
+          where: { key: `user:${foreign}` },
+        }),
+      ).toBeNull();
+    }, 30000);
+
+    test("two subscribers/operators cannot concurrently bypass one camera's durable cooldown", async () => {
+      const cam = camera();
+      const users = [rateUser(), rateUser()];
+      await prisma.cameraPreset.create({
+        data: {
+          camera: cam,
+          name: "home",
+          description: "Home",
+          position: { pan: 0, tilt: 0, zoom: 1 },
+          provenance: "control-api-import",
+        },
+      });
+      const results = await Promise.allSettled(
+        users.map((id) =>
+          commandPreset(
+            {
+              id: randomUUID(),
+              action: "load",
+              camera: cam,
+              name: "home",
+              authorization: "operator",
+              actor: { id },
+            },
+            { cooldownUserId: id },
+          ),
+        ),
+      );
+      expect(
+        results.filter(({ status }) => status === "fulfilled"),
+      ).toHaveLength(1);
+      expect(
+        results
+          .filter(({ status }) => status === "rejected")
+          .map((result) =>
+            result.status === "rejected" ? result.reason.code : null,
+          ),
+      ).toEqual(["TOO_MANY_REQUESTS"]);
+    }, 30000);
+
+    test("a concurrent subscriber pause/load is serialized and later dispatch rechecks the paused policy", async () => {
+      const originalGlobal = await prisma.cameraPresetPolicy.findUnique({
+        where: { scope: "global" },
+      });
+      const cam = camera();
+      const userId = rateUser();
+      try {
+        await prisma.cameraPresetPolicy.upsert({
+          where: { scope: "global" },
+          create: {
+            scope: "global",
+            paused: false,
+            updatedBy: "local-integration",
+          },
+          update: { paused: false, resumeAt: null },
+        });
+        await prisma.cameraPreset.create({
+          data: {
+            camera: cam,
+            name: "home",
+            description: "Home",
+            position: { pan: 0, tilt: 0, zoom: 1 },
+            provenance: "control-api-import",
+          },
+        });
+        await setSubscriberPolicy(
+          { camera: cam, paused: false },
+          "local-integration",
+        );
+        const command = {
+          id: randomUUID(),
+          action: "load" as const,
+          camera: cam,
+          name: "home",
+          authorization: "subscriber" as const,
+          actor: { id: userId },
+        };
+        const [load, pause] = await Promise.allSettled([
+          commandPreset(command, { cooldownUserId: userId }),
+          setSubscriberPolicy(
+            { camera: cam, paused: true },
+            "local-integration",
+          ),
+        ]);
+        expect(pause.status).toBe("fulfilled");
+        if (load.status === "fulfilled")
+          expect(await getPresetOperation(command.id)).toMatchObject({
+            status: "failed",
+            error: expect.stringContaining("paused"),
+          });
+        else expect(load.reason).toMatchObject({ code: "FORBIDDEN" });
+        // Simulate a retained pending row discovered after the policy was changed.
+        const delayedId = randomUUID();
+        await prisma.cameraPresetOperation.create({
+          data: {
+            id: delayedId,
+            action: "load",
+            camera: cam,
+            status: "pending",
+            commandHash: "b".repeat(64),
+            command: { ...command, id: delayedId },
+            expectedCameraVersion: 0,
+            expiresAt: new Date(Date.now() + 15000),
+          },
+        });
+        expect(await getPresetOperation(delayedId)).toMatchObject({
+          status: "failed",
+          error: expect.stringContaining("paused"),
+        });
+        // Operator loads bypass pause, while using the same authoritative preset data.
+        expect(
+          await commandPreset({
+            ...command,
+            id: randomUUID(),
+            authorization: "operator",
+            actor: { id: "local-operator" },
+          }),
+        ).toMatchObject({ status: "pending" });
+      } finally {
+        if (originalGlobal)
+          await prisma.cameraPresetPolicy.update({
+            where: { scope: "global" },
+            data: originalGlobal,
+          });
+        else
+          await prisma.cameraPresetPolicy.deleteMany({
+            where: { scope: "global" },
+          });
+      }
     }, 30000);
 
     test("pending recovery paginates tied timestamps and survives a deleted cursor row", async () => {

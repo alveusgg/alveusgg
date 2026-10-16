@@ -594,3 +594,16 @@ model CameraPresetLegacyAsset {
 
   @@index([camera, kind])
 }
+
+model CameraPresetCooldown {
+  key           String   @id @db.VarChar(191)
+  nextAllowedAt DateTime
+}
+
+model CameraPresetPolicy {
+  scope     String    @id @db.VarChar(110)
+  paused    Boolean
+  resumeAt  DateTime?
+  updatedBy String    @db.VarChar(100)
+  updatedAt DateTime  @updatedAt
+}

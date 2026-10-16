@@ -12,6 +12,16 @@ import {
 } from "@/server/utils/file-storage";
 
 import {
+  type Transaction,
+  dbCode,
+  presetTransaction as transaction,
+} from "./database";
+import {
+  isSubscriberLoad,
+  lockSubscriberPolicy,
+  subscriberCameraPaused,
+} from "./policy";
+import {
   type CaptureMetadata,
   type PresetCommand,
   captureMatchesOperation,
@@ -22,7 +32,6 @@ import {
 } from "./schema";
 import { verifyCaptureUpload } from "./storage";
 
-type Transaction = Prisma.TransactionClient;
 const json = (
   value: unknown,
 ): Prisma.InputJsonValue | typeof Prisma.JsonNull =>
@@ -31,23 +40,6 @@ const json = (
     : (JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue);
 function conflict(message: string): never {
   throw new TRPCError({ code: "CONFLICT", message });
-}
-const dbCode = (error: unknown) =>
-  error !== null && typeof error === "object" && "code" in error
-    ? error.code
-    : undefined;
-
-async function transaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T> {
-  for (let attempt = 0; ; attempt++) {
-    try {
-      return await prisma.$transaction(fn, {
-        isolationLevel: "Serializable",
-        timeout: 15_000,
-      });
-    } catch (error) {
-      if (dbCode(error) !== "P2034" || attempt >= 2) throw error;
-    }
-  }
 }
 
 async function lockCamera(tx: Transaction, camera: string) {
@@ -88,7 +80,7 @@ export function operationDto(operation: CameraPresetOperation) {
 }
 
 export async function getPresetOperation(id: string) {
-  const operation = await prisma.cameraPresetOperation.findUnique({
+  let operation = await prisma.cameraPresetOperation.findUnique({
     where: { id },
   });
   if (!operation)
@@ -96,7 +88,100 @@ export async function getPresetOperation(id: string) {
       code: "NOT_FOUND",
       message: "Preset operation not found",
     });
+  if (operation.status === "pending" && isSubscriberLoad(operation)) {
+    const camera = operation.camera;
+    operation = await transaction(async (tx) => {
+      await lockSubscriberPolicy(tx, camera);
+      const current = await tx.cameraPresetOperation.findUniqueOrThrow({
+        where: { id },
+      });
+      if (
+        current.status === "pending" &&
+        isSubscriberLoad(current) &&
+        (await subscriberCameraPaused(tx, camera))
+      )
+        return tx.cameraPresetOperation.update({
+          where: { id },
+          data: {
+            status: "failed",
+            error:
+              "Subscriber camera control was paused while this load was pending.",
+          },
+        });
+      return current;
+    });
+  }
   return operationDto(operation);
+}
+
+export async function findPresetOperationForUser(
+  id: string,
+  userId: string,
+  operator = false,
+) {
+  const operation = await prisma.cameraPresetOperation.findUnique({
+    where: { id },
+  });
+  if (!operation) return null;
+  const dto = operationDto(operation);
+  if (dto.actor.id !== userId && !operator)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This preset operation belongs to another user.",
+    });
+  return dto;
+}
+
+const COMMAND_COOLDOWN_MS = 1500;
+async function consumeUserCooldown(
+  tx: Transaction,
+  userId: string,
+  camera: string,
+) {
+  const now = new Date();
+  const keys = [`user:${userId}`, `camera:${camera}`];
+  await tx.cameraPresetCooldown.createMany({
+    data: keys.map((key) => ({ key, nextAllowedAt: new Date(0) })),
+    skipDuplicates: true,
+  });
+  const updated = await tx.cameraPresetCooldown.updateMany({
+    where: { key: { in: keys }, nextAllowedAt: { lte: now } },
+    data: { nextAllowedAt: new Date(now.getTime() + COMMAND_COOLDOWN_MS) },
+  });
+  if (updated.count !== keys.length)
+    throw new TRPCError({
+      code: "TOO_MANY_REQUESTS",
+      message: "Please wait 1.5 seconds between preset commands.",
+    });
+}
+
+function commandIdentity(value: unknown) {
+  const command = commandSchema.parse(value);
+  // The account's display name may change while an operation is being retried.
+  return {
+    id: command.id,
+    action: command.action,
+    camera: command.camera,
+    name: command.name,
+    newName: command.newName,
+    actor: { id: command.actor.id },
+  };
+}
+function assertSameCommand(
+  operation: CameraPresetOperation,
+  command: PresetCommand,
+) {
+  const existing = commandSchema.parse(operation.command);
+  if (existing.actor.id !== command.actor.id)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This operation ID belongs to another user.",
+    });
+  if (
+    payloadHash(commandIdentity(existing)) !==
+    payloadHash(commandIdentity(command))
+  )
+    conflict("Operation ID was already used for a different command");
 }
 
 export async function pendingPresetOperations(after?: {
@@ -155,9 +240,12 @@ async function dispatch(operationId: string) {
   }
 }
 
-export async function commandPreset(input: PresetCommand) {
+export async function commandPreset(
+  input: PresetCommand,
+  options: { cooldownUserId?: string } = {},
+) {
   const command = commandSchema.parse(input);
-  const hash = payloadHash(command);
+  const hash = payloadHash(commandIdentity(command));
   let operation: CameraPresetOperation;
   try {
     operation = await transaction(async (tx) => {
@@ -166,8 +254,7 @@ export async function commandPreset(input: PresetCommand) {
         where: { id: command.id },
       });
       if (existing) {
-        if (existing.commandHash !== hash)
-          conflict("Operation ID was already used for a different command");
+        assertSameCommand(existing, command);
         return existing;
       }
       const preset = command.name
@@ -197,6 +284,21 @@ export async function commandPreset(input: PresetCommand) {
         // Retaining tombstones prevents an old name-based operation from targeting a new identity.
         if (target && target.id !== preset!.id)
           conflict("That preset name already exists (including its history)");
+      }
+      if (command.authorization === "subscriber") {
+        if (command.action !== "load")
+          throw new TRPCError({ code: "FORBIDDEN" });
+        await lockSubscriberPolicy(tx, command.camera);
+        if (await subscriberCameraPaused(tx, command.camera))
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Subscriber control is paused for this camera.",
+          });
+      }
+      if (options.cooldownUserId) {
+        if (options.cooldownUserId !== command.actor.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+        await consumeUserCooldown(tx, options.cooldownUserId, command.camera);
       }
       // The camera generation is only a clear/import epoch; names have independent
       // generations so a delayed save does not suppress a different named preset.
@@ -278,8 +380,9 @@ export async function commandPreset(input: PresetCommand) {
     const existing = await prisma.cameraPresetOperation.findUnique({
       where: { id: command.id },
     });
-    if (!existing || existing.commandHash !== hash)
+    if (!existing)
       conflict("Operation ID or preset name conflicts with an existing record");
+    assertSameCommand(existing, command);
     operation = existing;
   }
   if (operation.status === "pending") await dispatch(operation.id);

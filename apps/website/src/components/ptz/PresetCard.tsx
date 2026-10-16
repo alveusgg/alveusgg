@@ -4,12 +4,6 @@ import { type ReactNode, useState } from "react";
 import type { PresetImage } from "@/data/tech/cameras.types";
 
 import { classes } from "@/utils/classes";
-import { type RouterInputs } from "@/utils/trpc";
-
-import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
-import RunCommandButton from "@/components/shared/actions/RunCommandButton";
-
-type Command = RouterInputs["stream"]["runCommand"];
 
 const PresetThumbnail = ({ image }: { image: PresetImage | null }) => {
   const [failed, setFailed] = useState(false);
@@ -41,7 +35,8 @@ const PresetThumbnail = ({ image }: { image: PresetImage | null }) => {
 const PresetCard = ({
   title,
   image,
-  command,
+  onLoad,
+  disabled = false,
   canLoad = false,
   imageProvenance,
   className,
@@ -51,7 +46,8 @@ const PresetCard = ({
   image: PresetImage | null;
   canLoad?: boolean;
   imageProvenance?: "legacy" | "capture" | null;
-  command?: Command;
+  onLoad?: () => void;
+  disabled?: boolean;
   className?: string;
   children?: ReactNode;
 }) => (
@@ -63,32 +59,19 @@ const PresetCard = ({
   >
     <div className="relative overflow-hidden rounded-t-lg">
       <PresetThumbnail key={image?.src ?? "none"} image={image} />
-      {canLoad && command && (
-        <RunCommandButton
-          command={command.command}
-          args={command.args}
-          subOnly
-          tooltip={{ offset: 8 }}
-          className="absolute inset-0 flex items-center justify-center text-alveus-green-100 opacity-25 transition-all hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100 [&>svg]:size-12"
-        />
-      )}
     </div>
     <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
       <div className="flex items-center justify-between">
         <h4 className="truncate text-lg font-semibold">{title}</h4>
-        {canLoad && command && (
-          <div className="flex gap-1">
-            <CopyToClipboardButton
-              text={`!${[command.command, ...(command.args ?? [])].join(" ")}`}
-              options={{ initialText: "Copy command" }}
-              preview
-            />
-            <RunCommandButton
-              command={command.command}
-              args={command.args}
-              subOnly
-            />
-          </div>
+        {canLoad && onLoad && (
+          <button
+            type="button"
+            onClick={onLoad}
+            disabled={disabled}
+            className="shrink-0 rounded-sm border border-alveus-green-700 px-2 py-1 text-sm disabled:opacity-50"
+          >
+            Load preset
+          </button>
         )}
       </div>
       {image && imageProvenance === "legacy" && (

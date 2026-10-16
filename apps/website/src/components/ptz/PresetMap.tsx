@@ -17,7 +17,6 @@ import { classes } from "@/utils/classes";
 import useTooltip from "@/hooks/tooltip";
 
 import PresetCard from "@/components/ptz/PresetCard";
-import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import "@xyflow/react/dist/style.css";
 
@@ -28,6 +27,8 @@ type PresetMapNodeData = {
   name: string;
   preset: Preset;
   highlight?: boolean;
+  onLoad?: () => void;
+  disabled?: boolean;
 };
 
 const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
@@ -50,10 +51,8 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
         image={data.preset.image}
         imageProvenance={data.preset.imageProvenance}
         canLoad={data.preset.canLoad}
-        command={{
-          command: "ptzload",
-          args: [data.camera.toLowerCase(), data.name],
-        }}
+        onLoad={data.onLoad}
+        disabled={data.disabled}
         className="w-64 overflow-hidden overscroll-none"
       >
         {data.preset.description}
@@ -82,25 +81,13 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
       >
         <p className="max-w-36 truncate">{data.name}</p>
 
-        {data.preset.canLoad === true && (
-          <RunCommandButton
-            command="ptzload"
-            args={[data.camera.toLowerCase(), data.name]}
-            subOnly
-            className="pointer-events-none relative top-px text-alveus-green-400 group-hover:text-alveus-green-900 [&>svg]:m-0 [&>svg]:size-3"
-          />
-        )}
-
-        {data.preset.canLoad === true && (
-          <RunCommandButton
-            command="ptzload"
-            args={[data.camera.toLowerCase(), data.name]}
-            subOnly
-            icon={() => null}
-            className="absolute inset-0"
-            tooltip={{
-              offset: 8,
-            }}
+        {data.preset.canLoad === true && data.onLoad && (
+          <button
+            type="button"
+            onClick={data.onLoad}
+            disabled={data.disabled}
+            aria-label={`Load preset ${data.name}`}
+            className="absolute inset-0 disabled:cursor-wait"
           />
         )}
       </div>
@@ -130,10 +117,14 @@ const PresetMap = ({
   camera,
   presets,
   filter,
+  onLoad,
+  disabled,
 }: {
   camera: Camera;
   presets: readonly PresetEntry[];
   filter?: (entry: PresetEntry) => boolean;
+  onLoad?: (name: string) => void;
+  disabled?: boolean;
 }) => {
   const mapNodes = useMemo(() => {
     if (!presets.length) return [];
@@ -168,10 +159,12 @@ const PresetMap = ({
           name,
           preset,
           highlight: filter?.([name, preset]),
+          onLoad: onLoad ? () => onLoad(name) : undefined,
+          disabled,
         },
       } satisfies Node<PresetMapNodeData>;
     });
-  }, [camera, filter, presets]);
+  }, [camera, filter, presets, onLoad, disabled]);
 
   const mapNodeTypes = useMemo(() => ({ preset: PresetMapNode }), []);
 

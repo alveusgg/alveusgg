@@ -23,6 +23,7 @@ const { db, verifyUpload, createUpload, signUpload } = vi.hoisted(() => {
       findUniqueOrThrow: vi.fn(),
       update: vi.fn(),
     },
+    cameraPresetCooldown: { createMany: vi.fn(), updateMany: vi.fn() },
     cameraPresetName: { upsert: vi.fn(), findUnique: vi.fn() },
     cameraPresetOperation: {
       findUnique: vi.fn(),
@@ -158,6 +159,35 @@ describe("durable preset commands", () => {
     await expect(
       commandPreset({ ...command, name: "other" }),
     ).rejects.toMatchObject({ code: "CONFLICT" });
+  });
+
+  test("UUID recovery ignores mutable display name and server authorization metadata without consuming another cooldown", async () => {
+    db.cameraPresetOperation.findUnique.mockResolvedValue({
+      ...operation,
+      command: {
+        ...command,
+        authorization: "operator",
+        actor: { id: "123", name: "Old Name" },
+      },
+    });
+    expect(
+      await commandPreset(
+        { ...command, actor: { id: "123", name: "New Name" } },
+        { cooldownUserId: "123" },
+      ),
+    ).toMatchObject({ id });
+    expect(db.cameraPresetCooldown.createMany).not.toHaveBeenCalled();
+    expect(db.cameraPresetCooldown.updateMany).not.toHaveBeenCalled();
+  });
+
+  test("another authenticated actor cannot reuse an existing operation UUID", async () => {
+    await expect(
+      commandPreset(
+        { ...command, actor: { id: "foreign-user" } },
+        { cooldownUserId: "foreign-user" },
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(db.cameraPresetCooldown.createMany).not.toHaveBeenCalled();
   });
 
   test("a genuinely missing preset has a distinct NOT_FOUND error", async () => {

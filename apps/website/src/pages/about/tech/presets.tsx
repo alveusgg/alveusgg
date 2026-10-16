@@ -1,6 +1,5 @@
 import { Field, Label, Switch } from "@headlessui/react";
 import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
@@ -12,6 +11,7 @@ import { channels as youtubeChannels } from "@/data/youtube";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
+import usePresetAccess from "@/hooks/preset-access";
 import useLocalStorage from "@/hooks/storage";
 import useSubscriberAccess from "@/hooks/subscription";
 
@@ -25,14 +25,10 @@ import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import { YouTubeEmbed } from "@/components/content/YouTube";
 import { CamListDropdown, CamListFull } from "@/components/ptz/CamList";
 import PresetList from "@/components/ptz/PresetList";
-import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
-import IconCheck from "@/icons/IconCheck";
-import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
-import IconX from "@/icons/IconX";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -59,7 +55,7 @@ const getPositionIcon = (position: number) => {
 };
 
 const AboutTechPresetsPage: NextPage = () => {
-  const { data: session } = useSession();
+  const access = usePresetAccess();
   const { subscription } = useSubscriberAccess();
 
   // Allow the camera UI to be focused with other page UI hidden
@@ -68,7 +64,7 @@ const AboutTechPresetsPage: NextPage = () => {
     useMemo(() => z.boolean(), []),
     false,
   );
-  const zen = subscription.isSuccess && subscription.data && focused;
+  const zen = !!access.data?.canLoad && focused;
   useEffect(() => {
     if (zen) {
       document.body.style.overflow = "hidden";
@@ -135,7 +131,7 @@ const AboutTechPresetsPage: NextPage = () => {
     "twitch",
   );
 
-  const split = subscription.isSuccess && subscription.data && sidebar !== -1;
+  const split = !!access.data?.canLoad && sidebar !== -1;
 
   return (
     <>
@@ -249,45 +245,11 @@ const AboutTechPresetsPage: NextPage = () => {
                   zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
                 )}
               >
-                <ProvideAuth scopeGroup="chat" className="mb-4" />
-
-                {!subscription.isPaused && (
-                  <div
-                    className={classes(
-                      "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
-                      subscription.isSuccess &&
-                        (subscription.data ? "bg-alveus-green" : "bg-red"),
-                      subscription.isLoading && "bg-twitch",
-                      subscription.isError && "bg-red",
-                    )}
-                  >
-                    <p>
-                      {subscription.isSuccess &&
-                        (subscription.data
-                          ? `@${session?.user?.name} is subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
-                          : `@${session?.user?.name} is not subscribed`)}
-
-                      {subscription.isLoading &&
-                        "Checking subscription status..."}
-                      {subscription.isError &&
-                        "Failed to check subscription status"}
-                    </p>
-
-                    {subscription.isSuccess &&
-                      (subscription.data ? (
-                        <IconCheck className="size-6" />
-                      ) : (
-                        <IconX className="size-6" />
-                      ))}
-
-                    {subscription.isLoading && (
-                      <IconLoading className="size-6 animate-spin" />
-                    )}
-                    {subscription.isError && <IconX className="size-6" />}
-                  </div>
+                {access.data?.canManage && (
+                  <Link href="/admin/presets">Manage camera presets</Link>
                 )}
 
-                {subscription.isSuccess && subscription.data && (
+                {access.data?.canLoad && (
                   <>
                     {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
                     <div
@@ -351,53 +313,55 @@ const AboutTechPresetsPage: NextPage = () => {
                       </Field>
                     </div>
 
-                    <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex flex-col leading-tight">
-                        <span>Swap camera positions on stream</span>
-                        <span className="text-sm text-alveus-green-400 italic">
-                          (select two grid positions to swap them)
-                        </span>
-                      </Label>
+                    {subscription.isSuccess && subscription.data && (
+                      <Field className="flex flex-wrap items-center justify-between gap-2">
+                        <Label className="flex flex-col leading-tight">
+                          <span>Swap camera positions on stream</span>
+                          <span className="text-sm text-alveus-green-400 italic">
+                            (select two grid positions to swap them)
+                          </span>
+                        </Label>
 
-                      <div className="flex">
-                        {Array.from({ length: 6 }).map((_, i) =>
-                          !selectedPosition || selectedPosition === i + 1 ? (
-                            <ActionButton
-                              key={i}
-                              onClick={() =>
-                                setSelectedPosition(
-                                  selectedPosition === i + 1
-                                    ? undefined
-                                    : i + 1,
-                                )
-                              }
-                              icon={getPositionIcon(i + 1)}
-                              tooltip={{
-                                content:
-                                  selectedPosition === i + 1
-                                    ? "Cancel position swap"
-                                    : `Swap position ${i + 1} with another`,
-                              }}
-                            />
-                          ) : (
-                            <RunCommandButton
-                              key={i}
-                              command="swap"
-                              args={[
-                                selectedPosition.toString(),
-                                (i + 1).toString(),
-                              ]}
-                              tooltip={{
-                                text: `Run swap command for positions ${selectedPosition} and ${i + 1}`,
-                              }}
-                              icon={getPositionIcon(i + 1)}
-                              onClick={() => setSelectedPosition(undefined)}
-                              className="text-highlight hover:text-black"
-                            />
-                          ),
-                        )}
-                      </div>
-                    </Field>
+                        <div className="flex">
+                          {Array.from({ length: 6 }).map((_, i) =>
+                            !selectedPosition || selectedPosition === i + 1 ? (
+                              <ActionButton
+                                key={i}
+                                onClick={() =>
+                                  setSelectedPosition(
+                                    selectedPosition === i + 1
+                                      ? undefined
+                                      : i + 1,
+                                  )
+                                }
+                                icon={getPositionIcon(i + 1)}
+                                tooltip={{
+                                  content:
+                                    selectedPosition === i + 1
+                                      ? "Cancel position swap"
+                                      : `Swap position ${i + 1} with another`,
+                                }}
+                              />
+                            ) : (
+                              <RunCommandButton
+                                key={i}
+                                command="swap"
+                                args={[
+                                  selectedPosition.toString(),
+                                  (i + 1).toString(),
+                                ]}
+                                tooltip={{
+                                  text: `Run swap command for positions ${selectedPosition} and ${i + 1}`,
+                                }}
+                                icon={getPositionIcon(i + 1)}
+                                onClick={() => setSelectedPosition(undefined)}
+                                className="text-highlight hover:text-black"
+                              />
+                            ),
+                          )}
+                        </div>
+                      </Field>
+                    )}
                   </>
                 )}
               </div>

@@ -18,44 +18,55 @@ export const positionSchema = z.object({
   autofocus: z.enum(["on", "off"]).optional(),
   autoiris: z.enum(["on", "off"]).optional(),
 });
+const commandFields = {
+  id: z.uuid(),
+  action: z.enum(["save", "load", "rename", "remove", "clear"]),
+  camera: cameraSchema,
+  name: presetNameSchema.optional(),
+  newName: presetNameSchema.optional(),
+};
+function validateCommand(
+  input: { action: string; name?: string; newName?: string },
+  ctx: z.RefinementCtx,
+) {
+  if (input.action !== "clear" && !input.name)
+    ctx.addIssue({
+      code: "custom",
+      message: "Preset name required",
+      path: ["name"],
+    });
+  if (input.action === "rename" && !input.newName)
+    ctx.addIssue({
+      code: "custom",
+      message: "New name required",
+      path: ["newName"],
+    });
+  if (input.action !== "rename" && input.newName !== undefined)
+    ctx.addIssue({
+      code: "custom",
+      message: "newName only applies to rename",
+      path: ["newName"],
+    });
+  if (input.action === "clear" && input.name !== undefined)
+    ctx.addIssue({
+      code: "custom",
+      message: "clear applies to the whole camera",
+      path: ["name"],
+    });
+}
 export const commandSchema = z
   .object({
-    id: z.uuid(),
-    action: z.enum(["save", "load", "rename", "remove", "clear"]),
-    camera: cameraSchema,
-    name: presetNameSchema.optional(),
-    newName: presetNameSchema.optional(),
+    ...commandFields,
+    authorization: z.enum(["subscriber", "operator"]).optional(),
     actor: z.object({
       id: z.string().min(1).max(100),
       name: z.string().max(100).optional(),
     }),
   })
-  .superRefine((input, ctx) => {
-    if (input.action !== "clear" && !input.name)
-      ctx.addIssue({
-        code: "custom",
-        message: "Preset name required",
-        path: ["name"],
-      });
-    if (input.action === "rename" && !input.newName)
-      ctx.addIssue({
-        code: "custom",
-        message: "New name required",
-        path: ["newName"],
-      });
-    if (input.action !== "rename" && input.newName !== undefined)
-      ctx.addIssue({
-        code: "custom",
-        message: "newName only applies to rename",
-        path: ["newName"],
-      });
-    if (input.action === "clear" && input.name !== undefined)
-      ctx.addIssue({
-        code: "custom",
-        message: "clear applies to the whole camera",
-        path: ["name"],
-      });
-  });
+  .superRefine(validateCommand);
+export const userCommandSchema = z
+  .strictObject(commandFields)
+  .superRefine(validateCommand);
 export type PresetCommand = z.infer<typeof commandSchema>;
 export const MAX_CAPTURE_BYTES = 10 * 1024 * 1024;
 export const captureSchema = z.object({

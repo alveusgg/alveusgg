@@ -2,14 +2,21 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
+  authorizePresetAction,
+  canManagePresets,
+  presetAccess,
+} from "@/server/presets/access";
+import { setSubscriberPolicy } from "@/server/presets/policy";
+import {
   cameraSchema,
   captureSchema,
-  commandSchema,
+  userCommandSchema,
 } from "@/server/presets/schema";
 import {
   commandPreset,
   commitPresetCapture,
   completePresetOperation,
+  findPresetOperationForUser,
   getPresetOperation,
   pendingPresetOperations,
   preparePresetCapture,
@@ -19,18 +26,89 @@ import {
 
 import { resolveControlCamera } from "@/data/tech/camera-identifiers";
 
-import { publicProcedure, router, sharedKeyProcedure } from "../trpc";
+import {
+  protectedProcedure,
+  publicProcedure,
+  router,
+  sharedKeyProcedure,
+} from "../trpc";
 
 export const presetsRouter = router({
-  command: sharedKeyProcedure.input(commandSchema).mutation(({ input }) => {
-    const camera = resolveControlCamera(input.camera);
-    if (!camera)
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Unknown control camera",
-      });
-    return commandPreset({ ...input, camera });
-  }),
+  setSubscriberControl: protectedProcedure
+    .input(
+      z.strictObject({
+        camera: cameraSchema.optional(),
+        paused: z.boolean(),
+        resumeAt: z.iso.datetime().nullable().optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      if (!canManagePresets(ctx.session))
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Camera operator access is required.",
+        });
+      const camera = input.camera
+        ? resolveControlCamera(input.camera)
+        : undefined;
+      if (input.camera && !camera)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unknown control camera",
+        });
+      return setSubscriberPolicy({ ...input, camera }, ctx.session.user.id);
+    }),
+  access: publicProcedure.query(({ ctx }) => presetAccess(ctx.session)),
+  userCommand: protectedProcedure
+    .input(userCommandSchema)
+    .mutation(async ({ ctx, input }) => {
+      const camera = resolveControlCamera(input.camera);
+      if (!camera)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unknown control camera",
+        });
+      const existing = await findPresetOperationForUser(
+        input.id,
+        ctx.session.user.id,
+      );
+      const authorization = existing
+        ? undefined
+        : await authorizePresetAction(ctx.session, input.action, camera);
+      try {
+        return await commandPreset(
+          {
+            ...input,
+            camera,
+            ...(authorization ? { authorization } : {}),
+            actor: {
+              id: ctx.session.user.id,
+              ...(ctx.session.user.name ? { name: ctx.session.user.name } : {}),
+            },
+          },
+          { cooldownUserId: ctx.session.user.id },
+        );
+      } catch (error) {
+        if (error instanceof TRPCError && error.code === "TOO_MANY_REQUESTS")
+          ctx.res.setHeader("Retry-After", "2");
+        throw error;
+      }
+    }),
+  userOperation: protectedProcedure
+    .input(z.object({ id: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const operation = await findPresetOperationForUser(
+        input.id,
+        ctx.session.user.id,
+        canManagePresets(ctx.session),
+      );
+      if (!operation)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Preset operation not found",
+        });
+      return operation;
+    }),
   operation: sharedKeyProcedure
     .input(z.object({ id: z.uuid() }))
     .query(({ input }) => getPresetOperation(input.id)),

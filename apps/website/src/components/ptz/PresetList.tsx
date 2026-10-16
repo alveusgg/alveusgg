@@ -34,11 +34,15 @@ import { sortPresets } from "@/utils/sort-presets";
 import { camelToKebab } from "@/utils/string-case";
 import { trpc } from "@/utils/trpc";
 
+import usePresetAccess from "@/hooks/preset-access";
+import usePresetOperation from "@/hooks/preset-operation";
 import useLocalStorage from "@/hooks/storage";
 import useSubscriberAccess from "@/hooks/subscription";
 import useTooltip from "@/hooks/tooltip";
 
 import Heading from "@/components/content/Heading";
+import AccessNotice from "@/components/presets/AccessNotice";
+import OperationStatus from "@/components/presets/OperationStatus";
 import PresetCard from "@/components/ptz/PresetCard";
 import PresetMap from "@/components/ptz/PresetMap";
 import ActionPreviewTooltip from "@/components/shared/actions/ActionPreviewTooltip";
@@ -328,6 +332,22 @@ const PresetList = ({
   }, [camera, setView]);
 
   const ptz = isCameraPTZ(cameras[camera]);
+  const access = usePresetAccess();
+  const operation = usePresetOperation(
+    `presets:public:${presetCatalogCamera(camera)}`,
+  );
+  const cameraPaused =
+    access.data?.pausedCameras.includes(presetCatalogCamera(camera)) &&
+    !access.data?.canManage;
+  const onLoad =
+    access.data?.canLoad && !access.isError && !cameraPaused
+      ? (name: string) =>
+          operation.run({
+            action: "load",
+            camera: presetCatalogCamera(camera),
+            name,
+          })
+      : undefined;
   const catalog = trpc.presets.catalog.useQuery(
     { camera: presetCatalogCamera(camera) },
     { enabled: ptz, refetchInterval: 30_000 },
@@ -371,6 +391,13 @@ const PresetList = ({
         onView={setView}
       />
 
+      {ptz && <AccessNotice />}
+      {cameraPaused && (
+        <p className="my-2 text-sm">
+          Subscriber preset loading for this camera is paused.
+        </p>
+      )}
+      <OperationStatus operation={operation} />
       {activeQuery.isError && (
         <div
           role="alert"
@@ -405,10 +432,8 @@ const PresetList = ({
                   image={preset.image}
                   canLoad={preset.canLoad}
                   imageProvenance={preset.imageProvenance}
-                  command={{
-                    command: "ptzload",
-                    args: [camera.toLowerCase(), name],
-                  }}
+                  onLoad={onLoad ? () => onLoad(name) : undefined}
+                  disabled={operation.busy}
                 >
                   {preset.description}
                 </PresetCard>
@@ -442,7 +467,13 @@ const PresetList = ({
           <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
         </div>
       ) : (
-        <PresetMap camera={camera} presets={safePresets} filter={filter} />
+        <PresetMap
+          camera={camera}
+          presets={safePresets}
+          filter={filter}
+          onLoad={onLoad}
+          disabled={operation.busy}
+        />
       )}
     </>
   );

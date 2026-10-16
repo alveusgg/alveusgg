@@ -13,6 +13,11 @@ import { notEmpty } from "@/utils/helpers";
 
 const menuItems = [
   {
+    label: "Camera presets",
+    href: "/admin/presets",
+    permission: permissions.managePTZControls,
+  },
+  {
     label: "Dashboard",
     href: "/admin/dashboard",
     permission: permissions.viewDashboard,
