@@ -11,14 +11,17 @@ export default defineConfig({
         }
 
         // hono-openapi never marks request bodies as required, but the control
-        // API rejects a missing body whenever its schema has required fields.
+        // API rejects every missing JSON body: most schemas have required
+        // fields, and the two that don't (`/ptz/load`, `/ptz/rptz`) use a Zod
+        // refinement requiring at least one field, which OpenAPI can't express.
         const requestBody =
           "requestBody" in operation ? operation.requestBody : undefined;
-        if (requestBody && "content" in requestBody) {
-          const schema = requestBody.content?.["application/json"]?.schema;
-          if (schema && "required" in schema && schema.required?.length) {
-            requestBody.required = true;
-          }
+        if (
+          requestBody &&
+          "content" in requestBody &&
+          requestBody.content?.["application/json"]
+        ) {
+          requestBody.required = true;
         }
       },
     },

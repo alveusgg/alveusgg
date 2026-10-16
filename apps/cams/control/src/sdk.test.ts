@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getInfoPosition, setPtzMove } from "./generated";
+import {
+  getInfoPosition,
+  setPtzLoad,
+  setPtzMove,
+  setPtzRptz,
+} from "./generated";
 import { createClient, createConfig } from "./generated/client";
 
 const baseUrl = "https://cams.test/direct";
@@ -80,12 +85,17 @@ describe("generated SDK", () => {
     expect(await request!.json()).toEqual({ direction: "up" });
   });
 
-  it("requires a body for mutations whose schema has required fields", () => {
+  it("requires a body for every mutation", () => {
     const { client } = setup(() => new Response("OK"));
 
-    // Only checked by `tsc`; the call itself is never awaited.
+    // Only checked by `tsc`; the calls themselves are never awaited.
     // @ts-expect-error `body` is required for setPtzMove.
     void setPtzMove({ client, headers }).catch(() => {});
+    // All of these fields are optional, but the control API requires one.
+    // @ts-expect-error `body` is required for setPtzLoad.
+    void setPtzLoad({ client, headers }).catch(() => {});
+    // @ts-expect-error `body` is required for setPtzRptz.
+    void setPtzRptz({ client, headers }).catch(() => {});
   });
 
   it("rejects a response that does not match the schema", async () => {
