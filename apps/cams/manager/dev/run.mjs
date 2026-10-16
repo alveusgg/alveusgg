@@ -14,6 +14,7 @@ let child;
 let issuer;
 let stopping = false;
 let force;
+const withWebsite = process.argv[2] === "--site";
 
 function requestStop() {
   stopping = true;
@@ -27,8 +28,8 @@ process.on("SIGINT", requestStop);
 process.on("SIGTERM", requestStop);
 
 try {
-  if (process.argv.length !== 2)
-    throw new Error("dev:mock takes no arguments.");
+  if (process.argv.length !== (withWebsite ? 3 : 2))
+    throw new Error("Usage: dev:mock [--site].");
   const state = await fetch("http://127.0.0.1:8090/mock/state", {
     signal: AbortSignal.timeout(3000),
   }).then((response) => {
@@ -44,6 +45,7 @@ try {
   // outside the checkout. HOME/XDG also isolate Wrangler's saved OAuth login.
   const text = await readFile(join(root, "wrangler.mock.json"), "utf8");
   const manager = JSON.parse(text);
+  if (withWebsite) manager.vars.ALVEUS_AUTH_ISSUER = "http://localhost:3000";
   manager.main = join(root, manager.main);
   delete manager.$schema;
   const configs = [manager];
@@ -66,7 +68,7 @@ try {
     args.push("--config", path);
   }
   await writeFile(join(temporary, ".dev.vars"), "");
-  issuer = await startIssuer();
+  if (!withWebsite) issuer = await startIssuer();
   const wrangler = join(
     dirname(require.resolve("wrangler/package.json")),
     "bin",
@@ -103,18 +105,21 @@ try {
     },
   );
   console.log(
-    "Local mocks only. Manager: http://127.0.0.1:8787; issuer: http://127.0.0.1:8798",
+    withWebsite
+      ? "Local mocks only. Manager: http://127.0.0.1:8787; website issuer: http://localhost:3000"
+      : "Local mocks only. Manager: http://127.0.0.1:8787; issuer: http://127.0.0.1:8798",
   );
-  console.log(
-    "Mint a header file with pnpm mock:token <new-file> [comma-separated-roles]. Ctrl-C stops both services.",
-  );
+  if (!withWebsite)
+    console.log(
+      "Mint a header file with pnpm mock:token <new-file> [comma-separated-roles]. Ctrl-C stops both services.",
+    );
   const [code] = await once(child, "exit");
   process.exitCode = stopping ? 0 : (code ?? 1);
 } catch (error) {
   // Avoid printing fetch errors/request details: startup never needs credentials.
   if (!stopping) {
     console.error(
-      error instanceof Error && error.message === "dev:mock takes no arguments."
+      error instanceof Error && error.message === "Usage: dev:mock [--site]."
         ? error.message
         : "Could not start local mocks. Check loopback ports 8787/8798 and the infrastructure mock stack (8090/1229/3130).",
     );

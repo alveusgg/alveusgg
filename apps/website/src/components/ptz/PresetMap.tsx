@@ -48,6 +48,8 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
         key={data.name}
         title={data.name}
         image={data.preset.image}
+        imageProvenance={data.preset.imageProvenance}
+        canLoad={data.preset.canLoad}
         command={{
           command: "ptzload",
           args: [data.camera.toLowerCase(), data.name],
@@ -80,23 +82,27 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
       >
         <p className="max-w-36 truncate">{data.name}</p>
 
-        <RunCommandButton
-          command="ptzload"
-          args={[data.camera.toLowerCase(), data.name]}
-          subOnly
-          className="pointer-events-none relative top-px text-alveus-green-400 group-hover:text-alveus-green-900 [&>svg]:m-0 [&>svg]:size-3"
-        />
+        {data.preset.canLoad === true && (
+          <RunCommandButton
+            command="ptzload"
+            args={[data.camera.toLowerCase(), data.name]}
+            subOnly
+            className="pointer-events-none relative top-px text-alveus-green-400 group-hover:text-alveus-green-900 [&>svg]:m-0 [&>svg]:size-3"
+          />
+        )}
 
-        <RunCommandButton
-          command="ptzload"
-          args={[data.camera.toLowerCase(), data.name]}
-          subOnly
-          icon={() => null}
-          className="absolute inset-0"
-          tooltip={{
-            offset: 8,
-          }}
-        />
+        {data.preset.canLoad === true && (
+          <RunCommandButton
+            command="ptzload"
+            args={[data.camera.toLowerCase(), data.name]}
+            subOnly
+            icon={() => null}
+            className="absolute inset-0"
+            tooltip={{
+              offset: 8,
+            }}
+          />
+        )}
       </div>
 
       {element}

@@ -147,6 +147,7 @@ const validateJWT = async (token: string, issuer: string) => {
 // ever needs an allowlist.
 export function requireRole(
   role: string,
+  options: { subject?: string } = {},
 ): MiddlewareHandler<{ Bindings: Env }> {
   return async (c: Context<{ Bindings: Env }>, next) => {
     const authorization = c.req.header("Authorization");
@@ -171,6 +172,12 @@ export function requireRole(
     if (!payload.data.roles.includes(role)) {
       throw new HTTPException(403, {
         message: "You are not authorized to perform this action.",
+      });
+    }
+
+    if (options.subject && payload.data.sub !== options.subject) {
+      throw new HTTPException(403, {
+        message: "This endpoint requires the website preset service.",
       });
     }
 

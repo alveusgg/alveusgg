@@ -1,7 +1,6 @@
 import { shuffle } from "lodash";
 import { describe, expect, it } from "vitest";
 
-import cameras from "@/data/tech/cameras";
 import type { Preset } from "@/data/tech/cameras.types";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -9,25 +8,26 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import { sortPresets } from "../src/utils/sort-presets";
 
 describe("sortPresets", () => {
-  it.each(Object.values(cameras).filter((data) => "presets" in data))(
-    "sorts $title presets without losing data or throwing an exception",
-    (data) => {
-      expect(sortPresets(typeSafeObjectEntries(data.presets))?.[0]?.[0]).toBe(
-        "home",
-      );
-
-      expect(
-        sortPresets(typeSafeObjectEntries(data.presets)).toSorted(([a], [b]) =>
-          a.localeCompare(b),
-        ),
-        "input and output contain the same data",
-      ).toEqual(
-        typeSafeObjectEntries(data.presets).toSorted(([a], [b]) =>
-          a.localeCompare(b),
-        ),
-      );
-    },
-  );
+  it("puts home first and preserves the complete supplied catalog", () => {
+    const input = typeSafeObjectEntries({
+      ...presetsTestData1,
+      home: {
+        description: "Home",
+        image: null,
+        canLoad: true,
+        position: { pan: 90, tilt: 0, zoom: 500 },
+      },
+    });
+    expect(input.length).toBeGreaterThan(1);
+    const sorted = sortPresets(input);
+    expect(sorted[0]?.[0]).toBe("home");
+    expect(sorted.toSorted(([a], [b]) => a.localeCompare(b))).toEqual(
+      input.toSorted(([a], [b]) => a.localeCompare(b)),
+    );
+  });
+  it("handles an empty catalog", () => {
+    expect(sortPresets([])).toEqual([]);
+  });
 
   it("finds suitable home preset not named home", () => {
     expect(sortPresets(typeSafeObjectEntries(presetsTestData1))?.[0]?.[0]).toBe(

@@ -420,9 +420,12 @@ model FileStorageObject {
   deletedAt  DateTime?
   expiresAt  DateTime?
 
-  imageAttachment ImageAttachment?
-  imageMetadata   ImageMetadata?
-  roundsCheck     RoundsCheck?
+  cameraPresetLegacyAsset CameraPresetLegacyAsset?
+  cameraPresets           CameraPreset[]
+  presetCapture           PresetCapture?
+  imageAttachment         ImageAttachment?
+  imageMetadata           ImageMetadata?
+  roundsCheck             RoundsCheck?
 
   @@index([expiresAt, deletedAt], name: "FileStorageObject_cleanup")
   @@index([expiresAt], name: "FileStorageObject_expiresAt")
@@ -510,4 +513,84 @@ model Pixel {
   @@unique([column, row, muralId], name: "Pixel_coordinate")
   @@index([donationId], name: "Pixel_donationId")
   @@index([muralId], name: "Pixel_muralId")
+}
+
+model CameraPresetCamera {
+  camera  String @id @db.VarChar(100)
+  version Int    @default(0)
+}
+
+model CameraPresetName {
+  camera  String @db.VarChar(100)
+  name    String @db.VarChar(100)
+  version Int    @default(0)
+
+  @@id([camera, name])
+}
+
+model CameraPreset {
+  id                  String    @id @default(cuid())
+  camera              String    @db.VarChar(100)
+  name                String    @db.VarChar(100)
+  description         String    @db.Text
+  position            Json
+  version             Int       @default(1)
+  provenance          String    @default("capture")
+  imageProvenance     String?
+  capturedAt          DateTime?
+  fileStorageObjectId String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  fileStorageObject FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id])
+
+  @@unique([camera, name])
+  @@index([camera, deletedAt])
+  @@index([fileStorageObjectId])
+}
+
+model CameraPresetOperation {
+  id                    String   @id @db.VarChar(36)
+  commandHash           String   @db.VarChar(64)
+  command               Json
+  action                String   @db.VarChar(16)
+  camera                String   @db.VarChar(100)
+  status                String   @default("pending") @db.VarChar(16)
+  expectedCameraVersion Int
+  expectedNameVersion   Int?
+  preset                Json?
+  result                Json?
+  error                 String?  @db.Text
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  expiresAt             DateTime
+
+  @@index([status, action, createdAt])
+}
+
+model PresetCapture {
+  id                  String    @id @db.VarChar(36)
+  operationId         String    @unique @db.VarChar(36)
+  metadata            Json
+  metadataHash        String    @db.VarChar(64)
+  fileStorageObjectId String    @unique
+  deliveredAt         DateTime?
+  createdAt           DateTime  @default(now())
+
+  fileStorageObject FileStorageObject @relation(fields: [fileStorageObjectId], references: [id])
+}
+
+model CameraPresetLegacyAsset {
+  id                  String  @id
+  path                String  @unique @db.VarChar(255)
+  camera              String? @db.VarChar(100)
+  name                String? @db.VarChar(100)
+  kind                String  @db.VarChar(16)
+  metadata            Json
+  fileStorageObjectId String  @unique
+
+  fileStorageObject FileStorageObject @relation(fields: [fileStorageObjectId], references: [id])
+
+  @@index([camera, kind])
 }

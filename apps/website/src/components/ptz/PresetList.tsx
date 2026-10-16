@@ -17,15 +17,19 @@ import {
 } from "react";
 import { z } from "zod";
 
+import {
+  presetCatalogCamera,
+  resolveControlCamera,
+} from "@/data/tech/camera-identifiers";
 import cameras, { type Camera } from "@/data/tech/cameras";
 import {
   type PresetEntry,
   isCameraMulti,
   isCameraPTZ,
 } from "@/data/tech/cameras.types";
+import { catalogPresetEntries } from "@/data/tech/preset-catalog";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries } from "@/utils/helpers";
 import { sortPresets } from "@/utils/sort-presets";
 import { camelToKebab } from "@/utils/string-case";
 import { trpc } from "@/utils/trpc";
@@ -219,7 +223,10 @@ const PresetTools = ({
   onView: (value: PresetView) => void;
 }) => {
   const { hasScopes, subscription } = useSubscriberAccess();
-  const canZoom = hasScopes && !!subscription.data;
+  const canZoom =
+    hasScopes &&
+    !!subscription.data &&
+    resolveControlCamera(camera) !== undefined;
   const cameraSlug = camera.toLowerCase();
 
   return (
@@ -320,12 +327,29 @@ const PresetList = ({
     }
   }, [camera, setView]);
 
+  const ptz = isCameraPTZ(cameras[camera]);
+  const catalog = trpc.presets.catalog.useQuery(
+    { camera: presetCatalogCamera(camera) },
+    { enabled: ptz, refetchInterval: 30_000 },
+  );
+  const layout = trpc.presets.layout.useQuery(
+    { camera },
+    { enabled: !ptz, refetchInterval: 30_000 },
+  );
+  const activeQuery = ptz ? catalog : layout;
   const sorted = useMemo(
+    () => sortPresets(catalogPresetEntries(catalog.data ?? [])),
+    [catalog.data],
+  );
+  // Failed refreshes must not leave stale camera commands available.
+  const safePresets = useMemo(
     () =>
-      isCameraPTZ(cameras[camera])
-        ? sortPresets(typeSafeObjectEntries(cameras[camera].presets))
-        : [],
-    [camera],
+      activeQuery.isError
+        ? sorted.map(
+            ([name, preset]) => [name, { ...preset, canLoad: false }] as const,
+          )
+        : sorted,
+    [sorted, activeQuery.isError],
   );
 
   const filter = useMemo(() => {
@@ -340,45 +364,85 @@ const PresetList = ({
     <>
       <PresetTools
         camera={camera}
-        zoom={zoom}
+        zoom={zoom && !activeQuery.isError && !activeQuery.isPending}
         search={search}
         onSearch={setSearch}
         view={view}
         onView={setView}
       />
 
-      {view === "list" ? (
+      {activeQuery.isError && (
+        <div
+          role="alert"
+          className="mt-3 rounded-sm border border-red-700 p-3 text-sm"
+        >
+          Unable to load presets. Camera preset controls are unavailable.
+          <button
+            type="button"
+            onClick={() => void activeQuery.refetch()}
+            disabled={activeQuery.isFetching}
+            className="ml-2 underline"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+      {activeQuery.isPending ? (
+        <p role="status" className="mt-3 text-sm">
+          Loading presets...
+        </p>
+      ) : ptz && !activeQuery.isError && !safePresets.length ? (
+        <p className="mt-3 text-sm">No presets available.</p>
+      ) : view === "list" ? (
         <div className="scrollbar-none shrink grow overflow-y-auto">
           <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
-            {sorted.filter(filter ?? (() => true)).map(([name, preset]) => (
-              <PresetCard
-                key={`${camera}-${name}`}
-                title={name}
-                image={preset.image}
-                command={{
-                  command: "ptzload",
-                  args: [camera.toLowerCase(), name],
-                }}
-              >
-                {preset.description}
-              </PresetCard>
-            ))}
+            {safePresets
+              .filter(filter ?? (() => true))
+              .map(([name, preset]) => (
+                <PresetCard
+                  key={`${camera}-${name}`}
+                  title={name}
+                  image={preset.image}
+                  canLoad={preset.canLoad}
+                  imageProvenance={preset.imageProvenance}
+                  command={{
+                    command: "ptzload",
+                    args: [camera.toLowerCase(), name],
+                  }}
+                >
+                  {preset.description}
+                </PresetCard>
+              ))}
 
-            {isCameraMulti(cameras[camera]) && (
+            {isCameraMulti(cameras[camera]) && layout.data && (
               <PresetCard
-                title={cameras[camera].multi.cameras.join(" + ")}
-                image={cameras[camera].multi.image}
+                title={(layout.data.cameras.length
+                  ? layout.data.cameras
+                  : cameras[camera].multi.cameras
+                ).join(" + ")}
+                image={layout.data.image}
+                imageProvenance="legacy"
                 className="col-span-2"
               >
-                {cameras[camera].multi.description}
+                {layout.data.description}
               </PresetCard>
             )}
           </div>
 
+          {!activeQuery.isError &&
+            (ptz
+              ? safePresets.filter(filter ?? (() => true)).length === 0
+              : !layout.data) && (
+              <p className="mt-3 text-sm">
+                {searchClean
+                  ? "No presets match your search."
+                  : "No presets available."}
+              </p>
+            )}
           <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
         </div>
       ) : (
-        <PresetMap camera={camera} presets={sorted} filter={filter} />
+        <PresetMap camera={camera} presets={safePresets} filter={filter} />
       )}
     </>
   );
