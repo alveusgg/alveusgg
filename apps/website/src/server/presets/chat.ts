@@ -10,6 +10,7 @@ import { env } from "@/env";
 import { getBroadcasterSubscriptionForUser } from "@/server/apis/twitch";
 import { getSuperUserIds } from "@/server/utils/auth";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
+import { isTwitchUserBanned } from "@/server/utils/twitch-bans";
 
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
@@ -98,6 +99,22 @@ export async function authorizeChatPresetAction(
   action: string,
   camera: string,
 ): Promise<"operator" | "subscriber"> {
+  let banned: boolean;
+  try {
+    banned = await isTwitchUserBanned(actor.twitchUserId);
+  } catch {
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Preset access verification is temporarily unavailable. Try again shortly.",
+    });
+  }
+  if (banned)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message:
+        "Preset controls are unavailable while you are banned or timed out in Alveus Sanctuary chat.",
+    });
   if (actor.canManage) return "operator";
   if (action !== "load")
     throw new TRPCError({
