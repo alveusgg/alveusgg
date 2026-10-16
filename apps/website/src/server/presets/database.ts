@@ -15,7 +15,18 @@ export async function presetTransaction<T>(
         timeout: 15_000,
       });
     } catch (error) {
-      if (dbCode(error) !== "P2034" || attempt >= 2) throw error;
+      // MySQL deadlocks from SELECT ... FOR UPDATE surface as raw-query errors.
+      const rawDeadlock =
+        dbCode(error) === "P2010" &&
+        error !== null &&
+        typeof error === "object" &&
+        "meta" in error &&
+        error.meta !== null &&
+        typeof error.meta === "object" &&
+        "code" in error.meta &&
+        error.meta.code === "1213";
+      if ((dbCode(error) !== "P2034" && !rawDeadlock) || attempt >= 2)
+        throw error;
     }
   }
 }

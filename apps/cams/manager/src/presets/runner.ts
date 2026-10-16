@@ -148,6 +148,11 @@ export async function runPresetJob(job: PresetJob, deps: Dependencies) {
     // Persist BEFORE a movement: a lost response is not permission to move again.
     deps.onStage?.("load-persist");
     await deps.persist(job);
+    // The website orders this durable claim against subscriber pauses. A stale
+    // operation snapshot cannot authorize movement after a pause has cancelled it.
+    deps.onStage?.("load-claim");
+    const claim = await deps.website.presets.claimLoad.mutate({ id: job.id });
+    if (!claim.claimed) return;
     try {
       deps.onStage?.("load-dispatch");
       const response = await successful(

@@ -7,6 +7,7 @@ import { prisma } from "@alveusgg/database";
 import { setSubscriberPolicy } from "@/server/presets/policy";
 import { type CaptureMetadata } from "@/server/presets/schema";
 import {
+  claimPresetLoad,
   commandPreset,
   commitPresetCapture,
   completePresetOperation,
@@ -575,6 +576,64 @@ describe.skipIf(!enabled)(
           status: "failed",
           error: expect.stringContaining("paused"),
         });
+        // Claims and pauses use the same locks, so either the pause cancels an
+        // unclaimed load or the worker owns it and its eventual result is retained.
+        for (const globalPause of [false, true]) {
+          await setSubscriberPolicy({ paused: false }, "local-integration");
+          await setSubscriberPolicy(
+            { camera: cam, paused: false },
+            "local-integration",
+          );
+          const claimedId = randomUUID();
+          await commandPreset({ ...command, id: claimedId });
+          expect(await claimPresetLoad(claimedId)).toMatchObject({
+            claimed: true,
+          });
+          await setSubscriberPolicy(
+            { ...(globalPause ? {} : { camera: cam }), paused: true },
+            "local-integration",
+          );
+          expect(await getPresetOperation(claimedId)).toMatchObject({
+            status: "pending",
+          });
+          expect(await claimPresetLoad(claimedId)).toMatchObject({
+            claimed: false,
+          });
+          expect(
+            await completePresetOperation({
+              id: claimedId,
+              status: "completed",
+            }),
+          ).toMatchObject({ status: "completed" });
+
+          await setSubscriberPolicy({ paused: false }, "local-integration");
+          await setSubscriberPolicy(
+            { camera: cam, paused: false },
+            "local-integration",
+          );
+          const racingId = randomUUID();
+          await commandPreset({ ...command, id: racingId });
+          const [claim] = await Promise.all([
+            claimPresetLoad(racingId),
+            setSubscriberPolicy(
+              { ...(globalPause ? {} : { camera: cam }), paused: true },
+              "local-integration",
+            ),
+          ]);
+          expect(await getPresetOperation(racingId)).toMatchObject({
+            status: claim.claimed ? "pending" : "failed",
+          });
+          expect(await claimPresetLoad(racingId)).toMatchObject({
+            claimed: false,
+          });
+          if (claim.claimed)
+            expect(
+              await completePresetOperation({
+                id: racingId,
+                status: "completed",
+              }),
+            ).toMatchObject({ status: "completed" });
+        }
         // Operator loads bypass pause, while using the same authoritative preset data.
         expect(
           await commandPreset({
