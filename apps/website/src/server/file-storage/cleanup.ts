@@ -1,6 +1,6 @@
 import { prisma } from "@alveusgg/database";
 
-import { deleteFileStorageObject } from "@/server/utils/file-storage";
+import { deleteExpiredFileStorageObject } from "@/server/utils/file-storage";
 
 export async function cleanupFileStorage({
   maxItems = 100,
@@ -13,12 +13,13 @@ export async function cleanupFileStorage({
     select: { id: true },
     where: {
       expiresAt: { lt: now },
-      deletedAt: null,
     },
     take: maxItems,
   });
 
   await Promise.allSettled(
-    expiredFileStorageObjects.map(({ id }) => deleteFileStorageObject(id)),
+    expiredFileStorageObjects.map(({ id }) =>
+      deleteExpiredFileStorageObject(id, now),
+    ),
   );
 }
