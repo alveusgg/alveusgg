@@ -83,6 +83,28 @@ export async function deleteFileStorageObject(id: string) {
   });
 }
 
+// Expiry selection can be stale by the time cleanup runs. Claim deletion with
+// the same row predicate that publication updates before touching S3. Keep the
+// expiry on failures so the cleanup job can retry an interrupted deletion.
+export async function deleteExpiredFileStorageObject(id: string, before: Date) {
+  // relationMode=prisma may split updateMany into SELECT + UPDATE by ID.
+  // Keep the expiry predicate on the actual write that acquires the row lock.
+  const claimed = await prisma.$executeRaw`
+    UPDATE FileStorageObject SET deletedAt = ${new Date()}
+    WHERE id = ${id} AND expiresAt < ${before}
+  `;
+  if (claimed !== 1) return;
+  const data = await prisma.fileStorageObject.findUniqueOrThrow({
+    where: { id },
+  });
+  if (!(await sendDeleteObjectCommand(data.key)))
+    throw new Error("Failed to delete expired file storage object");
+  await prisma.fileStorageObject.update({
+    where: { id },
+    data: { expiresAt: null },
+  });
+}
+
 export async function createFileStorageUpload({
   fileName,
   fileType,
