@@ -19,7 +19,7 @@ import {
 } from "@/server/trpc/trpc";
 
 import { permissions } from "@/data/permissions";
-import { channels } from "@/data/twitch";
+import { channels, scopeGroups } from "@/data/twitch";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),
@@ -30,6 +30,10 @@ const roleToScopePrefixMap: Record<(typeof roles)[number], string> = {
   broadcaster: "channel:",
   moderator: "moderator:",
 };
+const roleToRequiredScopes = (role: (typeof roles)[number]) =>
+  scopeGroups.api.filter((scope) =>
+    scope.startsWith(roleToScopePrefixMap[role]),
+  );
 
 export const adminTwitchRouter = router({
   getChannels: permittedProcedure.query(getTwitchChannels),
@@ -116,24 +120,39 @@ export const adminTwitchRouter = router({
         where: { id: userId },
         include: {
           accounts: {
-            where: {
-              provider: "twitch",
-              // TODO: This check is very rudimentary. It would be best to check each required scope explicitly
-              //        and not only if any with the scope prefix are set
-              scope: { contains: roleToScopePrefixMap[input.role] },
-            },
+            where: { provider: "twitch" },
           },
         },
       });
-      const accountId = userWithAccount?.accounts[0]?.id;
-      if (!accountId) {
+
+      // Check that the account has every scope required for the role
+      const requiredScopes = roleToRequiredScopes(input.role);
+      const account = userWithAccount?.accounts.find((account) => {
+        const accountScopes = new Set(account.scope?.split(" "));
+        return requiredScopes.every((scope) => accountScopes.has(scope));
+      });
+      if (!account) {
         throw new TRPCError({
-          message: "User does not have scope! " + userId,
+          message: `Twitch account is missing required scopes for ${input.role}: ${requiredScopes.join(", ")}`,
           code: "BAD_REQUEST",
         });
       }
 
-      // TODO: Check if the user is actually broadcaster/moderator in the channel?!
+      // A broadcaster must be the owner of the channel
+      if (
+        input.role === "broadcaster" &&
+        account.providerAccountId !== input.twitchChannelId
+      ) {
+        throw new TRPCError({
+          message: "Twitch account is not the broadcaster of this channel",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      // TODO: Check if the user is actually a moderator in the channel, this
+      //        needs the "moderation:read" scope and a call to the Get Moderators
+      //        API using the broadcaster's token (or "user:read:moderated_channels"
+      //        with the Get Moderated Channels API using the user's own token)
 
       try {
         await ctx.prisma.twitchChannel.update({
@@ -141,11 +160,11 @@ export const adminTwitchRouter = router({
           data: {
             broadcasterAccount:
               input.role === "broadcaster"
-                ? { connect: { id: accountId } }
+                ? { connect: { id: account.id } }
                 : undefined,
             moderatorAccount:
               input.role === "moderator"
-                ? { connect: { id: accountId } }
+                ? { connect: { id: account.id } }
                 : undefined,
           },
         });
