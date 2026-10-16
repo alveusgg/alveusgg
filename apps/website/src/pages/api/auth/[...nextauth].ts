@@ -13,7 +13,7 @@ import {
   refreshAccessToken,
 } from "@/server/utils/oauth2";
 
-import { scopeGroups } from "@/data/twitch";
+import { channels, scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
 
@@ -113,7 +113,14 @@ export const authOptions: NextAuthOptions = {
         account.twitchChannelBroadcaster.length ||
         account.twitchChannelModerator.length
       ) {
-        const err = requireScopes(account, scopeGroups.api);
+        const err = requireScopes(account, [
+          ...scopeGroups.api,
+          ...(account.twitchChannelBroadcaster.some(
+            ({ channelId }) => channelId === channels.alveus.id,
+          )
+            ? scopeGroups.moderation
+            : []),
+        ]);
         if (err) return err;
       }
 

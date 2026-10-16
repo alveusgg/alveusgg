@@ -6,16 +6,18 @@ import {
   isTwitchUserBanned,
 } from "@/server/utils/twitch-bans";
 
-const { db, lookup, redis, optionalRedis } = vi.hoisted(() => ({
+const { db, env, lookup, redis, optionalRedis } = vi.hoisted(() => ({
   db: {
     account: { findFirst: vi.fn() },
     twitchChannel: { findUnique: vi.fn() },
   },
+  env: { NODE_ENV: "test", DISABLE_ADMIN_AUTH: false },
   lookup: vi.fn(),
   redis: { get: vi.fn(), set: vi.fn() },
   optionalRedis: vi.fn(),
 }));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
+vi.mock("@/env", () => ({ env }));
 vi.mock("@/server/apis/twitch", () => ({ getUserBanFromBroadcaster: lookup }));
 vi.mock("@/server/utils/redis", () => ({
   getRedisOptional: optionalRedis,
@@ -23,6 +25,7 @@ vi.mock("@/server/utils/redis", () => ({
 }));
 
 const key = "twitch:chat-ban:v2:636587384:123";
+const fenceKey = "twitch:chat-ban:fence:636587384:123";
 const stored = new Map<string, unknown>();
 const broadcaster = {
   provider: "twitch",
@@ -35,6 +38,7 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-16T10:00:00Z"));
   stored.clear();
+  Object.assign(env, { NODE_ENV: "test", DISABLE_ADMIN_AUTH: false });
   optionalRedis.mockReturnValue(redis);
   redis.get.mockImplementation(async (key: string) => stored.get(key) ?? null);
   redis.set.mockImplementation(async (key: string, value: unknown) => {
@@ -103,14 +107,19 @@ test("a timeout is never cached beyond its expiration", async () => {
   expect(lookup).toHaveBeenCalledTimes(2);
 });
 
-test("expired timeout responses cannot establish unbanned status or populate the cache", async () => {
+test("a timeout Twitch still lists after it ended counts as unbanned", async () => {
   lookup.mockResolvedValue({
     expiresAt: new Date(Date.now() - 1).toISOString(),
   });
-  await expect(isTwitchUserBanned("123")).rejects.toThrow(
-    "expired chat timeout",
+  expect(await isTwitchUserBanned("123")).toBe(false);
+  expect(redis.set).toHaveBeenCalledWith(
+    key,
+    expect.objectContaining({
+      banned: false,
+      validUntil: Date.now() + 300_000,
+    }),
+    { expiry: 300 },
   );
-  expect(redis.set).not.toHaveBeenCalled();
 });
 
 test("simultaneous local misses share one bounded Twitch lookup", async () => {
@@ -224,6 +233,27 @@ test("a stalled Redis read has a bounded fallback to Twitch", async () => {
   expect(lookup).toHaveBeenCalledTimes(1);
 });
 
+test("the local DISABLE_ADMIN_AUTH session skips the ban check", async () => {
+  Object.assign(env, { NODE_ENV: "development", DISABLE_ADMIN_AUTH: true });
+  expect(await isPresetUserBanned("dev-admin")).toBe(false);
+  expect(db.account.findFirst).not.toHaveBeenCalled();
+  expect(lookup).not.toHaveBeenCalled();
+});
+
+test.each([
+  { NODE_ENV: "production", DISABLE_ADMIN_AUTH: true },
+  { NODE_ENV: "development", DISABLE_ADMIN_AUTH: false },
+])(
+  "the dev-admin bypass needs local development with auth disabled: %j",
+  async (config) => {
+    Object.assign(env, config);
+    db.account.findFirst.mockResolvedValue(null);
+    await expect(isPresetUserBanned("dev-admin")).rejects.toThrow(
+      "No Twitch identity",
+    );
+  },
+);
+
 test("chat identities from queued operations do not require a website signup", async () => {
   expect(await isPresetUserBanned("twitch:123")).toBe(false);
   expect(db.account.findFirst).not.toHaveBeenCalled();
@@ -233,13 +263,44 @@ test("a delivered event invalidates a cached allow immediately and the next chec
   await isTwitchUserBanned("123");
   await invalidateTwitchBan("123");
   expect(redis.set).toHaveBeenLastCalledWith(
-    "twitch:chat-ban:revision:636587384:123",
-    expect.any(String),
+    fenceKey,
+    { revision: expect.any(String), bannedUntil: null },
     { expiry: 600 },
   );
   lookup.mockResolvedValue({ expiresAt: null });
   expect(await isTwitchUserBanned("123")).toBe(true);
   expect(lookup).toHaveBeenCalledTimes(2);
+});
+
+test("a ban event denies without waiting for Twitch's moderation API to catch up", async () => {
+  await isTwitchUserBanned("123");
+  await invalidateTwitchBan("123", { endsAt: null });
+  expect(stored.get(fenceKey)).toEqual({
+    revision: expect.any(String),
+    bannedUntil: Date.now() + 600_000,
+  });
+  // Helix still reports the user as unbanned.
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(1);
+  // After the fence, a fresh Helix answer is authoritative again.
+  vi.setSystemTime(Date.now() + 600_000);
+  stored.delete(fenceKey);
+  lookup.mockResolvedValue({ expiresAt: null });
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(2);
+});
+
+test("a timeout event denies only until the timeout ends", async () => {
+  const endsAt = new Date(Date.now() + 60_000).toISOString();
+  await invalidateTwitchBan("123", { endsAt });
+  expect(stored.get(fenceKey)).toMatchObject({
+    bannedUntil: Date.parse(endsAt),
+  });
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).not.toHaveBeenCalled();
+  vi.setSystemTime(Date.parse(endsAt));
+  expect(await isTwitchUserBanned("123")).toBe(false);
+  expect(lookup).toHaveBeenCalledTimes(1);
 });
 
 test("duplicate and out-of-order invalidations never grant access or slide the cache deadline", async () => {
@@ -251,6 +312,13 @@ test("duplicate and out-of-order invalidations never grant access or slide the c
   expect(lookup).toHaveBeenCalledTimes(2);
 });
 
+test("a late ban event delivered after its unban fails closed until the fence ends", async () => {
+  await invalidateTwitchBan("123");
+  await invalidateTwitchBan("123", { endsAt: null });
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).not.toHaveBeenCalled();
+});
+
 test("an unban invalidates a cached denial and requires fresh proof before restoring access", async () => {
   lookup.mockResolvedValue({ expiresAt: null });
   expect(await isTwitchUserBanned("123")).toBe(true);
@@ -260,7 +328,7 @@ test("an unban invalidates a cached denial and requires fresh proof before resto
   expect(lookup).toHaveBeenCalledTimes(2);
 });
 
-test("a stale cache write racing an event cannot restore the previous allow", async () => {
+test("a cache write racing an event is never read back", async () => {
   let invalidate = true;
   redis.set.mockImplementation(async (name: string, value: unknown) => {
     if (name === key && invalidate) {
@@ -269,12 +337,13 @@ test("a stale cache write racing an event cannot restore the previous allow", as
     }
     stored.set(name, value);
   });
-  await expect(isTwitchUserBanned("123")).rejects.toThrow("moderation changed");
+  expect(await isTwitchUserBanned("123")).toBe(false);
   lookup.mockResolvedValue({ expiresAt: null });
   expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(2);
 });
 
-test("an event arriving during a Twitch lookup fences out the obsolete result", async () => {
+test("a ban event arriving during a Twitch lookup overrides its possibly stale answer", async () => {
   let release!: (value: null) => void;
   lookup.mockImplementationOnce(
     () =>
@@ -284,26 +353,67 @@ test("an event arriving during a Twitch lookup fences out the obsolete result", 
   );
   const pending = isTwitchUserBanned("123");
   await vi.waitFor(() => expect(lookup).toHaveBeenCalledTimes(1));
-  await invalidateTwitchBan("123");
+  await invalidateTwitchBan("123", { endsAt: null });
   release(null);
-  await expect(pending).rejects.toThrow("moderation changed");
-  expect(stored.has(key)).toBe(false);
-  lookup.mockResolvedValue({ expiresAt: null });
+  expect(await pending).toBe(true);
+  // The obsolete allow was written under the replaced revision only.
+  expect(stored.get(key)).toMatchObject({ banned: false, revision: null });
   expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(1);
 });
 
-test("an event racing a cached read cannot return a stale allow", async () => {
+test("an unban arriving during a Twitch lookup keeps that lookup's answer out of the cache", async () => {
+  let release!: (value: { expiresAt: null }) => void;
+  lookup.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  );
+  const pending = isTwitchUserBanned("123");
+  await vi.waitFor(() => expect(lookup).toHaveBeenCalledTimes(1));
+  await invalidateTwitchBan("123");
+  release({ expiresAt: null });
+  expect(await pending).toBe(true);
+  lookup.mockResolvedValue(null);
+  expect(await isTwitchUserBanned("123")).toBe(false);
+  expect(lookup).toHaveBeenCalledTimes(2);
+});
+
+test("a ban event racing a cached read applies from the next check", async () => {
   await isTwitchUserBanned("123");
   let invalidate = true;
   redis.get.mockImplementation(async (name: string) => {
     const value = stored.get(name) ?? null;
     if (name === key && invalidate) {
       invalidate = false;
-      await invalidateTwitchBan("123");
+      await invalidateTwitchBan("123", { endsAt: null });
     }
     return value;
   });
-  await expect(isTwitchUserBanned("123")).rejects.toThrow("moderation changed");
+  // Both reads saw the state from just before the event.
+  expect(await isTwitchUserBanned("123")).toBe(false);
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(1);
+});
+
+test("a transient fence read failure does not turn a verified lookup into a denial", async () => {
+  let failures = 1;
+  redis.get.mockImplementation(async (name: string) => {
+    if (name === fenceKey && failures-- > 0) throw new Error("Redis timeout");
+    return stored.get(name) ?? null;
+  });
+  expect(await isTwitchUserBanned("123")).toBe(false);
+  // The fence couldn't be read, so nothing proves the entry is current.
+  expect(redis.set).not.toHaveBeenCalled();
+});
+
+test("an unreadable fence is never treated as proof of a current cache entry", async () => {
+  await isTwitchUserBanned("123");
+  stored.set(fenceKey, "not-a-fence");
+  lookup.mockResolvedValue({ expiresAt: null });
+  expect(await isTwitchUserBanned("123")).toBe(true);
+  expect(lookup).toHaveBeenCalledTimes(2);
 });
 
 test("a lost invalidation write is retryable rather than acknowledged", async () => {

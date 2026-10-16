@@ -1,4 +1,4 @@
-import { beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 import type * as DatabaseModule from "@alveusgg/database";
 
@@ -68,6 +68,7 @@ const operator = {
 };
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.spyOn(console, "error").mockImplementation(() => {});
   banned.mockResolvedValue(false);
   db.$transaction.mockImplementation(async (fn) => fn(db));
   db.cameraPresetOperation.findUnique.mockResolvedValue(subscriber);
@@ -79,6 +80,10 @@ beforeEach(() => {
   db.cameraPresetPolicy.findMany.mockResolvedValue([
     { scope: "global", paused: true, resumeAt: null },
   ]);
+});
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 test("missing global settings fail closed while missing camera settings are unpaused", () => {
@@ -152,6 +157,7 @@ test.each([subscriber, operator])(
 );
 
 test("a moderation outage leaves a queued load pending and never exposes dispatchable state", async () => {
+  vi.useFakeTimers({ now: subscriber.expiresAt });
   banned.mockRejectedValue(new Error("secret upstream response"));
   await expect(getPresetOperation(id)).rejects.toMatchObject({
     code: "SERVICE_UNAVAILABLE",
@@ -160,6 +166,23 @@ test("a moderation outage leaves a queued load pending and never exposes dispatc
   });
   expect(db.cameraPresetOperation.updateMany).not.toHaveBeenCalled();
   expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+});
+
+test("a load that expires during a moderation outage is failed instead of blocking its camera", async () => {
+  vi.useFakeTimers({ now: subscriber.expiresAt.getTime() + 1 });
+  banned.mockRejectedValue(new Error("unavailable"));
+  db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({
+    ...subscriber,
+    status: "failed",
+  });
+  expect(await getPresetOperation(id)).toMatchObject({ status: "failed" });
+  expect(db.cameraPresetOperation.updateMany).toHaveBeenCalledWith({
+    where: { id, status: "pending" },
+    data: {
+      status: "failed",
+      error: expect.stringContaining("expired while chat ban verification"),
+    },
+  });
 });
 
 test.each(["completed", "failed"])(

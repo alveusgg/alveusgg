@@ -49,6 +49,7 @@ vi.mock("@/server/oauth/tokens", () => ({ issueAccessToken: vi.fn() }));
 // and authorization coverage and must never contact live Twitch from here.
 vi.mock("@/server/utils/twitch-bans", () => ({
   isPresetUserBanned: vi.fn(async () => false),
+  isTwitchUserBanned: vi.fn(async () => false),
 }));
 
 const png = Buffer.from(

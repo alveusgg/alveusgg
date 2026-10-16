@@ -8,6 +8,7 @@ import { prisma } from "@alveusgg/database";
 import { env } from "@/env";
 
 import { getBroadcasterSubscriptionForUser } from "@/server/apis/twitch";
+import { getAlveusBroadcasterToken } from "@/server/db/twitch-channels";
 import { getSuperUserIds } from "@/server/utils/auth";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 import { isTwitchUserBanned } from "@/server/utils/twitch-bans";
@@ -99,10 +100,14 @@ export async function authorizeChatPresetAction(
   action: string,
   camera: string,
 ): Promise<"operator" | "subscriber"> {
+  if (!actor.canManage)
+    await authorizeChatSubscriberLoad(actor, action, camera);
+  // Only spend a broadcaster-token ban lookup on a command it could deny.
   let banned: boolean;
   try {
     banned = await isTwitchUserBanned(actor.twitchUserId);
-  } catch {
+  } catch (error) {
+    console.error("Chat preset ban verification failed:", error);
     throw new TRPCError({
       code: "SERVICE_UNAVAILABLE",
       message:
@@ -115,7 +120,13 @@ export async function authorizeChatPresetAction(
       message:
         "Preset controls are unavailable while you are banned or timed out in Alveus Sanctuary chat.",
     });
-  if (actor.canManage) return "operator";
+  return actor.canManage ? "operator" : "subscriber";
+}
+async function authorizeChatSubscriberLoad(
+  actor: ChatPrincipal,
+  action: string,
+  camera: string,
+) {
   if (action !== "load")
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -123,23 +134,11 @@ export async function authorizeChatPresetAction(
     });
   let subscribed: boolean;
   try {
-    const channel = await prisma.twitchChannel.findUnique({
-      where: { channelId: channels.alveus.id },
-      select: {
-        broadcasterAccount: {
-          select: { providerAccountId: true, access_token: true, scope: true },
-        },
-      },
-    });
-    const account = channel?.broadcasterAccount;
-    if (
-      !account?.access_token ||
-      account.providerAccountId !== channels.alveus.id ||
-      !account.scope?.split(" ").includes("channel:read:subscriptions")
-    )
+    const token = await getAlveusBroadcasterToken("channel:read:subscriptions");
+    if (!token)
       throw new Error("Broadcaster subscription credentials unavailable");
     subscribed = await getBroadcasterSubscriptionForUser(
-      account.access_token,
+      token,
       channels.alveus.id,
       actor.twitchUserId,
       AbortSignal.timeout(5000),
@@ -163,5 +162,4 @@ export async function authorizeChatPresetAction(
       code: "FORBIDDEN",
       message: "Subscriber control is paused for this camera.",
     });
-  return "subscriber";
 }

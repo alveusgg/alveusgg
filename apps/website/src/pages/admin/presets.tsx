@@ -56,6 +56,11 @@ const AdminPresets: NextPage<
   const pause = trpc.presets.setSubscriberControl.useMutation({
     onSuccess: () => utils.presets.access.invalidate(),
   });
+  // Pausing stays available while moderation verification is down; resuming
+  // needs full operator access.
+  const canToggle = (paused: boolean | undefined) =>
+    !pause.isPending &&
+    (paused ? access.data?.canManage : access.data?.canPauseSubscribers);
   const togglePause = (paused: boolean, selected = false) =>
     pause.mutate({
       ...(selected ? { camera } : {}),
@@ -94,7 +99,7 @@ const AdminPresets: NextPage<
             <button
               type="button"
               className={button}
-              disabled={!access.data?.canManage || pause.isPending}
+              disabled={!canToggle(access.data?.subscriberControlsPaused)}
               onClick={() =>
                 togglePause(!access.data?.subscriberControlsPaused)
               }
@@ -106,7 +111,7 @@ const AdminPresets: NextPage<
             <button
               type="button"
               className={button}
-              disabled={!access.data?.canManage || pause.isPending}
+              disabled={!canToggle(access.data?.pausedCameras.includes(camera))}
               onClick={() =>
                 togglePause(!access.data?.pausedCameras.includes(camera), true)
               }
@@ -137,7 +142,11 @@ const AdminPresets: NextPage<
             <p role="alert">Unable to check preset permissions.</p>
           ) : !access.isPending && !access.data?.canManage ? (
             <p role="alert">
-              PTZ control permission is required to manage presets.
+              {access.data?.reason === "banned"
+                ? "Preset controls are unavailable while you are banned or timed out in Alveus Sanctuary chat."
+                : access.data?.reason === "unavailable"
+                  ? "Preset access verification is temporarily unavailable. Try again shortly."
+                  : "PTZ control permission is required to manage presets."}
             </p>
           ) : null}
           <label className="flex max-w-lg flex-col gap-1">

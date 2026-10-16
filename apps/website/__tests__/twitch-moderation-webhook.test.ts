@@ -29,6 +29,7 @@ function payload(type = "channel.ban") {
       user_id: "123",
       broadcaster_user_id: "636587384",
       reason: "private moderation reason",
+      ...(type === "channel.ban" ? { ends_at: null, is_permanent: true } : {}),
     },
   };
 }
@@ -77,18 +78,41 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-test.each(["channel.ban", "channel.unban"])(
+test.each([
+  ["channel.ban", { endsAt: null }],
+  ["channel.unban", undefined],
+])(
   "authenticated %s events invalidate the exact Twitch user without copying moderation details",
-  async (type) => {
+  async (type, ban) => {
     const response = await handleTwitchModerationWebhook(
       signed(payload(type)),
       secret,
     );
     expect(response.status).toBe(204);
-    expect(invalidate).toHaveBeenCalledExactlyOnceWith("123");
+    expect(invalidate).toHaveBeenCalledExactlyOnceWith("123", ban);
     expect(await response.text()).toBe("");
   },
 );
+
+test("a timeout passes its end time on so the ban applies only until then", async () => {
+  // Twitch sends sub-millisecond precision.
+  const endsAt = "2026-10-16T10:10:00.12345678Z";
+  const body = payload();
+  Object.assign(body.event, { ends_at: endsAt, is_permanent: false });
+  expect(
+    (await handleTwitchModerationWebhook(signed(body), secret)).status,
+  ).toBe(204);
+  expect(invalidate).toHaveBeenCalledExactlyOnceWith("123", { endsAt });
+});
+
+test("the signature covers the exact delivered bytes, including a byte order mark", async () => {
+  const response = await handleTwitchModerationWebhook(
+    signed(payload(), { raw: `\uFEFF${JSON.stringify(payload())}` }),
+    secret,
+  );
+  expect(response.status).toBe(204);
+  expect(invalidate).toHaveBeenCalledOnce();
+});
 
 test("signed subscription verification returns the exact plaintext challenge without mutating Redis", async () => {
   const body = {
@@ -255,5 +279,33 @@ test("the Next API adapter preserves raw signed bytes and never caches a webhook
   );
   expect(res.status).toHaveBeenCalledWith(204);
   expect(res.setHeader).toHaveBeenCalledWith("Cache-Control", "no-store");
-  expect(invalidate).toHaveBeenCalledExactlyOnceWith("123");
+  expect(invalidate).toHaveBeenCalledExactlyOnceWith("123", { endsAt: null });
+});
+
+test.each([
+  [
+    "an oversized body",
+    () => Readable.from([Buffer.from("x".repeat(65 * 1024))]),
+    413,
+  ],
+  [
+    "an interrupted delivery",
+    () =>
+      new Readable({
+        read() {
+          this.destroy(new Error("socket hang up"));
+        },
+      }),
+    400,
+  ],
+])("the Next API adapter reports %s accurately", async (_, stream, status) => {
+  const req = Object.assign(stream(), { method: "POST", headers: {} });
+  const res = { setHeader: vi.fn(), status: vi.fn(), send: vi.fn() };
+  res.status.mockReturnValue(res);
+  await moderationWebhook(
+    req as unknown as NextApiRequest,
+    res as unknown as NextApiResponse,
+  );
+  expect(res.status).toHaveBeenCalledWith(status);
+  expect(invalidate).not.toHaveBeenCalled();
 });

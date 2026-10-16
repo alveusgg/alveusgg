@@ -5,20 +5,32 @@ import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
+import { env } from "@/env";
+
 import { getUserBanFromBroadcaster } from "@/server/apis/twitch";
+import { getAlveusBroadcasterToken } from "@/server/db/twitch-channels";
 import { getRedis, getRedisOptional } from "@/server/utils/redis";
 
 import { channels } from "@/data/twitch";
 
+import { DEV_ADMIN_USER_ID } from "@/utils/dev-admin-session";
+
 // EventSub invalidates immediately on delivery; this bounds staleness if an
 // event is missed. Cache hits never renew the deadline, even if writes lag.
 const CACHE_SECONDS = 5 * 60;
+// Keep the event fence longer than any lookup cache entry can survive.
+const FENCE_SECONDS = CACHE_SECONDS * 2;
 const cachedBanSchema = z.strictObject({
   banned: z.boolean(),
   checkedAt: z.number().int().nonnegative(),
   validUntil: z.number().int().nonnegative(),
   revision: z.uuid().nullable(),
 });
+const fenceSchema = z.strictObject({
+  revision: z.uuid(),
+  bannedUntil: z.number().int().nonnegative().nullable(),
+});
+type Fence = z.infer<typeof fenceSchema>;
 const inFlight = new Map<string, Promise<boolean>>();
 
 async function cacheOperation<T>(operation: () => Promise<T>) {
@@ -48,8 +60,11 @@ async function bestEffortCache<T>(operation: () => Promise<T>) {
   }
 }
 
-const revisionKey = (twitchUserId: string) =>
-  `twitch:chat-ban:revision:${channels.alveus.id}:${twitchUserId}`;
+const fenceKey = (twitchUserId: string) =>
+  `twitch:chat-ban:fence:${channels.alveus.id}:${twitchUserId}`;
+
+const bannedByEvent = (fence: Fence | null | undefined) =>
+  fence?.bannedUntil != null && fence.bannedUntil > Date.now();
 
 function validTwitchUserId(twitchUserId: string) {
   if (!/^[0-9]{1,32}$/.test(twitchUserId))
@@ -58,39 +73,50 @@ function validTwitchUserId(twitchUserId: string) {
     );
 }
 
-export async function invalidateTwitchBan(twitchUserId: string) {
+export async function invalidateTwitchBan(
+  twitchUserId: string,
+  ban?: { endsAt: string | null },
+) {
   validTwitchUserId(twitchUserId);
-  // Events only invalidate; an out-of-order or repeated unban can never grant
-  // access. Keep the fence longer than any lookup cache entry can survive.
+  const now = Date.now();
+  // A ban denies straight from the event, as Helix can lag behind EventSub and
+  // a lookup must not cache that stale allow. Unbans only invalidate, so an
+  // out-of-order or repeated unban can never grant access.
+  const fence: Fence = {
+    revision: randomUUID(),
+    bannedUntil: ban
+      ? Math.min(
+          now + FENCE_SECONDS * 1000,
+          ban.endsAt ? Date.parse(ban.endsAt) : Infinity,
+        )
+      : null,
+  };
   // Do not acknowledge the webhook unless Redis confirms this write.
   await cacheOperation(() =>
-    getRedis().set(revisionKey(twitchUserId), randomUUID(), {
-      expiry: CACHE_SECONDS * 2,
-    }),
+    getRedis().set(fenceKey(twitchUserId), fence, { expiry: FENCE_SECONDS }),
   );
 }
 
 async function lookupBan(twitchUserId: string) {
   const redis = getRedisOptional();
   const key = `twitch:chat-ban:v2:${channels.alveus.id}:${twitchUserId}`;
-  const readRevision = async () => {
+  // undefined: Redis could not tell us whether an event arrived.
+  const readFence = async () => {
     const raw = redis
-      ? await bestEffortCache(() => redis.get(revisionKey(twitchUserId)))
+      ? await bestEffortCache(() => redis.get(fenceKey(twitchUserId)))
       : undefined;
-    return raw === null ? null : z.uuid().safeParse(raw).data;
+    return raw === null ? null : fenceSchema.safeParse(raw).data;
   };
-  const [revision, rawCache] = await Promise.all([
-    readRevision(),
+  const [fence, rawCache] = await Promise.all([
+    readFence(),
     redis ? bestEffortCache(() => redis.get(key)) : undefined,
   ]);
+  if (bannedByEvent(fence)) return true;
+  const revision = fence === undefined ? undefined : (fence?.revision ?? null);
   const cached = cachedBanSchema.safeParse(rawCache);
-  const assertUnchanged = async () => {
-    if ((await readRevision()) !== revision)
-      throw new Error(
-        "Chat moderation changed during verification. Retry the lookup.",
-      );
-  };
   const now = Date.now();
+  // Events never write the entry itself, so an event landing between these two
+  // reads still leaves a consistent answer from just before it.
   if (
     cached.success &&
     revision !== undefined &&
@@ -98,50 +124,30 @@ async function lookupBan(twitchUserId: string) {
     cached.data.checkedAt <= now &&
     cached.data.validUntil > now &&
     cached.data.validUntil <= cached.data.checkedAt + CACHE_SECONDS * 1000
-  ) {
-    await assertUnchanged();
-    return cached.data.banned;
-  }
-
-  const channel = await prisma.twitchChannel.findUnique({
-    where: { channelId: channels.alveus.id },
-    select: {
-      broadcasterAccount: {
-        select: {
-          provider: true,
-          providerAccountId: true,
-          access_token: true,
-          scope: true,
-        },
-      },
-    },
-  });
-  const account = channel?.broadcasterAccount;
-  if (
-    account?.provider !== "twitch" ||
-    account.providerAccountId !== channels.alveus.id ||
-    !account.access_token ||
-    !account.scope?.split(" ").includes("moderation:read")
   )
+    return cached.data.banned;
+
+  const token = await getAlveusBroadcasterToken("moderation:read");
+  if (!token)
     throw new Error("Alveus chat moderation credentials are unavailable.");
 
   // Start the cache lifetime before the request, not when Redis accepts a write.
   const checkedAt = Date.now();
   const ban = await getUserBanFromBroadcaster(
-    account.access_token,
+    token,
     channels.alveus.id,
     twitchUserId,
     AbortSignal.timeout(5000),
   );
+  const expiresAt = ban?.expiresAt ? Date.parse(ban.expiresAt) : null;
+  // Twitch can briefly keep listing a timeout after it ends.
+  const banned = ban !== null && (expiresAt === null || expiresAt > Date.now());
   const validUntil = Math.min(
     checkedAt + CACHE_SECONDS * 1000,
-    ban?.expiresAt ? Date.parse(ban.expiresAt) : Infinity,
+    banned && expiresAt !== null ? expiresAt : Infinity,
   );
-  const banned = ban !== null && validUntil > Date.now();
-  // An expired timeout isn't proof that the user has not since been banned.
-  if (ban && validUntil <= Date.now())
-    throw new Error("Twitch returned an expired chat timeout.");
-  await assertUnchanged();
+  // An entry written under a revision an event has since replaced is never
+  // read back, so this write cannot race an event into restoring access.
   if (redis && revision !== undefined && validUntil > Date.now())
     await bestEffortCache(() =>
       redis.set(
@@ -152,7 +158,8 @@ async function lookupBan(twitchUserId: string) {
         },
       ),
     );
-  await assertUnchanged();
+  // A ban delivered while Twitch answered wins over that possibly stale answer.
+  if (bannedByEvent(await readFence())) return true;
   return banned;
 }
 
@@ -168,6 +175,13 @@ export async function isTwitchUserBanned(twitchUserId: string) {
 }
 
 export async function isPresetUserBanned(userId: string) {
+  // The local DISABLE_ADMIN_AUTH session has no Twitch identity to check.
+  if (
+    env.NODE_ENV === "development" &&
+    env.DISABLE_ADMIN_AUTH &&
+    userId === DEV_ADMIN_USER_ID
+  )
+    return false;
   const chatIdentity = /^twitch:([0-9]{1,32})$/.exec(userId);
   if (chatIdentity) return isTwitchUserBanned(chatIdentity[1]!);
   const account = await prisma.account.findFirst({

@@ -17,6 +17,8 @@ const payloadSchema = z.object({
     .object({
       broadcaster_user_id: z.literal(channels.alveus.id),
       user_id: z.string().regex(/^[0-9]{1,32}$/),
+      // channel.ban only: null for a permanent ban, otherwise the timeout end.
+      ends_at: z.iso.datetime({ offset: true }).nullable().optional(),
     })
     .optional(),
 });
@@ -50,8 +52,9 @@ export async function handleTwitchModerationWebhook(
       status: 403,
     });
 
-  const body = await request.text();
-  if (Buffer.byteLength(body) > 64 * 1024)
+  // Sign the exact bytes Twitch sent; decoding first could alter them.
+  const body = new Uint8Array(await request.arrayBuffer());
+  if (body.byteLength > 64 * 1024)
     return new Response("EventSub payload too large.", { status: 413 });
   const expected = createHmac("sha256", secret)
     .update(id)
@@ -66,7 +69,7 @@ export async function handleTwitchModerationWebhook(
 
   let json: unknown;
   try {
-    json = JSON.parse(body);
+    json = JSON.parse(new TextDecoder().decode(body));
   } catch {
     return new Response("Invalid EventSub payload.", { status: 400 });
   }
@@ -102,7 +105,12 @@ export async function handleTwitchModerationWebhook(
   try {
     // Invalidation is intentionally independent of event ordering: delayed or
     // duplicate unbans must not overwrite a newer ban with an access grant.
-    await invalidateTwitchBan(payload.event.user_id);
+    await invalidateTwitchBan(
+      payload.event.user_id,
+      payload.subscription.type === "channel.ban"
+        ? { endsAt: payload.event.ends_at ?? null }
+        : undefined,
+    );
   } catch {
     // Acknowledge only after Redis confirms the fence. Twitch can retry an
     // unavailable receiver; a lost event still has the five-minute fallback.

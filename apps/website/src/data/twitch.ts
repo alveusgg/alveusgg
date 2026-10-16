@@ -33,8 +33,6 @@ export const scopeGroups = {
     "user:read:subscriptions",
   ],
   api: [
-    "channel:moderate",
-    "moderation:read",
     "chat:edit",
     "chat:read",
     "user:write:chat",
@@ -45,6 +43,8 @@ export const scopeGroups = {
     "channel:manage:schedule",
   ],
   chat: ["user:write:chat"],
+  // Only the AlveusSanctuary broadcaster: ban lookups and ban/unban EventSub.
+  moderation: ["channel:moderate", "moderation:read"],
 } as const satisfies Record<string, Scope[]>;
 
 export type ScopeGroup = keyof typeof scopeGroups;

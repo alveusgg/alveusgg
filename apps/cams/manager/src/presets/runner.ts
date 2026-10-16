@@ -105,6 +105,17 @@ export async function runPresetJob(job: PresetJob, deps: Dependencies) {
     await acknowledge(job, deps);
     return;
   }
+  if (job.loadDispatched) {
+    // Don't read the operation again: the site re-verifies a pending load's
+    // chat ban on every read, and this one may already have moved the camera.
+    // Completing a load that is no longer pending leaves it unchanged.
+    await deps.website.presets.complete.mutate({
+      id: job.id,
+      status: "failed",
+      error: "Load outcome unknown; it will not be automatically repeated.",
+    });
+    return;
+  }
   let operation;
   try {
     deps.onStage?.("operation-read");
@@ -118,14 +129,6 @@ export async function runPresetJob(job: PresetJob, deps: Dependencies) {
   }
   if (operation.action === "load") {
     if (operation.status !== "pending") return;
-    if (job.loadDispatched) {
-      await deps.website.presets.complete.mutate({
-        id: job.id,
-        status: "failed",
-        error: "Load outcome unknown; it will not be automatically repeated.",
-      });
-      return;
-    }
     if (Date.parse(operation.expiresAt) < deps.now()) {
       await deps.website.presets.complete.mutate({
         id: job.id,

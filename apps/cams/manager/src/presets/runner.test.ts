@@ -387,6 +387,28 @@ describe("preset load execution", () => {
     );
   });
 
+  it("records a dispatched load as unknown without the site's pre-dispatch ban check", async () => {
+    const f = fixture();
+    f.operation.action = "load";
+    f.website.presets.operation.query.mockRejectedValue(
+      TRPCClientError.from({
+        error: {
+          message: "Preset access verification is temporarily unavailable.",
+          code: -32603,
+          data: { code: "SERVICE_UNAVAILABLE", httpStatus: 503 },
+        },
+      }),
+    );
+    await runPresetJob({ ...f.job, loadDispatched: true }, f.deps);
+    expect(f.website.presets.operation.query).not.toHaveBeenCalled();
+    expect(f.control).not.toHaveBeenCalled();
+    expect(f.website.presets.complete.mutate).toHaveBeenCalledWith({
+      id,
+      status: "failed",
+      error: expect.stringContaining("unknown"),
+    });
+  });
+
   it("fails a malformed stored position without a movement or endless retries", async () => {
     const f = fixture();
     f.operation.action = "load";

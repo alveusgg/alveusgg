@@ -24,7 +24,10 @@ const { db, subscription, account, execute, setPolicy, banned } = vi.hoisted(
     banned: vi.fn(),
   }),
 );
-vi.mock("@/server/utils/twitch-bans", () => ({ isPresetUserBanned: banned }));
+vi.mock("@/server/utils/twitch-bans", () => ({
+  isPresetUserBanned: banned,
+  isTwitchUserBanned: banned,
+}));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
 vi.mock("@/env", () => ({
   env: {
@@ -100,6 +103,7 @@ function stored(actorId = "user") {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.spyOn(console, "error").mockImplementation(() => {});
   banned.mockResolvedValue(false);
   db.cameraPresetOperation.findUnique.mockResolvedValue(null);
   db.cameraPresetPolicy.findMany.mockResolvedValue([
@@ -144,12 +148,15 @@ describe("website preset authorization", () => {
     expect(await api.access()).toMatchObject({
       canLoad: false,
       canManage: false,
+      canPauseSubscribers: false,
       reason: "subscription",
     });
     await expect(api.userCommand(input)).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
     expect(execute).not.toHaveBeenCalled();
+    // A user denied anyway doesn't spend a broadcaster-token ban lookup.
+    expect(banned).not.toHaveBeenCalled();
   });
 
   test("verified subscribers load through camera aliases with no chat-write scope and a server-derived actor", async () => {
@@ -328,28 +335,34 @@ describe("website preset authorization", () => {
   });
 
   test.each([
-    session(),
-    session("operator", ["ptzControl"], []),
-    session("super-user", [], []),
+    [session(), "twitch-user"],
+    [session("operator", ["ptzControl"], []), "operator"],
+    [session("super-user", [], []), "super-user"],
   ])(
-    "chat bans override subscription, operator roles and superuser privileges: $user.id",
-    async (identity) => {
+    "chat bans override subscription, operator roles and superuser privileges: %j",
+    async (identity, checked) => {
       banned.mockResolvedValue(true);
       const api = caller(identity).api;
       expect(await api.access()).toMatchObject({
         canLoad: false,
         canManage: false,
+        canPauseSubscribers: false,
         reason: "banned",
       });
       await expect(api.userCommand(input)).rejects.toMatchObject({
         code: "FORBIDDEN",
         message: expect.stringContaining("banned or timed out"),
       });
-      expect(banned).toHaveBeenCalledWith(identity.user!.id);
-      expect(subscription).not.toHaveBeenCalled();
+      expect(banned).toHaveBeenCalledWith(checked);
       expect(execute).not.toHaveBeenCalled();
     },
   );
+
+  test("subscriber ban checks reuse the Twitch identity from the subscription check", async () => {
+    await caller(session()).api.access();
+    expect(account).toHaveBeenCalledOnce();
+    expect(banned).toHaveBeenCalledExactlyOnceWith("twitch-user");
+  });
 
   test("a banned operator cannot bypass moderation through a management action", async () => {
     banned.mockResolvedValue(true);
@@ -380,6 +393,7 @@ describe("website preset authorization", () => {
     expect(await api.access()).toMatchObject({
       canLoad: false,
       canManage: false,
+      canPauseSubscribers: true,
       reason: "unavailable",
     });
     await expect(api.userCommand(input)).rejects.toMatchObject({
@@ -388,6 +402,10 @@ describe("website preset authorization", () => {
         "Preset access verification is temporarily unavailable. Try again shortly.",
     });
     expect(execute).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      "Preset chat ban verification failed:",
+      expect.any(Error),
+    );
   });
 
   test("the former shared-key command entry point is absent", async () => {
@@ -455,5 +473,32 @@ describe("subscriber control policy authorization", () => {
       { camera: "crowoutdoor", paused: true },
       "operator",
     );
+  });
+
+  test.each([true, false])(
+    "a banned operator cannot change pause settings: paused %s",
+    async (paused) => {
+      banned.mockResolvedValue(true);
+      await expect(
+        caller(session("operator", ["ptzControl"])).api.setSubscriberControl({
+          paused,
+        }),
+      ).rejects.toMatchObject({
+        code: "FORBIDDEN",
+        message: expect.stringContaining("banned or timed out"),
+      });
+      expect(setPolicy).not.toHaveBeenCalled();
+    },
+  );
+
+  test("operators can still pause, but not resume, while moderation verification is unavailable", async () => {
+    banned.mockRejectedValue(new Error("Twitch unavailable"));
+    const api = caller(session("operator", ["ptzControl"])).api;
+    await api.setSubscriberControl({ paused: true });
+    expect(setPolicy).toHaveBeenCalledWith({ paused: true }, "operator");
+    await expect(
+      api.setSubscriberControl({ paused: false }),
+    ).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+    expect(setPolicy).toHaveBeenCalledOnce();
   });
 });

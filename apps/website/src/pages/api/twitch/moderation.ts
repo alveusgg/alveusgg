@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getRawBody } from "raw-body";
+import { type RawBodyError, getRawBody } from "raw-body";
 
 import { env } from "@/env";
 
@@ -20,8 +20,10 @@ export default async function moderationWebhook(
   let body: Buffer;
   try {
     body = await getRawBody(req, { limit: "64kb" });
-  } catch {
-    res.status(413).send("Unable to read EventSub payload within size limit.");
+  } catch (error) {
+    if ((error as RawBodyError).type === "entity.too.large")
+      res.status(413).send("EventSub payload too large.");
+    else res.status(400).send("Unable to read EventSub payload.");
     return;
   }
   const headers = new Headers();

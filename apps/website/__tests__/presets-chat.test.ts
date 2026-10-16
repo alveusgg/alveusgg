@@ -91,6 +91,7 @@ function stored(actorId: string) {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.spyOn(console, "error").mockImplementation(() => {});
   banned.mockResolvedValue(false);
   configuration.CHATBOT_PRESETS_SHARED_KEY =
     "dedicated-chat-preset-test-key-0123456789";
@@ -101,6 +102,7 @@ beforeEach(() => {
   ]);
   db.twitchChannel.findUnique.mockResolvedValue({
     broadcasterAccount: {
+      provider: "twitch",
       providerAccountId: "636587384",
       access_token: "private-broadcaster-test-token",
       scope: "channel:read:subscriptions",
@@ -418,7 +420,6 @@ test.each([
     });
     expect(banned).toHaveBeenCalledWith("123456");
     expect(execute).not.toHaveBeenCalled();
-    expect(broadcasterSubscription).not.toHaveBeenCalled();
   },
 );
 
@@ -430,4 +431,26 @@ test("chat commands fail closed when moderation verification is unavailable", as
       "Preset access verification is temporarily unavailable. Try again shortly.",
   });
   expect(execute).not.toHaveBeenCalled();
+  expect(console.error).toHaveBeenCalledWith(
+    "Chat preset ban verification failed:",
+    expect.any(Error),
+  );
 });
+
+test.each([
+  ["a non-operator's management command", "save", true],
+  ["a non-subscriber's load", "load", false],
+] as const)(
+  "%s is rejected without a ban lookup, even while verification is down",
+  async (_, action, subscribed) => {
+    broadcasterSubscription.mockResolvedValue(subscribed);
+    banned.mockRejectedValue(new Error("unavailable"));
+    await expect(
+      caller().api.chatCommand({
+        ...request,
+        command: { ...request.command, action },
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(banned).not.toHaveBeenCalled();
+  },
+);

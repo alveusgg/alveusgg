@@ -2,9 +2,11 @@ import { type Session } from "next-auth";
 
 import { scopeGroups } from "@/data/twitch";
 
+export const DEV_ADMIN_USER_ID = "dev-admin";
+
 export const DEV_ADMIN_SESSION: Session = {
   user: {
-    id: "dev-admin",
+    id: DEV_ADMIN_USER_ID,
     roles: [] as string[],
     scopes: scopeGroups.default,
     isSuperUser: true,
