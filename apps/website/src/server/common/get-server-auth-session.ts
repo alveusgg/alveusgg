@@ -10,11 +10,16 @@ import { authOptions } from "../../pages/api/auth/[...nextauth]";
 /**
  * Wrapper for unstable_getServerSession https://next-auth.js.org/configuration/nextjs
  */
-export const getServerAuthSession = async (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
-}) => {
-  return env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH
+export const getServerAuthSession = async (
+  ctx: {
+    req: GetServerSidePropsContext["req"];
+    res: GetServerSidePropsContext["res"];
+  },
+  { allowDevAdmin = true } = {},
+) => {
+  return allowDevAdmin &&
+    env.NODE_ENV === "development" &&
+    env.DISABLE_ADMIN_AUTH
     ? DEV_ADMIN_SESSION
     : await unstable_getServerSession(ctx.req, ctx.res, authOptions);
 };

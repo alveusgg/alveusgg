@@ -551,19 +551,20 @@ model CameraPreset {
 }
 
 model CameraPresetOperation {
-  id                    String   @id @db.VarChar(36)
-  commandHash           String   @db.VarChar(64)
+  id                    String    @id @db.VarChar(36)
+  commandHash           String    @db.VarChar(64)
   command               Json
-  action                String   @db.VarChar(16)
-  camera                String   @db.VarChar(100)
-  status                String   @default("pending") @db.VarChar(16)
+  action                String    @db.VarChar(16)
+  camera                String    @db.VarChar(100)
+  status                String    @default("pending") @db.VarChar(16)
+  dispatchedAt          DateTime?
   expectedCameraVersion Int
   expectedNameVersion   Int?
   preset                Json?
   result                Json?
-  error                 String?  @db.Text
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  error                 String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
   expiresAt             DateTime
 
   @@index([status, action, createdAt])

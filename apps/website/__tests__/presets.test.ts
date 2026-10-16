@@ -13,6 +13,7 @@ import {
   commitPresetCapture,
   completePresetOperation,
   preparePresetCapture,
+  presetCatalog,
 } from "@/server/presets/service";
 
 const { db, verifyUpload, createUpload, signUpload } = vi.hoisted(() => {
@@ -32,6 +33,7 @@ const { db, verifyUpload, createUpload, signUpload } = vi.hoisted(() => {
       update: vi.fn(),
     },
     cameraPreset: {
+      findMany: vi.fn(),
       findUnique: vi.fn(),
       upsert: vi.fn(),
       update: vi.fn(),
@@ -333,4 +335,33 @@ test("payload hashes ignore object ordering but retain distinct optical state", 
   expect(
     captureSchema.safeParse({ ...capture, size: 11 * 1024 * 1024 }).success,
   ).toBe(false);
+});
+
+test("archived zero-zoom presets remain readable but cannot be captured or loaded", async () => {
+  const position = { pan: 0, tilt: 0, zoom: 0 };
+  db.cameraPreset.findMany.mockResolvedValue([
+    {
+      id: "archived",
+      camera: "legacy:chin2",
+      name: "home",
+      position,
+      provenance: "legacy",
+      updatedAt: now,
+      fileStorageObject: null,
+    },
+  ]);
+  expect(await presetCatalog()).toMatchObject([{ position }]);
+  expect(captureSchema.safeParse({ ...capture, position }).success).toBe(false);
+  db.cameraPresetOperation.findUnique.mockResolvedValue(null);
+  db.cameraPreset.findUnique.mockResolvedValue({
+    id: "archived",
+    position,
+    provenance: "legacy",
+    deletedAt: null,
+  });
+  await expect(
+    commandPreset({ ...command, action: "load" }),
+  ).rejects.toMatchObject({
+    code: "PRECONDITION_FAILED",
+  });
 });

@@ -12,6 +12,5 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "include": ["src", "dev/*.ts", "worker-configuration.d.ts"],
-  "exclude": ["dev/smoke.integration.ts"]
+  "include": ["src", "worker-configuration.d.ts"]
 }

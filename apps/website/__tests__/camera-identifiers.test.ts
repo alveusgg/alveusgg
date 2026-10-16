@@ -26,7 +26,16 @@ describe("camera identities", () => {
   });
 
   it("does not turn retired or fixed legacy views into camera commands", () => {
-    for (const camera of ["hank", "chin2", "chin3", "unknown", "wolfmulti"])
+    for (const camera of [
+      "hank",
+      "chin2",
+      "chin3",
+      "unknown",
+      "wolfmulti",
+      "constructor",
+      "__proto__",
+      "toString",
+    ])
       expect(resolveControlCamera(camera)).toBeUndefined();
     expect(presetCatalogCamera("chin2")).toBe("legacy:chin2");
   });
