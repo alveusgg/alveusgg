@@ -10,6 +10,7 @@ import {
   getViewUrlForFileStorageObjectKey,
   renewFileStorageUpload,
 } from "@/server/utils/file-storage";
+import { isPresetUserBanned } from "@/server/utils/twitch-bans";
 
 import {
   type Transaction,
@@ -88,6 +89,34 @@ export async function getPresetOperation(id: string) {
       code: "NOT_FOUND",
       message: "Preset operation not found",
     });
+  if (operation.status === "pending" && operation.action === "load") {
+    const command = commandSchema.parse(operation.command);
+    let banned: boolean;
+    try {
+      banned = await isPresetUserBanned(command.actor.id);
+    } catch {
+      // Leave the operation pending for a bounded worker retry. Never hand the
+      // worker a dispatchable load while moderation verification is unavailable.
+      throw new TRPCError({
+        code: "SERVICE_UNAVAILABLE",
+        message:
+          "Preset access verification is temporarily unavailable. Try again shortly.",
+      });
+    }
+    if (banned) {
+      await prisma.cameraPresetOperation.updateMany({
+        where: { id, status: "pending" },
+        data: {
+          status: "failed",
+          error:
+            "Preset load cancelled because the user is banned or timed out in Alveus Sanctuary chat.",
+        },
+      });
+      operation = await prisma.cameraPresetOperation.findUniqueOrThrow({
+        where: { id },
+      });
+    }
+  }
   if (operation.status === "pending" && isSubscriberLoad(operation)) {
     const camera = operation.camera;
     operation = await transaction(async (tx) => {

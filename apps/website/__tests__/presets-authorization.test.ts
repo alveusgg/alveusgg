@@ -11,16 +11,20 @@ import { presetsRouter } from "@/server/trpc/router/presets";
 import type * as AuthModule from "@/server/utils/auth";
 import { ExpiredAccessTokenError } from "@/server/utils/oauth2";
 
-const { db, subscription, account, execute, setPolicy } = vi.hoisted(() => ({
-  db: {
-    cameraPresetOperation: { findUnique: vi.fn() },
-    cameraPresetPolicy: { findMany: vi.fn() },
-  },
-  subscription: vi.fn(),
-  account: vi.fn(),
-  execute: vi.fn(),
-  setPolicy: vi.fn(),
-}));
+const { db, subscription, account, execute, setPolicy, banned } = vi.hoisted(
+  () => ({
+    db: {
+      cameraPresetOperation: { findUnique: vi.fn() },
+      cameraPresetPolicy: { findMany: vi.fn() },
+    },
+    subscription: vi.fn(),
+    account: vi.fn(),
+    execute: vi.fn(),
+    setPolicy: vi.fn(),
+    banned: vi.fn(),
+  }),
+);
+vi.mock("@/server/utils/twitch-bans", () => ({ isPresetUserBanned: banned }));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
 vi.mock("@/env", () => ({
   env: {
@@ -96,6 +100,7 @@ function stored(actorId = "user") {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  banned.mockResolvedValue(false);
   db.cameraPresetOperation.findUnique.mockResolvedValue(null);
   db.cameraPresetPolicy.findMany.mockResolvedValue([
     { scope: "global", paused: false, resumeAt: null },
@@ -246,7 +251,7 @@ describe("website preset authorization", () => {
     await expect(api.userCommand(input)).rejects.toMatchObject({
       code: "SERVICE_UNAVAILABLE",
       message:
-        "Subscription verification is temporarily unavailable. Try again shortly.",
+        "Preset access verification is temporarily unavailable. Try again shortly.",
     });
     expect(execute).not.toHaveBeenCalled();
   });
@@ -320,6 +325,69 @@ describe("website preset authorization", () => {
     await expect(api.userCommand(input)).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
+  });
+
+  test.each([
+    session(),
+    session("operator", ["ptzControl"], []),
+    session("super-user", [], []),
+  ])(
+    "chat bans override subscription, operator roles and superuser privileges: $user.id",
+    async (identity) => {
+      banned.mockResolvedValue(true);
+      const api = caller(identity).api;
+      expect(await api.access()).toMatchObject({
+        canLoad: false,
+        canManage: false,
+        reason: "banned",
+      });
+      await expect(api.userCommand(input)).rejects.toMatchObject({
+        code: "FORBIDDEN",
+        message: expect.stringContaining("banned or timed out"),
+      });
+      expect(banned).toHaveBeenCalledWith(identity.user!.id);
+      expect(subscription).not.toHaveBeenCalled();
+      expect(execute).not.toHaveBeenCalled();
+    },
+  );
+
+  test("a banned operator cannot bypass moderation through a management action", async () => {
+    banned.mockResolvedValue(true);
+    await expect(
+      caller(session("operator", ["ptzControl"])).api.userCommand({
+        ...input,
+        action: "save",
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  test("a ban imposed after an access query denies a new command", async () => {
+    const api = caller(session()).api;
+    expect((await api.access()).canLoad).toBe(true);
+    banned.mockResolvedValue(true);
+    await expect(api.userCommand(input)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  test("moderation outages fail closed for operators and do not expose provider errors", async () => {
+    banned.mockRejectedValue(
+      new Error("private-broadcaster-token upstream sentinel"),
+    );
+    const api = caller(session("operator", ["ptzControl"])).api;
+    expect(await api.access()).toMatchObject({
+      canLoad: false,
+      canManage: false,
+      reason: "unavailable",
+    });
+    await expect(api.userCommand(input)).rejects.toMatchObject({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Preset access verification is temporarily unavailable. Try again shortly.",
+    });
+    expect(execute).not.toHaveBeenCalled();
   });
 
   test("the former shared-key command entry point is absent", async () => {

@@ -45,6 +45,11 @@ vi.mock("@/env", () => ({
   },
 }));
 vi.mock("@/server/oauth/tokens", () => ({ issueAccessToken: vi.fn() }));
+// This suite tests real DB/S3 transactions; moderation has dedicated API/cache
+// and authorization coverage and must never contact live Twitch from here.
+vi.mock("@/server/utils/twitch-bans", () => ({
+  isPresetUserBanned: vi.fn(async () => false),
+}));
 
 const png = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWZkAAAAASUVORK5CYII=",

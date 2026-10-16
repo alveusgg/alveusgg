@@ -4,6 +4,7 @@ import { type Session } from "next-auth";
 import { getUserSubscribedToBroadcaster } from "@/server/apis/twitch";
 import { checkPermissions, getUserTwitchAccount } from "@/server/utils/auth";
 import { ExpiredAccessTokenError } from "@/server/utils/oauth2";
+import { isPresetUserBanned } from "@/server/utils/twitch-bans";
 
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
@@ -17,6 +18,7 @@ export type PresetAccess = {
   pausedCameras: string[];
   reason:
     | "login"
+    | "banned"
     | "subscription"
     | "subscription-scope"
     | "unavailable"
@@ -43,6 +45,17 @@ export async function presetAccess(
   }
   if (!session?.user)
     return { ...policy, canLoad: false, canManage: false, reason: "login" };
+  try {
+    if (await isPresetUserBanned(session.user.id))
+      return { ...policy, canLoad: false, canManage: false, reason: "banned" };
+  } catch {
+    return {
+      ...policy,
+      canLoad: false,
+      canManage: false,
+      reason: "unavailable",
+    };
+  }
   if (canManagePresets(session))
     return { ...policy, canLoad: true, canManage: true, reason: null };
   if (!session.user.scopes.includes("user:read:subscriptions"))
@@ -88,20 +101,26 @@ export async function authorizePresetAction(
   action: string,
   camera: string,
 ): Promise<"operator" | "subscriber"> {
-  if (canManagePresets(session)) return "operator";
-  if (action !== "load")
+  if (!canManagePresets(session) && action !== "load")
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Preset management requires camera operator access.",
     });
   const access = await presetAccess(session);
+  if (access.canManage) return "operator";
+  if (access.reason === "banned")
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message:
+        "Preset controls are unavailable while you are banned or timed out in Alveus Sanctuary chat.",
+    });
   if (access.canLoad && !access.pausedCameras.includes(camera))
     return "subscriber";
   if (access.reason === "unavailable")
     throw new TRPCError({
       code: "SERVICE_UNAVAILABLE",
       message:
-        "Subscription verification is temporarily unavailable. Try again shortly.",
+        "Preset access verification is temporarily unavailable. Try again shortly.",
     });
   if (access.reason === "paused" || access.pausedCameras.includes(camera))
     throw new TRPCError({

@@ -157,6 +157,36 @@ it("uses workerd-compatible manual redirects and rejects a redirected upload bef
 });
 
 describe("preset capture delivery recovery", () => {
+  it("never moves the camera for a load cancelled by the site's chat ban check", async () => {
+    const f = fixture();
+    f.operation.action = "load";
+    f.operation.status = "failed";
+    await runPresetJob(f.job, f.deps);
+    expect(f.control).not.toHaveBeenCalled();
+    expect(f.persist).not.toHaveBeenCalled();
+    expect(f.website.presets.complete.mutate).not.toHaveBeenCalled();
+  });
+
+  it("keeps a load retryable without movement when chat ban verification is unavailable", async () => {
+    const f = fixture();
+    f.operation.action = "load";
+    f.website.presets.operation.query.mockRejectedValue(
+      TRPCClientError.from({
+        error: {
+          message: "Preset access verification is temporarily unavailable.",
+          code: -32603,
+          data: { code: "SERVICE_UNAVAILABLE", httpStatus: 503 },
+        },
+      }),
+    );
+    await expect(runPresetJob(f.job, f.deps)).rejects.toThrow(
+      "Preset access verification is temporarily unavailable.",
+    );
+    expect(f.control).not.toHaveBeenCalled();
+    expect(f.persist).not.toHaveBeenCalled();
+    expect(f.website.presets.complete.mutate).not.toHaveBeenCalled();
+  });
+
   it("reuses the retained original capture after an upload acknowledgement was lost", async () => {
     const f = fixture();
     f.upload.mockRejectedValueOnce(new Error("upload response lost"));

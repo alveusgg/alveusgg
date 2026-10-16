@@ -11,6 +11,7 @@ export const scopeLabels = {
   "chat:edit": "Chat (Edit)",
   "chat:read": "Chat (Read)",
   // Moderator
+  "moderation:read": "Channel Moderation (Read)",
   "moderator:read:followers": "Moderator Followers (Read)",
   // Channel
   "channel:read:charity": "Channel Charity (Read)",
@@ -31,6 +32,7 @@ export const scopeGroups = {
     "user:read:subscriptions",
   ],
   api: [
+    "moderation:read",
     "chat:edit",
     "chat:read",
     "user:write:chat",

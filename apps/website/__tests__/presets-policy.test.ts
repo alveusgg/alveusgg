@@ -8,7 +8,8 @@ import {
 } from "@/server/presets/policy";
 import { getPresetOperation } from "@/server/presets/service";
 
-const { db } = vi.hoisted(() => ({
+const { db, banned } = vi.hoisted(() => ({
+  banned: vi.fn(),
   db: {
     $transaction: vi.fn(),
     $queryRaw: vi.fn(),
@@ -26,6 +27,7 @@ const { db } = vi.hoisted(() => ({
     },
   },
 }));
+vi.mock("@/server/utils/twitch-bans", () => ({ isPresetUserBanned: banned }));
 vi.mock("@alveusgg/database", async (original) => ({
   ...(await original<typeof DatabaseModule>()),
   prisma: db,
@@ -66,6 +68,7 @@ const operator = {
 };
 beforeEach(() => {
   vi.resetAllMocks();
+  banned.mockResolvedValue(false);
   db.$transaction.mockImplementation(async (fn) => fn(db));
   db.cameraPresetOperation.findUnique.mockResolvedValue(subscriber);
   db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(subscriber);
@@ -121,7 +124,56 @@ test("operator loads do not acquire subscriber policy locks or fail when control
   });
   expect(db.cameraPresetPolicy.createMany).not.toHaveBeenCalled();
   expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+  expect(banned).toHaveBeenCalledWith("operator");
 });
+
+test.each([subscriber, operator])(
+  "pending loads from banned actors are cancelled before worker dispatch: $command.authorization",
+  async (operation) => {
+    banned.mockResolvedValue(true);
+    db.cameraPresetOperation.findUnique.mockResolvedValue(operation);
+    db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({
+      ...operation,
+      status: "failed",
+      error: "User banned or timed out",
+    });
+    expect(await getPresetOperation(operation.id)).toMatchObject({
+      status: "failed",
+    });
+    expect(db.cameraPresetOperation.updateMany).toHaveBeenCalledWith({
+      where: { id: operation.id, status: "pending" },
+      data: {
+        status: "failed",
+        error: expect.stringContaining("banned or timed out"),
+      },
+    });
+    expect(banned).toHaveBeenCalledWith(operation.command.actor.id);
+  },
+);
+
+test("a moderation outage leaves a queued load pending and never exposes dispatchable state", async () => {
+  banned.mockRejectedValue(new Error("secret upstream response"));
+  await expect(getPresetOperation(id)).rejects.toMatchObject({
+    code: "SERVICE_UNAVAILABLE",
+    message:
+      "Preset access verification is temporarily unavailable. Try again shortly.",
+  });
+  expect(db.cameraPresetOperation.updateMany).not.toHaveBeenCalled();
+  expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+});
+
+test.each(["completed", "failed"])(
+  "terminal %s outcomes remain recoverable during moderation outages",
+  async (status) => {
+    db.cameraPresetOperation.findUnique.mockResolvedValue({
+      ...subscriber,
+      status,
+    });
+    banned.mockRejectedValue(new Error("unavailable"));
+    expect(await getPresetOperation(id)).toMatchObject({ status });
+    expect(banned).not.toHaveBeenCalled();
+  },
+);
 
 test("pausing cancels only pending subscriber loads and records the server operator identity", async () => {
   db.cameraPresetOperation.findMany.mockResolvedValue([subscriber, operator]);
