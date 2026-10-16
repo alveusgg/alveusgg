@@ -31,7 +31,7 @@ import {
   payloadHash,
   positionSchema,
 } from "./schema";
-import { verifyCaptureUpload } from "./storage";
+import { stageVerifiedCaptureUpload } from "./storage";
 
 const json = (
   value: unknown,
@@ -292,16 +292,16 @@ export async function commandPreset(
 ) {
   const command = commandSchema.parse(input);
   const hash = payloadHash(commandIdentity(command));
-  let operation: CameraPresetOperation;
+  let result: { operation: CameraPresetOperation; created: boolean };
   try {
-    operation = await transaction(async (tx) => {
+    result = await transaction(async (tx) => {
       const camera = await lockCamera(tx, command.camera);
       const existing = await tx.cameraPresetOperation.findUnique({
         where: { id: command.id },
       });
       if (existing) {
         assertSameCommand(existing, command);
-        return existing;
+        return { operation: existing, created: false };
       }
       const preset = command.name
         ? await tx.cameraPreset.findUnique({
@@ -393,7 +393,7 @@ export async function commandPreset(
         result = { removed: removed.count };
       }
       const now = new Date();
-      return tx.cameraPresetOperation.create({
+      const operation = await tx.cameraPresetOperation.create({
         data: {
           id: command.id,
           commandHash: hash,
@@ -419,6 +419,7 @@ export async function commandPreset(
           expiresAt: new Date(now.getTime() + 15_000),
         },
       });
+      return { operation, created: true };
     });
   } catch (error) {
     // A concurrent request can commit the same UUID between our transaction's read and insert.
@@ -429,10 +430,11 @@ export async function commandPreset(
     if (!existing)
       conflict("Operation ID or preset name conflicts with an existing record");
     assertSameCommand(existing, command);
-    operation = existing;
+    result = { operation: existing, created: false };
   }
-  if (operation.status === "pending") await dispatch(operation.id);
-  return operationDto(operation);
+  if (result.created && result.operation.status === "pending")
+    await dispatch(result.operation.id);
+  return operationDto(result.operation);
 }
 
 export async function preparePresetCapture(
@@ -536,10 +538,8 @@ export async function commitPresetCapture(
       ...(await getPresetOperation(operationId)),
     };
   const metadata = captureSchema.parse(capture.metadata);
-  const image = await verifyCaptureUpload(
-    capture.fileStorageObject.key,
-    metadata,
-  );
+  const { fileStorageObject: published, image } =
+    await stageVerifiedCaptureUpload(capture.fileStorageObject.key, metadata);
   const completed = await transaction(async (tx) => {
     await lockCamera(tx, metadata.camera);
     const current = await tx.presetCapture.findUniqueOrThrow({
@@ -552,24 +552,25 @@ export async function commitPresetCapture(
     if (current.deliveredAt) return operation;
     if (current.fileStorageObjectId !== capture.fileStorageObjectId)
       conflict("Upload session changed; upload to the current session");
-    if (
-      current.fileStorageObject.deletedAt ||
-      !current.fileStorageObject.expiresAt ||
-      current.fileStorageObject.expiresAt.getTime() <= Date.now() + 1000
-    )
-      conflict("Upload expired; prepare a new upload session");
-    await tx.fileStorageObject.update({
-      where: { id: current.fileStorageObjectId },
-      data: { uploadedAt: new Date(), expiresAt: null },
-    });
+    // This write locks the candidate row against cleanup's conditional deletion
+    // claim. Neither a stale expiry snapshot nor a long transaction can delete
+    // an image after publication wins. A cleanup tombstone is never revived.
+    // Use a single SQL write: relationMode=prisma can split updateMany into
+    // a stale SELECT followed by an UPDATE that only retains the selected IDs.
+    const finalized = await tx.$executeRaw`
+      UPDATE FileStorageObject SET uploadedAt = ${new Date()}, expiresAt = NULL
+      WHERE id = ${published.id} AND deletedAt IS NULL AND expiresAt > ${new Date()}
+    `;
+    if (finalized !== 1)
+      conflict("Publication candidate expired; retry commitCapture");
     await tx.imageMetadata.upsert({
-      where: { fileStorageObjectId: current.fileStorageObjectId },
-      create: { fileStorageObjectId: current.fileStorageObjectId, ...image },
+      where: { fileStorageObjectId: published.id },
+      create: { fileStorageObjectId: published.id, ...image },
       update: image,
     });
     await tx.presetCapture.update({
       where: { id: captureId },
-      data: { deliveredAt: new Date() },
+      data: { deliveredAt: new Date(), fileStorageObjectId: published.id },
     });
     if (operation.status !== "pending") return operation;
     const camera = await tx.cameraPresetCamera.findUniqueOrThrow({
@@ -598,14 +599,14 @@ export async function commitPresetCapture(
         name: command.name!,
         description: command.name!,
         position: json(metadata.position),
-        fileStorageObjectId: current.fileStorageObjectId,
+        fileStorageObjectId: published.id,
         provenance: "capture",
         imageProvenance: "capture",
         capturedAt: new Date(metadata.capturedAt),
       },
       update: {
         position: json(metadata.position),
-        fileStorageObjectId: current.fileStorageObjectId,
+        fileStorageObjectId: published.id,
         provenance: "capture",
         imageProvenance: "capture",
         capturedAt: new Date(metadata.capturedAt),
