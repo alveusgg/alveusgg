@@ -13,10 +13,18 @@
   },
   "vars": {
     "ALVEUS_AUTH_ISSUER": "http://127.0.0.1:8798",
-    "CONTROL_API_TOKEN": "mock"
+    "CONTROL_API_TOKEN": "mock",
+    "SITE_URL": "http://localhost:3000",
+    "SITE_SHARED_KEY": "mock"
   },
   "services": [
-    { "binding": "CONTROL_API", "service": "cams-control-api-local" },
-    { "binding": "EVENTS", "service": "cams-control-events-local" }
+    {
+      "binding": "CONTROL_API",
+      "service": "cams-control-api-local"
+    },
+    {
+      "binding": "EVENTS",
+      "service": "cams-control-events-local"
+    }
   ]
 }
