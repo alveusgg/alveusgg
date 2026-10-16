@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type SetPtzLoadData = {
-  body?: {
+  body: {
     pan?: number & number;
     tilt?: number & number;
     zoom?: number & number;
@@ -172,7 +172,7 @@ export type SetPtzSpinResponses = {
 export type SetPtzSpinResponse = SetPtzSpinResponses[keyof SetPtzSpinResponses];
 
 export type SetPtzRptzData = {
-  body?: {
+  body: {
     pan?: number & number;
     tilt?: number & number;
     zoom?: number & number;
