@@ -46,6 +46,7 @@ function fixture() {
   const website = {
     presets: {
       operation: { query: vi.fn(async () => operation) },
+      claimLoad: { mutate: vi.fn(async () => ({ claimed: true, operation })) },
       prepareCapture: {
         mutate: vi.fn(async () =>
           state.delivered
@@ -357,8 +358,11 @@ describe("preset load execution", () => {
       autofocus: "off",
     });
     expect(f.persist.mock.invocationCallOrder[0]).toBeLessThan(
-      f.control.mock.invocationCallOrder[0]!,
+      f.website.presets.claimLoad.mutate.mock.invocationCallOrder[0]!,
     );
+    expect(
+      f.website.presets.claimLoad.mutate.mock.invocationCallOrder[0],
+    ).toBeLessThan(f.control.mock.invocationCallOrder[0]!);
     expect(f.website.presets.complete.mutate).toHaveBeenCalledWith({
       id,
       status: "completed",
@@ -387,28 +391,6 @@ describe("preset load execution", () => {
     );
   });
 
-  it("records a dispatched load as unknown without the site's pre-dispatch ban check", async () => {
-    const f = fixture();
-    f.operation.action = "load";
-    f.website.presets.operation.query.mockRejectedValue(
-      TRPCClientError.from({
-        error: {
-          message: "Preset access verification is temporarily unavailable.",
-          code: -32603,
-          data: { code: "SERVICE_UNAVAILABLE", httpStatus: 503 },
-        },
-      }),
-    );
-    await runPresetJob({ ...f.job, loadDispatched: true }, f.deps);
-    expect(f.website.presets.operation.query).not.toHaveBeenCalled();
-    expect(f.control).not.toHaveBeenCalled();
-    expect(f.website.presets.complete.mutate).toHaveBeenCalledWith({
-      id,
-      status: "failed",
-      error: expect.stringContaining("unknown"),
-    });
-  });
-
   it("fails a malformed stored position without a movement or endless retries", async () => {
     const f = fixture();
     f.operation.action = "load";
@@ -433,4 +415,41 @@ describe("preset load execution", () => {
     );
     expect(f.control).not.toHaveBeenCalled();
   });
+});
+
+it("does not move if a pause cancels the load while dispatch intent is persisted", async () => {
+  const f = fixture();
+  f.operation.action = "load";
+  f.persist.mockImplementationOnce(async () => {
+    f.operation.status = "failed";
+  });
+  f.website.presets.claimLoad.mutate.mockImplementationOnce(async () => ({
+    claimed: false,
+    operation: f.operation,
+  }));
+  await runPresetJob(f.job, f.deps);
+  expect(f.website.presets.claimLoad.mutate).toHaveBeenCalledWith({ id });
+  expect(f.control).not.toHaveBeenCalled();
+  expect(f.website.presets.complete.mutate).not.toHaveBeenCalled();
+});
+
+it("does not move or reclaim after the dispatch claim response is lost", async () => {
+  const f = fixture();
+  f.operation.action = "load";
+  f.website.presets.claimLoad.mutate.mockRejectedValueOnce(
+    new Error("claim response lost"),
+  );
+  await expect(runPresetJob(f.job, f.deps)).rejects.toThrow(
+    "claim response lost",
+  );
+  expect(f.control).not.toHaveBeenCalled();
+  await runPresetJob(structuredClone(f.job), f.deps);
+  expect(f.website.presets.claimLoad.mutate).toHaveBeenCalledTimes(1);
+  expect(f.control).not.toHaveBeenCalled();
+  expect(f.website.presets.complete.mutate).toHaveBeenCalledWith(
+    expect.objectContaining({
+      status: "failed",
+      error: expect.stringContaining("unknown"),
+    }),
+  );
 });

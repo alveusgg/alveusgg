@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { type Session } from "next-auth";
 
 import { getUserSubscribedToBroadcaster } from "@/server/apis/twitch";
-import { checkPermissions, getUserTwitchAccount } from "@/server/utils/auth";
+import { getSuperUserIds, getUserTwitchAccount } from "@/server/utils/auth";
 import { ExpiredAccessTokenError } from "@/server/utils/oauth2";
 import {
   isPresetUserBanned,
@@ -36,7 +36,12 @@ const bannedMessage =
 const unavailableMessage =
   "Preset access verification is temporarily unavailable. Try again shortly.";
 export function canManagePresets(session: Session | null) {
-  return checkPermissions(permissions.managePTZControls, session?.user);
+  const user = session?.user;
+  return Boolean(
+    user &&
+    (getSuperUserIds().includes(user.id) ||
+      user.roles.includes(permissions.managePTZControls.requiredRole)),
+  );
 }
 async function banStatus(lookup: () => Promise<boolean>) {
   try {

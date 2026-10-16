@@ -6,18 +6,17 @@ import {
   isTwitchUserBanned,
 } from "@/server/utils/twitch-bans";
 
-const { db, env, lookup, redis, optionalRedis } = vi.hoisted(() => ({
+const { db, lookup, redis, optionalRedis } = vi.hoisted(() => ({
   db: {
     account: { findFirst: vi.fn() },
     twitchChannel: { findUnique: vi.fn() },
   },
-  env: { NODE_ENV: "test", DISABLE_ADMIN_AUTH: false },
   lookup: vi.fn(),
   redis: { get: vi.fn(), set: vi.fn() },
   optionalRedis: vi.fn(),
 }));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
-vi.mock("@/env", () => ({ env }));
+vi.mock("@/env", () => ({ env: {} }));
 vi.mock("@/server/apis/twitch", () => ({ getUserBanFromBroadcaster: lookup }));
 vi.mock("@/server/utils/redis", () => ({
   getRedisOptional: optionalRedis,
@@ -38,7 +37,6 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-16T10:00:00Z"));
   stored.clear();
-  Object.assign(env, { NODE_ENV: "test", DISABLE_ADMIN_AUTH: false });
   optionalRedis.mockReturnValue(redis);
   redis.get.mockImplementation(async (key: string) => stored.get(key) ?? null);
   redis.set.mockImplementation(async (key: string, value: unknown) => {
@@ -232,27 +230,6 @@ test("a stalled Redis read has a bounded fallback to Twitch", async () => {
   expect(await pending).toBe(false);
   expect(lookup).toHaveBeenCalledTimes(1);
 });
-
-test("the local DISABLE_ADMIN_AUTH session skips the ban check", async () => {
-  Object.assign(env, { NODE_ENV: "development", DISABLE_ADMIN_AUTH: true });
-  expect(await isPresetUserBanned("dev-admin")).toBe(false);
-  expect(db.account.findFirst).not.toHaveBeenCalled();
-  expect(lookup).not.toHaveBeenCalled();
-});
-
-test.each([
-  { NODE_ENV: "production", DISABLE_ADMIN_AUTH: true },
-  { NODE_ENV: "development", DISABLE_ADMIN_AUTH: false },
-])(
-  "the dev-admin bypass needs local development with auth disabled: %j",
-  async (config) => {
-    Object.assign(env, config);
-    db.account.findFirst.mockResolvedValue(null);
-    await expect(isPresetUserBanned("dev-admin")).rejects.toThrow(
-      "No Twitch identity",
-    );
-  },
-);
 
 test("chat identities from queued operations do not require a website signup", async () => {
   expect(await isPresetUserBanned("twitch:123")).toBe(false);

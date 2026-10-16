@@ -5,15 +5,11 @@ import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
-import { env } from "@/env";
-
 import { getUserBanFromBroadcaster } from "@/server/apis/twitch";
 import { getAlveusBroadcasterToken } from "@/server/db/twitch-channels";
 import { getRedis, getRedisOptional } from "@/server/utils/redis";
 
 import { channels } from "@/data/twitch";
-
-import { DEV_ADMIN_USER_ID } from "@/utils/dev-admin-session";
 
 // EventSub invalidates immediately on delivery; this bounds staleness if an
 // event is missed. Cache hits never renew the deadline, even if writes lag.
@@ -175,13 +171,6 @@ export async function isTwitchUserBanned(twitchUserId: string) {
 }
 
 export async function isPresetUserBanned(userId: string) {
-  // The local DISABLE_ADMIN_AUTH session has no Twitch identity to check.
-  if (
-    env.NODE_ENV === "development" &&
-    env.DISABLE_ADMIN_AUTH &&
-    userId === DEV_ADMIN_USER_ID
-  )
-    return false;
   const chatIdentity = /^twitch:([0-9]{1,32})$/.exec(userId);
   if (chatIdentity) return isTwitchUserBanned(chatIdentity[1]!);
   const account = await prisma.account.findFirst({

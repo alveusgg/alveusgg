@@ -27,6 +27,7 @@ import {
   type PresetCommand,
   captureMatchesOperation,
   captureSchema,
+  catalogPositionSchema,
   commandSchema,
   payloadHash,
   positionSchema,
@@ -89,7 +90,12 @@ export async function getPresetOperation(id: string) {
       code: "NOT_FOUND",
       message: "Preset operation not found",
     });
-  if (operation.status === "pending" && operation.action === "load") {
+  // A claimed load may already have moved the camera; never relabel it.
+  if (
+    operation.status === "pending" &&
+    operation.action === "load" &&
+    !operation.dispatchedAt
+  ) {
     const command = commandSchema.parse(operation.command);
     let banned: boolean | undefined;
     try {
@@ -108,7 +114,7 @@ export async function getPresetOperation(id: string) {
     }
     if (banned !== false) {
       await prisma.cameraPresetOperation.updateMany({
-        where: { id, status: "pending" },
+        where: { id, status: "pending", dispatchedAt: null },
         data: {
           status: "failed",
           error: banned
@@ -121,7 +127,11 @@ export async function getPresetOperation(id: string) {
       });
     }
   }
-  if (operation.status === "pending" && isSubscriberLoad(operation)) {
+  if (
+    operation.status === "pending" &&
+    !operation.dispatchedAt &&
+    isSubscriberLoad(operation)
+  ) {
     const camera = operation.camera;
     operation = await transaction(async (tx) => {
       await lockSubscriberPolicy(tx, camera);
@@ -130,6 +140,7 @@ export async function getPresetOperation(id: string) {
       });
       if (
         current.status === "pending" &&
+        !current.dispatchedAt &&
         isSubscriberLoad(current) &&
         (await subscriberCameraPaused(tx, camera))
       )
@@ -145,6 +156,46 @@ export async function getPresetOperation(id: string) {
     });
   }
   return operationDto(operation);
+}
+
+// Workers must claim a load after persisting their local dispatch intent and before
+// sending movement. The same policy lock orders claims against subscriber pauses.
+// A lost claim response is an unknown outcome, never permission to claim again.
+export async function claimPresetLoad(id: string) {
+  const existing = await prisma.cameraPresetOperation.findUniqueOrThrow({
+    where: { id },
+  });
+  return transaction(async (tx) => {
+    await lockSubscriberPolicy(tx, existing.camera);
+    let operation = await tx.cameraPresetOperation.findUniqueOrThrow({
+      where: { id },
+    });
+    if (
+      operation.action !== "load" ||
+      operation.status !== "pending" ||
+      operation.dispatchedAt
+    )
+      return { claimed: false, operation: operationDto(operation) };
+    const error =
+      operation.expiresAt.getTime() <= Date.now()
+        ? "Load expired before it could be dispatched."
+        : isSubscriberLoad(operation) &&
+            (await subscriberCameraPaused(tx, operation.camera))
+          ? "Subscriber camera control was paused while this load was pending."
+          : null;
+    if (error) {
+      operation = await tx.cameraPresetOperation.update({
+        where: { id },
+        data: { status: "failed", error },
+      });
+      return { claimed: false, operation: operationDto(operation) };
+    }
+    operation = await tx.cameraPresetOperation.update({
+      where: { id },
+      data: { dispatchedAt: new Date() },
+    });
+    return { claimed: true, operation: operationDto(operation) };
+  });
 }
 
 export async function findPresetOperationForUser(
@@ -655,7 +706,7 @@ export async function presetCatalog(camera?: string) {
     camera: preset.camera,
     name: preset.name,
     description: preset.description,
-    position: positionSchema.parse(preset.position),
+    position: catalogPositionSchema.parse(preset.position),
     version: preset.version,
     provenance: preset.provenance,
     imageProvenance: preset.imageProvenance,
