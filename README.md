@@ -68,7 +68,7 @@ If you aren't working on features related to Twitch authentication, you can set 
 ### Local development
 
 1. Install Node.js using a version manager like [`nvm`](https://github.com/nvm-sh/nvm) or [`fnm`](https://github.com/Schniz/fnm). Run `nvm install`/`fnm install` in the project directory to install and `nvm use`/`fnm use` to use the correct Node.js version. Alternatively see [nodejs.org](https://nodejs.org/en/download) for other options to download and install Node.js. You can see what version we need in `package.json` under `engines`.
-2. Use `corepack enable` to use pnpm as the package manager. Corepack is a tool provided with Node.js that makes it easy for you to use the specific package manager we expect.
+2. Install [pnpm](https://pnpm.io/installation) as we use this as our package manager. It will automatically respect the version defined in `package.json` under `packageManager`.
 3. Authenticate with the GitHub Package Registry: `npm login --auth-type=legacy --registry=https://npm.pkg.github.com`
    1. Use your GitHub username (lowercase) as the username when prompted
    2. Create a [GitHub personal access token (classic)](https://github.com/settings/tokens/new) with the `read:packages` scope and use it as the password when prompted
