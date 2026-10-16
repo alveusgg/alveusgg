@@ -6,7 +6,7 @@ import {
   effectiveSubscriberPolicy,
   setSubscriberPolicy,
 } from "@/server/presets/policy";
-import { getPresetOperation } from "@/server/presets/service";
+import { claimPresetLoad, getPresetOperation } from "@/server/presets/service";
 
 const { db } = vi.hoisted(() => ({
   db: {
@@ -48,12 +48,13 @@ const subscriber = {
     actor: { id: "user" },
   },
   status: "pending",
+  dispatchedAt: null,
   preset: null,
   result: null,
   error: null,
   createdAt: now,
   updatedAt: now,
-  expiresAt: new Date(now.getTime() + 15000),
+  expiresAt: new Date("2099-01-01T00:00:00Z"),
 };
 const operator = {
   ...subscriber,
@@ -142,7 +143,11 @@ test("pausing cancels only pending subscriber loads and records the server opera
   });
   expect(db.cameraPresetOperation.updateMany).toHaveBeenCalledWith(
     expect.objectContaining({
-      where: { id: { in: [subscriber.id] }, status: "pending" },
+      where: {
+        id: { in: [subscriber.id] },
+        status: "pending",
+        dispatchedAt: null,
+      },
     }),
   );
 });
@@ -160,3 +165,46 @@ test.each([
     expect(db.$transaction).not.toHaveBeenCalled();
   },
 );
+
+test("a pause before dispatch denies the claim without moving", async () => {
+  expect(await claimPresetLoad(id)).toMatchObject({
+    claimed: false,
+    operation: { status: "failed", error: expect.stringContaining("paused") },
+  });
+});
+
+test("a successful claim is durable and cannot be granted twice", async () => {
+  db.cameraPresetPolicy.findMany.mockResolvedValue([
+    { scope: "global", paused: false, resumeAt: null },
+  ]);
+  expect(await claimPresetLoad(id)).toMatchObject({
+    claimed: true,
+    operation: { status: "pending" },
+  });
+  const claimed = { ...subscriber, dispatchedAt: new Date() };
+  db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(claimed);
+  db.cameraPresetOperation.findUnique.mockResolvedValue(claimed);
+  db.cameraPresetPolicy.findMany.mockResolvedValue([
+    { scope: "global", paused: true, resumeAt: null },
+  ]);
+  db.cameraPresetOperation.update.mockClear();
+  expect(await claimPresetLoad(id)).toMatchObject({ claimed: false });
+  expect(await getPresetOperation(id)).toMatchObject({ status: "pending" });
+  expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+});
+
+test("expired loads cannot acquire a dispatch claim", async () => {
+  db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({
+    ...subscriber,
+    expiresAt: new Date(0),
+  });
+  expect(await claimPresetLoad(id)).toMatchObject({
+    claimed: false,
+    operation: { status: "failed", error: expect.stringContaining("expired") },
+  });
+});
+
+test("operators can claim while subscriber controls are paused", async () => {
+  db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(operator);
+  expect(await claimPresetLoad(operator.id)).toMatchObject({ claimed: true });
+});

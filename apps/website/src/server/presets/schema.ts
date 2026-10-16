@@ -18,6 +18,10 @@ export const positionSchema = z.object({
   autofocus: z.enum(["on", "off"]).optional(),
   autoiris: z.enum(["on", "off"]).optional(),
 });
+// Historical catalogs contain zero-zoom positions that must never be sent to a camera.
+export const catalogPositionSchema = positionSchema.extend({
+  zoom: z.number().int().min(0).max(19999),
+});
 const commandFields = {
   id: z.uuid(),
   action: z.enum(["save", "load", "rename", "remove", "clear"]),

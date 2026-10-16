@@ -1,6 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { env } from "@/env";
+
+import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import {
   authorizePresetAction,
   canManagePresets,
@@ -13,6 +16,7 @@ import {
   userCommandSchema,
 } from "@/server/presets/schema";
 import {
+  claimPresetLoad,
   commandPreset,
   commitPresetCapture,
   completePresetOperation,
@@ -26,15 +30,25 @@ import {
 
 import { resolveControlCamera } from "@/data/tech/camera-identifiers";
 
-import {
-  protectedProcedure,
-  publicProcedure,
-  router,
-  sharedKeyProcedure,
-} from "../trpc";
+import { publicProcedure, router, sharedKeyProcedure } from "../trpc";
+
+// Preset permissions always require a real login, including in local development.
+const presetSessionProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  const session =
+    env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH
+      ? await getServerAuthSession(ctx, { allowDevAdmin: false })
+      : ctx.session;
+  return next({ ctx: { ...ctx, session } });
+});
+const presetUserProcedure = presetSessionProcedure.use(({ ctx, next }) => {
+  if (!ctx.session?.user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  return next({
+    ctx: { ...ctx, session: { ...ctx.session, user: ctx.session.user } },
+  });
+});
 
 export const presetsRouter = router({
-  setSubscriberControl: protectedProcedure
+  setSubscriberControl: presetUserProcedure
     .input(
       z.strictObject({
         camera: cameraSchema.optional(),
@@ -58,8 +72,8 @@ export const presetsRouter = router({
         });
       return setSubscriberPolicy({ ...input, camera }, ctx.session.user.id);
     }),
-  access: publicProcedure.query(({ ctx }) => presetAccess(ctx.session)),
-  userCommand: protectedProcedure
+  access: presetSessionProcedure.query(({ ctx }) => presetAccess(ctx.session)),
+  userCommand: presetUserProcedure
     .input(userCommandSchema)
     .mutation(async ({ ctx, input }) => {
       const camera = resolveControlCamera(input.camera);
@@ -94,7 +108,7 @@ export const presetsRouter = router({
         throw error;
       }
     }),
-  userOperation: protectedProcedure
+  userOperation: presetUserProcedure
     .input(z.object({ id: z.uuid() }))
     .query(async ({ ctx, input }) => {
       const operation = await findPresetOperationForUser(
@@ -109,6 +123,9 @@ export const presetsRouter = router({
         });
       return operation;
     }),
+  claimLoad: sharedKeyProcedure
+    .input(z.object({ id: z.uuid() }))
+    .mutation(({ input }) => claimPresetLoad(input.id)),
   operation: sharedKeyProcedure
     .input(z.object({ id: z.uuid() }))
     .query(({ input }) => getPresetOperation(input.id)),
