@@ -1,7 +1,10 @@
 import { createHash } from "node:crypto";
 
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { createId } from "@paralleldrive/cuid2";
 import { sync as probeImage } from "probe-image-size";
+
+import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
@@ -9,7 +12,7 @@ import { getFileStorageClient } from "@/server/utils/file-storage";
 
 import { type CaptureMetadata, MAX_CAPTURE_BYTES } from "./schema";
 
-export async function verifyCaptureUpload(
+async function readVerifiedCaptureUpload(
   key: string,
   capture: CaptureMetadata,
 ) {
@@ -49,5 +52,48 @@ export async function verifyCaptureUpload(
     image.height > 16384
   )
     throw new Error("Invalid capture image");
-  return { width: image.width, height: image.height, mimeType: image.mime };
+  return {
+    bytes,
+    image: { width: image.width, height: image.height, mimeType: image.mime },
+  };
+}
+
+export async function verifyCaptureUpload(
+  key: string,
+  capture: CaptureMetadata,
+) {
+  return (await readVerifiedCaptureUpload(key, capture)).image;
+}
+
+// Client PUT URLs can remain valid after delivery. Publish only the bytes that
+// were verified, under a new key for which no upload URL is ever issued.
+export async function stageVerifiedCaptureUpload(
+  key: string,
+  capture: CaptureMetadata,
+) {
+  const { bytes, image } = await readVerifiedCaptureUpload(key, capture);
+  const name = `${capture.id}.${capture.contentType === "image/png" ? "png" : "jpg"}`;
+  const prefix = "presets/published/";
+  const fileStorageObject = await prisma.fileStorageObject.create({
+    data: {
+      name,
+      type: capture.contentType,
+      prefix,
+      key: `${prefix}${createId()}-${name}`,
+      acl: "public-read",
+      expiresAt: new Date(Date.now() + 3600_000),
+    },
+  });
+  // The expiring candidate is reclaimable if upload or publication fails.
+  await getFileStorageClient().send(
+    new PutObjectCommand({
+      Bucket: env.FILE_STORAGE_BUCKET,
+      Key: fileStorageObject.key,
+      Body: bytes,
+      ContentType: capture.contentType,
+      ACL: "public-read",
+      Metadata: { acl: "public-read" },
+    }),
+  );
+  return { fileStorageObject, image };
 }
