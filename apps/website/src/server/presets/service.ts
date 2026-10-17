@@ -10,6 +10,7 @@ import {
   getViewUrlForFileStorageObjectKey,
   renewFileStorageUpload,
 } from "@/server/utils/file-storage";
+import { isPresetUserBanned } from "@/server/utils/twitch-bans";
 
 import {
   type Transaction,
@@ -89,6 +90,43 @@ export async function getPresetOperation(id: string) {
       code: "NOT_FOUND",
       message: "Preset operation not found",
     });
+  // A claimed load may already have moved the camera; never relabel it.
+  if (
+    operation.status === "pending" &&
+    operation.action === "load" &&
+    !operation.dispatchedAt
+  ) {
+    const command = commandSchema.parse(operation.command);
+    let banned: boolean | undefined;
+    try {
+      banned = await isPresetUserBanned(command.actor.id);
+    } catch (error) {
+      console.error("Preset load ban verification failed:", error);
+      // Never hand the worker a dispatchable load while verification is
+      // unavailable. Let it retry until the load expires, then fail the load
+      // here (by the site's clock) so it stops blocking its camera's queue.
+      if (operation.expiresAt.getTime() >= Date.now())
+        throw new TRPCError({
+          code: "SERVICE_UNAVAILABLE",
+          message:
+            "Preset access verification is temporarily unavailable. Try again shortly.",
+        });
+    }
+    if (banned !== false) {
+      await prisma.cameraPresetOperation.updateMany({
+        where: { id, status: "pending", dispatchedAt: null },
+        data: {
+          status: "failed",
+          error: banned
+            ? "Preset load cancelled because the user is banned or timed out in Alveus Sanctuary chat."
+            : "Preset load expired while chat ban verification was unavailable.",
+        },
+      });
+      operation = await prisma.cameraPresetOperation.findUniqueOrThrow({
+        where: { id },
+      });
+    }
+  }
   if (
     operation.status === "pending" &&
     !operation.dispatchedAt &&

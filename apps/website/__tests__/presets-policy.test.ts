@@ -1,4 +1,4 @@
-import { beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 import type * as DatabaseModule from "@alveusgg/database";
 
@@ -8,7 +8,8 @@ import {
 } from "@/server/presets/policy";
 import { claimPresetLoad, getPresetOperation } from "@/server/presets/service";
 
-const { db } = vi.hoisted(() => ({
+const { db, banned } = vi.hoisted(() => ({
+  banned: vi.fn(),
   db: {
     $transaction: vi.fn(),
     $queryRaw: vi.fn(),
@@ -26,6 +27,7 @@ const { db } = vi.hoisted(() => ({
     },
   },
 }));
+vi.mock("@/server/utils/twitch-bans", () => ({ isPresetUserBanned: banned }));
 vi.mock("@alveusgg/database", async (original) => ({
   ...(await original<typeof DatabaseModule>()),
   prisma: db,
@@ -67,6 +69,8 @@ const operator = {
 };
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  banned.mockResolvedValue(false);
   db.$transaction.mockImplementation(async (fn) => fn(db));
   db.cameraPresetOperation.findUnique.mockResolvedValue(subscriber);
   db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(subscriber);
@@ -77,6 +81,10 @@ beforeEach(() => {
   db.cameraPresetPolicy.findMany.mockResolvedValue([
     { scope: "global", paused: true, resumeAt: null },
   ]);
+});
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 test("missing global settings fail closed while missing camera settings are unpaused", () => {
@@ -122,7 +130,74 @@ test("operator loads do not acquire subscriber policy locks or fail when control
   });
   expect(db.cameraPresetPolicy.createMany).not.toHaveBeenCalled();
   expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+  expect(banned).toHaveBeenCalledWith("operator");
 });
+
+test.each([subscriber, operator])(
+  "pending loads from banned actors are cancelled before worker dispatch: $command.authorization",
+  async (operation) => {
+    banned.mockResolvedValue(true);
+    db.cameraPresetOperation.findUnique.mockResolvedValue(operation);
+    db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({
+      ...operation,
+      status: "failed",
+      error: "User banned or timed out",
+    });
+    expect(await getPresetOperation(operation.id)).toMatchObject({
+      status: "failed",
+    });
+    expect(db.cameraPresetOperation.updateMany).toHaveBeenCalledWith({
+      where: { id: operation.id, status: "pending", dispatchedAt: null },
+      data: {
+        status: "failed",
+        error: expect.stringContaining("banned or timed out"),
+      },
+    });
+    expect(banned).toHaveBeenCalledWith(operation.command.actor.id);
+  },
+);
+
+test("a moderation outage leaves a queued load pending and never exposes dispatchable state", async () => {
+  vi.useFakeTimers({ now: subscriber.expiresAt });
+  banned.mockRejectedValue(new Error("secret upstream response"));
+  await expect(getPresetOperation(id)).rejects.toMatchObject({
+    code: "SERVICE_UNAVAILABLE",
+    message:
+      "Preset access verification is temporarily unavailable. Try again shortly.",
+  });
+  expect(db.cameraPresetOperation.updateMany).not.toHaveBeenCalled();
+  expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
+});
+
+test("a load that expires during a moderation outage is failed instead of blocking its camera", async () => {
+  vi.useFakeTimers({ now: subscriber.expiresAt.getTime() + 1 });
+  banned.mockRejectedValue(new Error("unavailable"));
+  db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({
+    ...subscriber,
+    status: "failed",
+  });
+  expect(await getPresetOperation(id)).toMatchObject({ status: "failed" });
+  expect(db.cameraPresetOperation.updateMany).toHaveBeenCalledWith({
+    where: { id, status: "pending", dispatchedAt: null },
+    data: {
+      status: "failed",
+      error: expect.stringContaining("expired while chat ban verification"),
+    },
+  });
+});
+
+test.each(["completed", "failed"])(
+  "terminal %s outcomes remain recoverable during moderation outages",
+  async (status) => {
+    db.cameraPresetOperation.findUnique.mockResolvedValue({
+      ...subscriber,
+      status,
+    });
+    banned.mockRejectedValue(new Error("unavailable"));
+    expect(await getPresetOperation(id)).toMatchObject({ status });
+    expect(banned).not.toHaveBeenCalled();
+  },
+);
 
 test("pausing cancels only pending subscriber loads and records the server operator identity", async () => {
   db.cameraPresetOperation.findMany.mockResolvedValue([subscriber, operator]);
@@ -192,6 +267,21 @@ test("a successful claim is durable and cannot be granted twice", async () => {
   expect(await getPresetOperation(id)).toMatchObject({ status: "pending" });
   expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
 });
+
+test.each([true, new Error("unavailable")])(
+  "a claimed load may already have moved, so its ban recheck is skipped: %s",
+  async (ban) => {
+    if (ban instanceof Error) banned.mockRejectedValue(ban);
+    else banned.mockResolvedValue(ban);
+    db.cameraPresetOperation.findUnique.mockResolvedValue({
+      ...subscriber,
+      dispatchedAt: new Date(),
+    });
+    expect(await getPresetOperation(id)).toMatchObject({ status: "pending" });
+    expect(banned).not.toHaveBeenCalled();
+    expect(db.cameraPresetOperation.updateMany).not.toHaveBeenCalled();
+  },
+);
 
 test("expired loads cannot acquire a dispatch claim", async () => {
   db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue({

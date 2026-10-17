@@ -11,8 +11,10 @@ export const scopeLabels = {
   "chat:edit": "Chat (Edit)",
   "chat:read": "Chat (Read)",
   // Moderator
+  "moderation:read": "Channel Moderation (Read)",
   "moderator:read:followers": "Moderator Followers (Read)",
   // Channel
+  "channel:moderate": "Channel Moderation Events",
   "channel:read:charity": "Channel Charity (Read)",
   "channel:read:subscriptions": "Channel Subscriptions (Read)",
   "channel:read:vips": "Channel VIPs (Read)",
@@ -41,6 +43,8 @@ export const scopeGroups = {
     "channel:manage:schedule",
   ],
   chat: ["user:write:chat"],
+  // Only the AlveusSanctuary broadcaster: ban lookups and ban/unban EventSub.
+  moderation: ["channel:moderate", "moderation:read"],
 } as const satisfies Record<string, Scope[]>;
 
 export type ScopeGroup = keyof typeof scopeGroups;
