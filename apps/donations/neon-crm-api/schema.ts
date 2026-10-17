@@ -158,11 +158,13 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
-const NullableYesNoBoolean = z
-  .enum(["Yes", "No"])
+// Preserve donor-name privacy for both legacy webhooks and API responses.
+// Amount-anonymous donations remain unsupported while public alerts show amounts.
+const AnonymousDonationBoolean = z
+  .enum(["Yes", "No", "DonorNameAnonymous"])
   .nullable()
   .optional()
-  .transform((val) => val === "Yes");
+  .transform((val) => val != null && val !== "No");
 
 export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
@@ -196,11 +198,7 @@ export const DonationWebhookPayload = z.object({
     fund: IdNamePairBase,
     timestamps: Timestamps,
     date: DateSchema,
-    anonymousType: z
-      .enum(["Yes", "No"])
-      .nullable()
-      .optional()
-      .transform((val) => val === "Yes"),
+    anonymousType: AnonymousDonationBoolean,
     donationCustomFields: z.array(CustomFieldData).optional(),
     donorCoveredFeeFlag: z.boolean(),
     payLater: z.boolean().optional().default(false),
@@ -242,7 +240,7 @@ export const DonationResponse = z.object({
   origin: DonationOrigin,
   timestamps: NullableTimestamps,
   date: DateSchema,
-  anonymousType: NullableYesNoBoolean,
+  anonymousType: AnonymousDonationBoolean,
   donationCustomFields: z.array(CustomFieldData).nullable().optional(),
   donorCoveredFeeFlag: z
     .boolean()
@@ -437,12 +435,15 @@ export const WebhookResponse = z.object({
   id: RecordId,
   name: RecordName,
   url: z.httpUrl(),
-  trigger: z.enum(["CREATE_DONATION"]),
+  // Listing subscriptions also returns event types used by other integrations.
+  trigger: z.string().min(1),
   contentType: z.string(),
   triggerSelfImport: z.boolean(),
-  httpBasic: z.object({
-    userName: z.string(),
-  }),
+  httpBasic: z
+    .object({
+      userName: z.string(),
+    })
+    .nullable(),
   customParameters: z.array(NameValuePair).nullable(),
 });
 
