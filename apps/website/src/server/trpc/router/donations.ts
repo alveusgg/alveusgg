@@ -24,6 +24,7 @@ import {
   getExternalPixelsByVerification,
   getMyPixels,
   getPixels,
+  removeDonations,
   renamePixel,
 } from "@/server/db/donations";
 import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
@@ -156,6 +157,53 @@ export const donationsRouter = router({
     .mutation(async ({ input }) => {
       waitUntil(sendChatMessages(input.pixels));
       await createPixels(input.pixels);
+    }),
+
+  removeDonations: sharedKeyProcedure
+    .input(
+      z.object({
+        donations: z.array(
+          z.object({
+            provider: z.string(),
+            providerUniqueId: z.string(),
+          }),
+        ),
+        reason: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { removed, orphanPixels } = await removeDonations(input.donations);
+      const messages = removed
+        .filter((donation) => donation.pixels.length)
+        .map((donation) => {
+          const identifiers = [
+            ...new Set(donation.pixels.map((pixel) => pixel.identifier)),
+          ];
+          return `${donation.providerUniqueId}: removed ${donation.pixels.length} ${pluralize("pixel", donation.pixels.length)} of ${identifiers.join(", ")}`;
+        });
+      if (orphanPixels > 0) {
+        messages.push(
+          `removed ${orphanPixels} ${pluralize("pixel", orphanPixels)} without a donation`,
+        );
+      }
+      if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL && messages.length) {
+        waitUntil(
+          triggerPlainDiscordChannelWebhook({
+            webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+            contentMessage:
+              `Removing donations (${input.reason})\n` + messages.join("\n"),
+          }),
+        );
+      }
+      return {
+        donations: removed.length,
+        pixels:
+          orphanPixels +
+          removed.reduce(
+            (total, donation) => total + donation.pixels.length,
+            0,
+          ),
+      };
     }),
 
   getMyPixels: protectedProcedure

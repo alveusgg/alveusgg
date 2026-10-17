@@ -37,6 +37,7 @@ function makeProvider(name: string) {
       async () => new Response(`${name} accepted`, { status: 201 }),
     ),
     registerWebhook: vi.fn(async () => {}),
+    removeFailedDonations: vi.fn(async () => {}),
     syncRecentDonations: vi.fn(async () => ({
       complete: true,
       found: 0,
@@ -279,11 +280,14 @@ describe("donation provider isolation", () => {
     });
     expect((await manager.request("neon", "sync")).status).toBe(200);
     expect(manager.setAlarm).toHaveBeenCalledWith(Date.now() + 60_000);
+    expect(neon.removeFailedDonations).not.toHaveBeenCalled();
 
     await manager.alarm();
     expect(neon.syncRecentDonations).toHaveBeenCalledTimes(2);
-    // The window finished, so no further alarm is scheduled.
+    // The window finished, so no further alarm is scheduled and failed
+    // payments are swept.
     expect(manager.setAlarm).toHaveBeenCalledOnce();
+    expect(neon.removeFailedDonations).toHaveBeenCalledOnce();
   });
 
   it("does not schedule an alarm once the Neon sync is complete", async () => {
