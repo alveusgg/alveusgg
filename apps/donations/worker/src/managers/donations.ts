@@ -142,6 +142,8 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     const result = await provider.syncRecentDonations();
     if (!result.complete) {
       await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
+    } else {
+      await provider.removeFailedDonations();
     }
     return result;
   }
@@ -158,10 +160,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     await createIfNotExistsDonationsTable(this.ctx.storage.sql);
     await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
 
-    const storage = new DurableObjectDonationStorage(
-      this.ctx,
-      this.env.DONATION_QUEUE,
-    );
+    const storage = new DurableObjectDonationStorage(this.ctx, this.env);
 
     this.providers = {
       twitch: createRetryingInitializer(

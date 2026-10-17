@@ -35,7 +35,11 @@ const add = vi.fn<DonationStorage["add"]>(async () => 1);
 
 async function makeProvider() {
   return PaypalDonationProvider.init(
-    { add, config: { get: vi.fn(), set: vi.fn() } },
+    {
+      add,
+      remove: vi.fn(async () => {}),
+      config: { get: vi.fn(), set: vi.fn() },
+    },
     { SANDBOX: "false", PAYPAL_BUSINESS_EMAIL: business } as Env,
   );
 }
