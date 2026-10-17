@@ -145,6 +145,45 @@ describe("removing donations", () => {
     expect(resync).toHaveBeenCalledTimes(2);
   });
 
+  it("keeps a newer pending resync when an older retry overlaps a removal", async () => {
+    const { resync, storage } = setup();
+    // Leave a resync pending from an earlier failure.
+    removeDonations.mockResolvedValueOnce({ donations: 1, pixels: 1 });
+    resync.mockResolvedValueOnce(new Response(null, { status: 503 }));
+    await expect(
+      storage.remove("neon", "example-1", "payment failed"),
+    ).rejects.toThrow();
+
+    const pending: ((response: Response) => void)[] = [];
+    resync.mockImplementation(
+      () => new Promise<Response>((done) => pending.push(done)),
+    );
+    // The hourly retry starts...
+    const retry = storage.resyncPixelsIfPending();
+    await vi.advanceTimersByTimeAsync(0);
+    // ...and a newer removal deletes more pixels meanwhile.
+    removeDonations.mockResolvedValueOnce({ donations: 1, pixels: 2 });
+    const removal = storage.remove("neon", "example-2", "payment failed");
+    const removalSettled = removal.catch((error: unknown) => error);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Settle whichever resyncs are in flight: the older one succeeds, the
+    // newer one fails. Run until both callers have finished.
+    for (let step = 0; step < 4; step++) {
+      const next = pending.shift();
+      next?.(new Response(null, { status: step === 0 ? 200 : 500 }));
+      await vi.advanceTimersByTimeAsync(0);
+    }
+    await retry;
+    expect(await removalSettled).toBeInstanceOf(Error);
+
+    // The newer resync is still pending and retried.
+    resync.mockResolvedValue(new Response(null, { status: 200 }));
+    const before = resync.mock.calls.length;
+    await storage.resyncPixelsIfPending();
+    expect(resync.mock.calls.length).toBe(before + 1);
+  });
+
   it("retries a pending mural resync on its own", async () => {
     removeDonations.mockResolvedValue({ donations: 1, pixels: 1 });
     const { resync, storage } = setup();
