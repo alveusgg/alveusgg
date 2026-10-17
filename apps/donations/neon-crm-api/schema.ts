@@ -230,7 +230,17 @@ export type DonationEventWebhookPayload = z.output<
 export const DonationEventWebhookPayload = z.object({
   ...webhookPayloadBase,
   eventTrigger: z.string(),
-  data: z.looseObject({ id: RecordId }),
+  data: z.union([
+    z.looseObject({ id: RecordId }),
+    // Deletions only carry `{ donation: { donationId, deletedDateTime } }`.
+    z
+      .looseObject({
+        donation: z.looseObject({
+          donationId: z.union([z.number(), z.string()]),
+        }),
+      })
+      .transform(({ donation }) => ({ id: String(donation.donationId) })),
+  ]),
 });
 
 export const DonationWebhookTrigger = z.enum([

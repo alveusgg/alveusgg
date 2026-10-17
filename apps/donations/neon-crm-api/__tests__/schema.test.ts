@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   CreateWebhookInputBody,
+  DonationEventWebhookPayload,
   DonationResponse,
   DonationWebhookPayload,
   WebhookResponse,
@@ -180,6 +181,49 @@ describe("webhook subscriptions", () => {
     expect(
       CreateWebhookInputBody.safeParse({ ...input, trigger: "FUTURE_EVENT" })
         .success,
+    ).toBe(false);
+  });
+});
+
+describe("donation event webhooks", () => {
+  const base = {
+    eventTimestamp: "2026-10-17T15:50:00Z",
+    organizationId: "example",
+    customParameters: { uuid: "UPDATE_DONATION:https://example.com" },
+  };
+
+  it("reads the donation ID from update events", () => {
+    expect(
+      DonationEventWebhookPayload.parse({
+        ...base,
+        eventTrigger: "updateDonation",
+        data: { id: "47321", amount: 2 },
+      }).data.id,
+    ).toBe("47321");
+  });
+
+  it("reads the donation ID from delete events", () => {
+    expect(
+      DonationEventWebhookPayload.parse({
+        ...base,
+        eventTrigger: "deleteDonation",
+        data: {
+          donation: {
+            donationId: 47322,
+            deletedDateTime: "2026-10-17T10:50:00Z",
+          },
+        },
+      }).data.id,
+    ).toBe("47322");
+  });
+
+  it("rejects events without a donation ID", () => {
+    expect(
+      DonationEventWebhookPayload.safeParse({
+        ...base,
+        eventTrigger: "updateDonation",
+        data: {},
+      }).success,
     ).toBe(false);
   });
 });
