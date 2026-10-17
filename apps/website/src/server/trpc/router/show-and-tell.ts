@@ -118,7 +118,8 @@ export const showAndTellRouter = router({
   createFileUpload: publicProcedure
     .input(
       z.object({
-        fileName: z.string(),
+        // Becomes part of the storage key, which S3 limits to 1024 bytes
+        fileName: z.string().max(255),
         fileType: z.literal(imageMimeTypes),
       }),
     )
