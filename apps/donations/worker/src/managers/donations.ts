@@ -41,6 +41,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private providers?: DonationProviders;
   private ready?: Promise<void>;
+  private reconcileTwitchSubscriptions?: () => Promise<true | undefined>;
   private registerNeonWebhook?: () => Promise<true | undefined>;
 
   constructor(ctx: DurableObjectState, env: Env) {
@@ -63,6 +64,9 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         // Healthy providers are cached and never wait for these background tasks.
         for (const initialize of Object.values(this.providers ?? {})) {
           this.ctx.waitUntil(initialize());
+        }
+        if (this.reconcileTwitchSubscriptions) {
+          this.ctx.waitUntil(this.reconcileTwitchSubscriptions());
         }
         if (this.registerNeonWebhook) {
           this.ctx.waitUntil(this.registerNeonWebhook());
@@ -136,7 +140,22 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
     this.providers = {
       twitch: createRetryingInitializer(
-        () => TwitchDonationProvider.init(storage, this.env),
+        async () => {
+          const provider = await TwitchDonationProvider.init(storage, this.env);
+          this.reconcileTwitchSubscriptions = createRetryingInitializer(
+            async () => {
+              await provider.registerWebhook(this.env);
+              return true as const;
+            },
+            reportInitializationError("twitch", "webhook-reconciliation"),
+            60_000,
+            5 * 60_000,
+          );
+          // Never hold callback verification or delivery open during setup.
+          // The hourly sync also triggers this check if Twitch goes silent.
+          this.ctx.waitUntil(this.reconcileTwitchSubscriptions());
+          return provider;
+        },
         reportInitializationError("twitch", "provider-initialization"),
       ),
       paypal: createRetryingInitializer(

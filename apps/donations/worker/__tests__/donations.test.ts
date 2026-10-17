@@ -78,6 +78,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.spyOn(console, "error").mockImplementation(() => {});
   neon.registerWebhook.mockReset().mockResolvedValue(undefined);
+  twitch.registerWebhook.mockReset().mockResolvedValue(undefined);
   // Fake providers stand in for each external integration's initialization.
   vi.mocked(NeonDonationProvider.init)
     .mockReset()
@@ -190,6 +191,76 @@ describe("donation provider isolation", () => {
 
     expect((await manager.request("neon")).status).toBe(201);
     expect((await manager.request("paypal")).status).toBe(201);
+  });
+
+  it("periodically rechecks Twitch even after successful setup and coalesces concurrent checks", async () => {
+    const manager = makeManager();
+    expect((await manager.request("twitch")).status).toBe(201);
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(60_000);
+    await manager.request("paypal");
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(4 * 60_000);
+    await Promise.all([
+      manager.request("neon", "sync"),
+      manager.request("paypal"),
+      manager.request("twitch"),
+    ]);
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(2);
+    expect(TwitchDonationProvider.init).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps callbacks available while Twitch reconciliation stalls", async () => {
+    twitch.registerWebhook.mockReturnValue(new Promise(() => {}));
+    const manager = makeManager();
+
+    expect((await manager.request("twitch")).status).toBe(201);
+    expect((await manager.request("paypal")).status).toBe(201);
+    expect((await manager.request("neon", "sync")).status).toBe(200);
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports and retries failed Twitch checks on other providers' traffic", async () => {
+    const error = new Error("Twitch channel must reauthorize");
+    twitch.registerWebhook
+      .mockRejectedValueOnce(error)
+      .mockResolvedValue(undefined);
+    const manager = makeManager();
+
+    expect((await manager.request("twitch")).status).toBe(201);
+    await manager.drain();
+    expect(Sentry.captureException).toHaveBeenCalledWith(error);
+    expect(setScopeTag).toHaveBeenCalledWith("integration", "twitch");
+    expect(setScopeTag).toHaveBeenCalledWith(
+      "error.kind",
+      "webhook-reconciliation",
+    );
+    await manager.request("paypal");
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(60_000);
+    expect((await manager.request("neon", "sync")).status).toBe(200);
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(2);
+
+    // A failure after an earlier success must also observe the retry cooldown.
+    vi.advanceTimersByTime(5 * 60_000);
+    twitch.registerWebhook.mockRejectedValueOnce(error);
+    await manager.request("paypal");
+    await manager.drain();
+    await manager.request("twitch");
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(3);
+    vi.advanceTimersByTime(60_000);
+    await manager.request("paypal");
+    await manager.drain();
+    expect(twitch.registerWebhook).toHaveBeenCalledTimes(4);
   });
 
   it("does not acknowledge a failed donation delivery as successful", async () => {
