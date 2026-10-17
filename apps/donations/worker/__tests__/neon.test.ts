@@ -51,6 +51,7 @@ const env = {
 } as Env;
 const service = {
   add: vi.fn(async () => 1),
+  remove: vi.fn(async () => {}),
   config: { get: vi.fn(), set: vi.fn() },
 } satisfies DonationStorage;
 
@@ -579,5 +580,194 @@ describe("bounded Neon catch-up", () => {
     await expect(second).resolves.toEqual(await first);
     expect(service.config.set).toHaveBeenCalledOnce();
     expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+});
+
+describe("removing failed payments", () => {
+  function configStore(initial: Record<string, unknown> = {}) {
+    const state: Record<string, unknown> = structuredClone(initial);
+    service.config.get.mockImplementation((key: string) =>
+      structuredClone(state[key]),
+    );
+    service.config.set.mockImplementation((key: string, value: unknown) => {
+      state[key] = structuredClone(value);
+    });
+    return state;
+  }
+  function search(ids: string[], totalPages = 1) {
+    return {
+      ok: true as const,
+      data: {
+        pagination: {
+          currentPage: 0,
+          pageSize: 200,
+          totalPages,
+          totalResults: ids.length,
+        },
+        searchResults: ids.map((id) => ({ "Donation ID": id })),
+      },
+    };
+  }
+  function failedSearch(byStatus: Record<string, string[][]>) {
+    vi.mocked(searchDonations).mockImplementation(async (_options, query) => {
+      const pages = byStatus[String(query.searchFields[0]?.value)] ?? [[]];
+      const page = query.pagination?.currentPage ?? 0;
+      return search(pages[page] ?? [], pages.length);
+    });
+  }
+
+  it("removes failed, canceled and refunded donations from every page in one call", async () => {
+    configStore();
+    failedSearch({ Failed: [["7"], ["8"]], Refunded: [["9"]] });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(searchDonations).toHaveBeenCalledTimes(4);
+    expect(vi.mocked(searchDonations).mock.calls[0]?.[1].searchFields).toEqual([
+      { field: "Donation Status", operator: "EQUAL", value: "Failed" },
+      {
+        field: "Donation Created Date",
+        operator: "GREATER_AND_EQUAL",
+        value: "2025-12-02",
+      },
+    ]);
+    expect(service.remove).toHaveBeenCalledOnce();
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      ["example-7", "example-8", "example-9"],
+      "payment failed, canceled or refunded",
+    );
+  });
+
+  it("still cleans up when nothing failed", async () => {
+    configStore();
+    failedSearch({});
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      [],
+      "payment failed, canceled or refunded",
+    );
+  });
+
+  it("imports a donation that left the failed set because it was paid", async () => {
+    const state = configStore({ "neon-failed-payments": ["7", "8"] });
+    failedSearch({ Failed: [["7"]] });
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id: "8",
+        anonymousType: "No",
+        origin: { originCategory: "Donation Form" },
+      }),
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(getDonation).toHaveBeenCalledOnce();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-8" }),
+    );
+    expect(state["neon-failed-payments"]).toEqual(["7"]);
+  });
+
+  it.each([
+    { status: "Pending", date: "2026-01-01", kept: true },
+    { status: "Deferred", date: "2026-01-01", kept: true },
+    { status: "Pending", date: "2025-11-01", kept: false },
+    { status: "Failed", date: "2025-11-01", kept: false },
+  ])(
+    "keeps checking an unsettled payment within the window: %j",
+    async ({ status, date, kept }) => {
+      const state = configStore({ "neon-failed-payments": ["8"] });
+      failedSearch({});
+      vi.mocked(getDonation).mockResolvedValue({
+        ok: true,
+        data: DonationResponse.parse({
+          ...rawDonation,
+          id: "8",
+          anonymousType: "No",
+          status,
+          date,
+        }),
+      });
+      const provider = await NeonDonationProvider.init(service, env);
+      await provider.removeFailedDonations();
+
+      expect(service.add).not.toHaveBeenCalled();
+      expect(state["neon-failed-payments"]).toEqual(kept ? ["8"] : undefined);
+    },
+  );
+
+  it("stops checking a deleted donation", async () => {
+    const state = configStore({ "neon-failed-payments": ["8"] });
+    failedSearch({});
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "request",
+      error: "Request failed with status 404",
+      status: 404,
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(state["neon-failed-payments"]).toBeUndefined();
+  });
+
+  it("retries a failed import on the next sweep", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const state = configStore({ "neon-failed-payments": ["8"] });
+    failedSearch({});
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "network",
+      error: "offline",
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(service.add).not.toHaveBeenCalled();
+    expect(state["neon-failed-payments"]).toEqual(["8"]);
+  });
+
+  it("removes what it found but keeps the failed set when a search fails", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const state = configStore({ "neon-failed-payments": ["5"] });
+    vi.mocked(searchDonations)
+      .mockResolvedValueOnce({
+        ok: false,
+        errorType: "request",
+        error: "Request failed with status 429",
+        status: 429,
+      })
+      .mockResolvedValue(search(["9"]));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.removeFailedDonations()).resolves.toBeUndefined();
+
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      ["example-9", "example-9"],
+      "payment failed, canceled or refunded",
+    );
+    expect(Sentry.captureException).toHaveBeenCalledOnce();
+    // Without a complete picture, nothing is treated as paid, but the newly
+    // found failure is remembered.
+    expect(getDonation).not.toHaveBeenCalled();
+    expect(state["neon-failed-payments"]).toEqual(["5", "9"]);
+  });
+
+  it("runs one sweep at a time", async () => {
+    configStore();
+    failedSearch({});
+    const provider = await NeonDonationProvider.init(service, env);
+    await Promise.all([
+      provider.removeFailedDonations(),
+      provider.removeFailedDonations(),
+    ]);
+    expect(searchDonations).toHaveBeenCalledTimes(3);
+    expect(service.remove).toHaveBeenCalledOnce();
   });
 });
