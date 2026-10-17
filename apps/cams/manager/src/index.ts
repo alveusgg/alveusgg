@@ -11,7 +11,7 @@ const app = new Hono<{ Bindings: Env }>()
   .all("/direct/*", requireRole("ptzControl"), (c) => {
     const controller = exports.CamControllerDurableObject.getByName("default");
     const request = forwardWithoutRoutePrefix(c);
-    return controller.dangerouslyForwardFetch(request);
+    return controller.fetch(request);
   });
 
 export default app satisfies ExportedHandler<Env>;
