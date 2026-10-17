@@ -15,6 +15,7 @@
   "scripts": {
     "generate": "openapi-ts && prettier --write src/generated",
     "types": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
     "test": "vitest"
   },
   "exports": {
@@ -23,8 +24,15 @@
     "./zod": "./src/generated/zod.gen.ts"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@hey-api/openapi-ts": "^0.99.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.13.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3"
   },
   "dependencies": {
