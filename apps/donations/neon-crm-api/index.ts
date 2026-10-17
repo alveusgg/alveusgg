@@ -1,9 +1,11 @@
 import {
+  type AccountDonation,
   type CreateWebhookInput,
   type DonationResponse as Donation,
   type DonationSearchResponse as DonationSearch,
   type RecordId,
   type UpdateCustomFieldInput,
+  AccountDonationsResponse,
   AccountResponse,
   CreateWebhookResponse,
   CustomFieldResponse,
@@ -19,6 +21,8 @@ export { formatDateInTimezone } from "./utils";
 
 export type { Donation, DonationSearch };
 export {
+  type AccountDonation,
+  AccountDonationsResponse,
   type RecordId,
   AccountResponse,
   CreateWebhookResponse,
@@ -76,6 +80,95 @@ export const getAccount = async (options: Options, id: RecordId) => {
   }
   return account;
 };
+
+export const getAccountDonations = async (
+  options: Options,
+  id: RecordId,
+  { maxPages = Number.POSITIVE_INFINITY }: { maxPages?: number } = {},
+) => {
+  const donations: AccountDonation[] = [];
+  let totalPages = 1;
+
+  for (let page = 0; page < totalPages; page += 1) {
+    if (page >= maxPages) {
+      return {
+        ok: false,
+        errorType: "request",
+        error: `Account ${id} has at least ${totalPages} donation pages; maxPages=${maxPages}`,
+      } as const;
+    }
+
+    if (options.debug) {
+      console.info(`[neon-api] account ${id} donations page ${page} begin`);
+    }
+
+    const response = await fetchAccountDonationsPage(options, id, page);
+
+    if (!response.ok) {
+      if (options.debug) {
+        console.info(
+          `[neon-api] account ${id} donations page ${page} failed`,
+          response,
+        );
+      }
+      return response;
+    }
+
+    for (const donation of response.data.donations) {
+      donation.timestamps = fixTimestampsTimezone(
+        donation.timestamps,
+        options.localTimezone,
+      );
+    }
+
+    donations.push(...response.data.donations);
+    totalPages = response.data.pagination.totalPages;
+
+    if (options.debug) {
+      console.info(
+        `[neon-api] account ${id} donations page ${page} parsed ${response.data.donations.length}; totalPages=${totalPages}`,
+      );
+    }
+  }
+
+  if (options.debug) {
+    console.info(
+      `[neon-api] account ${id} donations complete: ${donations.length}`,
+    );
+  }
+
+  return { ok: true, data: donations } as const;
+};
+
+async function fetchAccountDonationsPage(
+  options: Options,
+  id: RecordId,
+  page: number,
+) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const response = await fetchWithSchema(
+      options,
+      `${url`accounts/${id}/donations`}?currentPage=${page}`,
+      AccountDonationsResponse,
+    );
+
+    if (
+      response.ok ||
+      response.errorType !== "request" ||
+      !response.error.includes("429")
+    ) {
+      return response;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1_000 * (attempt + 1)));
+  }
+
+  return fetchWithSchema(
+    options,
+    `${url`accounts/${id}/donations`}?currentPage=${page}`,
+    AccountDonationsResponse,
+  );
+}
 
 export const getDonation = async (options: Options, id: RecordId) => {
   const donation = await fetchWithSchema(

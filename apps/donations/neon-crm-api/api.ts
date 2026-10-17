@@ -5,6 +5,8 @@ export type Options = Pick<
   AllOptions,
   "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
 > & {
+  debug?: boolean;
+  fetchTimeoutMs?: number;
   onParseError?: SchemaParseErrorReporter;
 };
 
@@ -43,7 +45,7 @@ export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
     "",
   );
 
-const fetch = (
+const fetch = async (
   options: Options,
   path: string,
   method: ApiMethod = "GET",
@@ -52,6 +54,10 @@ const fetch = (
   const request: RequestInit & { headers: Record<string, string> } = {
     method,
     headers: apiHeaders(options),
+    signal:
+      options.fetchTimeoutMs === undefined
+        ? undefined
+        : AbortSignal.timeout(options.fetchTimeoutMs),
   };
 
   if (body) {
@@ -59,7 +65,22 @@ const fetch = (
     request.body = JSON.stringify(body);
   }
 
-  return global.fetch(options.baseUrl + path, request);
+  if (options.debug) {
+    console.info(`[neon-api] ${method} ${path} start`);
+  }
+
+  const start = performance.now();
+  const response = await global.fetch(options.baseUrl + path, request);
+
+  if (options.debug) {
+    console.info(
+      `[neon-api] ${method} ${path} -> ${response.status} in ${Math.round(
+        performance.now() - start,
+      )}ms`,
+    );
+  }
+
+  return response;
 };
 
 export const fetchOk = async (

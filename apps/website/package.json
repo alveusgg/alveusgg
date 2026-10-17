@@ -33,12 +33,20 @@
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "murals:import-neon-donations": "tsx --env-file=.env ./scripts/import-neon-donations.ts",
+    "murals:import-paypal-donations": "tsx --env-file=.env ./scripts/import-paypal-donations.ts",
+    "murals:import-thegivingblock-donations": "tsx --env-file=.env ./scripts/import-thegivingblock-donations.ts",
+    "murals:import-twitch-charity-donations": "tsx --env-file=.env ./scripts/import-twitch-charity-donations.ts",
+    "murals:fill-pixels": "tsx --env-file=.env ./scripts/fill-pixels.ts",
+    "murals:reconcile-donations": "tsx --env-file=.env ./scripts/reconcile-donations.ts",
+    "murals:export-twitch-charity-donations": "tsx ./scripts/export-twitch-charity-donations.ts"
   },
   "dependencies": {
     "@alveusgg/data": "0.79.1",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@alveusgg/neon-crm-api": "workspace:*",
     "@auth/prisma-adapter": "^2.11.3",
     "@aws-sdk/client-s3": "^3.1147.0",
     "@aws-sdk/s3-request-presigner": "^3.1147.0",
