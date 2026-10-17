@@ -1,0 +1,22 @@
+{
+  "name": "@alveusgg/cams-manager",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types && tsc",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@alveusgg/cams-control-client": "workspace:*",
+    "hono": "^4.13.8",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.151.0"
+  }
+}
