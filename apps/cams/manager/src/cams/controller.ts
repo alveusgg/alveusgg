@@ -1,5 +1,8 @@
 import { DurableObject, env } from "cloudflare:workers";
 
+// A single instance (`getByName("default")`) that only forwards requests for
+// now: it doesn't queue camera commands or store anything yet. Live camera
+// state will live here.
 export class CamControllerDurableObject extends DurableObject {
   constructor(state: DurableObjectState, env: Env) {
     super(state, env);
