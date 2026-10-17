@@ -46,6 +46,9 @@ export class UpstashRedisCache implements RedisCache {
     this.client = new UpstashRedis({
       token: env.UPSTASH_REDIS_REST_TOKEN!,
       url: env.UPSTASH_REDIS_REST_URL!,
+      // Values are JSON-encoded here, so decode them once in parseRedisJson.
+      // Upstash would otherwise decode a stored string before we parse it again.
+      automaticDeserialization: false,
     });
   }
 

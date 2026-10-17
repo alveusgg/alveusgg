@@ -7,8 +7,8 @@ import type * as PresetServiceModule from "@/server/presets/service";
 import { type Context } from "@/server/trpc/context";
 import { presetsRouter } from "@/server/trpc/router/presets";
 
-const { db, broadcasterSubscription, execute, configuration } = vi.hoisted(
-  () => ({
+const { db, broadcasterSubscription, execute, configuration, banned } =
+  vi.hoisted(() => ({
     db: {
       account: { findUnique: vi.fn() },
       twitchChannel: { findUnique: vi.fn() },
@@ -16,6 +16,7 @@ const { db, broadcasterSubscription, execute, configuration } = vi.hoisted(
       cameraPresetPolicy: { findMany: vi.fn() },
     },
     broadcasterSubscription: vi.fn(),
+    banned: vi.fn(),
     execute: vi.fn(),
     configuration: {
       NODE_ENV: "development",
@@ -24,8 +25,11 @@ const { db, broadcasterSubscription, execute, configuration } = vi.hoisted(
       CHATBOT_PRESETS_SHARED_KEY: "dedicated-chat-preset-test-key-0123456789",
       TRPC_API_SHARED_KEY: ["worker-test-key"],
     },
-  }),
-);
+  }));
+vi.mock("@/server/utils/twitch-bans", () => ({
+  isTwitchUserBanned: banned,
+  isPresetUserBanned: banned,
+}));
 vi.mock("@alveusgg/database", () => ({ prisma: db }));
 vi.mock("@/env", () => ({ env: configuration }));
 vi.mock("@/server/apis/twitch", () => ({
@@ -87,6 +91,8 @@ function stored(actorId: string) {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  banned.mockResolvedValue(false);
   configuration.CHATBOT_PRESETS_SHARED_KEY =
     "dedicated-chat-preset-test-key-0123456789";
   db.account.findUnique.mockResolvedValue(null);
@@ -96,6 +102,7 @@ beforeEach(() => {
   ]);
   db.twitchChannel.findUnique.mockResolvedValue({
     broadcasterAccount: {
+      provider: "twitch",
       providerAccountId: "636587384",
       access_token: "private-broadcaster-test-token",
       scope: "channel:read:subscriptions",
@@ -397,3 +404,53 @@ describe("chat UUID recovery and operation ownership", () => {
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });
+
+test.each([
+  null,
+  account("operator", ["ptzControl"]),
+  account("site-superuser"),
+])(
+  "chat bans override subscriber and operator permissions: %j",
+  async (siteAccount) => {
+    db.account.findUnique.mockResolvedValue(siteAccount);
+    banned.mockResolvedValue(true);
+    await expect(caller().api.chatCommand(request)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      message: expect.stringContaining("banned or timed out"),
+    });
+    expect(banned).toHaveBeenCalledWith("123456");
+    expect(execute).not.toHaveBeenCalled();
+  },
+);
+
+test("chat commands fail closed when moderation verification is unavailable", async () => {
+  banned.mockRejectedValue(new Error("private upstream detail"));
+  await expect(caller().api.chatCommand(request)).rejects.toMatchObject({
+    code: "SERVICE_UNAVAILABLE",
+    message:
+      "Preset access verification is temporarily unavailable. Try again shortly.",
+  });
+  expect(execute).not.toHaveBeenCalled();
+  expect(console.error).toHaveBeenCalledWith(
+    "Chat preset ban verification failed:",
+    expect.any(Error),
+  );
+});
+
+test.each([
+  ["a non-operator's management command", "save", true],
+  ["a non-subscriber's load", "load", false],
+] as const)(
+  "%s is rejected without a ban lookup, even while verification is down",
+  async (_, action, subscribed) => {
+    broadcasterSubscription.mockResolvedValue(subscribed);
+    banned.mockRejectedValue(new Error("unavailable"));
+    await expect(
+      caller().api.chatCommand({
+        ...request,
+        command: { ...request.command, action },
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(banned).not.toHaveBeenCalled();
+  },
+);
