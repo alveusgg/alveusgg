@@ -63,6 +63,28 @@ describe("donation anonymity", () => {
   );
 });
 
+describe("donation webhook metadata", () => {
+  it.each([null, undefined])(
+    "accepts campaign and fund being %s",
+    (campaignAndFund) => {
+      const webhook = DonationWebhookPayload.parse({
+        eventTrigger: "createDonation",
+        eventTimestamp: "2026-01-01T12:00:00Z",
+        organizationId: "example",
+        data: {
+          ...donation,
+          campaign: campaignAndFund,
+          fund: campaignAndFund,
+          donorCoveredFeeFlag: false,
+        },
+      });
+
+      expect(webhook.data.campaign).toBe(campaignAndFund);
+      expect(webhook.data.fund).toBe(campaignAndFund);
+    },
+  );
+});
+
 describe("webhook subscriptions", () => {
   it("accepts mixed event triggers and subscriptions without basic auth", () => {
     const subscriptions = [
