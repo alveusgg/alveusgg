@@ -14,8 +14,10 @@ import leftrampb from "@/assets/presets/serval/leftrampb.png";
 import leftwide from "@/assets/presets/serval/leftwide.png";
 import log from "@/assets/presets/serval/log.png";
 import middleplatform from "@/assets/presets/serval/middleplatform.png";
+import middleplatformbz from "@/assets/presets/serval/middleplatformbz.png";
 import middleplatformt from "@/assets/presets/serval/middleplatformt.png";
 import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
+import middleplatformtlz from "@/assets/presets/serval/middleplatformtlz.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
@@ -26,6 +28,7 @@ import sand from "@/assets/presets/serval/sand.png";
 import tub from "@/assets/presets/serval/tub.png";
 import tubb from "@/assets/presets/serval/tubb.png";
 import tubr from "@/assets/presets/serval/tubr.png";
+import tubt from "@/assets/presets/serval/tubt.png";
 import waterl from "@/assets/presets/serval/waterl.png";
 import waterr from "@/assets/presets/serval/waterr.png";
 import wide from "@/assets/presets/serval/wide.png";
@@ -78,8 +81,8 @@ const servalPresets: Record<string, Preset> = {
   insidecrate: {
     description: "insidecrate",
     image: insidecrate,
-    position: { pan: -63.96, tilt: -57.51, zoom: 3174 },
-    // modified: 2026-05-12T19:48:50.588Z
+    position: { pan: -64.19, tilt: -56.42, zoom: 2457 },
+    // modified: 2026-08-19T13:37:50.294Z
   },
   left: {
     description: "left",
@@ -129,6 +132,12 @@ const servalPresets: Record<string, Preset> = {
     position: { pan: -100.79, tilt: -24.79, zoom: 395 },
     // modified: 2026-04-02T12:37:39.728Z
   },
+  middleplatformbz: {
+    description: "middleplatformbz",
+    image: middleplatformbz,
+    position: { pan: -88.78, tilt: -9.19, zoom: 2408 },
+    // modified: 2026-06-27T14:06:53.059Z
+  },
   middleplatformt: {
     description: "middleplatformt",
     image: middleplatformt,
@@ -140,6 +149,12 @@ const servalPresets: Record<string, Preset> = {
     image: middleplatformtl,
     position: { pan: -103.13, tilt: -7.61, zoom: 395 },
     // modified: 2026-04-08T14:51:46.501Z
+  },
+  middleplatformtlz: {
+    description: "middleplatformtlz",
+    image: middleplatformtlz,
+    position: { pan: -97.42, tilt: -8.96, zoom: 3032 },
+    // modified: 2026-08-10T21:27:54.916Z
   },
   middleplatformtr: {
     description: "middleplatformtr",
@@ -200,6 +215,12 @@ const servalPresets: Record<string, Preset> = {
     image: tubr,
     position: { pan: -125.35, tilt: -48.7, zoom: 583 },
     // modified: 2026-05-19T15:42:52.503Z
+  },
+  tubt: {
+    description: "tubt",
+    image: tubt,
+    position: { pan: -144.86, tilt: -37.51, zoom: 1819 },
+    // modified: 2026-07-06T13:42:29.958Z
   },
   waterl: {
     description: "waterl",

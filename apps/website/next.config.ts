@@ -198,6 +198,16 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/contact",
+      destination: "/contact-us",
+      permanent: true,
+    },
+    {
+      source: "/grants",
+      destination: "/donate/grants",
+      permanent: true,
+    },
+    {
       source: "/annual-reports/:path*",
       destination: "/about/annual-reports/:path*",
       permanent: true,
@@ -343,6 +353,21 @@ const config: NextConfig = {
       destination: "/help/report-neglect-surrender",
       permanent: false,
     },
+    {
+      source: "/trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/donor-trees",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
+    {
+      source: "/leafers",
+      destination: "/about/events/donor-trees",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
@@ -382,6 +407,11 @@ const config: NextConfig = {
     {
       source: "/plushy",
       destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/census/:path*",
+      destination: "https://census.alveussanctuary.org/:path*",
       permanent: true,
     },
     {
@@ -594,9 +624,9 @@ const config: NextConfig = {
       type: "asset/source",
     });
 
-    // Load PDF files as URLs
+    // Load PDF + audio files as URLs
     config.module.rules.push({
-      test: /\.pdf$/,
+      test: /\.(pdf|mp3)$/,
       type: "asset/resource",
     });
 

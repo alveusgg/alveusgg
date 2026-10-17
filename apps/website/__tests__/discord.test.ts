@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
+import { escapeLinksForDiscord } from "@/utils/discord";
 
 test("wrapping fully qualified urls", async () => {
   const example = "https://google.com";

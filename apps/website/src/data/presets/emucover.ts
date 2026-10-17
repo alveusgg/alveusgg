@@ -9,7 +9,6 @@ import home from "@/assets/presets/emucover/home.png";
 import left from "@/assets/presets/emucover/left.png";
 import leftcorner from "@/assets/presets/emucover/leftcorner.png";
 import leftgrove from "@/assets/presets/emucover/leftgrove.png";
-import marmbubble from "@/assets/presets/emucover/marmbubble.png";
 import marmgate from "@/assets/presets/emucover/marmgate.png";
 import mudpit from "@/assets/presets/emucover/mudpit.png";
 import right from "@/assets/presets/emucover/right.png";
@@ -86,12 +85,6 @@ const emucoverPresets: Record<string, Preset> = {
     image: leftgrove,
     position: { pan: -55.44, tilt: -2.43, zoom: 172 },
     // modified: 2026-06-01T23:09:34.970Z
-  },
-  marmbubble: {
-    description: "marmbubble",
-    image: marmbubble,
-    position: { pan: -84.46, tilt: 0, zoom: 5413 },
-    // modified: 2026-06-01T22:59:30.824Z
   },
   marmgate: {
     description: "marmgate",

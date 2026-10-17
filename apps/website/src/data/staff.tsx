@@ -9,9 +9,10 @@ import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import chandlerImage from "@/assets/people/chandler.jpg";
+import chrisFunImage from "@/assets/people/chris-fun.jpg";
+import chrisImage from "@/assets/people/chris.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
 import jacobIckesFunImage from "@/assets/people/jacob-ickes-fun.jpg";
 import jacobIckesImage from "@/assets/people/jacob-ickes.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
@@ -21,6 +22,8 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import mirandaFunImage from "@/assets/people/miranda-fun.jpg";
+import mirandaImage from "@/assets/people/miranda.jpg";
 import rockyImage from "@/assets/people/rocky.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
@@ -109,7 +112,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2021-10",
-    department: "facilities",
+    department: "operations",
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -216,6 +219,27 @@ const staff: Record<string, Staff> = {
     joined: "2024-07",
     department: "animalCare",
   },
+  miranda: {
+    image: [mirandaImage, mirandaFunImage],
+    name: "Miranda (Randi)",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Miranda grew up in Southern California and always had a passion for
+          animals. She looked at local schools to pursue a career working with
+          animals and found Moorpark College, where she then spent 2 years as a
+          student zookeeper working on the zoo and taking classes. After
+          graduation she did a short stint as a dog trainer, training dogs who
+          would aid people with diabetes. Following that, she then began working
+          with marine mammals in San Diego, which she did for years before
+          packing up and moving to Texas to work for Alveus!
+        </p>
+      </>
+    ),
+    joined: "2026-03",
+    department: "animalCare",
+  },
   linden: {
     image: lindenImage,
     name: "Linden",
@@ -242,7 +266,7 @@ const staff: Record<string, Staff> = {
   lukas: {
     image: lukasMeyerImage,
     name: "Lukas Meyer",
-    title: "Herpetology & Invert Lead | Habitat Specialist",
+    title: "FAID Manager | Herpetology & Invert Lead",
     description: (
       <>
         <p>
@@ -256,25 +280,7 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-01",
-    department: "facilities",
-  },
-  dan: {
-    image: danielDoormanImage,
-    name: "Daniel (Dan the Doorman)",
-    title: "Facilities Specialist",
-    description: (
-      <>
-        <p>
-          Daniel has more than 15 years in the construction industry, working in
-          a varied capacity, including: carpentry, drywall, brick, tile,
-          plumbing, and more. His most recent job being in access solutions,
-          mainly overhead sectional doors. He enjoys tinkering with electronics,
-          puzzles, and has a strong appreciation for a good-looking door.
-        </p>
-      </>
-    ),
-    joined: "2025-07",
-    department: "facilities",
+    department: "operations",
   },
   rocky: {
     image: rockyImage,
@@ -294,6 +300,31 @@ const staff: Record<string, Staff> = {
       </>
     ),
     joined: "2025-08",
+    department: "facilities",
+  },
+  chris: {
+    image: [chrisImage, chrisFunImage],
+    name: "Chris",
+    title: "Facilities Specialist",
+    description: (
+      <>
+        <p>
+          Chris grew up in southeast Texas with a passion for the outdoors and
+          environmental conservation. He became an Environmental Analyst for a
+          local water authority and performed water chemistry and field analysis
+          for 5 years before moving to Austin for water chemistry, microbiology,
+          and serology at the state lab. He moved from there, on a whim, to
+          train dolphins for the U.S. Navy in San Diego for 5 years where he met
+          his now-wife Randi. He became Dive Safety Officer for the same Navy
+          Marine Mammal Program and ran dive operations across San Diego,
+          Washington, and Georgia. From there, he transitioned to an engineering
+          technician role for Navy unmanned surface vehicles until he moved back
+          to Austin, Texas with Randi and was ultimately hired on at Alveus as
+          part of the FAID department.
+        </p>
+      </>
+    ),
+    joined: "2026-06",
     department: "facilities",
   },
   space: {

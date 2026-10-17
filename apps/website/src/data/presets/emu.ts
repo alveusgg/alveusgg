@@ -5,6 +5,7 @@ import left from "@/assets/presets/emu/left.png";
 import leftcorner from "@/assets/presets/emu/leftcorner.png";
 import leftgate from "@/assets/presets/emu/leftgate.png";
 import maingate from "@/assets/presets/emu/maingate.png";
+import pedro from "@/assets/presets/emu/pedro.png";
 import pond from "@/assets/presets/emu/pond.png";
 import pondleft from "@/assets/presets/emu/pondleft.png";
 import right from "@/assets/presets/emu/right.png";
@@ -29,14 +30,14 @@ const emuPresets: Record<string, Preset> = {
   food: {
     description: "food",
     image: food,
-    position: { pan: -50.91, tilt: -3.84, zoom: 1545 },
-    // modified: 2026-06-01T22:25:50.180Z
+    position: { pan: -55.31, tilt: -3.46, zoom: 1545 },
+    // modified: 2026-09-25T14:34:40.912Z
   },
   left: {
     description: "left",
     image: left,
-    position: { pan: -172.51, tilt: -3.18, zoom: 1 },
-    // modified: 2026-06-01T22:34:14.756Z
+    position: { pan: -176.89, tilt: -3.31, zoom: 1 },
+    // modified: 2026-08-03T17:03:16.186Z
   },
   leftcorner: {
     description: "leftcorner",
@@ -55,6 +56,12 @@ const emuPresets: Record<string, Preset> = {
     image: maingate,
     position: { pan: -22.76, tilt: -6.83, zoom: 813 },
     // modified: 2026-06-01T22:27:44.214Z
+  },
+  pedro: {
+    description: "pedro",
+    image: pedro,
+    position: { pan: -55.5, tilt: -4.33, zoom: 2559 },
+    // modified: 2026-08-10T07:34:52.403Z
   },
   pond: {
     description: "pond",
@@ -77,14 +84,14 @@ const emuPresets: Record<string, Preset> = {
   rightcorner: {
     description: "rightcorner",
     image: rightcorner,
-    position: { pan: -26.16, tilt: -5.17, zoom: 1422 },
-    // modified: 2026-06-01T22:28:21.434Z
+    position: { pan: -31.8, tilt: -5.37, zoom: 1422 },
+    // modified: 2026-09-14T21:38:20.611Z
   },
   shelter: {
     description: "shelter",
     image: shelter,
-    position: { pan: -114.96, tilt: -1.84, zoom: 813 },
-    // modified: 2026-06-01T22:22:00.044Z
+    position: { pan: -120.64, tilt: -0.66, zoom: 813 },
+    // modified: 2026-09-25T14:28:32.809Z
   },
 };
 

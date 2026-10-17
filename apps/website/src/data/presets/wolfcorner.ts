@@ -18,6 +18,7 @@ import den2l from "@/assets/presets/wolfcorner/den2l.png";
 import den2m from "@/assets/presets/wolfcorner/den2m.png";
 import den2r from "@/assets/presets/wolfcorner/den2r.png";
 import den2shade from "@/assets/presets/wolfcorner/den2shade.png";
+import den2shadeb from "@/assets/presets/wolfcorner/den2shadeb.png";
 import den2shadel from "@/assets/presets/wolfcorner/den2shadel.png";
 import den2t from "@/assets/presets/wolfcorner/den2t.png";
 import down from "@/assets/presets/wolfcorner/down.png";
@@ -174,6 +175,12 @@ const wolfcornerPresets: Record<string, Preset> = {
     image: den2shade,
     position: { pan: -1.3, tilt: -19.27, zoom: 500 },
     // modified: 2025-10-09T11:10:30.252Z
+  },
+  den2shadeb: {
+    description: "den2shadeb",
+    image: den2shadeb,
+    position: { pan: -1.16, tilt: -24.62, zoom: 168 },
+    // modified: 2026-08-29T19:18:10.276Z
   },
   den2shadel: {
     description: "Den 2 shade left",

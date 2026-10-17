@@ -555,10 +555,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               )}
               {hasNextEntry && (
                 <button
-                  className={
-                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
-                    (hasPrevEntry ? "h-[3em]" : "h-[calc(6em-1.25rem)]")
-                  }
+                  className={classes(
+                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)]",
+                    hasPrevEntry ? "h-[3em]" : "h-[calc(6em-1.25rem)]",
+                  )}
                   type="button"
                   onClick={scrollToNext}
                 >

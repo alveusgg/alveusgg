@@ -13,16 +13,27 @@ import {
   DurableObjectDonationStorage,
 } from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
-import { setSentryTagsMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
 import { getSentryConfig } from "../utils/sentry";
+
+type DonationProviders = Partial<
+  Omit<Record<Providers, DonationProvider>, "neon"> & {
+    neon: NeonDonationProvider;
+  }
+>;
 
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
-  private providers?: Partial<Record<Providers, DonationProvider>>;
+  private providers?: DonationProviders;
   private ready?: Promise<void>;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
+
+    const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
       .use(logger())
@@ -33,6 +44,31 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         }
         await this.ready;
         return next();
+      })
+      .post("/:providerId/sync", sharedKeyMiddleware, async (c) => {
+        if (!this.providers) {
+          throw new Error(
+            "This should be impossible. Init is called in prior middleware.",
+          );
+        }
+
+        const providerId = Providers.safeParse(c.req.param("providerId"));
+        if (!providerId.success) {
+          return new Response("Invalid provider ID", { status: 400 });
+        }
+
+        if (providerId.data !== "neon") {
+          return new Response("Provider does not support sync", {
+            status: 404,
+          });
+        }
+
+        const provider = this.providers.neon;
+        if (!provider) {
+          return new Response("Provider not found", { status: 404 });
+        }
+
+        return c.json(await provider.syncRecentDonations());
       })
       .post("/:providerId/live", (c) => {
         if (!this.providers) {

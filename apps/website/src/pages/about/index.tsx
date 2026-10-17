@@ -41,16 +41,16 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
+import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
+import youtube from "@/assets/in-the-news/youtube.svg";
 
 const sectionLinks = [
   { name: "Twitch.tv", href: "#twitch" },
   { name: "In The News", href: "#news" },
   { name: "Founding", href: "#maya" },
   { name: "History", href: "#history" },
-  { name: "Tour Part 1", href: "#tour-part-1" },
-  { name: "Tour Part 2", href: "#tour-part-2" },
-  { name: "Recap 2024", href: "#recap-2024" },
+  { name: "Tour", href: "#tour-2026" },
   { name: "Transparency", href: "#transparency" },
 ];
 
@@ -162,6 +162,13 @@ const news: Record<string, News> = {
       "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
     logo: forbes,
   },
+  youtube: {
+    title: "YouTube Official Blog",
+    href: "https://blog.youtube/creator-and-artist-stories/maya-higa-alveus-animal-sanctuary/",
+    quote:
+      "How 27-year-old Maya Higa is bypassing traditional zoos to build the first virtual-only animal sanctuary.",
+    logo: youtube,
+  },
   lowes: {
     title: "Lowe's Red Vests x MrBeast",
     href: "https://corporate.lowes.com/newsroom/stories/serving-communities/lowes-red-vests-power-sanctuary-makeover-alongside-mrbeast",
@@ -171,6 +178,13 @@ const news: Record<string, News> = {
       type: "youtube",
       id: "8TieP5VgieE",
     },
+  },
+  rnz: {
+    title: "Radio New Zealand",
+    href: "https://www.rnz.co.nz/life/people/gen-z-s-jane-goodall-has-an-online-only-wildlife-sanctuary-in-texas",
+    quote:
+      "'Gen Z's Jane Goodall' has an online-only wildlife sanctuary in Texas",
+    logo: radioNewZealand,
   },
   amazon: {
     title: "Amazon Ads",
@@ -188,7 +202,7 @@ const news: Record<string, News> = {
   },
   powderBlue: {
     title: "Powder Blue",
-    href: "https://www.creatormag.blog/p/introducing-our-next-cover-star",
+    href: "https://offlineonline.substack.com/p/introducing-our-next-cover-star",
     quote:
       "Maya has become a beloved science communicator as well as a staple in the streamer community",
     video: {
@@ -307,18 +321,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     ],
   },
   {
-    key: "tour-part-1",
+    key: "tour-2021",
     cta: (
       <div className="flex flex-wrap items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-1" level={3} className="scroll-mt-52 italic">
-            Alveus Tour Part 1
+          <Heading id="tour-2021" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2021
           </Heading>
 
           <p className="mt-4 text-lg">
-            Watch the video and join Maya for a tour of Alveus, exploring the
-            parrot aviary, the chicken coop, and the pasture. Meet some of our
-            ambassadors and learn about their stories.
+            Watch the video to join Maya for a tour of Alveus as it was in late
+            2021, exploring the parrot aviary, the chicken coop, and the
+            pasture. Meet some of our ambassadors and learn about their stories.
           </p>
         </div>
 
@@ -421,7 +435,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     ],
   },
   {
-    key: "tour-part-2",
+    key: "tour-2022",
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -429,14 +443,14 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-2" level={3} className="scroll-mt-52 italic">
-            Alveus Tour Part 2
+          <Heading id="tour-2022" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2022
           </Heading>
 
           <p className="mt-4 text-lg">
-            Watch the video and join Maya for a tour around more of Alveus,
+            Join Maya for a tour around more of Alveus as it was in late 2022,
             exploring the training center, the studio, the reptile room and
-            critter cave, the nutrition house, crow aviary and the new fox
+            critter cave, the nutrition house, the crow aviary and the new fox
             enclosure.
           </p>
         </div>
@@ -766,7 +780,54 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/about/staff",
         },
       },
+      {
+        key: "miranda",
+        date: "2026-03",
+        content: [
+          "Miranda joins the Alveus team",
+          "Alveus continues to grow, with Miranda joining the team as an Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
+        key: "chris",
+        date: "2026-06",
+        content: [
+          "Chris joins the Alveus team",
+          "Chris joins the FAID department as a Facilities Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
+  },
+  {
+    key: "tour-2026",
+    cta: (
+      <div className="flex flex-wrap-reverse items-center gap-y-16">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <YouTubeLightbox videoId="tDFy0e-8FwA" />
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="tour-2026" level={3} className="scroll-mt-52 italic">
+            Alveus Tour: 2026
+          </Heading>
+
+          <p className="mt-4 text-lg">
+            Watch the video to join Maya for a tour around all of Alveus as it
+            was in 2026, getting a behind-the-scenes look at the sanctuary, and
+            meeting many of the ambassadors around the property in their
+            enclosures.
+          </p>
+        </div>
+      </div>
+    ),
   },
 ];
 

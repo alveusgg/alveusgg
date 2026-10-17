@@ -166,8 +166,8 @@ const crowoutPresets: Record<string, Preset> = {
   table: {
     description: "indoor crow table",
     image: table,
-    position: { pan: 135.54, tilt: -24, zoom: 1798 },
-    // modified: 2025-10-09T11:10:29.844Z
+    position: { pan: 122.65, tilt: -30.35, zoom: 1 },
+    // modified: 2026-08-19T13:53:55.412Z
   },
   training: {
     description: "training area",

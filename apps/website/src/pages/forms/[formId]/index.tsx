@@ -25,8 +25,7 @@ export type FormEntryWithAddress = FormEntry & {
 
 export const getServerSideProps: GetServerSideProps<
   { form: Form } & (
-    | { error: string }
-    | { existingEntry: FormEntryWithAddress | null }
+    { error: string } | { existingEntry: FormEntryWithAddress | null }
   )
 > = async (context) => {
   // Check params

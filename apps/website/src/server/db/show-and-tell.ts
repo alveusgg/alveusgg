@@ -30,8 +30,7 @@ import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
   fileStorageObject:
-    | (FileStorageObject & { imageMetadata: ImageMetadata | null })
-    | null;
+    (FileStorageObject & { imageMetadata: ImageMetadata | null }) | null;
 };
 
 export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {

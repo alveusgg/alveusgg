@@ -29,6 +29,21 @@ app.all("/pixels/*", async (c) => {
 
 export default Sentry.withSentry<Env, string>(getSentryConfig, {
   fetch: app.fetch,
+  scheduled: async (_, env) => {
+    const manager = env.DONATIONS_MANAGER.getByName("alveus");
+    const response = await manager.fetch("https://donations/neon/sync", {
+      method: "POST",
+      headers: {
+        Authorization: `ApiKey ${env.SHARED_KEY}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Neon donation sync failed with status ${response.status}: ${await response.text()}`,
+      );
+    }
+  },
   queue: async (batch, env) => {
     const headers: Record<string, string> = {};
     if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {

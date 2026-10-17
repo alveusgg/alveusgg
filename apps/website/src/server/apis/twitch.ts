@@ -294,6 +294,55 @@ export async function getUserByName(userName: string) {
   return data.data[0];
 }
 
+const liveStreamsResponseSchema = z.object({
+  data: z.array(z.object({ id: z.string() })),
+});
+
+const archiveVideosResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      stream_id: z.string().nullable(),
+      url: z.url(),
+      created_at: z.iso.datetime(),
+    }),
+  ),
+});
+
+export async function getCurrentVod(userId: string) {
+  const headers = await getApplicationAuthHeaders();
+  const streamResponse = await fetch(
+    `https://api.twitch.tv/helix/streams?${new URLSearchParams({ user_id: userId })}`,
+    { method: "GET", headers },
+  );
+  if (streamResponse.status !== 200) {
+    throw new Error("Failed to get live stream!");
+  }
+
+  const streams = await liveStreamsResponseSchema.parseAsync(
+    await streamResponse.json(),
+  );
+  const stream = streams.data[0];
+  if (!stream) return null;
+
+  const videoResponse = await fetch(
+    `https://api.twitch.tv/helix/videos?${new URLSearchParams({
+      user_id: userId,
+      type: "archive",
+      sort: "time",
+      first: "1",
+    })}`,
+    { method: "GET", headers },
+  );
+  if (videoResponse.status !== 200) {
+    throw new Error("Failed to get archive video!");
+  }
+
+  const videos = await archiveVideosResponseSchema.parseAsync(
+    await videoResponse.json(),
+  );
+  return videos.data.find((video) => video.stream_id === stream.id) ?? null;
+}
+
 const scheduleSegmentSchema = z.object({
   id: z.string(),
   start_time: z.iso.datetime(),
@@ -501,6 +550,20 @@ export async function getClips(
   return clipsResponseSchema.parseAsync(json);
 }
 
+const sendChatMessageResponseSchema = z.object({
+  data: z
+    .array(
+      z.object({
+        message_id: z.string(),
+        is_sent: z.boolean(),
+        drop_reason: z
+          .object({ code: z.string(), message: z.string() })
+          .nullable(),
+      }),
+    )
+    .length(1),
+});
+
 export async function sendChatMessage(
   userAccessToken: string,
   userId: string,
@@ -520,10 +583,18 @@ export async function sendChatMessage(
     }),
   });
 
+  const json = await response.json();
   if (response.status !== 200) {
-    const json = await response.json();
     console.error(json);
-    throw new Error("Failed to send chat message!");
+    throw new Error("Failed to send chat message");
+  }
+
+  const { data } = await sendChatMessageResponseSchema.safeParseAsync(json);
+  if (!data?.data[0]?.is_sent) {
+    console.error(json);
+    throw new Error(
+      `Failed to send chat message: ${data?.data[0]?.drop_reason?.message || ""}`,
+    );
   }
 }
 

@@ -4,6 +4,7 @@ import bed from "@/assets/presets/fox/bed.png";
 import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
 import belowleftplatformr from "@/assets/presets/fox/belowleftplatformr.png";
 import den1 from "@/assets/presets/fox/den1.png";
+import den1b from "@/assets/presets/fox/den1b.png";
 import den1r from "@/assets/presets/fox/den1r.png";
 import den1rampb from "@/assets/presets/fox/den1rampb.png";
 import den1t from "@/assets/presets/fox/den1t.png";
@@ -35,8 +36,10 @@ import nearleft from "@/assets/presets/fox/nearleft.png";
 import right from "@/assets/presets/fox/right.png";
 import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
+import rightplatformb from "@/assets/presets/fox/rightplatformb.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
+import riverl from "@/assets/presets/fox/riverl.png";
 import rivert from "@/assets/presets/fox/rivert.png";
 import stump from "@/assets/presets/fox/stump.png";
 import table from "@/assets/presets/fox/table.png";
@@ -66,8 +69,8 @@ const foxPresets: Record<string, Preset> = {
   bed: {
     description: "bed",
     image: bed,
-    position: { pan: -93.43, tilt: -6.56, zoom: 1219 },
-    // modified: 2026-04-18T13:42:41.450Z
+    position: { pan: 26.61, tilt: -5.89, zoom: 3185 },
+    // modified: 2026-09-25T14:59:13.137Z
   },
   belowleftplatform: {
     description: "belowleftplatform",
@@ -86,6 +89,12 @@ const foxPresets: Record<string, Preset> = {
     image: den1,
     position: { pan: -88.47, tilt: -2.29, zoom: 3005 },
     // modified: 2026-04-18T13:45:39.801Z
+  },
+  den1b: {
+    description: "den1b",
+    image: den1b,
+    position: { pan: -88.06, tilt: -3.01, zoom: 10297 },
+    // modified: 2026-08-15T18:24:30.824Z
   },
   den1r: {
     description: "den1r",
@@ -126,8 +135,8 @@ const foxPresets: Record<string, Preset> = {
   den2b: {
     description: "den2b",
     image: den2b,
-    position: { pan: -4.79, tilt: -3.9, zoom: 10229 },
-    // modified: 2026-06-09T21:26:42.082Z
+    position: { pan: -4.78, tilt: -3.9, zoom: 10229 },
+    // modified: 2026-09-25T15:15:30.745Z
   },
   den2t: {
     description: "den2t",
@@ -198,8 +207,8 @@ const foxPresets: Record<string, Preset> = {
   farfencelz: {
     description: "farfencelz",
     image: farfencelz,
-    position: { pan: -98.99, tilt: -3.77, zoom: 2673 },
-    // modified: 2026-05-17T04:11:40.339Z
+    position: { pan: -98.98, tilt: -3.76, zoom: 2673 },
+    // modified: 2026-09-25T15:00:02.771Z
   },
   fenntree: {
     description: "fenntree",
@@ -267,6 +276,12 @@ const foxPresets: Record<string, Preset> = {
     position: { pan: -15.87, tilt: -1.38, zoom: 691 },
     // modified: 2026-04-18T13:54:32.290Z
   },
+  rightplatformb: {
+    description: "rightplatformb",
+    image: rightplatformb,
+    position: { pan: -16.15, tilt: -7.21, zoom: 3538 },
+    // modified: 2026-07-29T19:55:17.635Z
+  },
   rightramp: {
     description: "rightramp",
     image: rightramp,
@@ -278,6 +293,12 @@ const foxPresets: Record<string, Preset> = {
     image: river,
     position: { pan: -42.93, tilt: -5.92, zoom: 1 },
     // modified: 2026-04-18T13:49:28.017Z
+  },
+  riverl: {
+    description: "riverl",
+    image: riverl,
+    position: { pan: -53.23, tilt: -2.68, zoom: 1 },
+    // modified: 2026-09-25T15:33:02.860Z
   },
   rivert: {
     description: "rivert",

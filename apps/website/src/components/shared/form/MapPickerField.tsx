@@ -1,11 +1,13 @@
 import MaplibreGeocoder, {
   type CarmenGeojsonFeature,
 } from "@maplibre/maplibre-gl-geocoder";
-import maplibregl, {
+import {
   GeolocateControl,
+  type GeolocatePositionEvent,
   Map,
   type MapMouseEvent,
   type Marker,
+  setWorkerUrl,
 } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -27,6 +29,8 @@ import { CheckboxField } from "./CheckboxField";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+
+setWorkerUrl("/maplibre-gl/maplibre-gl-worker.mjs");
 
 /**
  * @param name Unique name of the element
@@ -211,7 +215,6 @@ export const MapPickerField = ({
 
       // Add, or update the callback for, the geocoder input
       geocoderRef.current ??= new MaplibreGeocoder(geocoderApi, {
-        maplibregl,
         marker: false,
         showResultsWhileTyping: true,
         showResultMarkers: {
@@ -239,7 +242,7 @@ export const MapPickerField = ({
         showAccuracyCircle: false,
         showUserLocation: false,
       });
-      const geolocateHandle = ({ coords }: GeolocationPosition) => {
+      const geolocateHandle = ({ coords }: GeolocatePositionEvent) => {
         handleLocationSet(coords.latitude, coords.longitude);
       };
       geolocateRef.current.on("geolocate", geolocateHandle);

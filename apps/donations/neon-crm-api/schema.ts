@@ -10,6 +10,14 @@ const Status = z.enum(["ACTIVE", "INACTIVE"]);
 
 const ConsentStatus = z.enum(["GIVEN", "DECLINED", "NOT_ASKED"]);
 
+const GenericStatus = z
+  .string()
+  .nullable()
+  .optional()
+  .transform((status) =>
+    status ? status.toUpperCase().replace(/[^A-Z]/g, "_") : status,
+  );
+
 const DataType = z.enum([
   "Whole_Number",
   "Decimal",
@@ -160,7 +168,7 @@ export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
   createdBy: z.string(),
   createdDateTime: DateTimeSchema,
-  lastModifiedBy: z.string(),
+  lastModifiedBy: z.string().nullable(),
   lastModifiedDateTime: DateTimeSchema,
 });
 
@@ -206,26 +214,32 @@ export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
 const DonationPayment = z.object({
   id: RecordId,
   amount: z.number(),
-  paymentStatus: z.string().nullable().optional(),
+  paymentStatus: GenericStatus,
   receivedDate: DateSchema.nullable().optional(),
   note: z.string().nullable().optional(),
 });
 
-export type AccountDonation = z.output<typeof AccountDonation>;
-export const AccountDonation = z.object({
+const DonationOrigin = z
+  .object({
+    originDetail: z.string().nullable().optional(),
+    originCategory: z.string().nullable().optional(),
+  })
+  .nullable()
+  .optional();
+
+const DonationIdNamePair = IdNamePairBase.extend({
+  status: Status.nullable().optional(),
+}).nullable();
+
+export type DonationResponse = z.output<typeof DonationResponse>;
+export const DonationResponse = z.object({
   id: RecordId,
   accountId: RecordId,
   amount: z.number().positive(),
   purpose: z.string().nullable().optional(),
-  campaign: IdNamePair.nullable(),
-  fund: IdNamePair.nullable(),
-  origin: z
-    .object({
-      originDetail: z.string().nullable().optional(),
-      originCategory: z.string().nullable().optional(),
-    })
-    .nullable()
-    .optional(),
+  campaign: DonationIdNamePair,
+  fund: DonationIdNamePair,
+  origin: DonationOrigin,
   timestamps: NullableTimestamps,
   date: DateSchema,
   anonymousType: NullableYesNoBoolean,
@@ -245,7 +259,7 @@ export const AccountDonation = z.object({
     .nullable()
     .optional()
     .transform((payments) => payments ?? []),
-  status: z.string().nullable().optional(),
+  status: GenericStatus,
 });
 
 const Pagination = z.object({
@@ -253,14 +267,16 @@ const Pagination = z.object({
   pageSize: z.number(),
   totalPages: z.number(),
   totalResults: z.number(),
+  sortColumn: z.string().nullable().optional(),
+  sortDirection: z.string().nullable().optional(),
 });
 
-export type AccountDonationsResponse = z.output<
-  typeof AccountDonationsResponse
->;
-export const AccountDonationsResponse = z.object({
-  donations: z.array(AccountDonation),
+export type DonationSearchResponse = z.output<typeof DonationSearchResponse>;
+export const DonationSearchResponse = z.object({
   pagination: Pagination,
+  searchResults: z.array(
+    z.record(z.string(), z.union([z.string(), z.number(), z.null()])),
+  ),
 });
 
 const AddressBase = z.object({
@@ -432,3 +448,11 @@ export const WebhookResponse = z.object({
 
 export type WebhooksResponse = z.output<typeof WebhooksResponse>;
 export const WebhooksResponse = z.array(WebhookResponse);
+
+export type AccountDonation = z.output<typeof AccountDonation>;
+export const AccountDonation = DonationResponse;
+export type AccountDonationsResponse = z.output<typeof AccountDonationsResponse>;
+export const AccountDonationsResponse = z.object({
+  donations: z.array(AccountDonation),
+  pagination: Pagination,
+});

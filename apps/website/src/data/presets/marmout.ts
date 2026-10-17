@@ -1,7 +1,10 @@
+import appastick from "@/assets/presets/marmout/appastick.png";
 import basket from "@/assets/presets/marmout/basket.png";
 import blueball from "@/assets/presets/marmout/blueball.png";
 import bridgeb from "@/assets/presets/marmout/bridgeb.png";
 import bridgem from "@/assets/presets/marmout/bridgem.png";
+import brownball from "@/assets/presets/marmout/brownball.png";
+import brownballtop from "@/assets/presets/marmout/brownballtop.png";
 import domell from "@/assets/presets/marmout/domell.png";
 import domellb from "@/assets/presets/marmout/domellb.png";
 import domellshelf from "@/assets/presets/marmout/domellshelf.png";
@@ -10,6 +13,9 @@ import domelu from "@/assets/presets/marmout/domelu.png";
 import domelushelfl from "@/assets/presets/marmout/domelushelfl.png";
 import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
+import domerl from "@/assets/presets/marmout/domerl.png";
+import domerr from "@/assets/presets/marmout/domerr.png";
+import door from "@/assets/presets/marmout/door.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
 import downright from "@/assets/presets/marmout/downright.png";
@@ -18,17 +24,20 @@ import farcornerb from "@/assets/presets/marmout/farcornerb.png";
 import farcornershelf from "@/assets/presets/marmout/farcornershelf.png";
 import farcornert from "@/assets/presets/marmout/farcornert.png";
 import farrightshelf from "@/assets/presets/marmout/farrightshelf.png";
+import farrightshelfb from "@/assets/presets/marmout/farrightshelfb.png";
+import flapl from "@/assets/presets/marmout/flapl.png";
+import flapr from "@/assets/presets/marmout/flapr.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
 import flapsb from "@/assets/presets/marmout/flapsb.png";
 import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
 import hose from "@/assets/presets/marmout/hose.png";
 import left from "@/assets/presets/marmout/left.png";
-import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
 import leftcornershelf from "@/assets/presets/marmout/leftcornershelf.png";
 import lefthammock from "@/assets/presets/marmout/lefthammock.png";
 import leftpostbranch from "@/assets/presets/marmout/leftpostbranch.png";
 import leftpostshelf from "@/assets/presets/marmout/leftpostshelf.png";
+import leftpostshelfb from "@/assets/presets/marmout/leftpostshelfb.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
 import leftshelfl from "@/assets/presets/marmout/leftshelfl.png";
 import leftshelfr from "@/assets/presets/marmout/leftshelfr.png";
@@ -40,6 +49,7 @@ import right from "@/assets/presets/marmout/right.png";
 import rightcorner from "@/assets/presets/marmout/rightcorner.png";
 import rightpost from "@/assets/presets/marmout/rightpost.png";
 import table from "@/assets/presets/marmout/table.png";
+import tableropes from "@/assets/presets/marmout/tableropes.png";
 import tablet from "@/assets/presets/marmout/tablet.png";
 import upleft from "@/assets/presets/marmout/upleft.png";
 import upleftbranch from "@/assets/presets/marmout/upleftbranch.png";
@@ -52,8 +62,14 @@ const marmoutPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: 135.7, tilt: -18.09, zoom: 1 },
-    // modified: 2025-11-07T22:34:48.564Z
+    position: { pan: 135.7, tilt: -18.14, zoom: 1 },
+    // modified: 2026-07-25T13:46:01.796Z
+  },
+  appastick: {
+    description: "appastick",
+    image: appastick,
+    position: { pan: 122.85, tilt: 6.36, zoom: 1191 },
+    // modified: 2026-07-30T12:45:51.589Z
   },
   basket: {
     description: "basket",
@@ -79,6 +95,18 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 159.34, tilt: 7.44, zoom: 664 },
     // modified: 2026-05-23T17:37:41.860Z
   },
+  brownball: {
+    description: "brownball",
+    image: brownball,
+    position: { pan: 86.75, tilt: -18.08, zoom: 997 },
+    // modified: 2026-09-25T16:07:20.800Z
+  },
+  brownballtop: {
+    description: "brownballtop",
+    image: brownballtop,
+    position: { pan: 86.74, tilt: -16.44, zoom: 997 },
+    // modified: 2026-09-25T16:07:35.045Z
+  },
   domell: {
     description: "Dome Left Lower",
     image: domell,
@@ -88,8 +116,8 @@ const marmoutPresets: Record<string, Preset> = {
   domellb: {
     description: "domellb",
     image: domellb,
-    position: { pan: 126.35, tilt: -10.89, zoom: 332 },
-    // modified: 2026-06-08T13:56:17.053Z
+    position: { pan: 126.97, tilt: -10.69, zoom: 390 },
+    // modified: 2026-06-16T17:00:43.522Z
   },
   domellshelf: {
     description: "domellshelf",
@@ -126,6 +154,24 @@ const marmoutPresets: Record<string, Preset> = {
     image: domer,
     position: { pan: 150.19, tilt: -7.04, zoom: 1662 },
     // modified: 2025-11-09T15:43:20.327Z
+  },
+  domerl: {
+    description: "domerl",
+    image: domerl,
+    position: { pan: 148.54, tilt: -7.83, zoom: 1662 },
+    // modified: 2026-06-22T13:41:38.760Z
+  },
+  domerr: {
+    description: "domerr",
+    image: domerr,
+    position: { pan: 151.57, tilt: -7.67, zoom: 1662 },
+    // modified: 2026-06-22T13:40:20.947Z
+  },
+  door: {
+    description: "door",
+    image: door,
+    position: { pan: 166.51, tilt: -18.64, zoom: 464 },
+    // modified: 2026-09-11T13:14:16.323Z
   },
   down: {
     description: "Down",
@@ -172,8 +218,26 @@ const marmoutPresets: Record<string, Preset> = {
   farrightshelf: {
     description: "farrightshelf",
     image: farrightshelf,
-    position: { pan: 178.48, tilt: -7.38, zoom: 664 },
-    // modified: 2026-02-26T16:50:34.144Z
+    position: { pan: 178.64, tilt: -6, zoom: 664 },
+    // modified: 2026-07-25T13:47:31.109Z
+  },
+  farrightshelfb: {
+    description: "farrightshelfb",
+    image: farrightshelfb,
+    position: { pan: 179.34, tilt: -25.19, zoom: 1210 },
+    // modified: 2026-06-27T14:04:51.953Z
+  },
+  flapl: {
+    description: "flapl",
+    image: flapl,
+    position: { pan: 141.28, tilt: -12.54, zoom: 997 },
+    // modified: 2026-07-15T13:13:50.043Z
+  },
+  flapr: {
+    description: "flapr",
+    image: flapr,
+    position: { pan: 146.98, tilt: -13.24, zoom: 997 },
+    // modified: 2026-07-15T13:10:36.192Z
   },
   flaps: {
     description: "Flaps",
@@ -205,12 +269,6 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 104.97, tilt: -19.18, zoom: 1 },
     // modified: 2025-11-07T22:54:41.336Z
   },
-  leftcornerhideb: {
-    description: "Left Corner Hide Bottom",
-    image: leftcornerhideb,
-    position: { pan: 87.49, tilt: -16.48, zoom: 998 },
-    // modified: 2025-11-09T15:49:08.621Z
-  },
   leftcornershelf: {
     description: "leftcornershelf",
     image: leftcornershelf,
@@ -234,6 +292,12 @@ const marmoutPresets: Record<string, Preset> = {
     image: leftpostshelf,
     position: { pan: 110.42, tilt: -15.72, zoom: 239 },
     // modified: 2026-05-17T13:10:21.032Z
+  },
+  leftpostshelfb: {
+    description: "leftpostshelfb",
+    image: leftpostshelfb,
+    position: { pan: 107.05, tilt: -24.5, zoom: 1 },
+    // modified: 2026-09-01T21:23:58.201Z
   },
   leftposttop: {
     description: "Left Post Top",
@@ -301,11 +365,17 @@ const marmoutPresets: Record<string, Preset> = {
     position: { pan: 136.27, tilt: -21.57, zoom: 665 },
     // modified: 2025-12-18T21:17:08.440Z
   },
+  tableropes: {
+    description: "tableropes",
+    image: tableropes,
+    position: { pan: 124.75, tilt: -24.5, zoom: 593 },
+    // modified: 2026-09-25T16:04:14.821Z
+  },
   tablet: {
     description: "Tablet",
     image: tablet,
-    position: { pan: 164.94, tilt: -1.91, zoom: 1537 },
-    // modified: 2025-11-07T22:38:33.372Z
+    position: { pan: 164.95, tilt: -1.91, zoom: 1350 },
+    // modified: 2026-07-25T13:44:45.742Z
   },
   upleft: {
     description: "Up Left",
@@ -322,8 +392,8 @@ const marmoutPresets: Record<string, Preset> = {
   upright: {
     description: "Up Right",
     image: upright,
-    position: { pan: 154, tilt: 9.72, zoom: 1 },
-    // modified: 2025-11-07T22:55:24.472Z
+    position: { pan: 152.63, tilt: 10.75, zoom: 1 },
+    // modified: 2026-06-17T12:07:22.482Z
   },
   uprightbranches: {
     description: "uprightbranches",

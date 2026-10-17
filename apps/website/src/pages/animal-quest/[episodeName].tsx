@@ -92,10 +92,14 @@ const secondsToIso8601 = (seconds: number): string => {
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
   featured: {
-    [key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]]: (typeof ambassadors)[key];
+    [
+      key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]
+    ]: (typeof ambassadors)[key];
   };
   related: {
-    [key in (typeof animalQuest)[number]["ambassadors"]["related"][number]]: (typeof ambassadors)[key];
+    [
+      key in (typeof animalQuest)[number]["ambassadors"]["related"][number]
+    ]: (typeof ambassadors)[key];
   };
   icon?: AmbassadorImage;
 };

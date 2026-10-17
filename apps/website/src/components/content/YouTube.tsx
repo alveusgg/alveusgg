@@ -50,6 +50,7 @@ export const YouTubePreview = ({
           "pointer-events-none rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           className,
         )}
+        draggable={false}
       />
       {icon && (
         <>
@@ -73,7 +74,7 @@ type EmbedProps = {
 const iframeSrc = (id: string, params?: Record<string, string>) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
     id,
-  )}?${new URLSearchParams({ ...params, modestbranding: "1", rel: "0" }).toString()}`;
+  )}?${new URLSearchParams({ ...params, modestbranding: "1", rel: "0", enablejsapi: "1" }).toString()}`;
 
 export const YouTubeEmbed = ({ videoId, videoParams, caption }: EmbedProps) => (
   <div className="flex h-full flex-col">

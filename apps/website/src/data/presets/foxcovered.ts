@@ -3,8 +3,10 @@ import downleft from "@/assets/presets/foxcovered/downleft.png";
 import downright from "@/assets/presets/foxcovered/downright.png";
 import farcorner from "@/assets/presets/foxcovered/farcorner.png";
 import home from "@/assets/presets/foxcovered/home.png";
+import insidedoor from "@/assets/presets/foxcovered/insidedoor.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import middle from "@/assets/presets/foxcovered/middle.png";
+import middler from "@/assets/presets/foxcovered/middler.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
 import platformbl from "@/assets/presets/foxcovered/platformbl.png";
 import platformbr from "@/assets/presets/foxcovered/platformbr.png";
@@ -47,6 +49,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     position: { pan: -136.61, tilt: -5.8, zoom: 937 },
     // modified: 2026-04-18T13:26:11.654Z
   },
+  insidedoor: {
+    description: "insidedoor",
+    image: insidedoor,
+    position: { pan: -68.44, tilt: -12.26, zoom: 152 },
+    // modified: 2026-07-06T13:43:18.659Z
+  },
   left: {
     description: "left",
     image: left,
@@ -58,6 +66,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     image: middle,
     position: { pan: -121.34, tilt: -21.42, zoom: 1 },
     // modified: 2026-04-18T13:23:24.036Z
+  },
+  middler: {
+    description: "middler",
+    image: middler,
+    position: { pan: -109.48, tilt: -11.06, zoom: 155 },
+    // modified: 2026-09-25T15:21:06.787Z
   },
   platform: {
     description: "platform",
@@ -74,8 +88,8 @@ const foxcoveredPresets: Record<string, Preset> = {
   platformbr: {
     description: "platformbr",
     image: platformbr,
-    position: { pan: -142.73, tilt: -1.16, zoom: 4039 },
-    // modified: 2026-06-06T12:32:28.830Z
+    position: { pan: -141.12, tilt: -0.9, zoom: 2803 },
+    // modified: 2026-09-11T21:26:24.806Z
   },
   platformfl: {
     description: "platformfl",

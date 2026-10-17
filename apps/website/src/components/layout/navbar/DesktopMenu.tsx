@@ -10,7 +10,11 @@ import { useActiveNav } from "@/hooks/active";
 import IconChevronDown from "@/icons/IconChevronDown";
 
 import { Dropdown, DropdownMenuItems } from "./DropdownMenu";
-import { NavLink, navLinkClassesMain } from "./NavLink";
+import {
+  NavLink,
+  navLinkClassesMain,
+  navLinkClassesMainActive,
+} from "./NavLink";
 import { UtilityMenu } from "./UtilityMenu";
 
 export function DesktopMenu() {
@@ -45,6 +49,17 @@ export function DesktopMenu() {
                   <MenuButton
                     className={classes(
                       navLinkClassesMain,
+                      (("links" in link &&
+                        Object.values(link.links).some(
+                          (l) => l.link === active,
+                        )) ||
+                        ("groups" in link &&
+                          Object.values(link.groups).some((group) =>
+                            Object.values(group.links).some(
+                              (l) => l.link === active,
+                            ),
+                          ))) &&
+                        navLinkClassesMainActive,
                       "group/button flex items-center gap-2",
                     )}
                   >

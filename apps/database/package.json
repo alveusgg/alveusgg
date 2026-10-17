@@ -24,14 +24,14 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "^7.8.0",
-    "@prisma/client": "^7.8.0"
+    "@prisma/adapter-mariadb": "^7.10.0",
+    "@prisma/client": "^7.10.0"
   },
   "devDependencies": {
-    "@types/node": "^24.12.4",
-    "dotenv": "^17.4.2",
-    "prisma": "^7.8.0",
-    "tsdown": "^0.22.1"
+    "@types/node": "^24.19.1",
+    "dotenv": "^18.0.6",
+    "prisma": "^7.10.0",
+    "tsdown": "^0.23.0"
   },
   "exports": {
     ".": {

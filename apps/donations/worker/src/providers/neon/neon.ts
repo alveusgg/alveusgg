@@ -1,18 +1,73 @@
 import type { NeonDonation, Providers } from "@alveusgg/donations-core";
-import { type AccountResponse, getAccount } from "@alveusgg/neon-crm-api";
+import {
+  type AccountResponse,
+  type Donation,
+  formatDateInTimezone,
+  getAccount,
+  getDonation,
+  searchDonations,
+} from "@alveusgg/neon-crm-api";
 import { type Options, envToOptions } from "@alveusgg/neon-crm-api/env";
 import {
   type DonationWebhookPayload,
   parseDonationWebhook,
   setupWebhook,
 } from "@alveusgg/neon-crm-api/webhooks";
+import * as Sentry from "@sentry/cloudflare";
+import type { ZodError } from "zod";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
 import timingSafeCompareString from "../../utils/timing-safe-compare-string";
 
 type NeonDonationProviderOptions = Options & {
   donationDisplayNameCustomFieldId?: string;
+  onParseError?: (
+    error: ZodError,
+    context: {
+      eventTrigger?: string;
+      kind?: string;
+      method?: string;
+      path?: string;
+    },
+  ) => void;
 };
+
+type NeonDonationData = DonationWebhookPayload["data"] | Donation;
+type NeonSyncMetadata = {
+  lastSyncedAt?: string;
+};
+type NeonSyncResult = {
+  found: number;
+  imported: number;
+  skipped: number;
+};
+
+const SYNC_CONFIG_KEY = "neon-sync";
+const SYNC_LOOKBACK_DAYS = 2;
+const SYNC_MAX_PAGES = 10;
+const SYNC_PAGE_SIZE = 50;
+const SELF_IMPORT_ORIGIN_CATEGORY = "Self-Import";
+const SUCCEEDED_STATUS = "SUCCEEDED";
+
+function reportNeonParseError(
+  error: ZodError,
+  context: {
+    eventTrigger?: string;
+    kind?: string;
+    method?: string;
+    path?: string;
+  },
+) {
+  Sentry.withScope((scope) => {
+    scope.setTag("integration", "neon-crm");
+    scope.setTag("error.kind", "schema-parse");
+    if (context.path) scope.setTag("neon.path", context.path);
+    if (context.kind) scope.setTag("neon.kind", context.kind);
+    scope.setContext("neon", context);
+    scope.setContext("zod", { issues: error.issues });
+    Sentry.captureException(error);
+  });
+}
 
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
@@ -36,6 +91,7 @@ export class NeonDonationProvider implements DonationProvider {
       ...envToOptions(env),
       donationDisplayNameCustomFieldId:
         env.NEON_DONATION_DISPLAY_NAME_CUSTOM_FIELD_ID,
+      onParseError: reportNeonParseError,
     };
 
     try {
@@ -54,6 +110,7 @@ export class NeonDonationProvider implements DonationProvider {
 
   async clear() {
     this.service.config.set(this.name, undefined);
+    this.service.config.set(SYNC_CONFIG_KEY, undefined);
   }
 
   async handle(request: Request): Promise<Response> {
@@ -92,21 +149,157 @@ export class NeonDonationProvider implements DonationProvider {
     }
 
     const account = accountRes.data;
+    const donation = this.createDonation(data, account, new Date());
+
+    await this.service.add(donation);
+    return new Response("OK", { status: 200 });
+  }
+
+  async syncRecentDonations(): Promise<NeonSyncResult> {
+    const startedAt = new Date();
+    const metadata =
+      this.service.config.get<NeonSyncMetadata>(SYNC_CONFIG_KEY) ?? {};
+    const since = subtractDays(
+      metadata.lastSyncedAt ? new Date(metadata.lastSyncedAt) : startedAt,
+      SYNC_LOOKBACK_DAYS,
+    );
+    const sinceDate = formatDateInTimezone(since, this.options.localTimezone);
+
+    let currentPage = 0;
+    let totalPages = 1;
+    let found = 0;
+    let imported = 0;
+    let skipped = 0;
+
+    while (currentPage < totalPages && currentPage < SYNC_MAX_PAGES) {
+      const response = await searchDonations(this.options, {
+        searchFields: [
+          {
+            field: "Donation Status",
+            operator: "EQUAL",
+            value: "Succeeded",
+          },
+          {
+            field: "Origin Category",
+            operator: "NOT_EQUAL",
+            value: SELF_IMPORT_ORIGIN_CATEGORY,
+          },
+          {
+            field: "Donation Created Date",
+            operator: "GREATER_AND_EQUAL",
+            value: sinceDate,
+          },
+        ],
+        outputFields: [
+          "Donation ID",
+          "Donation Created Date",
+          "Donation Status",
+          "Origin Category",
+        ],
+        pagination: {
+          currentPage,
+          pageSize: SYNC_PAGE_SIZE,
+          sortColumn: "Donation Created Date",
+          sortDirection: "DESC",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to search Neon donations: ${response.error}`);
+      }
+
+      totalPages = response.data.pagination.totalPages;
+      found += response.data.searchResults.length;
+
+      for (const result of response.data.searchResults) {
+        const donationId = result["Donation ID"];
+        if (typeof donationId !== "string") {
+          skipped++;
+          continue;
+        }
+
+        const importedDonation = await this.importDonationById(donationId);
+        if (importedDonation) {
+          imported++;
+        } else {
+          skipped++;
+        }
+      }
+
+      currentPage++;
+    }
+
+    if (totalPages > SYNC_MAX_PAGES) {
+      throw new Error(
+        `Neon donation sync found ${totalPages} pages since ${sinceDate}; max pages is ${SYNC_MAX_PAGES}.`,
+      );
+    }
+
+    this.service.config.set(SYNC_CONFIG_KEY, {
+      lastSyncedAt: startedAt.toISOString(),
+    } satisfies NeonSyncMetadata);
+
+    return { found, imported, skipped };
+  }
+
+  private async importDonationById(id: string) {
+    const donationResponse = await getDonation(this.options, id);
+    if (!donationResponse.ok) {
+      throw new Error(`Failed to fetch Neon donation ${id}`);
+    }
+
+    const data = donationResponse.data;
+    if (!this.shouldSyncDonation(data)) {
+      return false;
+    }
+
+    const accountRes = await getAccount(this.options, data.accountId);
+    if (!accountRes.ok) {
+      throw new Error(`Failed to fetch Neon account ${data.accountId}`);
+    }
+
+    const donation = this.createDonation(data, accountRes.data, new Date());
+    return (await this.service.add(donation)) > 0;
+  }
+
+  private shouldSyncDonation(data: Donation) {
+    if (data.origin?.originCategory === SELF_IMPORT_ORIGIN_CATEGORY) {
+      return false;
+    }
+
+    if (data.status && data.status !== SUCCEEDED_STATUS) {
+      return false;
+    }
+
+    return (
+      data.payments.length === 0 ||
+      data.payments.some(
+        (payment) =>
+          payment.paymentStatus && payment.paymentStatus === SUCCEEDED_STATUS,
+      )
+    );
+  }
+
+  private createDonation(
+    data: NeonDonationData,
+    account: AccountResponse,
+    receivedAt: Date,
+  ) {
     const displayName = this.extractDisplayName(data, account);
 
-    const donation = {
+    return {
       id: crypto.randomUUID(),
       provider: "neon",
-      providerUniqueId: `${payload.organizationId}-${data.id}`,
+      providerUniqueId: `${this.options.organizationId}-${data.id}`,
       providerMetadata: {
-        neonCampaignId: data.campaign.id ?? undefined,
-        neonCampaignName: data.campaign.name ?? undefined,
-        neonFundId: data.fund.id ?? undefined,
-        neonFundName: data.fund.name ?? undefined,
+        neonCampaignId: data.campaign?.id ?? undefined,
+        neonCampaignName: data.campaign?.name ?? undefined,
+        neonFundId: data.fund?.id ?? undefined,
+        neonFundName: data.fund?.name ?? undefined,
         neonAccountId: data.accountId ?? undefined,
       },
       amount: toCents(data.amount),
-      receivedAt: new Date(),
+      receivedAt,
       donatedAt: data.timestamps.createdDateTime,
       donatedBy: {
         primary: "displayName",
@@ -125,22 +318,16 @@ export class NeonDonationProvider implements DonationProvider {
           undefined,
       },
       tags: {
-        fund: String(data.fund.id),
-        campaign: String(data.campaign.id),
+        fund: String(data.fund?.id ?? ""),
+        campaign: String(data.campaign?.id ?? ""),
         donorCoveredFee: data.donorCoveredFeeFlag ? "yes" : "no",
         anonymous: data.anonymousType ? "yes" : "no",
         payLater: data.payLater ? "yes" : "no",
       },
     } satisfies NeonDonation;
-
-    this.service.add(donation);
-    return new Response("OK", { status: 200 });
   }
 
-  private extractDisplayName(
-    data: DonationWebhookPayload["data"],
-    account: AccountResponse,
-  ) {
+  private extractDisplayName(data: NeonDonationData, account: AccountResponse) {
     if (data.anonymousType) {
       return "Anonymous";
     }
@@ -189,3 +376,6 @@ export class NeonDonationProvider implements DonationProvider {
 
 const toCents = (val: number): number =>
   Number.parseInt(val.toFixed(2).replace(".", ""), 10);
+
+const subtractDays = (date: Date, days: number) =>
+  new Date(date.getTime() - days * 24 * 60 * 60 * 1000);

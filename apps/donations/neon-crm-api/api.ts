@@ -7,9 +7,17 @@ export type Options = Pick<
 > & {
   debug?: boolean;
   fetchTimeoutMs?: number;
+  onParseError?: SchemaParseErrorReporter;
 };
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type SchemaParseErrorReporter = (
+  error: ZodError,
+  context: {
+    method: ApiMethod;
+    path: string;
+  },
+) => void;
 
 type FetchSuccess<T = unknown> = { ok: true; data: T };
 type FetchNetworkError = { ok: false; errorType: "network"; error: string };
@@ -17,10 +25,7 @@ type FetchRequestError = { ok: false; errorType: "request"; error: string };
 type FetchParseError = { ok: false; errorType: "parse"; error: ZodError };
 
 type FetchResult<T = unknown> =
-  | FetchSuccess<T>
-  | FetchNetworkError
-  | FetchRequestError
-  | FetchParseError;
+  FetchSuccess<T> | FetchNetworkError | FetchRequestError | FetchParseError;
 
 const apiHeaders = ({
   organizationId,
@@ -40,7 +45,7 @@ export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
     "",
   );
 
-const fetch = async (
+const fetch = (
   options: Options,
   path: string,
   method: ApiMethod = "GET",
@@ -130,6 +135,10 @@ export const fetchWithSchema = async <ResponseSchema extends ZodType>(
       console.error("Error parsing data from Neon CRM API", {
         path,
         error: parsed.error,
+      });
+      options.onParseError?.(parsed.error, {
+        method: method ?? "GET",
+        path,
       });
       return {
         ok: false,
