@@ -23,7 +23,8 @@ vi.mock("../src/providers/storage", () => ({
     .mockResolvedValue(undefined),
   DurableObjectDonationStorage: class {
     resyncPixelsIfPending = vi.fn(async () => {});
-    filterCancelled = vi.fn((donations: unknown[]) => donations);
+    deliverDonations = vi.fn(async (donations: unknown[]) => donations);
+    deliverPixels = vi.fn(async (donations: unknown[]) => donations);
   },
 }));
 vi.mock("../src/providers/neon/neon", () => ({

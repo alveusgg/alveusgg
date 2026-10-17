@@ -155,10 +155,20 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     return result;
   }
 
-  /** Called by queue consumers before delivering donations. */
-  async filterCancelled(donations: Donation[]) {
+  /**
+   * Called by the queue consumers. Delivery goes through this object, so it
+   * is ordered with removals of cancelled donations.
+   */
+  async deliverDonations(donations: Donation[]) {
     await this.ensureReady();
-    return this.storage?.filterCancelled(donations) ?? donations;
+    if (!this.storage) throw new Error("Donation storage not initialized");
+    return this.storage.deliverDonations(donations);
+  }
+
+  async deliverPixels(donations: Donation[]) {
+    await this.ensureReady();
+    if (!this.storage) throw new Error("Donation storage not initialized");
+    return this.storage.deliverPixels(donations);
   }
 
   async alarm() {

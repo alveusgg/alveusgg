@@ -24,9 +24,54 @@ export class DurableObjectDonationStorage implements DonationStorage {
     private env: Env,
   ) {}
 
-  async remove(provider: string, providerUniqueId: string, reason: string) {
-    // Cancel first, so a queue message for this donation that has not been
-    // delivered yet is dropped instead of recreating it afterwards.
+  // Deliveries and removals run one at a time, so a removal can never finish
+  // while a delivery of the same donation is still writing to the website.
+  private exclusiveTail: Promise<unknown> = Promise.resolve();
+  private exclusive<T>(task: () => Promise<T>): Promise<T> {
+    const run = this.exclusiveTail.then(task, task);
+    this.exclusiveTail = run.catch(() => undefined);
+    return run;
+  }
+
+  /** Write queued donations to the website, unless they were cancelled. */
+  deliverDonations(donations: Donation[]) {
+    return this.exclusive(async () => {
+      const kept = this.filterCancelled(donations);
+      if (kept.length) {
+        await createSiteApi(this.env).donations.createDonations.mutate({
+          donations: kept,
+        });
+      }
+      return kept;
+    });
+  }
+
+  /** Allocate pixels for queued donations, unless they were cancelled. */
+  deliverPixels(donations: Donation[]) {
+    return this.exclusive(async () => {
+      const kept = this.filterCancelled(donations);
+      if (kept.length) {
+        await this.env.PIXELS_MANAGER.getByName(
+          `alveus-${this.env.MURAL_ID}`,
+        ).process(kept);
+      }
+      return kept;
+    });
+  }
+
+  remove(provider: string, providerUniqueId: string, reason: string) {
+    return this.exclusive(() =>
+      this.removeNow(provider, providerUniqueId, reason),
+    );
+  }
+
+  private async removeNow(
+    provider: string,
+    providerUniqueId: string,
+    reason: string,
+  ) {
+    // Cancel first, so a queued donation that is delivered after this
+    // removal is dropped instead of recreating it.
     this.ctx.storage.sql.exec(
       `REPLACE INTO cancelledDonations (provider, providerUniqueId, cancelledAt)
        VALUES (?, ?, ?)`,
@@ -76,7 +121,7 @@ export class DurableObjectDonationStorage implements DonationStorage {
   }
 
   /** Drop queued donations that were cancelled after they were queued. */
-  filterCancelled(donations: Donation[]) {
+  private filterCancelled(donations: Donation[]) {
     return donations.filter((donation) => {
       const cursor = this.ctx.storage.sql.exec<{ cancelledAt: string }>(
         `SELECT cancelledAt FROM cancelledDonations

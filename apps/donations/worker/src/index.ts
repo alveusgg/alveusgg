@@ -5,7 +5,6 @@ import { logger } from "hono/logger";
 import { parse } from "superjson";
 import { setSentryTagsMiddleware } from "./utils/middleware";
 import { getSentryConfig } from "./utils/sentry";
-import { createSiteApi } from "./utils/site-api";
 import { forwardWithoutRoutePrefix } from "./utils/url";
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
@@ -44,30 +43,25 @@ export default Sentry.withSentry<Env, string>(getSentryConfig, {
     }
   },
   queue: async (batch, env) => {
-    const api = createSiteApi(env);
-
-    const parsed: Donation[] = batch.messages.map((message) =>
+    const donations: Donation[] = batch.messages.map((message) =>
       parse(message.body),
     );
-    // Donations can be cancelled (e.g. a failed payment) while still queued.
-    const donations: Donation[] =
-      await env.DONATIONS_MANAGER.getByName("alveus").filterCancelled(parsed);
-    if (!donations.length) return;
+    // Delivery goes through the donations manager, so a donation cancelled
+    // (e.g. after a failed payment) while queued is never written.
+    const manager = env.DONATIONS_MANAGER.getByName("alveus");
 
     if (batch.queue.endsWith("donations")) {
-      const kept = new Set(donations.map((donation) => donation.id));
-      await api.donations.createDonations.mutate({ donations });
-      await env.PIXELS_QUEUE.sendBatch(
-        batch.messages.filter((message) =>
-          kept.has(parse<Donation>(message.body).id),
-        ),
+      const delivered: Donation[] = await manager.deliverDonations(donations);
+      const kept = new Set(delivered.map((donation) => donation.id));
+      const messages = batch.messages.filter((message) =>
+        kept.has(parse<Donation>(message.body).id),
       );
+      if (messages.length) await env.PIXELS_QUEUE.sendBatch(messages);
       return;
     }
 
     if (batch.queue.endsWith("pixels")) {
-      const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
-      await manager.process(donations);
+      await manager.deliverPixels(donations);
       return;
     }
 
