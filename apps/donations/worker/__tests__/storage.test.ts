@@ -2,10 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Donation } from "@alveusgg/donations-core";
 import { DurableObjectDonationStorage } from "../src/providers/storage";
 
-const { removeDonations } = vi.hoisted(() => ({ removeDonations: vi.fn() }));
+const { removeDonations, createDonations } = vi.hoisted(() => ({
+  removeDonations: vi.fn(),
+  createDonations: vi.fn(),
+}));
 vi.mock("../src/utils/site-api", () => ({
   createSiteApi: () => ({
-    donations: { removeDonations: { mutate: removeDonations } },
+    donations: {
+      removeDonations: { mutate: removeDonations },
+      createDonations: { mutate: createDonations },
+    },
   }),
 }));
 
@@ -42,13 +48,19 @@ function fakeSql() {
 function setup() {
   const sql = fakeSql();
   const resync = vi.fn(async () => new Response(null, { status: 200 }));
+  const process = vi.fn(async () => {});
   const ctx = { storage: { sql } } as unknown as DurableObjectState;
   const env = {
     MURAL_ID: "two",
     SHARED_KEY: "shared-key",
-    PIXELS_MANAGER: { getByName: () => ({ fetch: resync }) },
+    PIXELS_MANAGER: { getByName: () => ({ fetch: resync, process }) },
   } as unknown as Env;
-  return { sql, resync, storage: new DurableObjectDonationStorage(ctx, env) };
+  return {
+    sql,
+    resync,
+    process,
+    storage: new DurableObjectDonationStorage(ctx, env),
+  };
 }
 
 const donation = (receivedAt: string) =>
@@ -146,20 +158,28 @@ describe("removing donations", () => {
   });
 });
 
-describe("cancelled donations in the queue", () => {
+function deferred() {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
+describe("delivering queued donations", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-01-02T00:00:00Z"));
     vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    removeDonations.mockResolvedValue({ donations: 1, pixels: 0 });
+    createDonations.mockResolvedValue(undefined);
   });
 
-  it("drops a donation queued before it was cancelled, but not a later re-import", async () => {
-    removeDonations.mockResolvedValue({ donations: 0, pixels: 0 });
+  it("drops a donation that was cancelled before delivery, but not a later re-import", async () => {
     const { storage } = setup();
     const queued = donation("2026-01-01T23:59:00Z");
-
-    vi.setSystemTime(new Date("2026-01-02T00:00:00Z"));
-    // The website has not received the queued donation yet.
     await storage.remove("neon", "example-1", "payment failed");
 
     const reimported = donation("2026-01-02T01:00:00Z");
@@ -167,9 +187,77 @@ describe("cancelled donations in the queue", () => {
       ...donation("2026-01-01T23:00:00Z"),
       providerUniqueId: "example-2",
     };
-    expect(storage.filterCancelled([queued, reimported, other])).toEqual([
-      reimported,
-      other,
+    await expect(
+      storage.deliverDonations([queued, reimported, other]),
+    ).resolves.toEqual([reimported, other]);
+    expect(createDonations).toHaveBeenCalledWith({
+      donations: [reimported, other],
+    });
+  });
+
+  it("finishes an in-flight delivery before removing, so the removal deletes it", async () => {
+    const { storage } = setup();
+    const write = deferred();
+    const order: string[] = [];
+    createDonations.mockImplementation(async () => {
+      await write.promise;
+      order.push("create");
+    });
+    removeDonations.mockImplementation(async () => {
+      order.push("remove");
+      return { donations: 1, pixels: 0 };
+    });
+
+    const delivery = storage.deliverDonations([
+      donation("2026-01-01T23:59:00Z"),
     ]);
+    const removal = storage.remove("neon", "example-1", "payment failed");
+    await vi.advanceTimersByTimeAsync(0);
+    expect(removeDonations).not.toHaveBeenCalled();
+
+    write.resolve();
+    await delivery;
+    await removal;
+    expect(order).toEqual(["create", "remove"]);
+  });
+
+  it("finishes in-flight pixel allocation before removing, then resyncs the mural", async () => {
+    const { storage, process, resync } = setup();
+    const allocation = deferred();
+    process.mockImplementation(() => allocation.promise);
+    removeDonations.mockResolvedValue({ donations: 1, pixels: 1 });
+
+    const delivery = storage.deliverPixels([donation("2026-01-01T23:59:00Z")]);
+    const removal = storage.remove("neon", "example-1", "payment failed");
+    await vi.advanceTimersByTimeAsync(0);
+    expect(removeDonations).not.toHaveBeenCalled();
+
+    allocation.resolve();
+    await delivery;
+    await removal;
+    expect(removeDonations).toHaveBeenCalledOnce();
+    expect(resync).toHaveBeenCalledOnce();
+  });
+
+  it("skips pixel allocation for a donation cancelled while queued", async () => {
+    const { storage, process } = setup();
+    await storage.remove("neon", "example-1", "payment failed");
+
+    await expect(
+      storage.deliverPixels([donation("2026-01-01T23:59:00Z")]),
+    ).resolves.toEqual([]);
+    expect(process).not.toHaveBeenCalled();
+  });
+
+  it("keeps working after a failed delivery", async () => {
+    const { storage } = setup();
+    createDonations.mockRejectedValueOnce(new Error("site unavailable"));
+
+    await expect(
+      storage.deliverDonations([donation("2026-01-01T23:59:00Z")]),
+    ).rejects.toThrow("site unavailable");
+    await expect(
+      storage.remove("neon", "example-1", "payment failed"),
+    ).resolves.toEqual({ donations: 1, pixels: 0 });
   });
 });
