@@ -77,6 +77,7 @@ export const parseDonationEventWebhook = async (
   if (!payload.success) {
     console.error("Failed to parse Neon donation event webhook", {
       error: payload.error,
+      shape: describeShape(body),
     });
     options.onParseError?.(payload.error, {
       kind: "webhook",
@@ -92,6 +93,24 @@ export const parseDonationEventWebhook = async (
   }
   return payload.data;
 };
+
+// Log where IDs live in an unexpected payload without logging donor details.
+function describeShape(value: unknown, depth = 0): unknown {
+  if (typeof value !== "object" || value === null) return typeof value;
+  if (Array.isArray(value))
+    return [depth < 2 ? describeShape(value[0], depth + 1) : "…"];
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [
+      key,
+      /id$/i.test(key) &&
+      (typeof entry === "string" || typeof entry === "number")
+        ? entry
+        : depth < 2
+          ? describeShape(entry, depth + 1)
+          : typeof entry,
+    ]),
+  );
+}
 
 export async function setupWebhook(
   url: string,
