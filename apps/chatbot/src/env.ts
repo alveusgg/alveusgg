@@ -38,7 +38,7 @@ export const env = createEnv({
     MODERATOR_USER_NAMES: namesSchema.default(
       [
         // Channels
-        "alveussantuary",
+        "alveussanctuary",
         "AlveusGG",
         // Staff
         "Maya",
