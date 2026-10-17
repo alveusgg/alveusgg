@@ -227,10 +227,8 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private async removeFailedNow() {
-    const sinceDate = formatDateInTimezone(
-      subtractDays(new Date(), FAILED_PAYMENT_LOOKBACK_DAYS),
-      this.options.localTimezone,
-    );
+    const since = subtractDays(new Date(), FAILED_PAYMENT_LOOKBACK_DAYS);
+    const sinceDate = formatDateInTimezone(since, this.options.localTimezone);
     const failed: string[] = [];
     let searchedAll = true;
     for (const status of FAILED_PAYMENT_STATUSES) {
@@ -253,27 +251,51 @@ export class NeonDonationProvider implements DonationProvider {
     } catch (error) {
       this.reportFailedPaymentIssue(error, { step: "remove" });
     }
-    if (!searchedAll) return;
-
-    // A donation that left the failed set may have been paid after all. The
-    // regular sync only looks back a few days, so import it here.
-    const current = new Set(failed);
-    const retry: string[] = [];
     const previous =
       this.service.config.get<string[]>(FAILED_PAYMENTS_CONFIG_KEY) ?? [];
+    const save = (ids: string[]) =>
+      this.service.config.set(
+        FAILED_PAYMENTS_CONFIG_KEY,
+        ids.length ? [...new Set(ids)] : undefined,
+      );
+    // Without every status, a missing ID does not mean it was paid.
+    if (!searchedAll) return save([...previous, ...failed]);
+
+    // A donation that left the failed set may have been paid after all. The
+    // regular sync only looks back a few days, so import it here, and keep
+    // checking while its payment is still unsettled.
+    const current = new Set(failed);
+    const keep: string[] = [];
     for (const id of previous.filter((id) => !current.has(id))) {
       try {
-        await this.importDonationById(id);
+        if (await this.recoverDonation(id, since)) keep.push(id);
       } catch (error) {
-        retry.push(id);
+        keep.push(id);
         this.reportFailedPaymentIssue(error, { donationId: id });
       }
     }
-    const next = [...failed, ...retry];
-    this.service.config.set(
-      FAILED_PAYMENTS_CONFIG_KEY,
-      next.length ? next : undefined,
+    save([...failed, ...keep]);
+  }
+
+  /** Imports a paid donation. Returns whether to check it again later. */
+  private async recoverDonation(id: string, since: Date) {
+    const response = await getDonation(this.options, id);
+    if (!response.ok) {
+      if (response.errorType === "request" && response.status === 404) {
+        return false;
+      }
+      throw new Error(`Failed to fetch Neon donation ${id}`);
+    }
+
+    const data = response.data;
+    if (data.status === SUCCEEDED_STATUS) {
+      await this.importDonation(data);
+      return false;
+    }
+    const settled = ["FAILED", "CANCELED", "REFUNDED"].includes(
+      data.status ?? "",
     );
+    return !settled && data.date >= since;
   }
 
   private async searchDonationIds(status: string, sinceDate: string) {
@@ -529,7 +551,10 @@ export class NeonDonationProvider implements DonationProvider {
       throw new Error(`Failed to fetch Neon donation ${id}`);
     }
 
-    const data = donationResponse.data;
+    return this.importDonation(donationResponse.data);
+  }
+
+  private async importDonation(data: Donation) {
     if (!this.shouldSyncDonation(data)) {
       return false;
     }

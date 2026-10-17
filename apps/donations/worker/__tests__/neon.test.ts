@@ -674,6 +674,49 @@ describe("removing failed payments", () => {
     expect(state["neon-failed-payments"]).toEqual(["7"]);
   });
 
+  it.each([
+    { status: "Pending", date: "2026-01-01", kept: true },
+    { status: "Deferred", date: "2026-01-01", kept: true },
+    { status: "Pending", date: "2025-11-01", kept: false },
+    { status: "Failed", date: "2025-11-01", kept: false },
+  ])(
+    "keeps checking an unsettled payment within the window: %j",
+    async ({ status, date, kept }) => {
+      const state = configStore({ "neon-failed-payments": ["8"] });
+      failedSearch({});
+      vi.mocked(getDonation).mockResolvedValue({
+        ok: true,
+        data: DonationResponse.parse({
+          ...rawDonation,
+          id: "8",
+          anonymousType: "No",
+          status,
+          date,
+        }),
+      });
+      const provider = await NeonDonationProvider.init(service, env);
+      await provider.removeFailedDonations();
+
+      expect(service.add).not.toHaveBeenCalled();
+      expect(state["neon-failed-payments"]).toEqual(kept ? ["8"] : undefined);
+    },
+  );
+
+  it("stops checking a deleted donation", async () => {
+    const state = configStore({ "neon-failed-payments": ["8"] });
+    failedSearch({});
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "request",
+      error: "Request failed with status 404",
+      status: 404,
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(state["neon-failed-payments"]).toBeUndefined();
+  });
+
   it("retries a failed import on the next sweep", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const state = configStore({ "neon-failed-payments": ["8"] });
@@ -710,9 +753,10 @@ describe("removing failed payments", () => {
       "payment failed, canceled or refunded",
     );
     expect(Sentry.captureException).toHaveBeenCalledOnce();
-    // Without a complete picture, nothing is treated as paid.
+    // Without a complete picture, nothing is treated as paid, but the newly
+    // found failure is remembered.
     expect(getDonation).not.toHaveBeenCalled();
-    expect(state["neon-failed-payments"]).toEqual(["5"]);
+    expect(state["neon-failed-payments"]).toEqual(["5", "9"]);
   });
 
   it("runs one sweep at a time", async () => {
