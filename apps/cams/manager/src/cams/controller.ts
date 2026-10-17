@@ -8,6 +8,13 @@ export class CamControllerDurableObject extends DurableObject {
     super(state, env);
   }
 
+  // Callers use `stub.fetch()` rather than calling the RPC method directly: a
+  // request body sent over JS RPC fails with "ReadableStream received over RPC
+  // disconnected prematurely" once the call returns.
+  async fetch(request: Request) {
+    return this.dangerouslyForwardFetch(request);
+  }
+
   async dangerouslyForwardFetch(request: Request) {
     // The VPC service only exposes HTTP; the URL also supplies its Host header.
     const url = new URL(request.url);
