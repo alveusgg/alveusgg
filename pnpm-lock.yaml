@@ -61,15 +61,27 @@ importers:
 
   apps/cams/manager:
     dependencies:
+      '@alveusgg/alveusgg-website':
+        specifier: workspace:*
+        version: link:../../website
       '@alveusgg/cams-control-client':
         specifier: workspace:*
         version: link:../control
+      '@trpc/client':
+        specifier: ^11.18.0
+        version: 11.18.0(@trpc/server@11.18.0)(typescript@6.0.3)
+      '@trpc/server':
+        specifier: ^11.18.0
+        version: 11.18.0(typescript@6.0.3)
       hono:
         specifier: ^4.13.8
         version: 4.13.13
       jose:
         specifier: ^6.2.12
         version: 6.2.12
+      superjson:
+        specifier: ^2.2.6
+        version: 2.2.6
       zod:
         specifier: ^4.6.5
         version: 4.6.5

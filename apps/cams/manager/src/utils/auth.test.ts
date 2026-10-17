@@ -27,12 +27,18 @@ const sign = (
     key = signingKey,
     iss = issuer,
     exp = "10m",
-  }: { key?: KeyPair; iss?: string; exp?: string | number } = {},
+    subject = "client-or-user-id",
+  }: {
+    key?: KeyPair;
+    iss?: string;
+    exp?: string | number;
+    subject?: string;
+  } = {},
 ) =>
   new SignJWT(claims)
     .setProtectedHeader({ alg: "RS256", kid })
     .setIssuer(iss)
-    .setSubject("client-or-user-id")
+    .setSubject(subject)
     .setIssuedAt()
     .setExpirationTime(exp)
     .sign(key.privateKey);
@@ -257,5 +263,39 @@ describe("requireRole", () => {
         });
       }
     });
+  });
+});
+
+describe("preset job service subject restriction", () => {
+  const requestJobs = async (roles: string[], subject: string) => {
+    const { requireRole } = await import("./auth");
+    const app = new Hono<{ Bindings: Env }>().post(
+      "/presets/jobs",
+      requireRole("ptzControl", { subject: "service:presets" }),
+      (c) => c.text("queued"),
+    );
+    return app.request(
+      "/presets/jobs",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${await accessToken(roles, { subject })}`,
+        },
+      },
+      { ALVEUS_AUTH_ISSUER: issuer },
+    );
+  };
+  it("rejects an ordinary user's valid PTZ token", async () => {
+    expect((await requestJobs(["ptzControl"], "user:123")).status).toBe(403);
+  });
+  it("accepts the signed preset service subject with the PTZ role", async () => {
+    expect((await requestJobs(["ptzControl"], "service:presets")).status).toBe(
+      200,
+    );
+  });
+  it("still rejects the right subject without the required role", async () => {
+    expect((await requestJobs(["otherRole"], "service:presets")).status).toBe(
+      403,
+    );
   });
 });

@@ -29,14 +29,16 @@
     },
   ],
   "secrets": {
-    "required": ["CONTROL_API_TOKEN"],
+    "required": ["CONTROL_API_TOKEN", "SITE_SHARED_KEY"],
   },
   "vars": {
     "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+    "SITE_URL": "",
   },
 
   "env": {
     "production": {
+      "triggers": { "crons": ["*/5 * * * *"] },
       "name": "cams-manager",
       "routes": [
         {
@@ -52,10 +54,11 @@
         },
       ],
       "secrets": {
-        "required": ["CONTROL_API_TOKEN"],
+        "required": ["CONTROL_API_TOKEN", "SITE_SHARED_KEY"],
       },
       "vars": {
         "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+        "SITE_URL": "https://www.alveussanctuary.org",
       },
     },
     // Preview deliberately talks to the same rack and trusts the production
@@ -77,10 +80,11 @@
         },
       ],
       "secrets": {
-        "required": ["CONTROL_API_TOKEN"],
+        "required": ["CONTROL_API_TOKEN", "SITE_SHARED_KEY"],
       },
       "vars": {
         "ALVEUS_AUTH_ISSUER": "https://www.alveussanctuary.org",
+        "SITE_URL": "",
       },
     },
   },
