@@ -30,7 +30,7 @@ function reportInitializationError(provider: Providers, operation: string) {
   return (error: unknown) => {
     console.error(`Failed ${operation} for ${provider}`, error);
     Sentry.withScope((scope) => {
-      scope.setTag("integration", provider);
+      scope.setTag("integration", provider === "neon" ? "neon-crm" : provider);
       scope.setTag("error.kind", operation);
       Sentry.captureException(error);
     });

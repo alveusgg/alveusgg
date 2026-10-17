@@ -158,13 +158,16 @@ const CustomFieldData = z.union([
   IdNamePairBase.extend({ value: z.string() }),
 ]);
 
-// Preserve donor-name privacy for both legacy webhooks and API responses.
-// Amount-anonymous donations remain unsupported while public alerts show amounts.
-const AnonymousDonationBoolean = z
-  .enum(["Yes", "No", "DonorNameAnonymous"])
+const DonationAnonymity = z
+  .enum(["Yes", "No", "DonorNameAnonymous", "DonationAmountAnonymous"])
   .nullable()
-  .optional()
-  .transform((val) => val != null && val !== "No");
+  .optional();
+
+// Keep the existing donor-name boolean while retaining amount privacy separately.
+const parseDonationAnonymity = (value: z.output<typeof DonationAnonymity>) => ({
+  anonymousType: value === "Yes" || value === "DonorNameAnonymous",
+  amountAnonymous: value === "DonationAmountAnonymous",
+});
 
 export type Timestamps = z.output<typeof Timestamps>;
 export const Timestamps = z.object({
@@ -190,19 +193,24 @@ export type DonationWebhookPayload = z.output<typeof DonationWebhookPayload>;
 export const DonationWebhookPayload = z.object({
   ...webhookPayloadBase,
   eventTrigger: z.literal("createDonation"),
-  data: z.object({
-    id: RecordId,
-    accountId: RecordId,
-    amount: z.number().positive(),
-    campaign: IdNamePairBase.nullish(),
-    fund: IdNamePairBase.nullish(),
-    timestamps: Timestamps,
-    date: DateSchema,
-    anonymousType: AnonymousDonationBoolean,
-    donationCustomFields: z.array(CustomFieldData).optional(),
-    donorCoveredFeeFlag: z.boolean(),
-    payLater: z.boolean().optional().default(false),
-  }),
+  data: z
+    .object({
+      id: RecordId,
+      accountId: RecordId,
+      amount: z.number().positive(),
+      campaign: IdNamePairBase.nullish(),
+      fund: IdNamePairBase.nullish(),
+      timestamps: Timestamps,
+      date: DateSchema,
+      anonymousType: DonationAnonymity,
+      donationCustomFields: z.array(CustomFieldData).optional(),
+      donorCoveredFeeFlag: z.boolean(),
+      payLater: z.boolean().optional().default(false),
+    })
+    .transform((data) => ({
+      ...data,
+      ...parseDonationAnonymity(data.anonymousType),
+    })),
 });
 
 export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
@@ -230,35 +238,40 @@ const DonationIdNamePair = IdNamePairBase.extend({
 }).nullable();
 
 export type DonationResponse = z.output<typeof DonationResponse>;
-export const DonationResponse = z.object({
-  id: RecordId,
-  accountId: RecordId,
-  amount: z.number().positive(),
-  purpose: z.string().nullable().optional(),
-  campaign: DonationIdNamePair,
-  fund: DonationIdNamePair,
-  origin: DonationOrigin,
-  timestamps: NullableTimestamps,
-  date: DateSchema,
-  anonymousType: AnonymousDonationBoolean,
-  donationCustomFields: z.array(CustomFieldData).nullable().optional(),
-  donorCoveredFeeFlag: z
-    .boolean()
-    .nullable()
-    .optional()
-    .transform((val) => val === true),
-  payLater: z
-    .boolean()
-    .nullable()
-    .optional()
-    .transform((val) => val === true),
-  payments: z
-    .array(DonationPayment)
-    .nullable()
-    .optional()
-    .transform((payments) => payments ?? []),
-  status: GenericStatus,
-});
+export const DonationResponse = z
+  .object({
+    id: RecordId,
+    accountId: RecordId,
+    amount: z.number().positive(),
+    purpose: z.string().nullable().optional(),
+    campaign: DonationIdNamePair,
+    fund: DonationIdNamePair,
+    origin: DonationOrigin,
+    timestamps: NullableTimestamps,
+    date: DateSchema,
+    anonymousType: DonationAnonymity,
+    donationCustomFields: z.array(CustomFieldData).nullable().optional(),
+    donorCoveredFeeFlag: z
+      .boolean()
+      .nullable()
+      .optional()
+      .transform((val) => val === true),
+    payLater: z
+      .boolean()
+      .nullable()
+      .optional()
+      .transform((val) => val === true),
+    payments: z
+      .array(DonationPayment)
+      .nullable()
+      .optional()
+      .transform((payments) => payments ?? []),
+    status: GenericStatus,
+  })
+  .transform((data) => ({
+    ...data,
+    ...parseDonationAnonymity(data.anonymousType),
+  }));
 
 const Pagination = z.object({
   currentPage: z.number(),
@@ -438,22 +451,16 @@ export const WebhookResponse = z.object({
   trigger: z.enum(["CREATE_DONATION"]),
   contentType: z.string(),
   triggerSelfImport: z.boolean(),
-  httpBasic: z.object({
-    userName: z.string(),
-  }),
+  httpBasic: z.object({ userName: z.string() }).nullable(),
   customParameters: z.array(NameValuePair).nullable(),
 });
 
 export type WebhooksResponse = z.output<typeof WebhooksResponse>;
-// Other integrations can register hooks that this client does not support.
-// Keep the individual schema strict without failing the entire listing.
+// Ignore other integrations' event types, but fail loudly if a donation hook's
+// shape changes. Dropping it could make setup incorrectly create a duplicate.
 export const WebhooksResponse = z
-  .array(
-    WebhookResponse.optional().catch(({ error }) => {
-      console.warn("Ignoring unsupported or invalid Neon webhook", {
-        issues: error.issues,
-      });
-      return undefined;
-    }),
+  .array(z.looseObject({ trigger: z.string() }))
+  .transform((webhooks) =>
+    webhooks.filter((webhook) => webhook.trigger === "CREATE_DONATION"),
   )
-  .transform((webhooks) => webhooks.filter((webhook) => webhook !== undefined));
+  .pipe(z.array(WebhookResponse));

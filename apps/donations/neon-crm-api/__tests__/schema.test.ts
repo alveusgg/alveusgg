@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   CreateWebhookInputBody,
@@ -27,14 +27,15 @@ const donation = {
 
 describe("donation anonymity", () => {
   it.each([
-    ["Yes", true],
-    ["DonorNameAnonymous", true],
-    ["No", false],
-    [null, false],
-    [undefined, false],
+    ["Yes", true, false],
+    ["DonorNameAnonymous", true, false],
+    ["DonationAmountAnonymous", false, true],
+    ["No", false, false],
+    [null, false, false],
+    [undefined, false, false],
   ])(
     "parses %s consistently for sync and webhooks",
-    (anonymousType, expected) => {
+    (anonymousType, expectedNameAnonymous, expectedAmountAnonymous) => {
       const response = DonationResponse.parse({ ...donation, anonymousType });
       const webhook = DonationWebhookPayload.parse({
         eventTrigger: "createDonation",
@@ -49,19 +50,19 @@ describe("donation anonymity", () => {
         },
       });
 
-      expect(response.anonymousType).toBe(expected);
-      expect(webhook.data.anonymousType).toBe(expected);
+      expect(response.anonymousType).toBe(expectedNameAnonymous);
+      expect(webhook.data.anonymousType).toBe(expectedNameAnonymous);
+      expect(response.amountAnonymous).toBe(expectedAmountAnonymous);
+      expect(webhook.data.amountAnonymous).toBe(expectedAmountAnonymous);
     },
   );
 
-  it.each(["DonationAmountAnonymous", "unexpected"])(
-    "rejects unsupported anonymity value %s",
-    (anonymousType) => {
-      expect(
-        DonationResponse.safeParse({ ...donation, anonymousType }).success,
-      ).toBe(false);
-    },
-  );
+  it("rejects unknown anonymity values", () => {
+    expect(
+      DonationResponse.safeParse({ ...donation, anonymousType: "unexpected" })
+        .success,
+    ).toBe(false);
+  });
 });
 
 describe("donation webhook metadata", () => {
@@ -87,13 +88,7 @@ describe("donation webhook metadata", () => {
 });
 
 describe("webhook subscriptions", () => {
-  beforeEach(() => {
-    vi.spyOn(console, "warn").mockImplementation(() => {});
-  });
-
-  afterEach(() => vi.restoreAllMocks());
-
-  it("drops unsupported hooks without losing the authenticated donation hook", () => {
+  it("ignores other triggers and retains donation hooks with or without auth", () => {
     const subscriptions = [
       {
         id: "1",
@@ -123,12 +118,14 @@ describe("webhook subscriptions", () => {
       })),
     ];
 
-    expect(WebhooksResponse.parse(subscriptions)).toEqual([subscriptions[0]]);
-    expect(console.warn).toHaveBeenCalledTimes(5);
-    expect(WebhookResponse.safeParse(subscriptions[1]).success).toBe(false);
+    expect(WebhooksResponse.parse(subscriptions)).toEqual(
+      subscriptions.slice(0, 2),
+    );
+    expect(WebhookResponse.safeParse(subscriptions[1]).success).toBe(true);
+    expect(WebhookResponse.safeParse(subscriptions[2]).success).toBe(false);
   });
 
-  it("reports malformed entries while retaining valid siblings", () => {
+  it("rejects malformed donation hooks instead of hiding them from setup", () => {
     const subscription = {
       id: "1",
       name: "Donations",
@@ -140,10 +137,18 @@ describe("webhook subscriptions", () => {
       customParameters: null,
     };
 
-    expect(WebhooksResponse.parse([null, {}, subscription])).toEqual([
-      subscription,
-    ]);
-    expect(console.warn).toHaveBeenCalledTimes(2);
+    expect(
+      WebhooksResponse.safeParse([
+        subscription,
+        { ...subscription, id: "2", url: "invalid" },
+      ]).success,
+    ).toBe(false);
+  });
+
+  it("ignores unsupported triggers without validating their unrelated fields", () => {
+    expect(
+      WebhooksResponse.parse([{ trigger: "UPDATE_DONATION", url: null }]),
+    ).toEqual([]);
   });
 
   it.each([null, {}, "not an array"])(

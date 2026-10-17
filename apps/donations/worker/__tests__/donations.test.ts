@@ -6,12 +6,14 @@ import { PaypalDonationProvider } from "../src/providers/paypal/paypal";
 import { TwitchDonationProvider } from "../src/providers/twitch/twitch";
 import { createIfNotExistsDonationsTable } from "../src/providers/storage";
 
+const { setScopeTag } = vi.hoisted(() => ({ setScopeTag: vi.fn() }));
+
 vi.mock("@sentry/cloudflare", () => ({
   instrumentDurableObjectWithSentry: (_config: unknown, base: unknown) => base,
   captureException: vi.fn(),
   setTags: vi.fn(),
   withScope: (callback: (scope: { setTag: () => void }) => void) =>
-    callback({ setTag: vi.fn() }),
+    callback({ setTag: setScopeTag }),
 }));
 vi.mock("../src/providers/storage", () => ({
   createIfNotExistsDonationsTable: vi.fn().mockResolvedValue(undefined),
@@ -105,6 +107,7 @@ describe("donation provider isolation", () => {
     expect(failed.status).toBe(503);
     expect(failed.headers.get("Retry-After")).toBe("60");
     expect(Sentry.captureException).toHaveBeenCalledWith(error);
+    expect(setScopeTag).toHaveBeenCalledWith("integration", "neon-crm");
     expect(NeonDonationProvider.init).toHaveBeenCalledTimes(1);
   });
 
@@ -161,6 +164,11 @@ describe("donation provider isolation", () => {
     expect((await manager.request("neon")).status).toBe(201);
     await manager.drain();
     expect(Sentry.captureException).toHaveBeenCalledWith(error);
+    expect(setScopeTag).toHaveBeenCalledWith("integration", "neon-crm");
+    expect(setScopeTag).toHaveBeenCalledWith(
+      "error.kind",
+      "webhook-registration",
+    );
     expect((await manager.request("neon", "sync")).status).toBe(200);
     expect(neon.registerWebhook).toHaveBeenCalledTimes(1);
 
