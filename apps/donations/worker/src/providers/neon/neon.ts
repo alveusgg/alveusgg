@@ -58,7 +58,16 @@ const SYNC_CONFIG_KEY = "neon-sync";
 const SYNC_LOOKBACK_DAYS = 2;
 const SYNC_MAX_PAGES = 10;
 const SYNC_PAGE_SIZE = 50;
-const SELF_IMPORT_ORIGIN_CATEGORY = "Self-Import";
+// Staff enter these by hand, often to backfill donations that were already
+// counted elsewhere (e.g. Twitch charity donations that received pixels).
+// Search results report a different "Origin Category" than the donation
+// record, so only trust the donation's own origin.
+const MANUAL_ORIGIN_CATEGORIES = new Set([
+  "Batch Donation",
+  "Custom Import",
+  "Data Entry",
+  "Self-Import",
+]);
 const SUCCEEDED_STATUS = "SUCCEEDED";
 const SYNC_MAX_RETRIES_PER_RUN = 10;
 // More failures in a row than this look like an outage rather than a broken
@@ -165,6 +174,20 @@ export class NeonDonationProvider implements DonationProvider {
       return new Response("OK", { status: 200 });
     }
 
+    let origin = data.origin;
+    if (origin === undefined) {
+      const donationRes = await getDonation(this.options, data.id);
+      if (!donationRes.ok) {
+        return new Response("Failed to fetch this donation's origin.", {
+          status: 500,
+        });
+      }
+      origin = donationRes.data.origin;
+    }
+    if (this.isManualDonation(data.id, origin)) {
+      return new Response("OK", { status: 200 });
+    }
+
     const accountRes = await getAccount(this.options, data.accountId);
     if (!accountRes.ok) {
       if (accountRes.errorType === "request")
@@ -256,11 +279,6 @@ export class NeonDonationProvider implements DonationProvider {
             value: "Succeeded",
           },
           {
-            field: "Origin Category",
-            operator: "NOT_EQUAL",
-            value: SELF_IMPORT_ORIGIN_CATEGORY,
-          },
-          {
             field: "Donation Created Date",
             operator: "GREATER_AND_EQUAL",
             value: catchUp.sinceDate,
@@ -284,7 +302,6 @@ export class NeonDonationProvider implements DonationProvider {
           "Donation ID",
           "Donation Created Date",
           "Donation Status",
-          "Origin Category",
         ],
         pagination: {
           // Advance by unique ID rather than a shifting numeric page offset.
@@ -322,13 +339,7 @@ export class NeonDonationProvider implements DonationProvider {
       found += results.length;
       const pageFailures: Record<string, NeonFailedDonation> = {};
       let consecutiveFailures = 0;
-      for (const [index, id] of ids.entries()) {
-        if (
-          results[index]?.["Origin Category"] === SELF_IMPORT_ORIGIN_CATEGORY
-        ) {
-          skipped++;
-          continue;
-        }
+      for (const id of ids) {
         try {
           if (await this.importDonationById(id)) imported++;
           else skipped++;
@@ -391,6 +402,14 @@ export class NeonDonationProvider implements DonationProvider {
   private async importDonationById(id: string) {
     const donationResponse = await getDonation(this.options, id);
     if (!donationResponse.ok) {
+      // Search still lists some deleted donations; retrying cannot help.
+      if (
+        donationResponse.errorType === "request" &&
+        donationResponse.status === 404
+      ) {
+        console.info("Skipping deleted Neon donation", { id });
+        return false;
+      }
       throw new Error(`Failed to fetch Neon donation ${id}`);
     }
 
@@ -413,7 +432,7 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
 
-    if (data.origin?.originCategory === SELF_IMPORT_ORIGIN_CATEGORY) {
+    if (this.isManualDonation(data.id, data.origin)) {
       return false;
     }
 
@@ -428,6 +447,14 @@ export class NeonDonationProvider implements DonationProvider {
           payment.paymentStatus && payment.paymentStatus === SUCCEEDED_STATUS,
       )
     );
+  }
+
+  private isManualDonation(id: string, origin: NeonDonationData["origin"]) {
+    const category = origin?.originCategory;
+    if (!category || !MANUAL_ORIGIN_CATEGORIES.has(category)) return false;
+
+    console.info("Skipping manually entered Neon donation", { id, category });
+    return true;
   }
 
   private shouldSkipAmountAnonymousDonation(data: NeonDonationData) {
