@@ -45,17 +45,19 @@ export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
     "",
   );
 
-const fetch = (
+const fetch = async (
   options: Options,
   path: string,
   method: ApiMethod = "GET",
   body?: unknown,
 ) => {
-  const timeoutMs = options.fetchTimeoutMs ?? 10_000;
   const request: RequestInit & { headers: Record<string, string> } = {
     method,
     headers: apiHeaders(options),
-    signal: AbortSignal.timeout(timeoutMs),
+    signal:
+      options.fetchTimeoutMs === undefined
+        ? undefined
+        : AbortSignal.timeout(options.fetchTimeoutMs),
   };
 
   if (body) {

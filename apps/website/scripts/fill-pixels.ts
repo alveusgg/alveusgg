@@ -1,191 +1,166 @@
-import { createId } from "@paralleldrive/cuid2";
+import { readFileSync } from "node:fs";
 
-import { prisma } from "@alveusgg/database";
+import { type Prisma, prisma } from "@alveusgg/database";
 
-import { DonatorSchema } from "@alveusgg/donations-core";
+import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH, isMuralId } from "@/data/murals";
+
 import {
-  DONATION_TOLERANCE,
-  PIXEL_PRICE,
-  hashPixelIdentifier,
-} from "@alveusgg/donations-core/pixels";
+  databaseTarget,
+  onlyArgs,
+  parseArgs,
+  readIds,
+  required,
+  sha256,
+  writePrivateJson,
+} from "./lib/backfill";
+import {
+  PixelPlan,
+  PlannedPixel,
+  checkPixelPlan,
+  makePixelPlan,
+} from "./lib/pixel-plan";
 
-import murals from "@/data/murals";
+let databaseUsed = false;
 
-import { typeSafeObjectEntries } from "@/utils/helpers";
+async function getDonations(
+  ids: string[],
+  db: Prisma.TransactionClient = prisma,
+) {
+  databaseUsed = true;
+  const rows = await db.donation.findMany({
+    where: { providerUniqueId: { in: ids } },
+    include: { pixels: true },
+  });
+  if (rows.length !== ids.length)
+    throw new Error("Some selected donations are missing");
+  return rows.map((d) => ({
+    ...d,
+    pixels: d.pixels
+      .filter((p) => p.muralId !== null)
+      .map((p) => PlannedPixel.parse(p)),
+  }));
+}
 
-// CLI Arguments
-const dryRun = process.argv.includes("--dry-run");
-const verbose = process.argv.includes("--verbose");
-const help = process.argv.includes("--help");
-const strictPixelAmounts = process.argv.includes("--strict-amount");
+async function getOccupied(
+  muralId: string,
+  pixelIds: string[] = [],
+  db: Prisma.TransactionClient = prisma,
+) {
+  return (
+    await db.pixel.findMany({
+      where: { OR: [{ muralId }, { id: { in: pixelIds } }] },
+    })
+  ).map((p) => PlannedPixel.parse(p));
+}
 
-function printUsageHint() {
-  console.error(
-    "Usage: pnpm run murals:fill-pixels [--help] [--dry-run] [--verbose] [--strict-amount] [--provider=x] [--neon-campaign-id=2] [--neon-fund-id=2] [startDateTime] [endDateTime]",
+async function main() {
+  const args = parseArgs();
+  onlyArgs(args, [
+    "help",
+    "dry-run",
+    "apply",
+    "provider-unique-ids",
+    "mural",
+    "plan-out",
+    "plan",
+    "confirm-sha",
+    "confirm-target",
+  ]);
+  if (args.has("help")) {
+    console.log(
+      "Plan (read-only): --provider-unique-ids=ids.json --mural=two --plan-out=private-plan.json\nApply: --apply --plan=private-plan.json --confirm-sha=SHA256 --confirm-target=HOST/DATABASE",
+    );
+    return;
+  }
+  const target = databaseTarget();
+  if (!args.has("apply")) {
+    if (
+      args.has("plan") ||
+      args.has("confirm-sha") ||
+      args.has("confirm-target")
+    )
+      throw new Error("Apply arguments require --apply");
+    const ids = readIds(required(args, "provider-unique-ids"));
+    const muralId = required(args, "mural");
+    if (!isMuralId(muralId)) throw new Error("Unknown mural");
+    const plan = await makePixelPlan(
+      await getDonations(ids),
+      await getOccupied(muralId),
+      {
+        target,
+        muralId,
+        columns: PIXEL_GRID_WIDTH,
+        rows: PIXEL_GRID_HEIGHT,
+      },
+    );
+    writePrivateJson(required(args, "plan-out"), plan);
+    console.log(
+      JSON.stringify({
+        mode: "read-only",
+        donations: plan.donations.length,
+        pixels: plan.donations.reduce((n, d) => n + d.pixels.length, 0),
+        sha256: sha256(readFileSync(required(args, "plan-out"))),
+      }),
+    );
+    return;
+  }
+  if (
+    args.get("apply") !== "true" ||
+    ["dry-run", "provider-unique-ids", "mural", "plan-out"].some((k) =>
+      args.has(k),
+    )
+  ) {
+    throw new Error("Apply accepts only a reviewed plan and confirmations");
+  }
+  const bytes = readFileSync(required(args, "plan"));
+  if (sha256(bytes) !== required(args, "confirm-sha"))
+    throw new Error("Plan hash does not match");
+  const plan = PixelPlan.parse(JSON.parse(bytes.toString("utf8")));
+  if (
+    plan.target !== target ||
+    required(args, "confirm-target") !== target ||
+    !isMuralId(plan.muralId) ||
+    plan.columns !== PIXEL_GRID_WIDTH ||
+    plan.rows !== PIXEL_GRID_HEIGHT
+  )
+    throw new Error("Plan target changed");
+  const ids = plan.donations.map((d) => d.providerUniqueId);
+  const pixelIds = plan.donations.flatMap((d) => d.pixels.map((p) => p.id));
+  // Check and insert in one transaction; a collision rolls the entire batch back.
+  // No notification APIs, queues, updates, deletes or skipDuplicates.
+  const inserted = await prisma.$transaction(
+    async (tx) => {
+      const missing = await checkPixelPlan(
+        plan,
+        await getDonations(ids, tx),
+        await getOccupied(plan.muralId, pixelIds, tx),
+      );
+      if (missing.length) await tx.pixel.createMany({ data: missing });
+      const remaining = await checkPixelPlan(
+        plan,
+        await getDonations(ids, tx),
+        await getOccupied(plan.muralId, pixelIds, tx),
+      );
+      if (remaining.length) throw new Error("Pixel verification incomplete");
+      return missing.length;
+    },
+    { isolationLevel: "Serializable" },
+  );
+  console.log(
+    JSON.stringify({
+      mode: "applied",
+      inserted,
+      verified: pixelIds.length,
+      cacheRefreshRequired: true,
+    }),
   );
 }
 
-if (help) {
-  printUsageHint();
-  process.exit(1);
-}
-
-const provider = process.argv
-  .find((arg) => arg.startsWith("--provider="))
-  ?.split("=")[1];
-const neonCampaignId = process.argv
-  .find((arg) => arg.startsWith("--neon-campaign-id="))
-  ?.split("=")[1];
-const neonFundId = process.argv
-  .find((arg) => arg.startsWith("--neon-fund-id="))
-  ?.split("=")[1];
-
-const fixedArgs = process.argv
-  .slice(2)
-  .filter((arg) => !arg.startsWith("--") && !arg.startsWith("-"));
-
-const startDateTimeStr = fixedArgs[0]?.trim();
-const endDateTimeStr = fixedArgs[1]?.trim();
-
-// Configuration
-const MIN_AMOUNT_CENTS = (PIXEL_PRICE - DONATION_TOLERANCE) * 100;
-const MAX_RETRIES = 5; // Number of attempts to resolve collisions
-
-// Mural data
-const [muralId, mural] =
-  typeSafeObjectEntries(murals).find(([, { type }]) => type === "live") ??
-  (["two", murals.two] as const);
-
-const startDateTime = startDateTimeStr
-  ? new Date(startDateTimeStr)
-  : new Date(mural.startedAt);
-const endDateTime = endDateTimeStr
-  ? new Date(endDateTimeStr)
-  : "endedAt" in mural
-    ? new Date(mural.endedAt)
-    : new Date();
-
-type NeededCount = {
-  id: string;
-  pixelsNeeded: number | bigint;
-};
-
-async function main() {
-  console.log("Starting backfill…");
-
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    console.log(`\n--- Attempt ${attempt}/${MAX_RETRIES} ---`);
-
-    const neonCampaignFilter = neonCampaignId
-      ? `AND JSON_UNQUOTE(JSON_EXTRACT(d.providerMetadata, '$.neonCampaignId')) = '${neonCampaignId.replace(/'/g, "''")}'`
-      : "";
-    const neonFundFilter = neonFundId
-      ? `AND JSON_UNQUOTE(JSON_EXTRACT(d.providerMetadata, '$.neonFundId')) = '${neonFundId.replace(/'/g, "''")}'`
-      : "";
-
-    const neededCounts = await prisma.$queryRawUnsafe<NeededCount[]>(`
-      SELECT d.id,
-             FLOOR((d.amount + 500) / 10000) - (SELECT COUNT(*)
-                                                FROM Pixel p
-                                                WHERE p.donationId = d.id) AS pixelsNeeded
-      FROM Donation d
-      WHERE d.receivedAt >= '${startDateTime.toISOString()}'
-        AND d.receivedAt <= '${endDateTime.toISOString()}'
-        AND d.amount > ${MIN_AMOUNT_CENTS}
-        ${provider ? `AND provider = '${provider}'` : ""}
-        ${neonCampaignFilter}
-        ${neonFundFilter}
-        ${strictPixelAmounts ? `AND MOD(d.amount, ${PIXEL_PRICE * 100}) < ${DONATION_TOLERANCE * 100})` : ""}
-      HAVING pixelsNeeded > 0
-      ORDER BY d.receivedAt
-    `);
-
-    if (neededCounts.length === 0) {
-      console.log("All donations are fully populated!");
-      break;
-    }
-
-    console.log(`> Found ${neededCounts.length} donations needing pixels.`);
-
-    // 2. PRISMA: Fetch full objects type-safely
-    const donationIds = neededCounts.map((n) => n.id);
-    const donations = await prisma.donation.findMany({
-      where: { id: { in: donationIds } },
-    });
-
-    // Create a lookup map for speed: ID -> Count
-    const countMap = new Map<string, number>();
-    neededCounts.forEach((n) => countMap.set(n.id, Number(n.pixelsNeeded)));
-
-    // 3. Generate pixels
-    const pixelsToInsert = [];
-
-    for (const donation of donations) {
-      const needed = countMap.get(donation.id) || 0;
-      if (needed <= 0) continue;
-
-      const donator = DonatorSchema.parse(donation.donatedBy);
-      let identifier = "Anonymous";
-      if (donator.primary === "displayName" && donator.displayName) {
-        identifier = `@${donator.displayName}`;
-      } else if (donator.primary === "username" && donator.username) {
-        identifier = `@${donator.username}`;
-      } else if (donator?.firstName) {
-        identifier = donator.firstName;
-      }
-
-      for (let i = 0; i < needed; i++) {
-        pixelsToInsert.push({
-          id: createId(),
-          receivedAt: donation.receivedAt, // Fully typed Date object
-          donationId: donation.id,
-          identifier: identifier,
-          email: donator.email && (await hashPixelIdentifier(donator.email)),
-          muralId,
-          column: Math.floor(Math.random() * 200),
-          row: Math.floor(Math.random() * 50),
-        });
-      }
-    }
-
-    console.log(`> Generated ${pixelsToInsert.length} pixels.`);
-
-    // 4. INSERT
-    if (!dryRun) {
-      const result = await prisma.pixel.createMany({
-        data: pixelsToInsert,
-        skipDuplicates: true,
-      });
-
-      const collisions = pixelsToInsert.length - result.count;
-      console.log(`> Inserted: ${result.count}`);
-
-      if (collisions > 0) {
-        console.log(`⚠️  Collisions: ${collisions}. Retrying next pass...`);
-      } else {
-        break;
-      }
-    } else {
-      console.info(
-        `Dry run mode - skipping database insert of ${pixelsToInsert.length} pixels.`,
-      );
-
-      if (verbose) {
-        console.info(pixelsToInsert);
-      }
-
-      break;
-    }
-  }
-
-  console.log("Done. Backfill complete.");
-}
-
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
+  .catch(() => {
+    console.error(
+      "Pixel backfill stopped. Check the private plan and database state; existing rows are never overwritten.",
+    );
+    process.exitCode = 1;
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => (databaseUsed ? prisma.$disconnect() : undefined));

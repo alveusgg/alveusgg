@@ -7,14 +7,22 @@ import { prisma } from "@alveusgg/database";
 
 import type { PaypalDonation } from "@alveusgg/donations-core";
 
+import { importDryRun } from "./lib/backfill";
+import { parseCsv, parseUsdAmount } from "./lib/csv";
+
+// Historical exports and webhook receipt times can differ through delivery delay.
+const DUPLICATE_WINDOW_MS = 5 * 60 * 1000;
+// Surface less precise historical matches for operator review.
+const FUZZY_WARNING_SECONDS = 20;
+
 // CLI Arguments
-const dryRun = process.argv.includes("--dry-run");
+const dryRun = importDryRun();
 const verbose = process.argv.includes("--verbose");
 const help = process.argv.includes("--help");
 
 function printUsageHint() {
   console.error(
-    "Usage: pnpm run murals:import-paypal-donations [--help] [--dry-run] [--verbose] <file> [campaign]",
+    "Usage: pnpm run murals:import-paypal-donations [--help] [--dry-run | --apply] [--verbose] <file> [campaign]",
   );
 }
 
@@ -28,12 +36,11 @@ const tupleLength = 4;
 const isCsvTuple = (arr: string[]): arr is [string, string, string, string] =>
   arr.length === tupleLength;
 
-async function parseCsvLine(line: string) {
-  const parts = line.split(",");
+async function parseCsvLine(parts: string[]) {
   if (!isCsvTuple(parts)) {
     console.warn(
       `Ignoring malformed line (expected ${tupleLength} comma-separated values):`,
-      line,
+      parts,
     );
     return null;
   }
@@ -41,15 +48,17 @@ async function parseCsvLine(line: string) {
   const [dateStr, name, email, amountStr] = parts;
 
   const date = new Date(dateStr.trim());
-  if (!date) {
-    console.error("Failed to parse date");
+  const amount = parseUsdAmount(amountStr);
+  if (Number.isNaN(date.getTime()) || amount === undefined) {
+    console.error("Skipping row with invalid date or amount");
+    return null;
   }
 
   return {
     date,
     name: name.trim(),
     email: email.trim(),
-    amount: parseFloat(amountStr.trim()),
+    amount,
   } as const;
 }
 
@@ -68,7 +77,7 @@ async function main() {
   const campaign = fixedArgs[1]?.trim() ?? undefined;
 
   const fileContent = readFileSync(resolve(filePath), "utf-8");
-  const lines = fileContent.split("\n").filter((l) => l.trim().length > 0);
+  const lines = parseCsv(fileContent);
 
   console.log(`Found ${lines.length} lines in the CSV file.`);
 
@@ -87,8 +96,8 @@ async function main() {
 
     // Check for duplicates
     // We filter by Amount + Time Window + Specific JSON path for userId
-    const windowStart = new Date(txTime - 5 * 60 * 1000);
-    const windowEnd = new Date(txTime + 5 * 60 * 1000);
+    const windowStart = new Date(txTime - DUPLICATE_WINDOW_MS);
+    const windowEnd = new Date(txTime + DUPLICATE_WINDOW_MS);
     const duplicate = await prisma.donation.findFirst({
       where: {
         amount: amountCents,
@@ -108,7 +117,7 @@ async function main() {
       const dbDate = duplicate.receivedAt;
       const diffSeconds = Math.abs((dbDate.getTime() - txTime) / 1000);
 
-      if (diffSeconds > 20) {
+      if (diffSeconds > FUZZY_WARNING_SECONDS) {
         console.warn(
           `[FUZZY MATCH] ${row.name} ($${row.amount}) found. ` +
             `Diff: ${diffSeconds.toFixed(1)}s. (CSV: ${row.date.toISOString()} vs DB: ${dbDate.toISOString()})`,

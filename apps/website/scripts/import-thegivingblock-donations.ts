@@ -10,14 +10,22 @@ import {
   TheGivingBlockDonationMetadataSchema,
 } from "@alveusgg/donations-core";
 
+import { importDryRun } from "./lib/backfill";
+import { parseCsv, parseUsdAmount } from "./lib/csv";
+
+// Historical exports and webhook receipt times can differ through delivery delay.
+const DUPLICATE_WINDOW_MS = 5 * 60 * 1000;
+// Surface less precise historical matches for operator review.
+const FUZZY_WARNING_SECONDS = 20;
+
 // CLI Arguments
-const dryRun = process.argv.includes("--dry-run");
+const dryRun = importDryRun();
 const verbose = process.argv.includes("--verbose");
 const help = process.argv.includes("--help");
 
 function printUsageHint() {
   console.error(
-    "Usage: pnpm run murals:import-thegivingblock-donations [--help] [--dry-run] [--verbose] <file> [campaign]",
+    "Usage: pnpm run murals:import-thegivingblock-donations [--help] [--dry-run | --apply] [--verbose] <file> [campaign]",
   );
 }
 
@@ -66,12 +74,11 @@ const tupleLength = expectedColumns.length;
 
 const isCsvTuple = (arr: string[]) => arr.length === tupleLength;
 
-async function parseCsvLine(line: string) {
-  const parts = line.split(",");
+async function parseCsvLine(parts: string[]) {
   if (!isCsvTuple(parts)) {
     console.warn(
       `Ignoring malformed line (expected ${tupleLength} comma-separated values):`,
-      line,
+      parts,
     );
     return null;
   }
@@ -79,8 +86,10 @@ async function parseCsvLine(line: string) {
   const date = new Date(
     `${safeAccess(parts, "Transaction Date")} ${safeAccess(parts, "Transaction Time")}`,
   );
-  if (!date) {
-    console.error("Failed to parse date");
+  const amount = parseUsdAmount(safeAccess(parts, "Donation Amount"));
+  if (Number.isNaN(date.getTime()) || amount === undefined) {
+    console.error("Skipping row with invalid date or amount");
+    return null;
   }
 
   const isAnonymous =
@@ -103,7 +112,7 @@ async function parseCsvLine(line: string) {
     name: isAnonymous ? "Anonymous" : safeAccess(parts, "Donor Name"),
     email: safeAccess(parts, "Donor Email"),
     campaignId: safeAccess(parts, "Campaign ID"),
-    amount: parseFloat(safeAccess(parts, "Donation Amount")),
+    amount,
     note: safeAccess(parts, "Donation Notes"),
     donationMethod: res.data.donationMethod,
     processorTransactionId: safeAccess(parts, "Processor Transaction ID"),
@@ -123,7 +132,7 @@ async function main() {
   }
 
   const fileContent = readFileSync(resolve(filePath), "utf-8");
-  const lines = fileContent.split("\n").filter((l) => l.trim().length > 0);
+  const lines = parseCsv(fileContent);
 
   console.log(`Found ${lines.length} lines in the CSV file.`);
 
@@ -142,8 +151,8 @@ async function main() {
 
     // Check for duplicates
     // We filter by Amount + Time Window + Specific JSON path for userId
-    const windowStart = new Date(txTime - 5 * 60 * 1000);
-    const windowEnd = new Date(txTime + 5 * 60 * 1000);
+    const windowStart = new Date(txTime - DUPLICATE_WINDOW_MS);
+    const windowEnd = new Date(txTime + DUPLICATE_WINDOW_MS);
     const duplicate = await prisma.donation.findFirst({
       where: {
         provider: "thegivingblock",
@@ -173,7 +182,7 @@ async function main() {
       const dbDate = duplicate.receivedAt;
       const diffSeconds = Math.abs((dbDate.getTime() - txTime) / 1000);
 
-      if (diffSeconds > 20) {
+      if (diffSeconds > FUZZY_WARNING_SECONDS) {
         console.warn(
           `[FUZZY MATCH] ${row.name} ($${row.amount}) found. ` +
             `Diff: ${diffSeconds.toFixed(1)}s. (CSV: ${row.date.toISOString()} vs DB: ${dbDate.toISOString()})`,

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import {
@@ -14,8 +14,11 @@ import { prisma } from "@alveusgg/database";
 
 import type { NeonDonation } from "@alveusgg/donations-core";
 
+import { importDryRun, writePrivateJson } from "./lib/backfill";
+import { parseCsv } from "./lib/csv";
+
 // CLI Arguments
-const dryRun = process.argv.includes("--dry-run");
+const dryRun = importDryRun();
 const verbose = process.argv.includes("--verbose");
 const help = process.argv.includes("--help");
 
@@ -65,7 +68,7 @@ const writeProviderUniqueIdsFile = process.argv
 
 function printUsageHint() {
   console.error(
-    "Usage: pnpm run murals:import-neon-donations [--help] [--dry-run] [--verbose] [--min-amount=95] [--limit=10] [--concurrency=2] [--ignore-account-ids=79,123] [--exclude-origin-categories=Self-Import] [--max-pages-per-account=10] [--write-provider-unique-ids=matched-neon-ids.txt] [--neon-env=../donations/worker/.env] <file>",
+    "Usage: pnpm run murals:import-neon-donations [--help] [--dry-run | --apply] [--verbose] [--min-amount=95] [--limit=10] [--concurrency=2] [--ignore-account-ids=79,123] [--exclude-origin-categories=Self-Import] [--max-pages-per-account=10] [--write-provider-unique-ids=matched-neon-ids.json] [--neon-env=../donations/worker/.env] <file>",
   );
 }
 
@@ -433,9 +436,9 @@ async function main() {
   }
 
   if (writeProviderUniqueIdsFile) {
-    writeFileSync(
+    writePrivateJson(
       resolve(writeProviderUniqueIdsFile),
-      `${importProviderUniqueIds.join("\n")}\n`,
+      importProviderUniqueIds,
     );
     console.log(
       `Wrote ${importProviderUniqueIds.length} providerUniqueIds to ${writeProviderUniqueIdsFile}`,
@@ -606,54 +609,6 @@ function namesMatch(actual: string | null | undefined, expected: string) {
   return (
     expected.trim() === "" || String(actual ?? "").trim() === expected.trim()
   );
-}
-
-function parseCsv(input: string) {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < input.length; i += 1) {
-    const char = input[i];
-    const next = input[i + 1];
-
-    if (char === '"') {
-      if (inQuotes && next === '"') {
-        field += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (!inQuotes && char === ",") {
-      row.push(field);
-      field = "";
-      continue;
-    }
-
-    if (!inQuotes && (char === "\n" || char === "\r")) {
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = "";
-      if (char === "\r" && next === "\n") {
-        i += 1;
-      }
-      continue;
-    }
-
-    field += char;
-  }
-
-  if (field || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
-
-  return rows.filter((fields) => fields.some((value) => value !== ""));
 }
 
 function rowsToObjects(rows: string[][]) {

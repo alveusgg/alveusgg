@@ -451,7 +451,9 @@ export const WebhooksResponse = z.array(WebhookResponse);
 
 export type AccountDonation = z.output<typeof AccountDonation>;
 export const AccountDonation = DonationResponse;
-export type AccountDonationsResponse = z.output<typeof AccountDonationsResponse>;
+export type AccountDonationsResponse = z.output<
+  typeof AccountDonationsResponse
+>;
 export const AccountDonationsResponse = z.object({
   donations: z.array(AccountDonation),
   pagination: Pagination,

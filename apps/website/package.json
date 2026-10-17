@@ -38,7 +38,9 @@
     "murals:import-paypal-donations": "tsx --env-file=.env ./scripts/import-paypal-donations.ts",
     "murals:import-thegivingblock-donations": "tsx --env-file=.env ./scripts/import-thegivingblock-donations.ts",
     "murals:import-twitch-charity-donations": "tsx --env-file=.env ./scripts/import-twitch-charity-donations.ts",
-    "murals:fill-pixels": "tsx --env-file=.env ./scripts/fill-pixels.ts"
+    "murals:fill-pixels": "tsx --env-file=.env ./scripts/fill-pixels.ts",
+    "murals:reconcile-donations": "tsx --env-file=.env ./scripts/reconcile-donations.ts",
+    "murals:export-twitch-charity-donations": "tsx ./scripts/export-twitch-charity-donations.ts"
   },
   "dependencies": {
     "@alveusgg/data": "0.79.1",

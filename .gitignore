@@ -35,3 +35,6 @@ yarn-error.log*
 !.env.example
 .wrangler/
 worker-configuration.d.ts
+
+# Private administrative exports and backfill review artifacts
+/apps/website/scripts/private/
