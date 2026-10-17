@@ -6,6 +6,7 @@ import {
   getDonation,
   searchDonations,
 } from "@alveusgg/neon-crm-api";
+import * as Sentry from "@sentry/cloudflare";
 import { NeonDonationProvider } from "../src/providers/neon/neon";
 import type { DonationStorage } from "../src/providers/storage";
 
@@ -17,6 +18,7 @@ vi.mock("@alveusgg/neon-crm-api", async (importOriginal) => ({
 }));
 vi.mock("@sentry/cloudflare", () => ({
   captureException: vi.fn(),
+  captureMessage: vi.fn(),
   withScope: (
     callback: (scope: { setTag: () => void; setContext: () => void }) => void,
   ) => callback({ setTag: vi.fn(), setContext: vi.fn() }),
@@ -94,9 +96,11 @@ describe("Neon amount privacy", () => {
     const provider = await NeonDonationProvider.init(service, env);
 
     await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
       found: 2,
       imported: 1,
       skipped: 1,
+      retrying: 0,
     });
     expect(service.add).toHaveBeenCalledTimes(1);
     expect(service.add).toHaveBeenCalledWith(
@@ -141,4 +145,315 @@ describe("Neon amount privacy", () => {
       expect(service.config.set).not.toHaveBeenCalled();
     },
   );
+});
+
+describe("bounded Neon catch-up", () => {
+  function page(ids: string[], totalPages = 1) {
+    return {
+      ok: true as const,
+      data: {
+        pagination: {
+          currentPage: 0,
+          pageSize: 50,
+          totalPages,
+          totalResults: ids.length,
+        },
+        searchResults: ids.map((id): Record<string, string> => ({
+          "Donation ID": id,
+        })),
+      },
+    };
+  }
+  function checkpointStore(
+    initial: unknown = { lastSyncedAt: "2025-01-01T00:00:00.000Z" },
+  ) {
+    let state = initial;
+    service.config.get.mockImplementation(() => structuredClone(state));
+    service.config.set.mockImplementation((_key, value) => {
+      state = structuredClone(value);
+    });
+    return () => state;
+  }
+  function normalDonation(id: string, originCategory = "API") {
+    return DonationResponse.parse({
+      ...rawDonation,
+      id,
+      anonymousType: "No",
+      origin: { originCategory },
+    });
+  }
+
+  it("checkpoints a capped batch and resumes a frozen window after a provider restart", async () => {
+    const state = checkpointStore();
+    vi.mocked(searchDonations).mockImplementation(async () =>
+      page([String(vi.mocked(searchDonations).mock.calls.length)], 20),
+    );
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: normalDonation(id),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: false,
+      found: 10,
+      imported: 10,
+      skipped: 0,
+      retrying: 0,
+    });
+    expect(searchDonations).toHaveBeenCalledTimes(10);
+    expect(state()).toEqual({
+      lastSyncedAt: "2025-01-01T00:00:00.000Z",
+      catchUp: {
+        startedAt: "2026-01-02T00:00:00.000Z",
+        sinceDate: "2024-12-29",
+        untilDate: "2026-01-02",
+        lastDonationId: "10",
+      },
+    });
+    expect(vi.mocked(searchDonations).mock.calls[1]?.[1]).toMatchObject({
+      searchFields: expect.arrayContaining([
+        { field: "Donation ID", operator: "GREATER_THAN", value: "1" },
+        {
+          field: "Origin Category",
+          operator: "NOT_EQUAL",
+          value: "Self-Import",
+        },
+      ]),
+      pagination: {
+        currentPage: 0,
+        sortColumn: "Donation ID",
+        sortDirection: "ASC",
+      },
+    });
+    vi.setSystemTime(new Date("2026-01-05T00:00:00Z"));
+    vi.mocked(searchDonations).mockResolvedValue(page(["11"]));
+    const restarted = await NeonDonationProvider.init(service, env);
+    await expect(restarted.syncRecentDonations()).resolves.toMatchObject({
+      complete: true,
+      imported: 1,
+    });
+    expect(searchDonations).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        searchFields: expect.arrayContaining([
+          { field: "Donation ID", operator: "GREATER_THAN", value: "10" },
+          {
+            field: "Donation Created Date",
+            operator: "GREATER_AND_EQUAL",
+            value: "2024-12-29",
+          },
+          {
+            field: "Donation Created Date",
+            operator: "LESS_THAN",
+            value: "2026-01-02",
+          },
+        ]),
+      }),
+    );
+    // Use the original start watermark, so arrivals while catching up remain in the next lookback.
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+
+  it("replays a page when several donations fail in a row", async () => {
+    const state = checkpointStore();
+    vi.mocked(searchDonations)
+      .mockResolvedValueOnce(page(["1"], 3))
+      .mockResolvedValue(page(["2", "3", "4", "5"]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) =>
+      id === "1" || id === "2"
+        ? { ok: true, data: normalDonation(id) }
+        : { ok: false, errorType: "request", error: "temporary failure" },
+    );
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).rejects.toThrow(
+      "Failed to fetch Neon donation",
+    );
+    expect(state()).toEqual({
+      lastSyncedAt: "2025-01-01T00:00:00.000Z",
+      catchUp: expect.objectContaining({ lastDonationId: "1" }),
+    });
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: normalDonation(id),
+    }));
+    service.add.mockResolvedValueOnce(0); // existing reservation skips the replayed record
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 4,
+      imported: 3,
+      skipped: 1,
+      retrying: 0,
+    });
+    expect(
+      vi.mocked(searchDonations).mock.lastCall?.[1].searchFields,
+    ).toContainEqual({
+      field: "Donation ID",
+      operator: "GREATER_THAN",
+      value: "1",
+    });
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+
+  it("defers a single failing donation so the cursor keeps advancing", async () => {
+    const state = checkpointStore();
+    vi.mocked(searchDonations).mockResolvedValue(page(["1", "2", "3"]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) =>
+      id === "2"
+        ? { ok: false, errorType: "request", error: "not found" }
+        : { ok: true, data: normalDonation(id) },
+    );
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 3,
+      imported: 2,
+      skipped: 0,
+      retrying: 1,
+    });
+    expect(Sentry.captureException).toHaveBeenCalledOnce();
+    expect(state()).toEqual({
+      lastSyncedAt: "2026-01-02T00:00:00.000Z",
+      failedDonations: {
+        "2": { firstFailedAt: "2026-01-02T00:00:00.000Z", attempts: 1 },
+      },
+    });
+
+    // Retried by the next run, alongside newer donations.
+    vi.setSystemTime(new Date("2026-01-02T01:00:00Z"));
+    vi.mocked(searchDonations).mockResolvedValue(page(["4"]));
+    await expect(provider.syncRecentDonations()).resolves.toMatchObject({
+      imported: 1,
+      retrying: 1,
+    });
+    expect(getDonation).toHaveBeenCalledWith(expect.anything(), "2");
+    expect(state()).toMatchObject({
+      failedDonations: { "2": { attempts: 2 } },
+    });
+
+    // Given up and reported once it has failed for a day.
+    vi.setSystemTime(new Date("2026-01-03T00:00:00Z"));
+    vi.mocked(searchDonations).mockResolvedValue(page([]));
+    await expect(provider.syncRecentDonations()).resolves.toMatchObject({
+      retrying: 0,
+    });
+    expect(Sentry.captureException).toHaveBeenCalledTimes(2);
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-03T00:00:00.000Z" });
+  });
+
+  it("imports a deferred donation once it succeeds", async () => {
+    const state = checkpointStore({
+      lastSyncedAt: "2026-01-01T00:00:00.000Z",
+      failedDonations: {
+        "2": { firstFailedAt: "2026-01-01T00:00:00.000Z", attempts: 1 },
+      },
+    });
+    vi.mocked(searchDonations).mockResolvedValue(page([]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: normalDonation(id),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 0,
+      imported: 1,
+      skipped: 0,
+      retrying: 0,
+    });
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+
+  it("reports a catch-up that has not finished for hours", async () => {
+    checkpointStore({
+      lastSyncedAt: "2025-01-01T00:00:00.000Z",
+      catchUp: {
+        startedAt: "2026-01-01T12:00:00.000Z",
+        sinceDate: "2024-12-29",
+        untilDate: "2026-01-02",
+        lastDonationId: "100",
+      },
+    });
+    vi.mocked(searchDonations).mockImplementation(async () =>
+      page([String(100 + vi.mocked(searchDonations).mock.calls.length)], 20),
+    );
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: normalDonation(id),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).resolves.toMatchObject({
+      complete: false,
+    });
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      "Neon donation sync: catch-up-delayed",
+      "warning",
+    );
+  });
+
+  it("excludes Self-Import search rows and detail records", async () => {
+    checkpointStore();
+    const response = page(["1", "2", "3"]);
+    response.data.searchResults[0] = {
+      "Donation ID": "1",
+      "Origin Category": "Self-Import",
+    };
+    vi.mocked(searchDonations).mockResolvedValue(response);
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: normalDonation(id, id === "2" ? "Self-Import" : "API"),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 3,
+      imported: 1,
+      skipped: 2,
+      retrying: 0,
+    });
+    expect(getDonation).not.toHaveBeenCalledWith(expect.anything(), "1");
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-3" }),
+    );
+  });
+
+  it.each([{ ids: ["2", "1"] }, { ids: ["1", "1"] }, { ids: ["invalid"] }])(
+    "refuses an unsafe cursor page: %j",
+    async ({ ids }) => {
+      const state = checkpointStore();
+      vi.mocked(searchDonations).mockResolvedValue(page(ids));
+      const provider = await NeonDonationProvider.init(service, env);
+      await expect(provider.syncRecentDonations()).rejects.toThrow(
+        "increasing numeric IDs",
+      );
+      expect(service.add).not.toHaveBeenCalled();
+      expect(state()).toEqual({ lastSyncedAt: "2025-01-01T00:00:00.000Z" });
+    },
+  );
+
+  it("coalesces concurrent invocations and completes an empty window", async () => {
+    const state = checkpointStore();
+    let resolve!: (value: ReturnType<typeof page>) => void;
+    vi.mocked(searchDonations).mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    const provider = await NeonDonationProvider.init(service, env);
+    const first = provider.syncRecentDonations();
+    const second = provider.syncRecentDonations();
+    expect(searchDonations).toHaveBeenCalledOnce();
+    resolve(page([], 0));
+    await expect(first).resolves.toEqual({
+      complete: true,
+      found: 0,
+      imported: 0,
+      skipped: 0,
+      retrying: 0,
+    });
+    await expect(second).resolves.toEqual(await first);
+    expect(service.config.set).toHaveBeenCalledOnce();
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
 });

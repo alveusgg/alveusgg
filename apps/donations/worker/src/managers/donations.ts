@@ -20,6 +20,10 @@ import {
 import { getSentryConfig } from "../utils/sentry";
 import { createRetryingInitializer } from "../utils/initialization";
 
+// Continue an unfinished Neon catch-up soon, rather than at the next hourly
+// cron. Each alarm invocation gets a fresh subrequest budget.
+const NEON_SYNC_CONTINUE_DELAY_MS = 60_000;
+
 type DonationProviders = Partial<
   Omit<Record<Providers, () => Promise<DonationProvider | undefined>>, "neon">
 > & {
@@ -53,13 +57,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
       .use(logger())
       .use(setSentryTagsMiddleware())
       .use(async (c, next) => {
-        if (!this.ready) {
-          this.ready = this.init().catch((error: unknown) => {
-            this.ready = undefined;
-            throw error;
-          });
-        }
-        await this.ready;
+        await this.ensureReady();
         // Retry failed providers on later traffic, including the scheduled sync.
         // Healthy providers are cached and never wait for these background tasks.
         for (const initialize of Object.values(this.providers ?? {})) {
@@ -91,15 +89,15 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
           });
         }
 
-        const provider = await this.providers.neon();
-        if (!provider) {
+        const result = await this.syncNeon();
+        if (!result) {
           return new Response("Provider temporarily unavailable", {
             status: 503,
             headers: { "Retry-After": "60" },
           });
         }
 
-        return c.json(await provider.syncRecentDonations());
+        return c.json(result);
       })
       .post("/:providerId/live", async (c) => {
         if (!this.providers) {
@@ -127,6 +125,33 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
         return provider.handle(c.req.raw);
       });
+  }
+
+  private ensureReady() {
+    this.ready ??= this.init().catch((error: unknown) => {
+      this.ready = undefined;
+      throw error;
+    });
+    return this.ready;
+  }
+
+  private async syncNeon() {
+    const provider = await this.providers?.neon();
+    if (!provider) return undefined;
+
+    const result = await provider.syncRecentDonations();
+    if (!result.complete) {
+      await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
+    }
+    return result;
+  }
+
+  async alarm() {
+    await this.ensureReady();
+    // Throwing lets Cloudflare retry the alarm; the hourly cron resumes after.
+    if (!(await this.syncNeon())) {
+      throw new Error("Neon provider unavailable for continued sync");
+    }
   }
 
   async init() {
