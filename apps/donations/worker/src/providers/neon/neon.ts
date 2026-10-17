@@ -35,8 +35,15 @@ type NeonDonationProviderOptions = Options & {
 type NeonDonationData = DonationWebhookPayload["data"] | Donation;
 type NeonSyncMetadata = {
   lastSyncedAt?: string;
+  catchUp?: {
+    startedAt: string;
+    sinceDate: string;
+    untilDate: string;
+    lastDonationId?: string;
+  };
 };
 type NeonSyncResult = {
+  complete: boolean;
   found: number;
   imported: number;
   skipped: number;
@@ -71,6 +78,7 @@ function reportNeonParseError(
 
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
+  private syncPromise?: Promise<NeonSyncResult>;
 
   constructor(
     private options: NeonDonationProviderOptions,
@@ -153,22 +161,41 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   async syncRecentDonations(): Promise<NeonSyncResult> {
+    // Overlapping cron/manual requests must share one checkpoint writer.
+    this.syncPromise ??= this.syncBatch().finally(() => {
+      this.syncPromise = undefined;
+    });
+    return this.syncPromise;
+  }
+
+  private async syncBatch(): Promise<NeonSyncResult> {
     const startedAt = new Date();
     const metadata =
       this.service.config.get<NeonSyncMetadata>(SYNC_CONFIG_KEY) ?? {};
-    const since = subtractDays(
-      metadata.lastSyncedAt ? new Date(metadata.lastSyncedAt) : startedAt,
-      SYNC_LOOKBACK_DAYS,
-    );
-    const sinceDate = formatDateInTimezone(since, this.options.localTimezone);
-
-    let currentPage = 0;
-    let totalPages = 1;
+    const catchUp: NonNullable<NeonSyncMetadata["catchUp"]> =
+      metadata.catchUp ?? {
+        startedAt: startedAt.toISOString(),
+        sinceDate: formatDateInTimezone(
+          subtractDays(
+            metadata.lastSyncedAt ? new Date(metadata.lastSyncedAt) : startedAt,
+            SYNC_LOOKBACK_DAYS,
+          ),
+          this.options.localTimezone,
+        ),
+        // Freeze the local-date window. A later run resumes the same window,
+        // then starts its next lookback from this run's start, not completion.
+        untilDate: subtractDays(
+          new Date(formatDateInTimezone(startedAt, this.options.localTimezone)),
+          -1,
+        )
+          .toISOString()
+          .slice(0, 10),
+      };
     let found = 0;
     let imported = 0;
     let skipped = 0;
 
-    while (currentPage < totalPages && currentPage < SYNC_MAX_PAGES) {
+    for (let page = 0; page < SYNC_MAX_PAGES; page++) {
       const response = await searchDonations(this.options, {
         searchFields: [
           {
@@ -184,8 +211,22 @@ export class NeonDonationProvider implements DonationProvider {
           {
             field: "Donation Created Date",
             operator: "GREATER_AND_EQUAL",
-            value: sinceDate,
+            value: catchUp.sinceDate,
           },
+          {
+            field: "Donation Created Date",
+            operator: "LESS_THAN",
+            value: catchUp.untilDate,
+          },
+          ...(catchUp.lastDonationId
+            ? [
+                {
+                  field: "Donation ID",
+                  operator: "GREATER_THAN",
+                  value: catchUp.lastDonationId,
+                },
+              ]
+            : []),
         ],
         outputFields: [
           "Donation ID",
@@ -194,10 +235,11 @@ export class NeonDonationProvider implements DonationProvider {
           "Origin Category",
         ],
         pagination: {
-          currentPage,
+          // Advance by unique ID rather than a shifting numeric page offset.
+          currentPage: 0,
           pageSize: SYNC_PAGE_SIZE,
-          sortColumn: "Donation Created Date",
-          sortDirection: "DESC",
+          sortColumn: "Donation ID",
+          sortDirection: "ASC",
         },
       });
 
@@ -205,38 +247,54 @@ export class NeonDonationProvider implements DonationProvider {
         throw new Error(`Failed to search Neon donations: ${response.error}`);
       }
 
-      totalPages = response.data.pagination.totalPages;
-      found += response.data.searchResults.length;
-
-      for (const result of response.data.searchResults) {
-        const donationId = result["Donation ID"];
-        if (typeof donationId !== "string") {
+      const results = response.data.searchResults;
+      let lastId = catchUp.lastDonationId;
+      const ids = results.map((result) => {
+        const id = result["Donation ID"];
+        if (
+          typeof id !== "string" ||
+          !/^\d+$/.test(id) ||
+          (lastId !== undefined && BigInt(id) <= BigInt(lastId))
+        ) {
+          throw new Error(
+            "Neon donation search did not return increasing numeric IDs",
+          );
+        }
+        lastId = id;
+        return id;
+      });
+      const complete = response.data.pagination.totalPages <= 1;
+      if (!complete && !ids.length) {
+        throw new Error("Neon donation search returned no cursor progress");
+      }
+      found += results.length;
+      for (const [index, id] of ids.entries()) {
+        if (
+          results[index]?.["Origin Category"] === SELF_IMPORT_ORIGIN_CATEGORY
+        ) {
           skipped++;
           continue;
         }
-
-        const importedDonation = await this.importDonationById(donationId);
-        if (importedDonation) {
-          imported++;
-        } else {
-          skipped++;
-        }
+        if (await this.importDonationById(id)) imported++;
+        else skipped++;
       }
 
-      currentPage++;
-    }
-
-    if (totalPages > SYNC_MAX_PAGES) {
-      throw new Error(
-        `Neon donation sync found ${totalPages} pages since ${sinceDate}; max pages is ${SYNC_MAX_PAGES}.`,
+      // Checkpoint only a fully processed page; a failed page is safely replayed
+      // through the existing donation-ID deduplication on the next invocation.
+      catchUp.lastDonationId = lastId;
+      await this.service.config.set(
+        SYNC_CONFIG_KEY,
+        complete
+          ? { lastSyncedAt: catchUp.startedAt }
+          : ({
+              ...metadata,
+              catchUp: { ...catchUp },
+            } satisfies NeonSyncMetadata),
       );
+      if (complete) return { complete: true, found, imported, skipped };
     }
 
-    this.service.config.set(SYNC_CONFIG_KEY, {
-      lastSyncedAt: startedAt.toISOString(),
-    } satisfies NeonSyncMetadata);
-
-    return { found, imported, skipped };
+    return { complete: false, found, imported, skipped };
   }
 
   private async importDonationById(id: string) {
