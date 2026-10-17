@@ -95,16 +95,21 @@ export class DurableObjectDonationStorage implements DonationStorage {
     if (removed.pixels > 0) {
       this.config.set(PIXELS_RESYNC_CONFIG_KEY, true);
     }
-    await this.resyncPixelsIfPending();
+    await this.resyncNow();
     console.info("Removed donation", { providerUniqueId, reason, ...removed });
     return removed;
   }
 
   /**
    * Resync the mural after pixels were removed. Persisted, so a failed resync
-   * is retried by later removals and syncs instead of being lost.
+   * is retried by later removals and syncs instead of being lost. Runs in
+   * turn with removals, so an older resync cannot clear a newer pending one.
    */
-  async resyncPixelsIfPending() {
+  resyncPixelsIfPending() {
+    return this.exclusive(() => this.resyncNow());
+  }
+
+  private async resyncNow() {
     if (!this.config.get<boolean>(PIXELS_RESYNC_CONFIG_KEY)) return;
 
     const mural = this.env.PIXELS_MANAGER.getByName(
