@@ -7,17 +7,19 @@ import events from "@/data/events";
 import { getRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
-  const eventsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/events`;
+  const eventsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/events`;
   const latestEventDate = events[0] && new Date(events[0].date);
 
   const eventFeedItems = events
     .map((event) => ({
       ...event,
-      url: `${env.NEXT_PUBLIC_BASE_URL}/events#${event.slug}`,
+      url: `${eventsPageUrl}#${event.slug}`,
     }))
     .map((event) => ({
       title: event.name,
-      id: event.url,
+      // The id is the RSS guid, so keep it on the old URL to prevent readers
+      // from showing every event as new after the link moved to /about/events
+      id: `${env.NEXT_PUBLIC_BASE_URL}/events#${event.slug}`,
       link: event.url,
       description: reactToText(event.info),
       date: event.date,
