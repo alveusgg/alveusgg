@@ -1,6 +1,7 @@
 import {
-  type WebhookResponse,
+  type CreateWebhookInput,
   type WebhookPayload,
+  DonationEventWebhookPayload,
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
@@ -8,7 +9,10 @@ import { createWebhook, deleteWebhook, getWebhooks } from "./index.js";
 import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
 import type { ZodError } from "zod";
 
-export type { DonationWebhookPayload } from "./schema.js";
+export type {
+  DonationEventWebhookPayload,
+  DonationWebhookPayload,
+} from "./schema.js";
 
 type WebhookOptions = Pick<Options, "organizationId" | "localTimezone"> & {
   onParseError?: (
@@ -65,9 +69,33 @@ export const parseDonationWebhook = async (
   body: unknown,
 ) => parseWebhook(options, body, DonationWebhookPayload);
 
+export const parseDonationEventWebhook = async (
+  options: WebhookOptions,
+  body: unknown,
+) => {
+  const payload = await DonationEventWebhookPayload.safeParseAsync(body);
+  if (!payload.success) {
+    console.error("Failed to parse Neon donation event webhook", {
+      error: payload.error,
+    });
+    options.onParseError?.(payload.error, {
+      kind: "webhook",
+      eventTrigger: undefined,
+    });
+    return false;
+  }
+  if (payload.data.organizationId !== options.organizationId) {
+    console.error(
+      `Ignoring webhook from ${payload.data.organizationId} because it is not the allowed organization id (${options.organizationId}).`,
+    );
+    return false;
+  }
+  return payload.data;
+};
+
 export async function setupWebhook(
   url: string,
-  trigger: WebhookResponse["trigger"],
+  trigger: CreateWebhookInput["trigger"],
   options: Options,
 ) {
   const existingWebhooks = await getWebhooks(options);
@@ -82,6 +110,7 @@ export async function setupWebhook(
       (webhook) =>
         isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
         webhook.trigger === trigger &&
+        webhook.httpBasic !== null &&
         webhook.httpBasic.userName === options.basicAuthUsername,
     )
     .sort((a, b) => Number(a.id) - Number(b.id));
@@ -119,12 +148,12 @@ export async function setupWebhook(
   }
 }
 
-function getWebhookName(url: string, trigger: WebhookResponse["trigger"]) {
+function getWebhookName(url: string, trigger: CreateWebhookInput["trigger"]) {
   const hostname = new URL(url).hostname.replace(/[^a-zA-Z0-9]+/g, "-");
   return `alveusgg-donations-${trigger.toLowerCase()}-${hostname}`;
 }
 
-function getWebhookUuid(url: string, trigger: WebhookResponse["trigger"]) {
+function getWebhookUuid(url: string, trigger: CreateWebhookInput["trigger"]) {
   const normalizedUrl = new URL(url);
   normalizedUrl.searchParams.delete("uuid");
   normalizedUrl.searchParams.sort();

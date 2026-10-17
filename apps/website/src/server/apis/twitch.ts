@@ -7,6 +7,8 @@ import {
   getClientCredentialsAccessToken,
 } from "@/server/utils/oauth2";
 
+import { reconcileWebhookSubscriptions } from "./twitch-eventsub";
+
 export type AuthHeaders = {
   "Client-Id": string;
   Authorization: `Bearer ${string}`;
@@ -598,16 +600,8 @@ export async function sendChatMessage(
   }
 }
 
-const setupWebhookSubscriptionResponseSchema = z.object({
-  data: z.array(
-    z.object({
-      id: z.string(),
-    }),
-  ),
-});
-
-export async function setupWebhookSubscriptionForBroadcaster(
-  broadcasterUserId: string,
+export async function setupWebhookSubscriptionsForBroadcasters(
+  broadcasterUserIds: string[],
   type: string,
   version: string,
   callback: string,
@@ -622,55 +616,13 @@ export async function setupWebhookSubscriptionForBroadcaster(
     throw new Error("Twitch API: Could not obtain OAuth access token!");
   }
 
-  const headers = {
-    "Content-Type": "application/json",
-    "Client-Id": env.TWITCH_CLIENT_ID,
-    Authorization: `Bearer ${accessToken}`,
-  };
-
-  const response = await fetch(
-    `https://api.twitch.tv/helix/eventsub/subscriptions`,
+  return reconcileWebhookSubscriptions(
     {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        type,
-        version,
-        condition: {
-          broadcaster_user_id: broadcasterUserId,
-        },
-        transport: {
-          method: "webhook",
-          callback,
-          secret,
-        },
-      }),
+      "Content-Type": "application/json",
+      "Client-Id": env.TWITCH_CLIENT_ID,
+      Authorization: `Bearer ${accessToken}`,
     },
+    broadcasterUserIds,
+    { type, version, callback, secret },
   );
-
-  if (response.status === 409) {
-    return { result: "already_exists" };
-  }
-
-  if (response.status !== 202) {
-    const json = await response.json();
-    console.error(json);
-    throw new Error(
-      `Error creating webhook subscription ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const json = await response.json();
-  const data = await setupWebhookSubscriptionResponseSchema.parseAsync(json);
-  if (data.data.length === 0) {
-    throw new Error("No webhook subscription created!");
-  }
-  if (data.data.length > 1) {
-    throw new Error("Multiple webhook subscriptions found!");
-  }
-  const subscription = data.data[0];
-  if (!subscription) {
-    throw new Error("Failed to setup webhook subscription!");
-  }
-  return { result: "success", subscription };
 }
