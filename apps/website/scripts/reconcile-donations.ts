@@ -27,6 +27,7 @@ async function main() {
   }
   const bytes = readFileSync(required(args, "manifest"));
   const manifest = DonationManifest.parse(JSON.parse(bytes.toString("utf8")));
+  const target = databaseTarget();
   databaseUsed = true;
   const rows = await prisma.donation.findMany({
     where: {
@@ -62,7 +63,7 @@ async function main() {
   const report = {
     version: 1,
     mode: "read-only",
-    target: databaseTarget(),
+    target,
     manifestSha256: sha256(bytes),
     ...result,
     missingAmountCents: result.missing.reduce((sum, d) => sum + d.amount, 0),

@@ -128,6 +128,7 @@ async function main() {
   const pixelIds = plan.donations.flatMap((d) => d.pixels.map((p) => p.id));
   // Check and insert in one transaction; a collision rolls the entire batch back.
   // No notification APIs, queues, updates, deletes or skipDuplicates.
+  databaseUsed = true;
   const inserted = await prisma.$transaction(
     async (tx) => {
       const missing = await checkPixelPlan(
