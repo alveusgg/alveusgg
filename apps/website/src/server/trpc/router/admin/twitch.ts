@@ -26,14 +26,9 @@ const permittedProcedure = protectedProcedure.use(
 );
 
 const roles = ["moderator", "broadcaster"] as const;
-const roleToScopePrefixMap: Record<(typeof roles)[number], string> = {
-  broadcaster: "channel:",
-  moderator: "moderator:",
-};
-const roleToRequiredScopes = (role: (typeof roles)[number]) =>
-  scopeGroups.api.filter((scope) =>
-    scope.startsWith(roleToScopePrefixMap[role]),
-  );
+// Accounts get connected after granting the "api" scope group on /admin/twitch,
+// and the session callback requires all of it once an account is connected
+const requiredScopes = scopeGroups.api;
 
 export const adminTwitchRouter = router({
   getChannels: permittedProcedure.query(getTwitchChannels),
@@ -125,8 +120,7 @@ export const adminTwitchRouter = router({
         },
       });
 
-      // Check that the account has every scope required for the role
-      const requiredScopes = roleToRequiredScopes(input.role);
+      // Check that the account has every scope the API access needs
       const account = userWithAccount?.accounts.find((account) => {
         const accountScopes = new Set(account.scope?.split(" "));
         return requiredScopes.every((scope) => accountScopes.has(scope));
