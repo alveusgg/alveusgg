@@ -7,7 +7,9 @@ import { logger } from "hono/logger";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
 import { NeonDonationProvider } from "../providers/neon/neon";
+import type { Donation } from "@alveusgg/donations-core";
 import {
+  createIfNotExistsCancelledDonationsTable,
   createIfNotExistsDonationsTable,
   createIfNotExistsProviderMetadataTable,
   DurableObjectDonationStorage,
@@ -44,6 +46,7 @@ function reportInitializationError(provider: Providers, operation: string) {
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private providers?: DonationProviders;
+  private storage?: DurableObjectDonationStorage;
   private ready?: Promise<void>;
   private reconcileTwitchSubscriptions?: () => Promise<true | undefined>;
   private registerNeonWebhook?: () => Promise<true | undefined>;
@@ -136,6 +139,12 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   }
 
   private async syncNeon() {
+    // Retry a mural resync that failed after an earlier removal.
+    await this.storage?.resyncPixelsIfPending().catch((error: unknown) => {
+      console.error("Failed to resync pixels", error);
+      Sentry.captureException(error);
+    });
+
     const provider = await this.providers?.neon();
     if (!provider) return undefined;
 
@@ -144,6 +153,12 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
       await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
     }
     return result;
+  }
+
+  /** Called by queue consumers before delivering donations. */
+  async filterCancelled(donations: Donation[]) {
+    await this.ensureReady();
+    return this.storage?.filterCancelled(donations) ?? donations;
   }
 
   async alarm() {
@@ -157,8 +172,10 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   async init() {
     await createIfNotExistsDonationsTable(this.ctx.storage.sql);
     await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
+    await createIfNotExistsCancelledDonationsTable(this.ctx.storage.sql);
 
     const storage = new DurableObjectDonationStorage(this.ctx, this.env);
+    this.storage = storage;
 
     this.providers = {
       twitch: createRetryingInitializer(

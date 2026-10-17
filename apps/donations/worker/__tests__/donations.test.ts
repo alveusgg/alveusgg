@@ -18,7 +18,13 @@ vi.mock("@sentry/cloudflare", () => ({
 vi.mock("../src/providers/storage", () => ({
   createIfNotExistsDonationsTable: vi.fn().mockResolvedValue(undefined),
   createIfNotExistsProviderMetadataTable: vi.fn().mockResolvedValue(undefined),
-  DurableObjectDonationStorage: class {},
+  createIfNotExistsCancelledDonationsTable: vi
+    .fn()
+    .mockResolvedValue(undefined),
+  DurableObjectDonationStorage: class {
+    resyncPixelsIfPending = vi.fn(async () => {});
+    filterCancelled = vi.fn((donations: unknown[]) => donations);
+  },
 }));
 vi.mock("../src/providers/neon/neon", () => ({
   NeonDonationProvider: { init: vi.fn() },

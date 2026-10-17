@@ -2,6 +2,8 @@ import type { Donation } from "@alveusgg/donations-core";
 import { parse, stringify } from "superjson";
 import { createSiteApi } from "../utils/site-api";
 
+const PIXELS_RESYNC_CONFIG_KEY = "pixels-resync-pending";
+
 export interface DonationStorage {
   add: (...donations: Donation[]) => Promise<number>;
   /** Delete donations and their pixels, e.g. after a payment failed. */
@@ -23,6 +25,15 @@ export class DurableObjectDonationStorage implements DonationStorage {
   ) {}
 
   async remove(provider: string, providerUniqueId: string, reason: string) {
+    // Cancel first, so a queue message for this donation that has not been
+    // delivered yet is dropped instead of recreating it afterwards.
+    this.ctx.storage.sql.exec(
+      `REPLACE INTO cancelledDonations (provider, providerUniqueId, cancelledAt)
+       VALUES (?, ?, ?)`,
+      provider,
+      providerUniqueId,
+      new Date().toISOString(),
+    );
     const removed = await createSiteApi(
       this.env,
     ).donations.removeDonations.mutate({
@@ -37,19 +48,55 @@ export class DurableObjectDonationStorage implements DonationStorage {
       providerUniqueId,
     );
     if (removed.pixels > 0) {
-      const mural = this.env.PIXELS_MANAGER.getByName(
-        `alveus-${this.env.MURAL_ID}`,
-      );
-      const response = await mural.fetch("https://pixels/resync", {
-        method: "POST",
-        headers: { Authorization: `ApiKey ${this.env.SHARED_KEY}` },
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to resync pixels: ${response.status}`);
-      }
+      this.config.set(PIXELS_RESYNC_CONFIG_KEY, true);
     }
+    await this.resyncPixelsIfPending();
     console.info("Removed donation", { providerUniqueId, reason, ...removed });
     return removed;
+  }
+
+  /**
+   * Resync the mural after pixels were removed. Persisted, so a failed resync
+   * is retried by later removals and syncs instead of being lost.
+   */
+  async resyncPixelsIfPending() {
+    if (!this.config.get<boolean>(PIXELS_RESYNC_CONFIG_KEY)) return;
+
+    const mural = this.env.PIXELS_MANAGER.getByName(
+      `alveus-${this.env.MURAL_ID}`,
+    );
+    const response = await mural.fetch("https://pixels/resync", {
+      method: "POST",
+      headers: { Authorization: `ApiKey ${this.env.SHARED_KEY}` },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to resync pixels: ${response.status}`);
+    }
+    this.config.set(PIXELS_RESYNC_CONFIG_KEY, undefined);
+  }
+
+  /** Drop queued donations that were cancelled after they were queued. */
+  filterCancelled(donations: Donation[]) {
+    return donations.filter((donation) => {
+      const cursor = this.ctx.storage.sql.exec<{ cancelledAt: string }>(
+        `SELECT cancelledAt FROM cancelledDonations
+         WHERE provider = ? AND providerUniqueId = ?`,
+        donation.provider,
+        donation.providerUniqueId,
+      );
+      const row = cursor.next();
+      if (row.done) return true;
+
+      const cancelled =
+        new Date(donation.receivedAt).getTime() <=
+        Date.parse(row.value.cancelledAt);
+      if (cancelled) {
+        console.info("Dropping cancelled donation from queue", {
+          providerUniqueId: donation.providerUniqueId,
+        });
+      }
+      return !cancelled;
+    });
   }
 
   async add(...donations: Donation[]) {
@@ -112,6 +159,18 @@ export async function createIfNotExistsDonationsTable(sql: SqlStorage) {
       provider TEXT NOT NULL,
       providerUniqueId TEXT PRIMARY KEY,
       date TEXT NOT NULL
+    );
+  `);
+}
+
+export async function createIfNotExistsCancelledDonationsTable(
+  sql: SqlStorage,
+) {
+  sql.exec(`
+    CREATE TABLE IF NOT EXISTS cancelledDonations (
+      provider TEXT NOT NULL,
+      providerUniqueId TEXT PRIMARY KEY,
+      cancelledAt TEXT NOT NULL
     );
   `);
 }
