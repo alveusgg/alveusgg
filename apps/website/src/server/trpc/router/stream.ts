@@ -28,7 +28,7 @@ import invariant from "@/utils/invariant";
 import { createJWT, signJWT } from "@/utils/jwt";
 
 export const runCommandSchema = z.object({
-  command: z.literal(["ptzload", "ptzzoom", "swap"]),
+  command: z.literal(["ptzzoom", "swap"]),
   args: z.array(z.string()).optional(),
 });
 
