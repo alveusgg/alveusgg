@@ -25,7 +25,7 @@ export function getBucketUrl() {
 
 let __client: S3Client;
 
-function getS3Client() {
+export function getFileStorageClient() {
   if (!__client) {
     if (env.FILE_STORAGE_ENDPOINT === "")
       throw new Error("File storage: FILE_STORAGE_ENDPOINT is not set");
@@ -35,6 +35,9 @@ function getS3Client() {
       throw new Error("File storage: FILE_STORAGE_SECRET is not set");
 
     __client = new S3Client({
+      // Presigned uploads do not know the eventual body. Avoid signing an
+      // optional checksum of an empty body; capture uploads verify SHA-256 later.
+      requestChecksumCalculation: "WHEN_REQUIRED",
       forcePathStyle: env.FILE_STORAGE_PATH_STYLE,
       endpoint: env.FILE_STORAGE_ENDPOINT,
       region: env.FILE_STORAGE_REGION,
@@ -54,7 +57,7 @@ export function getViewUrlForFileStorageObjectKey(key: string) {
 
 async function sendDeleteObjectCommand(key: string) {
   try {
-    await getS3Client().send(
+    await getFileStorageClient().send(
       new DeleteObjectCommand({ Bucket: env.FILE_STORAGE_BUCKET, Key: key }),
     );
     return true;
@@ -77,6 +80,28 @@ export async function deleteFileStorageObject(id: string) {
     data: {
       deletedAt: new Date(),
     },
+  });
+}
+
+// Expiry selection can be stale by the time cleanup runs. Claim deletion with
+// the same row predicate that publication updates before touching S3. Keep the
+// expiry on failures so the cleanup job can retry an interrupted deletion.
+export async function deleteExpiredFileStorageObject(id: string, before: Date) {
+  // relationMode=prisma may split updateMany into SELECT + UPDATE by ID.
+  // Keep the expiry predicate on the actual write that acquires the row lock.
+  const claimed = await prisma.$executeRaw`
+    UPDATE FileStorageObject SET deletedAt = ${new Date()}
+    WHERE id = ${id} AND expiresAt < ${before}
+  `;
+  if (claimed !== 1) return;
+  const data = await prisma.fileStorageObject.findUniqueOrThrow({
+    where: { id },
+  });
+  if (!(await sendDeleteObjectCommand(data.key)))
+    throw new Error("Failed to delete expired file storage object");
+  await prisma.fileStorageObject.update({
+    where: { id },
+    data: { expiresAt: null },
   });
 }
 
@@ -106,7 +131,7 @@ export async function createFileStorageUpload({
     },
   });
 
-  const signedUrlString = await getSignedUrl(getS3Client(), command, {
+  const signedUrlString = await getSignedUrl(getFileStorageClient(), command, {
     expiresIn: expires,
     signableHeaders: new Set(["content-type", "x-amz-acl"]),
     unhoistableHeaders: new Set(["x-amz-acl"]),
@@ -177,4 +202,24 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
   await Promise.allSettled(tasks);
 
   return { success: true, metaData };
+}
+
+// Renew the URL for an existing pending upload without changing its object identity.
+export async function renewFileStorageUpload(
+  key: string,
+  type: string,
+  expires = 3600,
+) {
+  const command = new PutObjectCommand({
+    Key: key,
+    Bucket: env.FILE_STORAGE_BUCKET,
+    ContentType: type,
+    ACL: "public-read",
+    Metadata: { acl: "public-read" },
+  });
+  return getSignedUrl(getFileStorageClient(), command, {
+    expiresIn: expires,
+    signableHeaders: new Set(["content-type", "x-amz-acl"]),
+    unhoistableHeaders: new Set(["x-amz-acl"]),
+  });
 }
