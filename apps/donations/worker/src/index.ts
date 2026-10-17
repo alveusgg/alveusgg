@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 import { parse } from "superjson";
 import { setSentryTagsMiddleware } from "./utils/middleware";
 import { getSentryConfig } from "./utils/sentry";
+import { createSiteApi } from "./utils/site-api";
 import { forwardWithoutRoutePrefix } from "./utils/url";
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
@@ -43,25 +44,21 @@ export default Sentry.withSentry<Env, string>(getSentryConfig, {
     }
   },
   queue: async (batch, env) => {
+    const api = createSiteApi(env);
+
     const donations: Donation[] = batch.messages.map((message) =>
       parse(message.body),
     );
-    // Delivery goes through the donations manager, so a donation cancelled
-    // (e.g. after a failed payment) while queued is never written.
-    const manager = env.DONATIONS_MANAGER.getByName("alveus");
 
     if (batch.queue.endsWith("donations")) {
-      const delivered: Donation[] = await manager.deliverDonations(donations);
-      const kept = new Set(delivered.map((donation) => donation.id));
-      const messages = batch.messages.filter((message) =>
-        kept.has(parse<Donation>(message.body).id),
-      );
-      if (messages.length) await env.PIXELS_QUEUE.sendBatch(messages);
+      await api.donations.createDonations.mutate({ donations });
+      await env.PIXELS_QUEUE.sendBatch(batch.messages);
       return;
     }
 
     if (batch.queue.endsWith("pixels")) {
-      await manager.deliverPixels(donations);
+      const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
+      await manager.process(donations);
       return;
     }
 

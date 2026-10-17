@@ -10,7 +10,6 @@ import {
 import { type Options, envToOptions } from "@alveusgg/neon-crm-api/env";
 import {
   type DonationWebhookPayload,
-  parseDonationEventWebhook,
   parseDonationWebhook,
   setupWebhook,
 } from "@alveusgg/neon-crm-api/webhooks";
@@ -35,14 +34,6 @@ type NeonDonationProviderOptions = Options & {
 
 type NeonDonationData = DonationWebhookPayload["data"] | Donation;
 type NeonFailedDonation = { firstFailedAt: string; attempts: number };
-// Imported donations whose payment has not settled yet, and donations removed
-// after a failed payment that could still succeed on a retry.
-type NeonTrackedPayment = {
-  importedAt: string;
-  removedAt?: string;
-  checkedAt?: string;
-};
-type NeonTrackedPayments = Record<string, NeonTrackedPayment>;
 type NeonSyncMetadata = {
   lastSyncedAt?: string;
   catchUp?: {
@@ -84,17 +75,10 @@ const SYNC_MAX_RETRIES_PER_RUN = 10;
 const SYNC_MAX_CONSECUTIVE_FAILURES = 3;
 const SYNC_FAILED_DONATION_TTL_MS = 24 * 60 * 60 * 1000;
 const SYNC_CATCH_UP_ALERT_MS = 6 * 60 * 60 * 1000;
-const PAYMENTS_CONFIG_KEY = "neon-payments";
-// Neon Pay can take hours to settle a card payment, and a declined payment
-// may still be retried after the donor talks to their bank.
-const PAYMENT_TRACKING_MS = 7 * 24 * 60 * 60 * 1000;
-const SYNC_MAX_PAYMENT_CHECKS = 20;
-const FAILED_DONATION_STATUSES = new Set(["FAILED", "CANCELED", "REFUNDED"]);
-const WEBHOOK_TRIGGERS = [
-  "CREATE_DONATION",
-  "UPDATE_DONATION",
-  "DELETE_DONATION",
-] as const;
+const FAILED_PAYMENT_STATUSES = ["Failed", "Canceled", "Refunded"];
+const FAILED_PAYMENT_LOOKBACK_DAYS = 30;
+// Failed donation IDs from the last sweep, to notice payments that succeed.
+const FAILED_PAYMENTS_CONFIG_KEY = "neon-failed-payments";
 
 function reportNeonParseError(
   error: ZodError,
@@ -133,6 +117,7 @@ function reportNeonSyncIssue(
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
   private syncPromise?: Promise<NeonSyncResult>;
+  private removeFailedPromise?: Promise<void>;
 
   constructor(
     private options: NeonDonationProviderOptions,
@@ -160,9 +145,7 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   async registerWebhook(url: string) {
-    for (const trigger of WEBHOOK_TRIGGERS) {
-      await setupWebhook(url, trigger, this.options);
-    }
+    await setupWebhook(url, "CREATE_DONATION", this.options);
   }
 
   async clear() {
@@ -182,11 +165,7 @@ export class NeonDonationProvider implements DonationProvider {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const body: unknown = await request.json();
-    if (!isCreateDonationEvent(body)) {
-      return this.handleDonationEvent(body);
-    }
-
+    const body = await request.json();
     const payload = await parseDonationWebhook(this.options, body);
     if (!payload) {
       return new Response(`The donation payload was unexpected`, {
@@ -200,20 +179,17 @@ export class NeonDonationProvider implements DonationProvider {
       return new Response("OK", { status: 200 });
     }
 
-    // The donation record is the source of truth for origin and payment.
-    const donationRes = await getDonation(this.options, data.id);
-    if (!donationRes.ok) {
-      return new Response("Failed to fetch this donation.", { status: 500 });
+    let origin = data.origin;
+    if (origin === undefined) {
+      const donationRes = await getDonation(this.options, data.id);
+      if (!donationRes.ok) {
+        return new Response("Failed to fetch this donation's origin.", {
+          status: 500,
+        });
+      }
+      origin = donationRes.data.origin;
     }
-    const details = donationRes.data;
-    if (this.isManualDonation(data.id, details.origin)) {
-      return new Response("OK", { status: 200 });
-    }
-    if (details.status && FAILED_DONATION_STATUSES.has(details.status)) {
-      console.info("Skipping Neon donation with a failed payment", {
-        id: data.id,
-        status: details.status,
-      });
+    if (this.isManualDonation(data.id, origin)) {
       return new Response("OK", { status: 200 });
     }
 
@@ -233,139 +209,115 @@ export class NeonDonationProvider implements DonationProvider {
     const account = accountRes.data;
     const donation = this.createDonation(data, account, new Date());
 
-    // Award pixels right away, but remove them again if the payment fails.
-    if (
-      (await this.service.add(donation)) > 0 &&
-      !isPaymentSucceeded(details)
-    ) {
-      this.trackPayment(data.id, { importedAt: new Date().toISOString() });
-    }
-    return new Response("OK", { status: 200 });
-  }
-
-  private async handleDonationEvent(body: unknown) {
-    const payload = await parseDonationEventWebhook(this.options, body);
-    if (!payload) {
-      return new Response(`The donation payload was unexpected`, {
-        status: 400,
-      });
-    }
-
-    try {
-      await this.reconcilePayment(payload.data.id);
-    } catch (error) {
-      console.error("Failed to reconcile Neon donation", {
-        id: payload.data.id,
-        error,
-      });
-      return new Response("Failed to reconcile this donation.", {
-        status: 500,
-      });
-    }
+    await this.service.add(donation);
     return new Response("OK", { status: 200 });
   }
 
   /**
-   * Remove a donation's pixels once its payment fails or it is deleted, and
-   * import it again if a removed payment later succeeds.
+   * Pixels are awarded before a card payment settles. Remove donations whose
+   * payment has failed or was refunded since. Removing is idempotent and runs
+   * after every completed sync, so a donation recreated by a late queue
+   * delivery is removed again on the next run.
    */
-  private async reconcilePayment(id: string) {
-    const tracked = this.getTrackedPayments()[id];
-    const donationRes = await getDonation(this.options, id);
-    if (!donationRes.ok) {
-      if (donationRes.errorType === "request" && donationRes.status === 404) {
-        await this.removeDonation(id, "deleted in Neon", tracked);
-        return "removed";
-      }
-      throw new Error(`Failed to fetch Neon donation ${id}`);
-    }
-
-    const data = donationRes.data;
-    if (data.status && FAILED_DONATION_STATUSES.has(data.status)) {
-      if (tracked?.removedAt) return "removed";
-      await this.removeDonation(
-        id,
-        `payment ${data.status.toLowerCase()}`,
-        tracked,
-      );
-      return "removed";
-    }
-    // Staff edits to older donations also trigger updates; leave those alone.
-    if (!tracked) return "ignored";
-    if (!isPaymentSucceeded(data)) return "pending";
-
-    // Keep tracking until the re-import succeeds, so a failed one is retried.
-    if (tracked.removedAt) await this.importDonation(data);
-    this.untrackPayment(id);
-    return "settled";
+  async removeFailedDonations() {
+    this.removeFailedPromise ??= this.removeFailedNow().finally(() => {
+      this.removeFailedPromise = undefined;
+    });
+    return this.removeFailedPromise;
   }
 
-  private async removeDonation(
-    id: string,
-    reason: string,
-    tracked: NeonTrackedPayment | undefined,
-  ) {
-    await this.service.remove(this.name, this.providerUniqueId(id), reason);
-    if (tracked && !tracked.removedAt) {
-      this.trackPayment(id, {
-        ...tracked,
-        removedAt: new Date().toISOString(),
-      });
-    }
-  }
-
-  private async recheckPayments(now: Date) {
-    // Least recently checked first, so long-pending payments cannot starve
-    // newer ones.
-    const entries = Object.entries(this.getTrackedPayments())
-      .sort(([, a], [, b]) =>
-        (a.checkedAt ?? "").localeCompare(b.checkedAt ?? ""),
-      )
-      .slice(0, SYNC_MAX_PAYMENT_CHECKS);
-    for (const [id, tracked] of entries) {
+  private async removeFailedNow() {
+    const sinceDate = formatDateInTimezone(
+      subtractDays(new Date(), FAILED_PAYMENT_LOOKBACK_DAYS),
+      this.options.localTimezone,
+    );
+    const failed: string[] = [];
+    let searchedAll = true;
+    for (const status of FAILED_PAYMENT_STATUSES) {
       try {
-        const state = await this.reconcilePayment(id);
-        if (
-          state !== "settled" &&
-          now.getTime() - Date.parse(tracked.importedAt) >= PAYMENT_TRACKING_MS
-        ) {
-          console.info("Stopped tracking unsettled Neon payment", {
-            id,
-            state,
-          });
-          this.untrackPayment(id);
-        }
+        failed.push(...(await this.searchDonationIds(status, sinceDate)));
       } catch (error) {
-        console.error("Failed to recheck Neon payment", { id, error });
-        reportNeonSyncIssue("payment-check-failed", { donationId: id }, error);
-      } finally {
-        const current = this.getTrackedPayments()[id];
-        if (current) {
-          this.trackPayment(id, { ...current, checkedAt: now.toISOString() });
-        }
+        searchedAll = false;
+        this.reportFailedPaymentIssue(error, { status });
       }
     }
-  }
 
-  private getTrackedPayments() {
-    return (
-      this.service.config.get<NeonTrackedPayments>(PAYMENTS_CONFIG_KEY) ?? {}
-    );
-  }
+    try {
+      // Also runs without failed donations, to clean up orphaned pixels and
+      // resync the mural.
+      await this.service.remove(
+        this.name,
+        failed.map((id) => this.providerUniqueId(id)),
+        "payment failed, canceled or refunded",
+      );
+    } catch (error) {
+      this.reportFailedPaymentIssue(error, { step: "remove" });
+    }
+    if (!searchedAll) return;
 
-  private trackPayment(id: string, entry: NeonTrackedPayment) {
-    this.service.config.set(PAYMENTS_CONFIG_KEY, {
-      ...this.getTrackedPayments(),
-      [id]: entry,
-    } satisfies NeonTrackedPayments);
-  }
-
-  private untrackPayment(id: string) {
-    const { [id]: _, ...rest } = this.getTrackedPayments();
+    // A donation that left the failed set may have been paid after all. The
+    // regular sync only looks back a few days, so import it here.
+    const current = new Set(failed);
+    const retry: string[] = [];
+    const previous =
+      this.service.config.get<string[]>(FAILED_PAYMENTS_CONFIG_KEY) ?? [];
+    for (const id of previous.filter((id) => !current.has(id))) {
+      try {
+        await this.importDonationById(id);
+      } catch (error) {
+        retry.push(id);
+        this.reportFailedPaymentIssue(error, { donationId: id });
+      }
+    }
+    const next = [...failed, ...retry];
     this.service.config.set(
-      PAYMENTS_CONFIG_KEY,
-      Object.keys(rest).length ? rest : undefined,
+      FAILED_PAYMENTS_CONFIG_KEY,
+      next.length ? next : undefined,
     );
+  }
+
+  private async searchDonationIds(status: string, sinceDate: string) {
+    const ids: string[] = [];
+    for (let page = 0, pages = 1; page < pages; page++) {
+      const response = await searchDonations(this.options, {
+        searchFields: [
+          { field: "Donation Status", operator: "EQUAL", value: status },
+          {
+            field: "Donation Created Date",
+            operator: "GREATER_AND_EQUAL",
+            value: sinceDate,
+          },
+        ],
+        outputFields: ["Donation ID"],
+        pagination: {
+          currentPage: page,
+          pageSize: 200,
+          sortColumn: "Donation ID",
+          sortDirection: "ASC",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to search Neon donations: ${response.error}`);
+      }
+      pages = response.data.pagination.totalPages;
+      ids.push(
+        ...response.data.searchResults.map((result) =>
+          String(result["Donation ID"]),
+        ),
+      );
+    }
+    return ids;
+  }
+
+  private reportFailedPaymentIssue(
+    error: unknown,
+    context: Record<string, unknown>,
+  ) {
+    console.error("Failed to remove failed Neon donations", {
+      ...context,
+      error,
+    });
+    reportNeonSyncIssue("failed-payment-removal", context, error);
   }
 
   private providerUniqueId(id: string) {
@@ -403,10 +355,6 @@ export class NeonDonationProvider implements DonationProvider {
           .toISOString()
           .slice(0, 10),
       };
-    if (Object.keys(this.getTrackedPayments()).length) {
-      await this.recheckPayments(startedAt);
-    }
-
     const failedDonations = { ...metadata.failedDonations };
     let found = 0;
     let imported = 0;
@@ -581,10 +529,7 @@ export class NeonDonationProvider implements DonationProvider {
       throw new Error(`Failed to fetch Neon donation ${id}`);
     }
 
-    return this.importDonation(donationResponse.data);
-  }
-
-  private async importDonation(data: Donation) {
+    const data = donationResponse.data;
     if (!this.shouldSyncDonation(data)) {
       return false;
     }
@@ -607,7 +552,17 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
 
-    return isPaymentSucceeded(data);
+    if (data.status && data.status !== SUCCEEDED_STATUS) {
+      return false;
+    }
+
+    return (
+      data.payments.length === 0 ||
+      data.payments.some(
+        (payment) =>
+          payment.paymentStatus && payment.paymentStatus === SUCCEEDED_STATUS,
+      )
+    );
   }
 
   private isManualDonation(id: string, origin: NeonDonationData["origin"]) {
@@ -720,20 +675,6 @@ export class NeonDonationProvider implements DonationProvider {
     return "Anonymous";
   }
 }
-
-const isCreateDonationEvent = (body: unknown) =>
-  typeof body === "object" &&
-  body !== null &&
-  "eventTrigger" in body &&
-  body.eventTrigger === "createDonation";
-
-const isPaymentSucceeded = (data: Donation) => {
-  if (data.status && data.status !== SUCCEEDED_STATUS) return false;
-  return (
-    data.payments.length === 0 ||
-    data.payments.some((payment) => payment.paymentStatus === SUCCEEDED_STATUS)
-  );
-};
 
 const toCents = (val: number): number =>
   Number.parseInt(val.toFixed(2).replace(".", ""), 10);

@@ -51,20 +51,9 @@ const env = {
 } as Env;
 const service = {
   add: vi.fn(async () => 1),
-  remove: vi.fn(async () => ({ donations: 1, pixels: 1 })),
+  remove: vi.fn(async () => {}),
   config: { get: vi.fn(), set: vi.fn() },
 } satisfies DonationStorage;
-
-function configStore(initial: Record<string, unknown> = {}) {
-  const state: Record<string, unknown> = structuredClone(initial);
-  service.config.get.mockImplementation((key: string) =>
-    structuredClone(state[key]),
-  );
-  service.config.set.mockImplementation((key: string, value: unknown) => {
-    state[key] = structuredClone(value);
-  });
-  return state;
-}
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -72,7 +61,6 @@ beforeEach(() => {
   vi.setSystemTime(new Date("2026-01-02T00:00:00Z"));
   vi.spyOn(console, "info").mockImplementation(() => {});
   service.add.mockResolvedValue(1);
-  service.remove.mockResolvedValue({ donations: 1, pixels: 1 });
   vi.mocked(getAccount).mockResolvedValue({
     ok: true,
     data: { individualAccount: null, companyAccount: null },
@@ -160,8 +148,8 @@ describe("Neon amount privacy", () => {
   );
 });
 
-describe("Neon webhooks", () => {
-  function webhook(eventTrigger = "createDonation", data = {}) {
+describe("manually entered Neon donations", () => {
+  function webhook(data: Record<string, unknown>) {
     return new Request("https://example.com/neon/live", {
       method: "POST",
       headers: {
@@ -169,180 +157,69 @@ describe("Neon webhooks", () => {
         Authorization: `Basic ${btoa("donations:example")}`,
       },
       body: JSON.stringify({
-        eventTrigger,
+        eventTrigger: "createDonation",
         eventTimestamp: "2026-01-01T12:00:00Z",
         organizationId: "example",
         data: { ...rawDonation, anonymousType: "No", ...data },
       }),
     });
   }
-  function details(overrides: Record<string, unknown> = {}) {
+
+  it.each(["Data Entry", "Custom Import", "Batch Donation", "Self-Import"])(
+    "acknowledges a %s webhook without importing it",
+    async (originCategory) => {
+      const provider = await NeonDonationProvider.init(service, env);
+      const response = await provider.handle(
+        webhook({ origin: { originCategory, originDetail: "Staff" } }),
+      );
+
+      expect(response.status).toBe(200);
+      expect(service.add).not.toHaveBeenCalled();
+      expect(getDonation).not.toHaveBeenCalled();
+    },
+  );
+
+  it("imports a donation form webhook", async () => {
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook({
+        origin: { originCategory: "Donation Form", originDetail: null },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(getDonation).not.toHaveBeenCalled();
+  });
+
+  it("looks up the origin when the webhook omits it", async () => {
     vi.mocked(getDonation).mockResolvedValue({
       ok: true,
       data: DonationResponse.parse({
         ...rawDonation,
         anonymousType: "No",
-        origin: { originCategory: "Donation Form" },
-        ...overrides,
+        origin: { originCategory: "Data Entry" },
       }),
     });
-  }
-  const pending = {
-    status: "Pending",
-    payments: [{ id: "5", amount: 123.45, paymentStatus: "Pending" }],
-  };
-
-  it.each(["Data Entry", "Custom Import", "Batch Donation", "Self-Import"])(
-    "acknowledges a %s donation without importing it",
-    async (originCategory) => {
-      details({ origin: { originCategory, originDetail: "Staff" } });
-      const provider = await NeonDonationProvider.init(service, env);
-      const response = await provider.handle(webhook());
-
-      expect(response.status).toBe(200);
-      expect(service.add).not.toHaveBeenCalled();
-    },
-  );
-
-  it("imports a settled donation form donation without tracking it", async () => {
-    const state = configStore();
-    details();
     const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook());
+    const response = await provider.handle(webhook({}));
 
     expect(response.status).toBe(200);
     expect(getDonation).toHaveBeenCalledWith(expect.anything(), "1");
-    expect(service.add).toHaveBeenCalledOnce();
-    expect(state["neon-payments"]).toBeUndefined();
-  });
-
-  it("imports a pending payment right away and tracks it", async () => {
-    const state = configStore();
-    details(pending);
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook());
-
-    expect(response.status).toBe(200);
-    expect(service.add).toHaveBeenCalledOnce();
-    expect(state["neon-payments"]).toEqual({
-      "1": { importedAt: "2026-01-02T00:00:00.000Z" },
-    });
-  });
-
-  it("skips a donation whose payment already failed", async () => {
-    details({ status: "Failed" });
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook());
-
-    expect(response.status).toBe(200);
     expect(service.add).not.toHaveBeenCalled();
   });
 
-  it("asks Neon to retry when the donation lookup fails", async () => {
+  it("asks Neon to retry when the origin lookup fails", async () => {
     vi.mocked(getDonation).mockResolvedValue({
       ok: false,
       errorType: "network",
       error: "offline",
     });
     const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook());
+    const response = await provider.handle(webhook({}));
 
     expect(response.status).toBe(500);
     expect(service.add).not.toHaveBeenCalled();
-  });
-
-  it("removes a tracked donation once its payment fails", async () => {
-    const state = configStore({
-      "neon-payments": { "1": { importedAt: "2026-01-01T23:58:00.000Z" } },
-    });
-    details({ status: "Failed" });
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook("updateDonation", { id: "1" }),
-    );
-
-    expect(response.status).toBe(200);
-    expect(service.remove).toHaveBeenCalledWith(
-      "neon",
-      "example-1",
-      "payment failed",
-    );
-    // Keep watching in case the payment is retried.
-    expect(state["neon-payments"]).toEqual({
-      "1": {
-        importedAt: "2026-01-01T23:58:00.000Z",
-        removedAt: "2026-01-02T00:00:00.000Z",
-      },
-    });
-  });
-
-  it("imports a removed donation again once its payment succeeds", async () => {
-    const state = configStore({
-      "neon-payments": {
-        "1": {
-          importedAt: "2026-01-01T00:00:00.000Z",
-          removedAt: "2026-01-01T00:05:00.000Z",
-        },
-      },
-    });
-    details();
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook("updateDonation", { id: "1" }),
-    );
-
-    expect(response.status).toBe(200);
-    expect(service.add).toHaveBeenCalledWith(
-      expect.objectContaining({ providerUniqueId: "example-1" }),
-    );
-    expect(state["neon-payments"]).toBeUndefined();
-  });
-
-  it("ignores updates to settled donations it is not tracking", async () => {
-    configStore();
-    details({ date: "2025-01-01" });
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook("updateDonation", { id: "1" }),
-    );
-
-    expect(response.status).toBe(200);
-    expect(service.add).not.toHaveBeenCalled();
-    expect(service.remove).not.toHaveBeenCalled();
-  });
-
-  it("removes a deleted donation", async () => {
-    configStore();
-    vi.mocked(getDonation).mockResolvedValue({
-      ok: false,
-      errorType: "request",
-      error: "Request failed with status 404",
-      status: 404,
-    });
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook("deleteDonation", { id: "1" }),
-    );
-
-    expect(response.status).toBe(200);
-    expect(service.remove).toHaveBeenCalledWith(
-      "neon",
-      "example-1",
-      "deleted in Neon",
-    );
-  });
-
-  it("asks Neon to retry when removing a donation fails", async () => {
-    configStore();
-    details({ status: "Refunded" });
-    service.remove.mockRejectedValue(new Error("site unavailable"));
-    vi.spyOn(console, "error").mockImplementation(() => {});
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook("updateDonation", { id: "1" }),
-    );
-
-    expect(response.status).toBe(500);
   });
 });
 
@@ -366,8 +243,12 @@ describe("bounded Neon catch-up", () => {
   function checkpointStore(
     initial: unknown = { lastSyncedAt: "2025-01-01T00:00:00.000Z" },
   ) {
-    const state = configStore({ "neon-sync": initial });
-    return () => state["neon-sync"];
+    let state = initial;
+    service.config.get.mockImplementation(() => structuredClone(state));
+    service.config.set.mockImplementation((_key, value) => {
+      state = structuredClone(value);
+    });
+    return () => state;
   }
   function normalDonation(id: string, originCategory = "API") {
     return DonationResponse.parse({
@@ -661,132 +542,6 @@ describe("bounded Neon catch-up", () => {
     expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
   });
 
-  it("rechecks tracked payments and stops tracking stale ones", async () => {
-    const state = configStore({
-      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
-      "neon-payments": {
-        "1": { importedAt: "2026-01-01T00:00:00.000Z" },
-        "2": { importedAt: "2026-01-01T00:00:00.000Z" },
-        "3": { importedAt: "2025-12-20T00:00:00.000Z" },
-        "4": { importedAt: "2026-01-01T00:00:00.000Z" },
-        "5": {
-          importedAt: "2026-01-01T00:00:00.000Z",
-          removedAt: "2026-01-01T00:10:00.000Z",
-        },
-      },
-    });
-    vi.mocked(searchDonations).mockResolvedValue(page([]));
-    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
-      ok: true,
-      data: DonationResponse.parse({
-        ...rawDonation,
-        id,
-        anonymousType: "No",
-        status:
-          { "1": "Deferred", "2": "Failed", "3": "Pending", "5": "Failed" }[
-            id
-          ] ?? "Succeeded",
-      }),
-    }));
-    const provider = await NeonDonationProvider.init(service, env);
-    await provider.syncRecentDonations();
-
-    expect(service.remove).toHaveBeenCalledOnce();
-    expect(service.remove).toHaveBeenCalledWith(
-      "neon",
-      "example-2",
-      "payment failed",
-    );
-    const checkedAt = "2026-01-02T00:00:00.000Z";
-    expect(state["neon-payments"]).toEqual({
-      // Not a final status yet, so keep watching it.
-      "1": { importedAt: "2026-01-01T00:00:00.000Z", checkedAt },
-      "2": {
-        importedAt: "2026-01-01T00:00:00.000Z",
-        removedAt: "2026-01-02T00:00:00.000Z",
-        checkedAt,
-      },
-      // Already removed, so it is not removed again.
-      "5": {
-        importedAt: "2026-01-01T00:00:00.000Z",
-        removedAt: "2026-01-01T00:10:00.000Z",
-        checkedAt,
-      },
-    });
-  });
-
-  it("rotates rechecks so long-pending payments cannot starve newer ones", async () => {
-    const payments = Object.fromEntries(
-      Array.from({ length: 25 }, (_, index) => [
-        String(index + 1),
-        {
-          importedAt: `2026-01-01T00:${String(index).padStart(2, "0")}:00.000Z`,
-        },
-      ]),
-    );
-    configStore({
-      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
-      "neon-payments": payments,
-    });
-    vi.mocked(searchDonations).mockResolvedValue(page([]));
-    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
-      ok: true,
-      data: DonationResponse.parse({
-        ...rawDonation,
-        id,
-        anonymousType: "No",
-        status: "Deferred",
-      }),
-    }));
-    const provider = await NeonDonationProvider.init(service, env);
-    await provider.syncRecentDonations();
-    expect(getDonation).toHaveBeenCalledTimes(20);
-
-    vi.mocked(getDonation).mockClear();
-    vi.setSystemTime(new Date("2026-01-02T01:00:00Z"));
-    await provider.syncRecentDonations();
-    const second = vi.mocked(getDonation).mock.calls.map(([, id]) => id);
-    // The five that were not checked last time go first.
-    expect(second.slice(0, 5)).toEqual(["21", "22", "23", "24", "25"]);
-  });
-
-  it("keeps tracking a removed payment until its re-import succeeds", async () => {
-    const state = configStore({
-      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
-      "neon-payments": {
-        "1": {
-          importedAt: "2026-01-01T00:00:00.000Z",
-          removedAt: "2026-01-01T00:05:00.000Z",
-        },
-      },
-    });
-    vi.mocked(searchDonations).mockResolvedValue(page([]));
-    vi.mocked(getDonation).mockResolvedValue({
-      ok: true,
-      data: normalDonation("1"),
-    });
-    vi.mocked(getAccount).mockResolvedValueOnce({
-      ok: false,
-      errorType: "network",
-      error: "offline",
-    });
-    vi.spyOn(console, "error").mockImplementation(() => {});
-    const provider = await NeonDonationProvider.init(service, env);
-    await provider.syncRecentDonations();
-
-    expect(service.add).not.toHaveBeenCalled();
-    expect(state["neon-payments"]).toMatchObject({
-      "1": { removedAt: "2026-01-01T00:05:00.000Z" },
-    });
-
-    vi.setSystemTime(new Date("2026-01-02T01:00:00Z"));
-    await provider.syncRecentDonations();
-    expect(service.add).toHaveBeenCalledWith(
-      expect.objectContaining({ providerUniqueId: "example-1" }),
-    );
-    expect(state["neon-payments"]).toBeUndefined();
-  });
-
   it.each([{ ids: ["2", "1"] }, { ids: ["1", "1"] }, { ids: ["invalid"] }])(
     "refuses an unsafe cursor page: %j",
     async ({ ids }) => {
@@ -825,5 +580,150 @@ describe("bounded Neon catch-up", () => {
     await expect(second).resolves.toEqual(await first);
     expect(service.config.set).toHaveBeenCalledOnce();
     expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+});
+
+describe("removing failed payments", () => {
+  function configStore(initial: Record<string, unknown> = {}) {
+    const state: Record<string, unknown> = structuredClone(initial);
+    service.config.get.mockImplementation((key: string) =>
+      structuredClone(state[key]),
+    );
+    service.config.set.mockImplementation((key: string, value: unknown) => {
+      state[key] = structuredClone(value);
+    });
+    return state;
+  }
+  function search(ids: string[], totalPages = 1) {
+    return {
+      ok: true as const,
+      data: {
+        pagination: {
+          currentPage: 0,
+          pageSize: 200,
+          totalPages,
+          totalResults: ids.length,
+        },
+        searchResults: ids.map((id) => ({ "Donation ID": id })),
+      },
+    };
+  }
+  function failedSearch(byStatus: Record<string, string[][]>) {
+    vi.mocked(searchDonations).mockImplementation(async (_options, query) => {
+      const pages = byStatus[String(query.searchFields[0]?.value)] ?? [[]];
+      const page = query.pagination?.currentPage ?? 0;
+      return search(pages[page] ?? [], pages.length);
+    });
+  }
+
+  it("removes failed, canceled and refunded donations from every page in one call", async () => {
+    configStore();
+    failedSearch({ Failed: [["7"], ["8"]], Refunded: [["9"]] });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(searchDonations).toHaveBeenCalledTimes(4);
+    expect(vi.mocked(searchDonations).mock.calls[0]?.[1].searchFields).toEqual([
+      { field: "Donation Status", operator: "EQUAL", value: "Failed" },
+      {
+        field: "Donation Created Date",
+        operator: "GREATER_AND_EQUAL",
+        value: "2025-12-02",
+      },
+    ]);
+    expect(service.remove).toHaveBeenCalledOnce();
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      ["example-7", "example-8", "example-9"],
+      "payment failed, canceled or refunded",
+    );
+  });
+
+  it("still cleans up when nothing failed", async () => {
+    configStore();
+    failedSearch({});
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      [],
+      "payment failed, canceled or refunded",
+    );
+  });
+
+  it("imports a donation that left the failed set because it was paid", async () => {
+    const state = configStore({ "neon-failed-payments": ["7", "8"] });
+    failedSearch({ Failed: [["7"]] });
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id: "8",
+        anonymousType: "No",
+        origin: { originCategory: "Donation Form" },
+      }),
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(getDonation).toHaveBeenCalledOnce();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-8" }),
+    );
+    expect(state["neon-failed-payments"]).toEqual(["7"]);
+  });
+
+  it("retries a failed import on the next sweep", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const state = configStore({ "neon-failed-payments": ["8"] });
+    failedSearch({});
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "network",
+      error: "offline",
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.removeFailedDonations();
+
+    expect(service.add).not.toHaveBeenCalled();
+    expect(state["neon-failed-payments"]).toEqual(["8"]);
+  });
+
+  it("removes what it found but keeps the failed set when a search fails", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const state = configStore({ "neon-failed-payments": ["5"] });
+    vi.mocked(searchDonations)
+      .mockResolvedValueOnce({
+        ok: false,
+        errorType: "request",
+        error: "Request failed with status 429",
+        status: 429,
+      })
+      .mockResolvedValue(search(["9"]));
+    const provider = await NeonDonationProvider.init(service, env);
+    await expect(provider.removeFailedDonations()).resolves.toBeUndefined();
+
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      ["example-9", "example-9"],
+      "payment failed, canceled or refunded",
+    );
+    expect(Sentry.captureException).toHaveBeenCalledOnce();
+    // Without a complete picture, nothing is treated as paid.
+    expect(getDonation).not.toHaveBeenCalled();
+    expect(state["neon-failed-payments"]).toEqual(["5"]);
+  });
+
+  it("runs one sweep at a time", async () => {
+    configStore();
+    failedSearch({});
+    const provider = await NeonDonationProvider.init(service, env);
+    await Promise.all([
+      provider.removeFailedDonations(),
+      provider.removeFailedDonations(),
+    ]);
+    expect(searchDonations).toHaveBeenCalledTimes(3);
+    expect(service.remove).toHaveBeenCalledOnce();
   });
 });

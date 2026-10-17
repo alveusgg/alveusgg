@@ -2,16 +2,17 @@ import type { Donation } from "@alveusgg/donations-core";
 import { parse, stringify } from "superjson";
 import { createSiteApi } from "../utils/site-api";
 
-const PIXELS_RESYNC_CONFIG_KEY = "pixels-resync-pending";
-
 export interface DonationStorage {
   add: (...donations: Donation[]) => Promise<number>;
-  /** Delete donations and their pixels, e.g. after a payment failed. */
+  /**
+   * Delete donations and their pixels, e.g. after a payment failed, clean up
+   * orphaned pixels, and resync the mural.
+   */
   remove: (
     provider: string,
-    providerUniqueId: string,
+    providerUniqueIds: string[],
     reason: string,
-  ) => Promise<{ donations: number; pixels: number }>;
+  ) => Promise<void>;
   config: {
     set: (providerId: string, value: unknown | undefined) => void;
     get: <T>(providerId: string) => T | undefined;
@@ -24,94 +25,32 @@ export class DurableObjectDonationStorage implements DonationStorage {
     private env: Env,
   ) {}
 
-  // Deliveries and removals run one at a time, so a removal can never finish
-  // while a delivery of the same donation is still writing to the website.
-  private exclusiveTail: Promise<unknown> = Promise.resolve();
-  private exclusive<T>(task: () => Promise<T>): Promise<T> {
-    const run = this.exclusiveTail.then(task, task);
-    this.exclusiveTail = run.catch(() => undefined);
-    return run;
-  }
-
-  /** Write queued donations to the website, unless they were cancelled. */
-  deliverDonations(donations: Donation[]) {
-    return this.exclusive(async () => {
-      const kept = this.filterCancelled(donations);
-      if (kept.length) {
-        await createSiteApi(this.env).donations.createDonations.mutate({
-          donations: kept,
-        });
-      }
-      return kept;
-    });
-  }
-
-  /** Allocate pixels for queued donations, unless they were cancelled. */
-  deliverPixels(donations: Donation[]) {
-    return this.exclusive(async () => {
-      const kept = this.filterCancelled(donations);
-      if (kept.length) {
-        await this.env.PIXELS_MANAGER.getByName(
-          `alveus-${this.env.MURAL_ID}`,
-        ).process(kept);
-      }
-      return kept;
-    });
-  }
-
-  remove(provider: string, providerUniqueId: string, reason: string) {
-    return this.exclusive(() =>
-      this.removeNow(provider, providerUniqueId, reason),
-    );
-  }
-
-  private async removeNow(
-    provider: string,
-    providerUniqueId: string,
-    reason: string,
-  ) {
-    // Cancel first, so a queued donation that is delivered after this
-    // removal is dropped instead of recreating it.
-    this.ctx.storage.sql.exec(
-      `REPLACE INTO cancelledDonations (provider, providerUniqueId, cancelledAt)
-       VALUES (?, ?, ?)`,
-      provider,
-      providerUniqueId,
-      new Date().toISOString(),
-    );
+  async remove(provider: string, providerUniqueIds: string[], reason: string) {
     const removed = await createSiteApi(
       this.env,
     ).donations.removeDonations.mutate({
-      donations: [{ provider, providerUniqueId }],
+      donations: providerUniqueIds.map((providerUniqueId) => ({
+        provider,
+        providerUniqueId,
+      })),
       reason,
     });
-    // Release the reservation, so the donation is imported again if the
-    // payment is retried and succeeds.
-    this.ctx.storage.sql.exec(
-      `DELETE FROM donations WHERE provider = ? AND providerUniqueId = ?`,
-      provider,
-      providerUniqueId,
-    );
-    if (removed.pixels > 0) {
-      this.config.set(PIXELS_RESYNC_CONFIG_KEY, true);
+    // Release the reservations, so a donation whose payment is retried and
+    // succeeds can be imported again.
+    for (const providerUniqueId of providerUniqueIds) {
+      this.ctx.storage.sql.exec(
+        `DELETE FROM donations WHERE provider = ? AND providerUniqueId = ?`,
+        provider,
+        providerUniqueId,
+      );
     }
-    await this.resyncNow();
-    console.info("Removed donation", { providerUniqueId, reason, ...removed });
-    return removed;
-  }
 
-  /**
-   * Resync the mural after pixels were removed. Persisted, so a failed resync
-   * is retried by later removals and syncs instead of being lost. Runs in
-   * turn with removals, so an older resync cannot clear a newer pending one.
-   */
-  resyncPixelsIfPending() {
-    return this.exclusive(() => this.resyncNow());
-  }
+    if (removed.donations > 0 || removed.pixels > 0) {
+      console.info("Removed donations", { reason, ...removed });
+    }
 
-  private async resyncNow() {
-    if (!this.config.get<boolean>(PIXELS_RESYNC_CONFIG_KEY)) return;
-
+    // Always resync, so pixels a racing delivery added to the live mural are
+    // dropped too. A failed resync is repeated by the next sweep.
     const mural = this.env.PIXELS_MANAGER.getByName(
       `alveus-${this.env.MURAL_ID}`,
     );
@@ -122,31 +61,6 @@ export class DurableObjectDonationStorage implements DonationStorage {
     if (!response.ok) {
       throw new Error(`Failed to resync pixels: ${response.status}`);
     }
-    this.config.set(PIXELS_RESYNC_CONFIG_KEY, undefined);
-  }
-
-  /** Drop queued donations that were cancelled after they were queued. */
-  private filterCancelled(donations: Donation[]) {
-    return donations.filter((donation) => {
-      const cursor = this.ctx.storage.sql.exec<{ cancelledAt: string }>(
-        `SELECT cancelledAt FROM cancelledDonations
-         WHERE provider = ? AND providerUniqueId = ?`,
-        donation.provider,
-        donation.providerUniqueId,
-      );
-      const row = cursor.next();
-      if (row.done) return true;
-
-      const cancelled =
-        new Date(donation.receivedAt).getTime() <=
-        Date.parse(row.value.cancelledAt);
-      if (cancelled) {
-        console.info("Dropping cancelled donation from queue", {
-          providerUniqueId: donation.providerUniqueId,
-        });
-      }
-      return !cancelled;
-    });
   }
 
   async add(...donations: Donation[]) {
@@ -209,18 +123,6 @@ export async function createIfNotExistsDonationsTable(sql: SqlStorage) {
       provider TEXT NOT NULL,
       providerUniqueId TEXT PRIMARY KEY,
       date TEXT NOT NULL
-    );
-  `);
-}
-
-export async function createIfNotExistsCancelledDonationsTable(
-  sql: SqlStorage,
-) {
-  sql.exec(`
-    CREATE TABLE IF NOT EXISTS cancelledDonations (
-      provider TEXT NOT NULL,
-      providerUniqueId TEXT PRIMARY KEY,
-      cancelledAt TEXT NOT NULL
     );
   `);
 }

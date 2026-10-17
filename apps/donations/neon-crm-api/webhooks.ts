@@ -1,7 +1,6 @@
 import {
   type CreateWebhookInput,
   type WebhookPayload,
-  DonationEventWebhookPayload,
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
@@ -9,10 +8,7 @@ import { createWebhook, deleteWebhook, getWebhooks } from "./index.js";
 import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
 import type { ZodError } from "zod";
 
-export type {
-  DonationEventWebhookPayload,
-  DonationWebhookPayload,
-} from "./schema.js";
+export type { DonationWebhookPayload } from "./schema.js";
 
 type WebhookOptions = Pick<Options, "organizationId" | "localTimezone"> & {
   onParseError?: (
@@ -68,49 +64,6 @@ export const parseDonationWebhook = async (
   options: WebhookOptions,
   body: unknown,
 ) => parseWebhook(options, body, DonationWebhookPayload);
-
-export const parseDonationEventWebhook = async (
-  options: WebhookOptions,
-  body: unknown,
-) => {
-  const payload = await DonationEventWebhookPayload.safeParseAsync(body);
-  if (!payload.success) {
-    console.error("Failed to parse Neon donation event webhook", {
-      error: payload.error,
-      shape: describeShape(body),
-    });
-    options.onParseError?.(payload.error, {
-      kind: "webhook",
-      eventTrigger: undefined,
-    });
-    return false;
-  }
-  if (payload.data.organizationId !== options.organizationId) {
-    console.error(
-      `Ignoring webhook from ${payload.data.organizationId} because it is not the allowed organization id (${options.organizationId}).`,
-    );
-    return false;
-  }
-  return payload.data;
-};
-
-// Log where IDs live in an unexpected payload without logging donor details.
-function describeShape(value: unknown, depth = 0): unknown {
-  if (typeof value !== "object" || value === null) return typeof value;
-  if (Array.isArray(value))
-    return [depth < 2 ? describeShape(value[0], depth + 1) : "…"];
-  return Object.fromEntries(
-    Object.entries(value).map(([key, entry]) => [
-      key,
-      /id$/i.test(key) &&
-      (typeof entry === "string" || typeof entry === "number")
-        ? entry
-        : depth < 2
-          ? describeShape(entry, depth + 1)
-          : typeof entry,
-    ]),
-  );
-}
 
 export async function setupWebhook(
   url: string,

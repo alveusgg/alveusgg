@@ -222,33 +222,6 @@ export const DonationWebhookPayload = z.object({
     })),
 });
 
-// Neon does not document the update/delete payloads, so only rely on the
-// donation ID and look the donation up for everything else.
-export type DonationEventWebhookPayload = z.output<
-  typeof DonationEventWebhookPayload
->;
-export const DonationEventWebhookPayload = z.object({
-  ...webhookPayloadBase,
-  eventTrigger: z.string(),
-  data: z.union([
-    z.looseObject({ id: RecordId }),
-    // Deletions only carry `{ donation: { donationId, deletedDateTime } }`.
-    z
-      .looseObject({
-        donation: z.looseObject({
-          donationId: z.union([z.number(), z.string()]),
-        }),
-      })
-      .transform(({ donation }) => ({ id: String(donation.donationId) })),
-  ]),
-});
-
-export const DonationWebhookTrigger = z.enum([
-  "CREATE_DONATION",
-  "UPDATE_DONATION",
-  "DELETE_DONATION",
-]);
-
 export const WebhookPayload = z.discriminatedUnion("eventTrigger", [
   DonationWebhookPayload,
 ]);
@@ -457,7 +430,7 @@ export type CreateWebhookInput = z.input<typeof CreateWebhookInputBody>;
 export const CreateWebhookInputBody = z.object({
   name: RecordName,
   url: z.httpUrl(),
-  trigger: DonationWebhookTrigger,
+  trigger: z.enum(["CREATE_DONATION"]),
   contentType: z.literal("application/json"),
   triggerSelfImport: z.boolean(),
   httpBasic: z.object({
@@ -476,7 +449,7 @@ export const WebhookResponse = z.object({
   id: RecordId,
   name: RecordName,
   url: z.httpUrl(),
-  trigger: DonationWebhookTrigger,
+  trigger: z.enum(["CREATE_DONATION"]),
   contentType: z.string(),
   triggerSelfImport: z.boolean(),
   httpBasic: z.object({ userName: z.string() }).nullable(),
@@ -489,8 +462,6 @@ export type WebhooksResponse = z.output<typeof WebhooksResponse>;
 export const WebhooksResponse = z
   .array(z.looseObject({ trigger: z.string() }))
   .transform((webhooks) =>
-    webhooks.filter(
-      (webhook) => DonationWebhookTrigger.safeParse(webhook.trigger).success,
-    ),
+    webhooks.filter((webhook) => webhook.trigger === "CREATE_DONATION"),
   )
   .pipe(z.array(WebhookResponse));
