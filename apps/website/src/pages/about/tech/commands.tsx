@@ -64,6 +64,8 @@ const AboutTechCommandsPage: NextPage = () => {
               Twitch live chat have varying levels of access to run commands in
               chat that can control what live cameras are shown on stream, what
               can be seen on each of the cameras, and what audio can be heard.
+              Camera presets are managed and loaded from the{" "}
+              <Link href="/about/tech/presets">camera presets page</Link>.
             </p>
           </div>
         </Section>

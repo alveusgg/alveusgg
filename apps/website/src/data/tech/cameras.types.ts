@@ -1,9 +1,15 @@
-import { type StaticImageData } from "next/image";
+export interface PresetImage {
+  src: string;
+  width: number;
+  height: number;
+}
 
 export interface Preset {
   description: string;
-  image: StaticImageData;
+  image: PresetImage | null;
   position: { pan: number; tilt: number; zoom: number };
+  canLoad?: boolean;
+  imageProvenance?: "legacy" | "capture" | null;
 }
 
 export type PresetEntry = readonly [string, Preset];
@@ -23,8 +29,6 @@ export const isCameraPTZ = (cam: CameraPTZ | CameraMulti): cam is CameraPTZ =>
 export interface CameraMulti extends CameraCore {
   multi: {
     cameras: string[];
-    description: string;
-    image: StaticImageData;
   };
 }
 
