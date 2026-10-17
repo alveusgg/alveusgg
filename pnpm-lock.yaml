@@ -40,15 +40,27 @@ importers:
 
   apps/cams/manager:
     dependencies:
+      '@alveusgg/alveusgg-website':
+        specifier: workspace:*
+        version: link:../../website
       '@alveusgg/cams-control-client':
         specifier: workspace:*
         version: link:../control
+      '@trpc/client':
+        specifier: ^11.18.0
+        version: 11.18.0(@trpc/server@11.18.0)(typescript@7.0.2)
+      '@trpc/server':
+        specifier: ^11.18.0
+        version: 11.18.0(typescript@7.0.2)
       hono:
         specifier: ^4.13.8
         version: 4.13.13
       jose:
         specifier: ^6.2.12
         version: 6.2.12
+      superjson:
+        specifier: ^2.2.6
+        version: 2.2.6
       zod:
         specifier: ^4.6.5
         version: 4.6.5
@@ -8729,6 +8741,11 @@ snapshots:
       '@trpc/server': 11.18.0(typescript@6.0.3)
       typescript: 6.0.3
 
+  '@trpc/client@11.18.0(@trpc/server@11.18.0)(typescript@7.0.2)':
+    dependencies:
+      '@trpc/server': 11.18.0(typescript@7.0.2)
+      typescript: 7.0.2
+
   '@trpc/next@11.18.0(@tanstack/react-query@5.104.1)(@trpc/client@11.18.0)(@trpc/react-query@11.18.0)(@trpc/server@11.18.0)(next@16.4.0)(react-dom@19.3.0)(react@19.3.0)(typescript@6.0.3)':
     dependencies:
       '@trpc/client': 11.18.0(@trpc/server@11.18.0)(typescript@6.0.3)
@@ -8752,6 +8769,10 @@ snapshots:
   '@trpc/server@11.18.0(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
+
+  '@trpc/server@11.18.0(typescript@7.0.2)':
+    dependencies:
+      typescript: 7.0.2
 
   '@ts-morph/common@0.29.0':
     dependencies:
