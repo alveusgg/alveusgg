@@ -39,6 +39,15 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
     DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
+    DATA_ENCRYPTION_KEYS: z
+      .string()
+      .regex(
+        /^[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=(,[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=)*$/,
+        "Must be a comma-separated list of <key id>:<base64 32-byte key>",
+      ),
+    DATA_BLIND_INDEX_KEY: z
+      .string()
+      .regex(/^[A-Za-z0-9+/]{43}=$/, "Must be a base64 32-byte key"),
     NODE_ENV: z
       .literal(["development", "test", "production"])
       .default("production"),
@@ -163,6 +172,8 @@ export const env = createEnv({
     // Server:
     DATABASE_URL: process.env.DATABASE_URL,
     DATA_ENCRYPTION_PASSPHRASE: process.env.DATA_ENCRYPTION_PASSPHRASE,
+    DATA_ENCRYPTION_KEYS: process.env.DATA_ENCRYPTION_KEYS,
+    DATA_BLIND_INDEX_KEY: process.env.DATA_BLIND_INDEX_KEY,
     NODE_ENV: process.env.NODE_ENV || "production",
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
