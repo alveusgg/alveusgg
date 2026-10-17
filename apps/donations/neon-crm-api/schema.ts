@@ -435,17 +435,25 @@ export const WebhookResponse = z.object({
   id: RecordId,
   name: RecordName,
   url: z.httpUrl(),
-  // Listing subscriptions also returns event types used by other integrations.
-  trigger: z.string().min(1),
+  trigger: z.enum(["CREATE_DONATION"]),
   contentType: z.string(),
   triggerSelfImport: z.boolean(),
-  httpBasic: z
-    .object({
-      userName: z.string(),
-    })
-    .nullable(),
+  httpBasic: z.object({
+    userName: z.string(),
+  }),
   customParameters: z.array(NameValuePair).nullable(),
 });
 
 export type WebhooksResponse = z.output<typeof WebhooksResponse>;
-export const WebhooksResponse = z.array(WebhookResponse);
+// Other integrations can register hooks that this client does not support.
+// Keep the individual schema strict without failing the entire listing.
+export const WebhooksResponse = z
+  .array(
+    WebhookResponse.optional().catch(({ error }) => {
+      console.warn("Ignoring unsupported or invalid Neon webhook", {
+        issues: error.issues,
+      });
+      return undefined;
+    }),
+  )
+  .transform((webhooks) => webhooks.filter((webhook) => webhook !== undefined));

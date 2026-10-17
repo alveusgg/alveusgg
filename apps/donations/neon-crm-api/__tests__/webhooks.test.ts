@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createWebhook, deleteWebhook, getWebhooks } from "../index";
 import { setupWebhook } from "../webhooks";
+import { WebhooksResponse } from "../schema";
 
 vi.mock("../index", () => ({
   createWebhook: vi.fn(),
@@ -33,12 +34,15 @@ const subscription = {
 describe("setupWebhook", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    vi.spyOn(console, "warn").mockImplementation(() => {});
   });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it("reuses the authenticated subscription and leaves unrelated hooks alone", async () => {
     vi.mocked(getWebhooks).mockResolvedValue({
       ok: true,
-      data: [
+      data: WebhooksResponse.parse([
         { ...subscription, id: "2", httpBasic: null },
         {
           ...subscription,
@@ -47,7 +51,7 @@ describe("setupWebhook", () => {
           httpBasic: null,
         },
         subscription,
-      ],
+      ]),
     });
 
     await setupWebhook(url, "CREATE_DONATION", options);
@@ -59,7 +63,7 @@ describe("setupWebhook", () => {
   it("creates an authenticated subscription when only an unauthenticated hook matches", async () => {
     vi.mocked(getWebhooks).mockResolvedValue({
       ok: true,
-      data: [{ ...subscription, httpBasic: null }],
+      data: WebhooksResponse.parse([{ ...subscription, httpBasic: null }]),
     });
     vi.mocked(createWebhook).mockResolvedValue({ ok: true, data: { id: "2" } });
 
@@ -81,7 +85,7 @@ describe("setupWebhook", () => {
   it("does not match null auth against an unconfigured username", async () => {
     vi.mocked(getWebhooks).mockResolvedValue({
       ok: true,
-      data: [{ ...subscription, httpBasic: null }],
+      data: WebhooksResponse.parse([{ ...subscription, httpBasic: null }]),
     });
     vi.mocked(createWebhook).mockResolvedValue({ ok: true, data: { id: "2" } });
 

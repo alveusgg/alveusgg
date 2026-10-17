@@ -82,7 +82,6 @@ export async function setupWebhook(
       (webhook) =>
         isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
         webhook.trigger === trigger &&
-        webhook.httpBasic !== null &&
         webhook.httpBasic.userName === options.basicAuthUsername,
     )
     .sort((a, b) => Number(a.id) - Number(b.id));

@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   CreateWebhookInputBody,
   DonationResponse,
   DonationWebhookPayload,
+  WebhookResponse,
   WebhooksResponse,
 } from "../schema";
 
@@ -86,7 +87,13 @@ describe("donation webhook metadata", () => {
 });
 
 describe("webhook subscriptions", () => {
-  it("accepts mixed event triggers and subscriptions without basic auth", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it("drops unsupported hooks without losing the authenticated donation hook", () => {
     const subscriptions = [
       {
         id: "1",
@@ -116,8 +123,35 @@ describe("webhook subscriptions", () => {
       })),
     ];
 
-    expect(WebhooksResponse.parse(subscriptions)).toEqual(subscriptions);
+    expect(WebhooksResponse.parse(subscriptions)).toEqual([subscriptions[0]]);
+    expect(console.warn).toHaveBeenCalledTimes(5);
+    expect(WebhookResponse.safeParse(subscriptions[1]).success).toBe(false);
   });
+
+  it("reports malformed entries while retaining valid siblings", () => {
+    const subscription = {
+      id: "1",
+      name: "Donations",
+      url: "https://example.com/donations",
+      trigger: "CREATE_DONATION",
+      contentType: "application/json",
+      triggerSelfImport: false,
+      httpBasic: { userName: "donations" },
+      customParameters: null,
+    };
+
+    expect(WebhooksResponse.parse([null, {}, subscription])).toEqual([
+      subscription,
+    ]);
+    expect(console.warn).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([null, {}, "not an array"])(
+    "rejects an invalid listing wrapper: %s",
+    (input) => {
+      expect(WebhooksResponse.safeParse(input).success).toBe(false);
+    },
+  );
 
   it("keeps creation restricted to the supported donation trigger", () => {
     const input = {

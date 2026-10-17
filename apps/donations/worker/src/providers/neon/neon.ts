@@ -94,18 +94,11 @@ export class NeonDonationProvider implements DonationProvider {
       onParseError: reportNeonParseError,
     };
 
-    try {
-      await setupWebhook(
-        `${env.SELF_URL}/donations/neon/live`,
-        "CREATE_DONATION",
-        options,
-      );
-    } catch (e) {
-      console.error("Failed to set up Neon webhook", e);
-      throw e;
-    }
-
     return new NeonDonationProvider(options, service);
+  }
+
+  async registerWebhook(url: string) {
+    await setupWebhook(url, "CREATE_DONATION", this.options);
   }
 
   async clear() {
