@@ -188,6 +188,14 @@ const webhookPayloadBase = {
   customParameters: z.record(z.string(), z.string()).nullable().optional(),
 };
 
+const DonationOrigin = z
+  .object({
+    originDetail: z.string().nullable().optional(),
+    originCategory: z.string().nullable().optional(),
+  })
+  .nullable()
+  .optional();
+
 export type DonationWebhookPayload = z.output<typeof DonationWebhookPayload>;
 
 export const DonationWebhookPayload = z.object({
@@ -206,6 +214,7 @@ export const DonationWebhookPayload = z.object({
       donationCustomFields: z.array(CustomFieldData).optional(),
       donorCoveredFeeFlag: z.boolean(),
       payLater: z.boolean().optional().default(false),
+      origin: DonationOrigin,
     })
     .transform((data) => ({
       ...data,
@@ -224,14 +233,6 @@ const DonationPayment = z.object({
   receivedDate: DateSchema.nullable().optional(),
   note: z.string().nullable().optional(),
 });
-
-const DonationOrigin = z
-  .object({
-    originDetail: z.string().nullable().optional(),
-    originCategory: z.string().nullable().optional(),
-  })
-  .nullable()
-  .optional();
 
 const DonationIdNamePair = IdNamePairBase.extend({
   status: Status.nullable().optional(),
