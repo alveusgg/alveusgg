@@ -94,18 +94,11 @@ export class NeonDonationProvider implements DonationProvider {
       onParseError: reportNeonParseError,
     };
 
-    try {
-      await setupWebhook(
-        `${env.SELF_URL}/donations/neon/live`,
-        "CREATE_DONATION",
-        options,
-      );
-    } catch (e) {
-      console.error("Failed to set up Neon webhook", e);
-      throw e;
-    }
-
     return new NeonDonationProvider(options, service);
+  }
+
+  async registerWebhook(url: string) {
+    await setupWebhook(url, "CREATE_DONATION", this.options);
   }
 
   async clear() {
@@ -134,6 +127,10 @@ export class NeonDonationProvider implements DonationProvider {
     }
 
     const { data } = payload;
+
+    if (this.shouldSkipAmountAnonymousDonation(data)) {
+      return new Response("OK", { status: 200 });
+    }
 
     const accountRes = await getAccount(this.options, data.accountId);
     if (!accountRes.ok) {
@@ -263,6 +260,10 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private shouldSyncDonation(data: Donation) {
+    if (this.shouldSkipAmountAnonymousDonation(data)) {
+      return false;
+    }
+
     if (data.origin?.originCategory === SELF_IMPORT_ORIGIN_CATEGORY) {
       return false;
     }
@@ -278,6 +279,15 @@ export class NeonDonationProvider implements DonationProvider {
           payment.paymentStatus && payment.paymentStatus === SUCCEEDED_STATUS,
       )
     );
+  }
+
+  private shouldSkipAmountAnonymousDonation(data: NeonDonationData) {
+    if (!data.amountAnonymous) return false;
+
+    // The public donation/pixel pipeline exposes amounts. Acknowledge but skip
+    // these donations until that pipeline can honor amount privacy.
+    console.info("Skipping amount-anonymous Neon donation", { id: data.id });
+    return true;
   }
 
   private createDonation(
