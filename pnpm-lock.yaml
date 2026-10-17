@@ -125,6 +125,12 @@ importers:
       '@t3-oss/env-core':
         specifier: ^0.13.11
         version: 0.13.11(typescript@6.0.3)(valibot@1.4.2)(zod@4.6.5)
+      '@trpc/client':
+        specifier: ^11.18.0
+        version: 11.18.0(@trpc/server@11.18.0)(typescript@6.0.3)
+      '@trpc/server':
+        specifier: ^11.18.0
+        version: 11.18.0(typescript@6.0.3)
       '@twurple/api':
         specifier: ^8.0.3
         version: 8.2.0(@twurple/auth@8.2.0)
@@ -143,6 +149,9 @@ importers:
       read-pkg:
         specifier: ^10.1.0
         version: 10.1.0
+      superjson:
+        specifier: ^2.2.6
+        version: 2.2.6
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -150,6 +159,9 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
     devDependencies:
+      '@alveusgg/alveusgg-website':
+        specifier: workspace:*
+        version: link:../website
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.2
@@ -171,6 +183,9 @@ importers:
       typescript-eslint:
         specifier: ^8.71.1
         version: 8.71.1(eslint@9.39.2)(supports-color@10.2.2)(typescript@6.0.3)
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@30.1.2)(vite@7.3.6)
 
   apps/database:
     dependencies:

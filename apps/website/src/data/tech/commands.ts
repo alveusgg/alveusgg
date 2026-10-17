@@ -65,6 +65,9 @@ export const commandCategories = {
   Focus: {
     heading: "Focus",
   },
+  Presets: {
+    heading: "Presets",
+  },
   Audio: {
     heading: "Audio",
   },
@@ -570,6 +573,132 @@ const commands = {
         required: true,
         variadic: false,
         choices: ["on", "off"],
+      },
+    ],
+  },
+
+  /**
+   * Presets
+   */
+  ptzhome: {
+    description:
+      "Load the named home preset for an explicit camera (subscriber access; operator pause applies)",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzload: {
+    description:
+      "Load a website preset for an explicit camera (subscriber access; operator pause applies)",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzsave: {
+    description:
+      "Save current position and screenshot on the website (PTZ operator only; quote multiword names)",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzremove: {
+    description:
+      "Remove a website preset (PTZ operator only; quote multiword names)",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzrename: {
+    description:
+      "Rename a website preset (PTZ operator only; quote multiword names)",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "old",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "new",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzlist: {
+    description: "Get all preset positions for a camera",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzclear: {
+    description:
+      "Remove all website presets for an explicit camera (PTZ operator only; requires confirm)",
+    category: "Presets",
+    args: [
+      { type: "string", name: "camera", required: true, variadic: false },
+      {
+        type: "choice",
+        name: "confirmation",
+        required: true,
+        variadic: false,
+        choices: ["confirm"],
       },
     ],
   },
