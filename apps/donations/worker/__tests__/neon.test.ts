@@ -147,6 +147,81 @@ describe("Neon amount privacy", () => {
   );
 });
 
+describe("manually entered Neon donations", () => {
+  function webhook(data: Record<string, unknown>) {
+    return new Request("https://example.com/neon/live", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${btoa("donations:example")}`,
+      },
+      body: JSON.stringify({
+        eventTrigger: "createDonation",
+        eventTimestamp: "2026-01-01T12:00:00Z",
+        organizationId: "example",
+        data: { ...rawDonation, anonymousType: "No", ...data },
+      }),
+    });
+  }
+
+  it.each(["Data Entry", "Custom Import", "Batch Donation", "Self-Import"])(
+    "acknowledges a %s webhook without importing it",
+    async (originCategory) => {
+      const provider = await NeonDonationProvider.init(service, env);
+      const response = await provider.handle(
+        webhook({ origin: { originCategory, originDetail: "Staff" } }),
+      );
+
+      expect(response.status).toBe(200);
+      expect(service.add).not.toHaveBeenCalled();
+      expect(getDonation).not.toHaveBeenCalled();
+    },
+  );
+
+  it("imports a donation form webhook", async () => {
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook({
+        origin: { originCategory: "Donation Form", originDetail: null },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(getDonation).not.toHaveBeenCalled();
+  });
+
+  it("looks up the origin when the webhook omits it", async () => {
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        anonymousType: "No",
+        origin: { originCategory: "Data Entry" },
+      }),
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(webhook({}));
+
+    expect(response.status).toBe(200);
+    expect(getDonation).toHaveBeenCalledWith(expect.anything(), "1");
+    expect(service.add).not.toHaveBeenCalled();
+  });
+
+  it("asks Neon to retry when the origin lookup fails", async () => {
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "network",
+      error: "offline",
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(webhook({}));
+
+    expect(response.status).toBe(500);
+    expect(service.add).not.toHaveBeenCalled();
+  });
+});
+
 describe("bounded Neon catch-up", () => {
   function page(ids: string[], totalPages = 1) {
     return {
@@ -213,11 +288,6 @@ describe("bounded Neon catch-up", () => {
     expect(vi.mocked(searchDonations).mock.calls[1]?.[1]).toMatchObject({
       searchFields: expect.arrayContaining([
         { field: "Donation ID", operator: "GREATER_THAN", value: "1" },
-        {
-          field: "Origin Category",
-          operator: "NOT_EQUAL",
-          value: "Self-Import",
-        },
       ]),
       pagination: {
         currentPage: 0,
@@ -262,7 +332,12 @@ describe("bounded Neon catch-up", () => {
     vi.mocked(getDonation).mockImplementation(async (_options, id) =>
       id === "1" || id === "2"
         ? { ok: true, data: normalDonation(id) }
-        : { ok: false, errorType: "request", error: "temporary failure" },
+        : {
+            ok: false,
+            errorType: "request",
+            error: "temporary failure",
+            status: 503,
+          },
     );
     const provider = await NeonDonationProvider.init(service, env);
     await expect(provider.syncRecentDonations()).rejects.toThrow(
@@ -299,7 +374,12 @@ describe("bounded Neon catch-up", () => {
     vi.mocked(searchDonations).mockResolvedValue(page(["1", "2", "3"]));
     vi.mocked(getDonation).mockImplementation(async (_options, id) =>
       id === "2"
-        ? { ok: false, errorType: "request", error: "not found" }
+        ? {
+            ok: false,
+            errorType: "request",
+            error: "temporary failure",
+            status: 500,
+          }
         : { ok: true, data: normalDonation(id) },
     );
     const provider = await NeonDonationProvider.init(service, env);
@@ -390,31 +470,75 @@ describe("bounded Neon catch-up", () => {
     );
   });
 
-  it("excludes Self-Import search rows and detail records", async () => {
+  it("skips manually entered donations by their own origin, not the search row", async () => {
     checkpointStore();
-    const response = page(["1", "2", "3"]);
-    response.data.searchResults[0] = {
-      "Donation ID": "1",
-      "Origin Category": "Self-Import",
+    const response = page(["1", "2", "3", "4", "5", "6"]);
+    // Search reports a misleading category; the donation record is the source of truth.
+    response.data.searchResults[5] = {
+      "Donation ID": "6",
+      "Origin Category": "Custom Import",
     };
     vi.mocked(searchDonations).mockResolvedValue(response);
+    const origins: Record<string, string> = {
+      "1": "Self-Import",
+      "2": "Data Entry",
+      "3": "Custom Import",
+      "4": "Batch Donation",
+      "5": "API",
+      "6": "Donation Form",
+    };
     vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
       ok: true,
-      data: normalDonation(id, id === "2" ? "Self-Import" : "API"),
+      data: normalDonation(id, origins[id]),
     }));
     const provider = await NeonDonationProvider.init(service, env);
     await expect(provider.syncRecentDonations()).resolves.toEqual({
       complete: true,
-      found: 3,
-      imported: 1,
-      skipped: 2,
+      found: 6,
+      imported: 2,
+      skipped: 4,
       retrying: 0,
     });
-    expect(getDonation).not.toHaveBeenCalledWith(expect.anything(), "1");
-    expect(service.add).toHaveBeenCalledOnce();
+    expect(
+      vi.mocked(searchDonations).mock.lastCall?.[1].searchFields,
+    ).not.toContainEqual(expect.objectContaining({ field: "Origin Category" }));
+    expect(getAccount).toHaveBeenCalledTimes(2);
     expect(service.add).toHaveBeenCalledWith(
-      expect.objectContaining({ providerUniqueId: "example-3" }),
+      expect.objectContaining({ providerUniqueId: "example-5" }),
     );
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-6" }),
+    );
+  });
+
+  it("skips deleted donations without deferring them", async () => {
+    const state = checkpointStore({
+      lastSyncedAt: "2026-01-01T00:00:00.000Z",
+      failedDonations: {
+        "9": { firstFailedAt: "2026-01-01T00:00:00.000Z", attempts: 1 },
+      },
+    });
+    vi.mocked(searchDonations).mockResolvedValue(page(["1", "2", "3", "4"]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) =>
+      id === "4"
+        ? { ok: true, data: normalDonation(id) }
+        : {
+            ok: false,
+            errorType: "request",
+            error: "Request failed with status 404",
+            status: 404,
+          },
+    );
+    const provider = await NeonDonationProvider.init(service, env);
+    // Three deleted donations in a row must not look like an outage.
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 4,
+      imported: 1,
+      skipped: 4,
+      retrying: 0,
+    });
+    expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
   });
 
   it.each([{ ids: ["2", "1"] }, { ids: ["1", "1"] }, { ids: ["invalid"] }])(
