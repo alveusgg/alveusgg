@@ -697,19 +697,94 @@ describe("bounded Neon catch-up", () => {
       "example-2",
       "payment failed",
     );
+    const checkedAt = "2026-01-02T00:00:00.000Z";
     expect(state["neon-payments"]).toEqual({
       // Not a final status yet, so keep watching it.
-      "1": { importedAt: "2026-01-01T00:00:00.000Z" },
+      "1": { importedAt: "2026-01-01T00:00:00.000Z", checkedAt },
       "2": {
         importedAt: "2026-01-01T00:00:00.000Z",
         removedAt: "2026-01-02T00:00:00.000Z",
+        checkedAt,
       },
       // Already removed, so it is not removed again.
       "5": {
         importedAt: "2026-01-01T00:00:00.000Z",
         removedAt: "2026-01-01T00:10:00.000Z",
+        checkedAt,
       },
     });
+  });
+
+  it("rotates rechecks so long-pending payments cannot starve newer ones", async () => {
+    const payments = Object.fromEntries(
+      Array.from({ length: 25 }, (_, index) => [
+        String(index + 1),
+        {
+          importedAt: `2026-01-01T00:${String(index).padStart(2, "0")}:00.000Z`,
+        },
+      ]),
+    );
+    configStore({
+      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
+      "neon-payments": payments,
+    });
+    vi.mocked(searchDonations).mockResolvedValue(page([]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id,
+        anonymousType: "No",
+        status: "Deferred",
+      }),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.syncRecentDonations();
+    expect(getDonation).toHaveBeenCalledTimes(20);
+
+    vi.mocked(getDonation).mockClear();
+    vi.setSystemTime(new Date("2026-01-02T01:00:00Z"));
+    await provider.syncRecentDonations();
+    const second = vi.mocked(getDonation).mock.calls.map(([, id]) => id);
+    // The five that were not checked last time go first.
+    expect(second.slice(0, 5)).toEqual(["21", "22", "23", "24", "25"]);
+  });
+
+  it("keeps tracking a removed payment until its re-import succeeds", async () => {
+    const state = configStore({
+      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
+      "neon-payments": {
+        "1": {
+          importedAt: "2026-01-01T00:00:00.000Z",
+          removedAt: "2026-01-01T00:05:00.000Z",
+        },
+      },
+    });
+    vi.mocked(searchDonations).mockResolvedValue(page([]));
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: normalDonation("1"),
+    });
+    vi.mocked(getAccount).mockResolvedValueOnce({
+      ok: false,
+      errorType: "network",
+      error: "offline",
+    });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.syncRecentDonations();
+
+    expect(service.add).not.toHaveBeenCalled();
+    expect(state["neon-payments"]).toMatchObject({
+      "1": { removedAt: "2026-01-01T00:05:00.000Z" },
+    });
+
+    vi.setSystemTime(new Date("2026-01-02T01:00:00Z"));
+    await provider.syncRecentDonations();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-1" }),
+    );
+    expect(state["neon-payments"]).toBeUndefined();
   });
 
   it.each([{ ids: ["2", "1"] }, { ids: ["1", "1"] }, { ids: ["invalid"] }])(

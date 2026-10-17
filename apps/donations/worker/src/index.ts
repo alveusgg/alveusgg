@@ -46,13 +46,22 @@ export default Sentry.withSentry<Env, string>(getSentryConfig, {
   queue: async (batch, env) => {
     const api = createSiteApi(env);
 
-    const donations: Donation[] = batch.messages.map((message) =>
+    const parsed: Donation[] = batch.messages.map((message) =>
       parse(message.body),
     );
+    // Donations can be cancelled (e.g. a failed payment) while still queued.
+    const donations: Donation[] =
+      await env.DONATIONS_MANAGER.getByName("alveus").filterCancelled(parsed);
+    if (!donations.length) return;
 
     if (batch.queue.endsWith("donations")) {
+      const kept = new Set(donations.map((donation) => donation.id));
       await api.donations.createDonations.mutate({ donations });
-      await env.PIXELS_QUEUE.sendBatch(batch.messages);
+      await env.PIXELS_QUEUE.sendBatch(
+        batch.messages.filter((message) =>
+          kept.has(parse<Donation>(message.body).id),
+        ),
+      );
       return;
     }
 

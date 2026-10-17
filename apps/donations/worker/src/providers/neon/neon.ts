@@ -37,7 +37,11 @@ type NeonDonationData = DonationWebhookPayload["data"] | Donation;
 type NeonFailedDonation = { firstFailedAt: string; attempts: number };
 // Imported donations whose payment has not settled yet, and donations removed
 // after a failed payment that could still succeed on a retry.
-type NeonTrackedPayment = { importedAt: string; removedAt?: string };
+type NeonTrackedPayment = {
+  importedAt: string;
+  removedAt?: string;
+  checkedAt?: string;
+};
 type NeonTrackedPayments = Record<string, NeonTrackedPayment>;
 type NeonSyncMetadata = {
   lastSyncedAt?: string;
@@ -290,8 +294,9 @@ export class NeonDonationProvider implements DonationProvider {
     if (!tracked) return "ignored";
     if (!isPaymentSucceeded(data)) return "pending";
 
-    this.untrackPayment(id);
+    // Keep tracking until the re-import succeeds, so a failed one is retried.
     if (tracked.removedAt) await this.importDonation(data);
+    this.untrackPayment(id);
     return "settled";
   }
 
@@ -310,8 +315,12 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private async recheckPayments(now: Date) {
+    // Least recently checked first, so long-pending payments cannot starve
+    // newer ones.
     const entries = Object.entries(this.getTrackedPayments())
-      .sort(([, a], [, b]) => a.importedAt.localeCompare(b.importedAt))
+      .sort(([, a], [, b]) =>
+        (a.checkedAt ?? "").localeCompare(b.checkedAt ?? ""),
+      )
       .slice(0, SYNC_MAX_PAYMENT_CHECKS);
     for (const [id, tracked] of entries) {
       try {
@@ -329,6 +338,11 @@ export class NeonDonationProvider implements DonationProvider {
       } catch (error) {
         console.error("Failed to recheck Neon payment", { id, error });
         reportNeonSyncIssue("payment-check-failed", { donationId: id }, error);
+      } finally {
+        const current = this.getTrackedPayments()[id];
+        if (current) {
+          this.trackPayment(id, { ...current, checkedAt: now.toISOString() });
+        }
       }
     }
   }
