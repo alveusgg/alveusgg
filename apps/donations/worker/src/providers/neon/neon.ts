@@ -33,6 +33,7 @@ type NeonDonationProviderOptions = Options & {
 };
 
 type NeonDonationData = DonationWebhookPayload["data"] | Donation;
+type NeonFailedDonation = { firstFailedAt: string; attempts: number };
 type NeonSyncMetadata = {
   lastSyncedAt?: string;
   catchUp?: {
@@ -41,12 +42,16 @@ type NeonSyncMetadata = {
     untilDate: string;
     lastDonationId?: string;
   };
+  // Donations that failed to import are retried by later runs, so a single
+  // broken record cannot hold back the cursor.
+  failedDonations?: Record<string, NeonFailedDonation>;
 };
-type NeonSyncResult = {
+export type NeonSyncResult = {
   complete: boolean;
   found: number;
   imported: number;
   skipped: number;
+  retrying: number;
 };
 
 const SYNC_CONFIG_KEY = "neon-sync";
@@ -55,6 +60,12 @@ const SYNC_MAX_PAGES = 10;
 const SYNC_PAGE_SIZE = 50;
 const SELF_IMPORT_ORIGIN_CATEGORY = "Self-Import";
 const SUCCEEDED_STATUS = "SUCCEEDED";
+const SYNC_MAX_RETRIES_PER_RUN = 10;
+// More failures in a row than this look like an outage rather than a broken
+// record, so the page is replayed instead of skipped.
+const SYNC_MAX_CONSECUTIVE_FAILURES = 3;
+const SYNC_FAILED_DONATION_TTL_MS = 24 * 60 * 60 * 1000;
+const SYNC_CATCH_UP_ALERT_MS = 6 * 60 * 60 * 1000;
 
 function reportNeonParseError(
   error: ZodError,
@@ -73,6 +84,20 @@ function reportNeonParseError(
     scope.setContext("neon", context);
     scope.setContext("zod", { issues: error.issues });
     Sentry.captureException(error);
+  });
+}
+
+function reportNeonSyncIssue(
+  kind: string,
+  context: Record<string, unknown>,
+  error?: unknown,
+) {
+  Sentry.withScope((scope) => {
+    scope.setTag("integration", "neon-crm");
+    scope.setTag("error.kind", kind);
+    scope.setContext("neon", context);
+    if (error) Sentry.captureException(error);
+    else Sentry.captureMessage(`Neon donation sync: ${kind}`, "warning");
   });
 }
 
@@ -191,9 +216,36 @@ export class NeonDonationProvider implements DonationProvider {
           .toISOString()
           .slice(0, 10),
       };
+    const failedDonations = { ...metadata.failedDonations };
     let found = 0;
     let imported = 0;
     let skipped = 0;
+
+    const retries = Object.entries(failedDonations).slice(
+      0,
+      SYNC_MAX_RETRIES_PER_RUN,
+    );
+    for (const [id, failure] of retries) {
+      // Re-insert failures at the end, so later entries also get their turn.
+      delete failedDonations[id];
+      try {
+        if (await this.importDonationById(id)) imported++;
+        else skipped++;
+      } catch (error) {
+        if (
+          startedAt.getTime() - Date.parse(failure.firstFailedAt) <
+          SYNC_FAILED_DONATION_TTL_MS
+        ) {
+          failedDonations[id] = { ...failure, attempts: failure.attempts + 1 };
+        } else {
+          reportNeonSyncIssue(
+            "donation-abandoned",
+            { donationId: id, attempts: failure.attempts + 1 },
+            error,
+          );
+        }
+      }
+    }
 
     for (let page = 0; page < SYNC_MAX_PAGES; page++) {
       const response = await searchDonations(this.options, {
@@ -268,6 +320,8 @@ export class NeonDonationProvider implements DonationProvider {
         throw new Error("Neon donation search returned no cursor progress");
       }
       found += results.length;
+      const pageFailures: Record<string, NeonFailedDonation> = {};
+      let consecutiveFailures = 0;
       for (const [index, id] of ids.entries()) {
         if (
           results[index]?.["Origin Category"] === SELF_IMPORT_ORIGIN_CATEGORY
@@ -275,26 +329,63 @@ export class NeonDonationProvider implements DonationProvider {
           skipped++;
           continue;
         }
-        if (await this.importDonationById(id)) imported++;
-        else skipped++;
+        try {
+          if (await this.importDonationById(id)) imported++;
+          else skipped++;
+          consecutiveFailures = 0;
+        } catch (error) {
+          if (++consecutiveFailures >= SYNC_MAX_CONSECUTIVE_FAILURES) {
+            throw error;
+          }
+          pageFailures[id] = {
+            firstFailedAt: startedAt.toISOString(),
+            attempts: 1,
+          };
+          reportNeonSyncIssue("donation-deferred", { donationId: id }, error);
+        }
       }
 
-      // Checkpoint only a fully processed page; a failed page is safely replayed
-      // through the existing donation-ID deduplication on the next invocation.
+      // Checkpoint only a fully processed page; an aborted page is safely
+      // replayed through the existing donation-ID deduplication next time.
       catchUp.lastDonationId = lastId;
+      Object.assign(failedDonations, pageFailures);
+      const pendingFailures = Object.keys(failedDonations).length
+        ? failedDonations
+        : undefined;
       await this.service.config.set(
         SYNC_CONFIG_KEY,
         complete
-          ? { lastSyncedAt: catchUp.startedAt }
+          ? ({
+              lastSyncedAt: catchUp.startedAt,
+              failedDonations: pendingFailures,
+            } satisfies NeonSyncMetadata)
           : ({
               ...metadata,
               catchUp: { ...catchUp },
+              failedDonations: pendingFailures,
             } satisfies NeonSyncMetadata),
       );
-      if (complete) return { complete: true, found, imported, skipped };
+      const retrying = Object.keys(failedDonations).length;
+      if (complete) {
+        return { complete: true, found, imported, skipped, retrying };
+      }
     }
 
-    return { complete: false, found, imported, skipped };
+    const catchUpDuration = startedAt.getTime() - Date.parse(catchUp.startedAt);
+    if (catchUpDuration >= SYNC_CATCH_UP_ALERT_MS) {
+      reportNeonSyncIssue("catch-up-delayed", {
+        catchUpStartedAt: catchUp.startedAt,
+        lastDonationId: catchUp.lastDonationId,
+      });
+    }
+
+    return {
+      complete: false,
+      found,
+      imported,
+      skipped,
+      retrying: Object.keys(failedDonations).length,
+    };
   }
 
   private async importDonationById(id: string) {

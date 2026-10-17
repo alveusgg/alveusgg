@@ -38,17 +38,20 @@ function makeProvider(name: string) {
     ),
     registerWebhook: vi.fn(async () => {}),
     syncRecentDonations: vi.fn(async () => ({
+      complete: true,
       found: 0,
       imported: 0,
       skipped: 0,
+      retrying: 0,
     })),
   };
 }
 
 function makeManager() {
   const background: Promise<unknown>[] = [];
+  const setAlarm = vi.fn(async () => {});
   const ctx = {
-    storage: { sql: {} },
+    storage: { sql: {}, setAlarm },
     waitUntil: (task: Promise<unknown>) => background.push(task),
   } as unknown as DurableObjectState;
   const env = {
@@ -64,6 +67,8 @@ function makeManager() {
           headers: { Authorization: "ApiKey shared-key" },
         }),
       ),
+    alarm: () => manager.alarm(),
+    setAlarm,
     drain: () => Promise.all(background),
   };
 }
@@ -261,6 +266,38 @@ describe("donation provider isolation", () => {
     await manager.request("paypal");
     await manager.drain();
     expect(twitch.registerWebhook).toHaveBeenCalledTimes(4);
+  });
+
+  it("continues an unfinished Neon catch-up from an alarm", async () => {
+    const manager = makeManager();
+    neon.syncRecentDonations.mockResolvedValueOnce({
+      complete: false,
+      found: 500,
+      imported: 500,
+      skipped: 0,
+      retrying: 0,
+    });
+    expect((await manager.request("neon", "sync")).status).toBe(200);
+    expect(manager.setAlarm).toHaveBeenCalledWith(Date.now() + 60_000);
+
+    await manager.alarm();
+    expect(neon.syncRecentDonations).toHaveBeenCalledTimes(2);
+    // The window finished, so no further alarm is scheduled.
+    expect(manager.setAlarm).toHaveBeenCalledOnce();
+  });
+
+  it("does not schedule an alarm once the Neon sync is complete", async () => {
+    const manager = makeManager();
+    expect((await manager.request("neon", "sync")).status).toBe(200);
+    expect(manager.setAlarm).not.toHaveBeenCalled();
+  });
+
+  it("fails the alarm so it is retried when Neon is unavailable", async () => {
+    vi.mocked(NeonDonationProvider.init).mockRejectedValue(
+      new Error("Neon down"),
+    );
+    const manager = makeManager();
+    await expect(manager.alarm()).rejects.toThrow("Neon provider unavailable");
   });
 
   it("does not acknowledge a failed donation delivery as successful", async () => {
