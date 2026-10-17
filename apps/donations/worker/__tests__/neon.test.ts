@@ -51,8 +51,20 @@ const env = {
 } as Env;
 const service = {
   add: vi.fn(async () => 1),
+  remove: vi.fn(async () => ({ donations: 1, pixels: 1 })),
   config: { get: vi.fn(), set: vi.fn() },
 } satisfies DonationStorage;
+
+function configStore(initial: Record<string, unknown> = {}) {
+  const state: Record<string, unknown> = structuredClone(initial);
+  service.config.get.mockImplementation((key: string) =>
+    structuredClone(state[key]),
+  );
+  service.config.set.mockImplementation((key: string, value: unknown) => {
+    state[key] = structuredClone(value);
+  });
+  return state;
+}
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -60,6 +72,7 @@ beforeEach(() => {
   vi.setSystemTime(new Date("2026-01-02T00:00:00Z"));
   vi.spyOn(console, "info").mockImplementation(() => {});
   service.add.mockResolvedValue(1);
+  service.remove.mockResolvedValue({ donations: 1, pixels: 1 });
   vi.mocked(getAccount).mockResolvedValue({
     ok: true,
     data: { individualAccount: null, companyAccount: null },
@@ -147,8 +160,8 @@ describe("Neon amount privacy", () => {
   );
 });
 
-describe("manually entered Neon donations", () => {
-  function webhook(data: Record<string, unknown>) {
+describe("Neon webhooks", () => {
+  function webhook(eventTrigger = "createDonation", data = {}) {
     return new Request("https://example.com/neon/live", {
       method: "POST",
       headers: {
@@ -156,69 +169,180 @@ describe("manually entered Neon donations", () => {
         Authorization: `Basic ${btoa("donations:example")}`,
       },
       body: JSON.stringify({
-        eventTrigger: "createDonation",
+        eventTrigger,
         eventTimestamp: "2026-01-01T12:00:00Z",
         organizationId: "example",
         data: { ...rawDonation, anonymousType: "No", ...data },
       }),
     });
   }
-
-  it.each(["Data Entry", "Custom Import", "Batch Donation", "Self-Import"])(
-    "acknowledges a %s webhook without importing it",
-    async (originCategory) => {
-      const provider = await NeonDonationProvider.init(service, env);
-      const response = await provider.handle(
-        webhook({ origin: { originCategory, originDetail: "Staff" } }),
-      );
-
-      expect(response.status).toBe(200);
-      expect(service.add).not.toHaveBeenCalled();
-      expect(getDonation).not.toHaveBeenCalled();
-    },
-  );
-
-  it("imports a donation form webhook", async () => {
-    const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(
-      webhook({
-        origin: { originCategory: "Donation Form", originDetail: null },
-      }),
-    );
-
-    expect(response.status).toBe(200);
-    expect(service.add).toHaveBeenCalledOnce();
-    expect(getDonation).not.toHaveBeenCalled();
-  });
-
-  it("looks up the origin when the webhook omits it", async () => {
+  function details(overrides: Record<string, unknown> = {}) {
     vi.mocked(getDonation).mockResolvedValue({
       ok: true,
       data: DonationResponse.parse({
         ...rawDonation,
         anonymousType: "No",
-        origin: { originCategory: "Data Entry" },
+        origin: { originCategory: "Donation Form" },
+        ...overrides,
       }),
     });
+  }
+  const pending = {
+    status: "Pending",
+    payments: [{ id: "5", amount: 123.45, paymentStatus: "Pending" }],
+  };
+
+  it.each(["Data Entry", "Custom Import", "Batch Donation", "Self-Import"])(
+    "acknowledges a %s donation without importing it",
+    async (originCategory) => {
+      details({ origin: { originCategory, originDetail: "Staff" } });
+      const provider = await NeonDonationProvider.init(service, env);
+      const response = await provider.handle(webhook());
+
+      expect(response.status).toBe(200);
+      expect(service.add).not.toHaveBeenCalled();
+    },
+  );
+
+  it("imports a settled donation form donation without tracking it", async () => {
+    const state = configStore();
+    details();
     const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook({}));
+    const response = await provider.handle(webhook());
 
     expect(response.status).toBe(200);
     expect(getDonation).toHaveBeenCalledWith(expect.anything(), "1");
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(state["neon-payments"]).toBeUndefined();
+  });
+
+  it("imports a pending payment right away and tracks it", async () => {
+    const state = configStore();
+    details(pending);
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(webhook());
+
+    expect(response.status).toBe(200);
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(state["neon-payments"]).toEqual({
+      "1": { importedAt: "2026-01-02T00:00:00.000Z" },
+    });
+  });
+
+  it("skips a donation whose payment already failed", async () => {
+    details({ status: "Failed" });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(webhook());
+
+    expect(response.status).toBe(200);
     expect(service.add).not.toHaveBeenCalled();
   });
 
-  it("asks Neon to retry when the origin lookup fails", async () => {
+  it("asks Neon to retry when the donation lookup fails", async () => {
     vi.mocked(getDonation).mockResolvedValue({
       ok: false,
       errorType: "network",
       error: "offline",
     });
     const provider = await NeonDonationProvider.init(service, env);
-    const response = await provider.handle(webhook({}));
+    const response = await provider.handle(webhook());
 
     expect(response.status).toBe(500);
     expect(service.add).not.toHaveBeenCalled();
+  });
+
+  it("removes a tracked donation once its payment fails", async () => {
+    const state = configStore({
+      "neon-payments": { "1": { importedAt: "2026-01-01T23:58:00.000Z" } },
+    });
+    details({ status: "Failed" });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook("updateDonation", { id: "1" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      "example-1",
+      "payment failed",
+    );
+    // Keep watching in case the payment is retried.
+    expect(state["neon-payments"]).toEqual({
+      "1": {
+        importedAt: "2026-01-01T23:58:00.000Z",
+        removedAt: "2026-01-02T00:00:00.000Z",
+      },
+    });
+  });
+
+  it("imports a removed donation again once its payment succeeds", async () => {
+    const state = configStore({
+      "neon-payments": {
+        "1": {
+          importedAt: "2026-01-01T00:00:00.000Z",
+          removedAt: "2026-01-01T00:05:00.000Z",
+        },
+      },
+    });
+    details();
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook("updateDonation", { id: "1" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-1" }),
+    );
+    expect(state["neon-payments"]).toBeUndefined();
+  });
+
+  it("ignores updates to settled donations it is not tracking", async () => {
+    configStore();
+    details({ date: "2025-01-01" });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook("updateDonation", { id: "1" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).not.toHaveBeenCalled();
+    expect(service.remove).not.toHaveBeenCalled();
+  });
+
+  it("removes a deleted donation", async () => {
+    configStore();
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: false,
+      errorType: "request",
+      error: "Request failed with status 404",
+      status: 404,
+    });
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook("deleteDonation", { id: "1" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      "example-1",
+      "deleted in Neon",
+    );
+  });
+
+  it("asks Neon to retry when removing a donation fails", async () => {
+    configStore();
+    details({ status: "Refunded" });
+    service.remove.mockRejectedValue(new Error("site unavailable"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      webhook("updateDonation", { id: "1" }),
+    );
+
+    expect(response.status).toBe(500);
   });
 });
 
@@ -242,12 +366,8 @@ describe("bounded Neon catch-up", () => {
   function checkpointStore(
     initial: unknown = { lastSyncedAt: "2025-01-01T00:00:00.000Z" },
   ) {
-    let state = initial;
-    service.config.get.mockImplementation(() => structuredClone(state));
-    service.config.set.mockImplementation((_key, value) => {
-      state = structuredClone(value);
-    });
-    return () => state;
+    const state = configStore({ "neon-sync": initial });
+    return () => state["neon-sync"];
   }
   function normalDonation(id: string, originCategory = "API") {
     return DonationResponse.parse({
@@ -539,6 +659,57 @@ describe("bounded Neon catch-up", () => {
       retrying: 0,
     });
     expect(state()).toEqual({ lastSyncedAt: "2026-01-02T00:00:00.000Z" });
+  });
+
+  it("rechecks tracked payments and stops tracking stale ones", async () => {
+    const state = configStore({
+      "neon-sync": { lastSyncedAt: "2026-01-01T00:00:00.000Z" },
+      "neon-payments": {
+        "1": { importedAt: "2026-01-01T00:00:00.000Z" },
+        "2": { importedAt: "2026-01-01T00:00:00.000Z" },
+        "3": { importedAt: "2025-12-20T00:00:00.000Z" },
+        "4": { importedAt: "2026-01-01T00:00:00.000Z" },
+        "5": {
+          importedAt: "2026-01-01T00:00:00.000Z",
+          removedAt: "2026-01-01T00:10:00.000Z",
+        },
+      },
+    });
+    vi.mocked(searchDonations).mockResolvedValue(page([]));
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id,
+        anonymousType: "No",
+        status:
+          { "1": "Deferred", "2": "Failed", "3": "Pending", "5": "Failed" }[
+            id
+          ] ?? "Succeeded",
+      }),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+    await provider.syncRecentDonations();
+
+    expect(service.remove).toHaveBeenCalledOnce();
+    expect(service.remove).toHaveBeenCalledWith(
+      "neon",
+      "example-2",
+      "payment failed",
+    );
+    expect(state["neon-payments"]).toEqual({
+      // Not a final status yet, so keep watching it.
+      "1": { importedAt: "2026-01-01T00:00:00.000Z" },
+      "2": {
+        importedAt: "2026-01-01T00:00:00.000Z",
+        removedAt: "2026-01-02T00:00:00.000Z",
+      },
+      // Already removed, so it is not removed again.
+      "5": {
+        importedAt: "2026-01-01T00:00:00.000Z",
+        removedAt: "2026-01-01T00:10:00.000Z",
+      },
+    });
   });
 
   it.each([{ ids: ["2", "1"] }, { ids: ["1", "1"] }, { ids: ["invalid"] }])(

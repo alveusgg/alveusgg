@@ -1,8 +1,15 @@
 import type { Donation } from "@alveusgg/donations-core";
 import { parse, stringify } from "superjson";
+import { createSiteApi } from "../utils/site-api";
 
 export interface DonationStorage {
   add: (...donations: Donation[]) => Promise<number>;
+  /** Delete donations and their pixels, e.g. after a payment failed. */
+  remove: (
+    provider: string,
+    providerUniqueId: string,
+    reason: string,
+  ) => Promise<{ donations: number; pixels: number }>;
   config: {
     set: (providerId: string, value: unknown | undefined) => void;
     get: <T>(providerId: string) => T | undefined;
@@ -12,8 +19,38 @@ export interface DonationStorage {
 export class DurableObjectDonationStorage implements DonationStorage {
   constructor(
     private ctx: DurableObjectState,
-    private queue: Queue,
+    private env: Env,
   ) {}
+
+  async remove(provider: string, providerUniqueId: string, reason: string) {
+    const removed = await createSiteApi(
+      this.env,
+    ).donations.removeDonations.mutate({
+      donations: [{ provider, providerUniqueId }],
+      reason,
+    });
+    // Release the reservation, so the donation is imported again if the
+    // payment is retried and succeeds.
+    this.ctx.storage.sql.exec(
+      `DELETE FROM donations WHERE provider = ? AND providerUniqueId = ?`,
+      provider,
+      providerUniqueId,
+    );
+    if (removed.pixels > 0) {
+      const mural = this.env.PIXELS_MANAGER.getByName(
+        `alveus-${this.env.MURAL_ID}`,
+      );
+      const response = await mural.fetch("https://pixels/resync", {
+        method: "POST",
+        headers: { Authorization: `ApiKey ${this.env.SHARED_KEY}` },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to resync pixels: ${response.status}`);
+      }
+    }
+    console.info("Removed donation", { providerUniqueId, reason, ...removed });
+    return removed;
+  }
 
   async add(...donations: Donation[]) {
     const messages: MessageSendRequest<string>[] = [];
@@ -32,7 +69,7 @@ export class DurableObjectDonationStorage implements DonationStorage {
     }
 
     if (messages.length > 0) {
-      this.ctx.waitUntil(this.queue.sendBatch(messages));
+      this.ctx.waitUntil(this.env.DONATION_QUEUE.sendBatch(messages));
     }
 
     return messages.length;

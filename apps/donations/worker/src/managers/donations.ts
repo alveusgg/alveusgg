@@ -158,10 +158,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     await createIfNotExistsDonationsTable(this.ctx.storage.sql);
     await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
 
-    const storage = new DurableObjectDonationStorage(
-      this.ctx,
-      this.env.DONATION_QUEUE,
-    );
+    const storage = new DurableObjectDonationStorage(this.ctx, this.env);
 
     this.providers = {
       twitch: createRetryingInitializer(
