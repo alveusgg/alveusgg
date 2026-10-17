@@ -2,6 +2,7 @@ import { Bot } from "@twurple/easy-bot";
 
 import { env } from "@/env";
 import { getAuthProvider } from "@/twitch/auth";
+import { createPresetCommands } from "@/bot/commands/presets";
 import { createNotificationCommands } from "@/bot/commands/notification";
 import { createVersionCommands } from "@/bot/commands/version";
 
@@ -16,6 +17,10 @@ export async function startBot() {
         // Notification commands
         createNotificationCommands(),
         createVersionCommands(),
+        createPresetCommands({
+          keyFile: env.PRESETS_SITE_KEY_FILE,
+          apiBaseUrl: env.API_BASE_URL,
+        }),
       ])
     ).flat(),
     chatClientOptions: {

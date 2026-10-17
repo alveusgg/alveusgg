@@ -18,6 +18,9 @@ COPY ./apps/database/tsdown.config.ts .
 COPY ./apps/database/prisma.config.ts .
 COPY ./apps/database/src/ src/
 
+## Resolve the website's type-only workspace dependency without installing it
+COPY ./apps/website/package.json /app/apps/website/package.json
+
 ## Copy chatbot files
 WORKDIR /app/apps/chatbot
 COPY ./apps/chatbot/tsconfig.json .
@@ -30,7 +33,7 @@ RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
 		--mount=type=cache,id=pnpm,target=/pnpm/store \
     set -eu; \
 		printf "//npm.pkg.github.com/:_authToken=%s\\n" "$(cat /tmp/github_token)" > "$HOME/.npmrc"; \
-    pnpm install --frozen-lockfile --filter "{.}..."; \
+    pnpm install --frozen-lockfile --filter-prod "{.}..."; \
     rm -f "$HOME/.npmrc"
 
 ## Copy code

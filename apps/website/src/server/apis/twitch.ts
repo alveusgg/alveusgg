@@ -251,6 +251,50 @@ export async function getUsersSubscribedToBroadcaster(
   return usersSubscribedToResponseSchema.parseAsync(json);
 }
 
+// The broadcaster's token verifies chat users even when they have never signed
+// into this website. Filter and verify BOTH IDs; a badge in another channel is
+// not proof of an Alveus Sanctuary subscription.
+export async function getBroadcasterSubscriptionForUser(
+  broadcasterAccessToken: string,
+  broadcasterId: string,
+  userId: string,
+  signal: AbortSignal,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/subscriptions?${new URLSearchParams({ broadcaster_id: broadcasterId, user_id: userId })}`,
+    {
+      method: "GET",
+      signal,
+      headers: await getUserAuthHeaders(broadcasterAccessToken),
+    },
+  );
+  if (response.status !== 200)
+    throw new Error("Could not verify broadcaster subscription.");
+  const data = z
+    .object({
+      data: z
+        .array(
+          z.object({
+            user_id: z.string(),
+            broadcaster_id: z.string(),
+            tier: z.enum(["1000", "2000", "3000"]),
+          }),
+        )
+        .max(1),
+    })
+    .parse(await response.json());
+  if (
+    data.data.some(
+      (entry) =>
+        entry.user_id !== userId || entry.broadcaster_id !== broadcasterId,
+    )
+  )
+    throw new Error(
+      "Subscription verification returned an unexpected identity.",
+    );
+  return data.data.length === 1;
+}
+
 const usersResponseSchema = z.object({
   data: z.array(
     z.object({
