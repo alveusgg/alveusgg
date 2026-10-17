@@ -327,6 +327,7 @@ export class NeonDonationProvider implements DonationProvider {
           this.untrackPayment(id);
         }
       } catch (error) {
+        console.error("Failed to recheck Neon payment", { id, error });
         reportNeonSyncIssue("payment-check-failed", { donationId: id }, error);
       }
     }
