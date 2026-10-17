@@ -87,6 +87,22 @@ describe("donation webhook metadata", () => {
   );
 });
 
+describe("donation amounts", () => {
+  // Rejecting these made the sync retry them instead of skipping them.
+  it.each([0, -5])("parses an amount of %s", (amount) => {
+    const response = DonationResponse.parse({ ...donation, amount });
+    const webhook = DonationWebhookPayload.parse({
+      eventTrigger: "createDonation",
+      eventTimestamp: "2026-01-01T12:00:00Z",
+      organizationId: "example",
+      data: { ...donation, amount, donorCoveredFeeFlag: false },
+    });
+
+    expect(response.amount).toBe(amount);
+    expect(webhook.data.amount).toBe(amount);
+  });
+});
+
 describe("webhook subscriptions", () => {
   it("ignores other triggers and retains donation hooks with or without auth", () => {
     const subscriptions = [

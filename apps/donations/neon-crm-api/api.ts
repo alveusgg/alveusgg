@@ -48,7 +48,15 @@ export const url = (strings: TemplateStringsArray, ...values: Array<string>) =>
     "",
   );
 
-const fetch = (
+// Neon limits simultaneous requests per endpoint and organization (searches
+// allow only one), so another client's request can briefly cause a 429.
+// See https://developer.neoncrm.com/api-v2-resources/rate-limits/
+const RATE_LIMIT_RETRIES = 3;
+const RATE_LIMIT_RETRY_DELAY_MS = 500;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetch = async (
   options: Options,
   path: string,
   method: ApiMethod = "GET",
@@ -64,7 +72,18 @@ const fetch = (
     request.body = JSON.stringify(body);
   }
 
-  return global.fetch(options.baseUrl + path, request);
+  for (let attempt = 0; ; attempt++) {
+    const response = await global.fetch(options.baseUrl + path, request);
+    if (response.status !== 429 || attempt >= RATE_LIMIT_RETRIES) {
+      return response;
+    }
+
+    // A rejected request was not processed, so retrying is safe for any method.
+    await response.body?.cancel();
+    await sleep(
+      RATE_LIMIT_RETRY_DELAY_MS * 2 ** attempt * (0.5 + Math.random()),
+    );
+  }
 };
 
 export const fetchOk = async (
