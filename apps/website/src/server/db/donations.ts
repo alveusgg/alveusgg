@@ -118,6 +118,30 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
   });
 }
 
+export async function removeDonations(
+  donations: { provider: string; providerUniqueId: string }[],
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.donation.findMany({
+      where: {
+        OR: donations.map(({ provider, providerUniqueId }) => ({
+          provider,
+          providerUniqueId,
+        })),
+      },
+      select: {
+        id: true,
+        providerUniqueId: true,
+        pixels: { select: { identifier: true, muralId: true } },
+      },
+    });
+    const ids = existing.map((donation) => donation.id);
+    await tx.pixel.deleteMany({ where: { donationId: { in: ids } } });
+    await tx.donation.deleteMany({ where: { id: { in: ids } } });
+    return existing;
+  });
+}
+
 export function getPixelLeaderboard(muralId: string, take: number = 10) {
   return prisma.pixel.groupBy({
     by: ["identifier", "email"],

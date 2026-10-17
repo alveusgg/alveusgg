@@ -118,9 +118,11 @@ describe("webhook subscriptions", () => {
       })),
     ];
 
-    expect(WebhooksResponse.parse(subscriptions)).toEqual(
-      subscriptions.slice(0, 2),
-    );
+    expect(WebhooksResponse.parse(subscriptions)).toEqual([
+      subscriptions[0],
+      subscriptions[1],
+      subscriptions[4],
+    ]);
     expect(WebhookResponse.safeParse(subscriptions[1]).success).toBe(true);
     expect(WebhookResponse.safeParse(subscriptions[2]).success).toBe(false);
   });
@@ -147,7 +149,7 @@ describe("webhook subscriptions", () => {
 
   it("ignores unsupported triggers without validating their unrelated fields", () => {
     expect(
-      WebhooksResponse.parse([{ trigger: "UPDATE_DONATION", url: null }]),
+      WebhooksResponse.parse([{ trigger: "UPDATE_PLEDGE_PAYMENT", url: null }]),
     ).toEqual([]);
   });
 
@@ -158,7 +160,7 @@ describe("webhook subscriptions", () => {
     },
   );
 
-  it("keeps creation restricted to the supported donation trigger", () => {
+  it("keeps creation restricted to the supported donation triggers", () => {
     const input = {
       name: "Donation subscription",
       url: "https://example.com/donations",
@@ -170,6 +172,11 @@ describe("webhook subscriptions", () => {
     };
 
     expect(CreateWebhookInputBody.safeParse(input).success).toBe(true);
+    for (const trigger of ["UPDATE_DONATION", "DELETE_DONATION"]) {
+      expect(
+        CreateWebhookInputBody.safeParse({ ...input, trigger }).success,
+      ).toBe(true);
+    }
     expect(
       CreateWebhookInputBody.safeParse({ ...input, trigger: "FUTURE_EVENT" })
         .success,
