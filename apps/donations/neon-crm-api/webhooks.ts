@@ -1,5 +1,5 @@
 import {
-  type WebhookResponse,
+  type CreateWebhookInput,
   type WebhookPayload,
   DonationWebhookPayload,
 } from "./schema.js";
@@ -67,7 +67,7 @@ export const parseDonationWebhook = async (
 
 export async function setupWebhook(
   url: string,
-  trigger: WebhookResponse["trigger"],
+  trigger: CreateWebhookInput["trigger"],
   options: Options,
 ) {
   const existingWebhooks = await getWebhooks(options);
@@ -82,6 +82,7 @@ export async function setupWebhook(
       (webhook) =>
         isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
         webhook.trigger === trigger &&
+        webhook.httpBasic !== null &&
         webhook.httpBasic.userName === options.basicAuthUsername,
     )
     .sort((a, b) => Number(a.id) - Number(b.id));
@@ -119,12 +120,12 @@ export async function setupWebhook(
   }
 }
 
-function getWebhookName(url: string, trigger: WebhookResponse["trigger"]) {
+function getWebhookName(url: string, trigger: CreateWebhookInput["trigger"]) {
   const hostname = new URL(url).hostname.replace(/[^a-zA-Z0-9]+/g, "-");
   return `alveusgg-donations-${trigger.toLowerCase()}-${hostname}`;
 }
 
-function getWebhookUuid(url: string, trigger: WebhookResponse["trigger"]) {
+function getWebhookUuid(url: string, trigger: CreateWebhookInput["trigger"]) {
   const normalizedUrl = new URL(url);
   normalizedUrl.searchParams.delete("uuid");
   normalizedUrl.searchParams.sort();
