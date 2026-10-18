@@ -15,17 +15,22 @@ export type CycleItemProps = {
   ref: RefCallback<Element>;
 };
 
+export type CycleItem = {
+  key: string;
+  render: (props: CycleItemProps) => ReactNode;
+};
+
 const Cycle = ({
   items,
   className,
   interval = 60,
 }: {
-  items: Record<string, (props: CycleItemProps) => ReactNode>;
+  items: CycleItem[];
   className?: string;
   interval?: number;
 }) => {
   const refs = useRef<(Element | null)[]>([]);
-  const count = Object.keys(items).length;
+  const count = items.length;
 
   const [index, setIndex] = useState(0);
   const next = useCallback(
@@ -69,12 +74,11 @@ const Cycle = ({
 
   const entries = useMemo(
     () =>
-      Object.entries(items).map(([key, render], idx) => ({
+      items.map(({ key, render }, idx) => ({
         key,
         render,
         // Whenever an item is (un)mounted, update the ref and check if we need to advance
         ref: (el: Element | null) => {
-          // eslint-disable-next-line react-hooks/refs -- this is a ref callback, only called when the item (un)mounts
           const previous = refs.current[idx];
           refs.current[idx] = el;
 
