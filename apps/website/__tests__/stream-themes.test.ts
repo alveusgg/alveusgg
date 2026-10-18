@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { streamThemeOverrideSchema } from "@/data/stream-themes";
+
 import { getStreamThemes } from "@/utils/stream-themes";
 
 describe("stream themes", () => {
@@ -45,4 +47,29 @@ describe("stream themes", () => {
       "default",
     ]);
   });
+
+  it.each(["christmas", "halloween"])(
+    "accepts %s as a forced theme outside its month",
+    (theme) => {
+      const override = streamThemeOverrideSchema.parse(theme);
+      expect(getStreamThemes("2026-07-01", override)).toEqual([
+        theme,
+        "default",
+      ]);
+    },
+  );
+
+  it.each([
+    { theme: undefined },
+    { theme: "unknown" },
+    { theme: "toString" },
+    { theme: ["wolf-week", "auto"] },
+  ])(
+    "falls back to the configured theme for invalid URL value $theme",
+    ({ theme }) => {
+      expect(streamThemeOverrideSchema.catch("christmas").parse(theme)).toBe(
+        "christmas",
+      );
+    },
+  );
 });

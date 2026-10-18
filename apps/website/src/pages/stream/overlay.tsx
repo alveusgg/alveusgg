@@ -7,10 +7,12 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
+import { streamThemeOverrideSchema } from "@/data/stream-themes";
+
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { getToday } from "@/utils/datetime";
-import { getStreamThemes } from "@/utils/stream-themes";
+import { type StreamTheme, getStreamThemes } from "@/utils/stream-themes";
 
 import useChat from "@/hooks/chat";
 import useLocalStorage from "@/hooks/storage";
@@ -67,13 +69,12 @@ const debug = [
   "bg-gray",
 ];
 
+type StreamBorder = StaticImageData | typeof border6camWolfWeek;
+
 interface Grid {
   grid: string;
-  border?: {
+  border?: Partial<Record<StreamTheme, StreamBorder>> & {
     default: StaticImageData;
-    christmas?: StaticImageData;
-    halloween?: StaticImageData;
-    "wolf-week"?: typeof border6camWolfWeek;
     flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
@@ -359,12 +360,9 @@ const OverlayPage: NextPage = () => {
   }, []);
 
   // Valid URL overrides take priority over the configured theme.
-  const theme =
-    query.theme === "auto" ||
-    query.theme === "default" ||
-    query.theme === "wolf-week"
-      ? query.theme
-      : (env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto");
+  const theme = streamThemeOverrideSchema
+    .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto")
+    .parse(query.theme);
 
   const borders = grid[layout].border;
   const border = getStreamThemes(date, theme)

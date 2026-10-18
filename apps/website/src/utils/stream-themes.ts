@@ -1,15 +1,15 @@
-type StreamTheme = "default" | "christmas" | "halloween" | "wolf-week";
-type StreamThemeOverride = "auto" | "default" | "wolf-week";
+import type { z } from "zod";
 
-const monthlyThemes: Partial<Record<string, StreamTheme>> = {
-  "10": "halloween",
-  "12": "christmas",
-};
+import {
+  monthlyThemes,
+  type streamThemeOverrideSchema,
+  themeSchedule,
+} from "@/data/stream-themes";
 
-// First matching event wins. End dates are exclusive, in Alveus time.
-const themeSchedule: { start: string; end: string; theme: StreamTheme }[] = [
-  { start: "2026-10-18", end: "2026-10-25", theme: "wolf-week" },
-];
+type StreamThemeOverride = z.infer<typeof streamThemeOverrideSchema>;
+export type StreamTheme = Exclude<StreamThemeOverride, "auto">;
+
+const themesByMonth: Partial<Record<string, StreamTheme>> = monthlyThemes;
 
 // Return themes in priority order so layouts can skip unavailable variants.
 export const getStreamThemes = (
@@ -19,15 +19,16 @@ export const getStreamThemes = (
   const scheduledTheme = themeSchedule.find(
     ({ start, end }) => date !== null && date >= start && date < end,
   )?.theme;
-  const overrides = {
-    auto: scheduledTheme,
-    default: undefined,
-    "wolf-week": "wolf-week",
-  } as const;
+  let selectedTheme: StreamTheme | undefined;
+  if (override === "auto") {
+    selectedTheme = scheduledTheme;
+  } else if (override !== "default") {
+    selectedTheme = override;
+  }
 
   return [
-    overrides[override],
-    monthlyThemes[date?.slice(5, 7) ?? ""],
+    selectedTheme,
+    themesByMonth[date?.slice(5, 7) ?? ""],
     "default" as const,
   ].filter((theme) => theme !== undefined);
 };
