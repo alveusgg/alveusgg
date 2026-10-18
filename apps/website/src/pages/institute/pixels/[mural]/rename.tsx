@@ -1,9 +1,11 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import murals from "@/data/murals";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import { PixelProvider } from "@/hooks/pixels";
 
@@ -14,6 +16,7 @@ import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 import { EditExternalPixels } from "@/components/institute/EditExternalPixels";
 import { EditMyPixels } from "@/components/institute/EditMyPixels";
+import { EditNeonPixels } from "@/components/institute/EditNeonPixels";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 
@@ -32,6 +35,8 @@ const links = typeSafeObjectEntries(murals).map(([muralId, muralData]) => ({
 
 const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
   const session = useSession();
+  const neonDonor = trpc.donations.getNeonDonor.useQuery();
+  const router = useRouter();
   const mural = murals[muralId];
 
   return (
@@ -88,6 +93,21 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
           )}
         </div>
       </Section>
+
+      {neonDonor.data?.isEnabled ? (
+        <Section containerClassName="space-y-4 text-lg">
+          <Heading level={2}>Pixels connected with your donor account</Heading>
+
+          <div className="mt-6">
+            <EditNeonPixels
+              key={muralId}
+              muralId={muralId}
+              isLoggedIn={neonDonor.data.isLoggedIn}
+              hasLoginFailed={router.query.neonLogin === "failed"}
+            />
+          </div>
+        </Section>
+      ) : null}
 
       {/* Grow the last section to cover the page */}
       <Section className="grow" containerClassName="space-y-4 text-lg">
