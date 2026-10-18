@@ -16,7 +16,7 @@ import useLocalStorage from "@/hooks/storage";
 
 import Video from "@/components/content/Video";
 import Crunch from "@/components/overlay/Crunch";
-import Cycle from "@/components/overlay/Cycle";
+import Cycle, { type CycleItemProps } from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
 import Raid from "@/components/overlay/Raid";
@@ -509,14 +509,17 @@ const OverlayPage: NextPage = () => {
 
       <Cycle
         items={useMemo(
-          () =>
-            [
-              !hide.has("socials") && (
-                // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
-                <Socials interval={cycleTime / 3} key="socials" />
+          () => ({
+            ...(!hide.has("socials") && {
+              // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
+              socials: (props: CycleItemProps) => (
+                <Socials interval={cycleTime / 3} {...props} />
               ),
-              !hide.has("event") && <Event key="event" />,
-            ].filter((x) => !!x),
+            }),
+            ...(!hide.has("event") && {
+              event: (props: CycleItemProps) => <Event {...props} />,
+            }),
+          }),
           [hide],
         )}
         interval={cycleTime}
@@ -525,15 +528,22 @@ const OverlayPage: NextPage = () => {
 
       <Cycle
         items={useMemo(
-          () =>
-            [
-              !hide.has("disclaimer") && !disclaimer && (
-                <Text key="disclaimer" className="text-xl text-stroke">
-                  {disclaimerText}
-                </Text>
-              ),
-              !hide.has("subs") && <Subs key="subs" />,
-            ].filter((x) => !!x),
+          () => ({
+            ...(!hide.has("disclaimer") &&
+              !disclaimer && {
+                disclaimer: ({ className, ref }: CycleItemProps) => (
+                  <Text
+                    className={classes("text-xl text-stroke", className)}
+                    ref={ref}
+                  >
+                    {disclaimerText}
+                  </Text>
+                ),
+              }),
+            ...(!hide.has("subs") && {
+              subs: (props: CycleItemProps) => <Subs {...props} />,
+            }),
+          }),
           [hide, disclaimer],
         )}
         interval={cycleTime / 2}
