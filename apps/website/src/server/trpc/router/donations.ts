@@ -15,7 +15,7 @@ import {
 
 import { env } from "@/env";
 
-import { getNeonOAuthConfig } from "@/server/apis/neon";
+import { getNeonLogoutUrl, getNeonOAuthConfig } from "@/server/apis/neon";
 import { sendChatMessage } from "@/server/apis/twitch";
 import {
   type PixelWithDonation,
@@ -309,9 +309,13 @@ export const donationsRouter = router({
     }),
 
   getNeonDonor: publicProcedure.query(async ({ ctx }) => {
-    const isEnabled = getNeonOAuthConfig() !== null;
-    const neonDonor = isEnabled ? await getNeonDonorFromRequest(ctx.req) : null;
-    return { isEnabled, isLoggedIn: neonDonor !== null };
+    const config = getNeonOAuthConfig();
+    const neonDonor = config ? await getNeonDonorFromRequest(ctx.req) : null;
+    return {
+      isEnabled: config !== null,
+      isLoggedIn: neonDonor !== null,
+      logoutUrl: config ? getNeonLogoutUrl(config) : null,
+    };
   }),
 
   getNeonPixels: neonDonorProcedure

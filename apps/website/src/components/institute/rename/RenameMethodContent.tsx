@@ -13,7 +13,13 @@ import { type RenameMethodId, getRenameReturnTo } from "./methods";
 
 export type RenameMethodState = {
   user: Session["user"] | undefined;
-  neon: { isEnabled: boolean; isLoggedIn: boolean; hasLoginFailed: boolean };
+  neon: {
+    isEnabled: boolean;
+    isLoggedIn: boolean;
+    hasLoginFailed: boolean;
+    hasLoggedOut: boolean;
+    logoutUrl: string | null;
+  };
 };
 
 /**
@@ -57,6 +63,8 @@ export function RenameMethodContent({
           muralId={muralId}
           isLoggedIn={state.neon.isLoggedIn}
           hasLoginFailed={state.neon.hasLoginFailed}
+          hasLoggedOut={state.neon.hasLoggedOut}
+          neonLogoutUrl={state.neon.logoutUrl}
           returnTo={getRenameReturnTo(muralId, method)}
         />
       );

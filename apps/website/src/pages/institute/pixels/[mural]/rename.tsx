@@ -66,6 +66,8 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
       isEnabled: isNeonEnabled,
       isLoggedIn: isNeonLoggedIn,
       hasLoginFailed: router.query.neonLogin === "failed",
+      hasLoggedOut: router.query.neonLogin === "loggedOut",
+      logoutUrl: neonDonor.data?.logoutUrl ?? null,
     },
   };
 
