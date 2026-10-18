@@ -347,7 +347,7 @@ const OverlayPage: NextPage = () => {
     ),
   );
 
-  // Track the current date to switch borders to non-default variants
+  // Track the current date to switch borders to non-default themes
   const [date, setDate] = useState<string | null>(null);
   useEffect(() => {
     const updateDate = () => {
@@ -359,15 +359,17 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Valid URL overrides take priority over the configured theme.
-  const theme = streamThemeOverrideSchema
-    .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto")
-    .parse(query.theme);
+  // Determine which border theme to use based on the current date and override
+  const border = useMemo(() => {
+    // Valid URL overrides take priority over the configured theme
+    const theme = streamThemeOverrideSchema
+      .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto")
+      .parse(query.theme);
 
-  const borders = grid[layout].border;
-  const border = getStreamThemes(date, theme)
-    .map((theme) => borders?.[theme])
-    .find((source) => source !== undefined);
+    return getStreamThemes(date, theme)
+      .map((theme) => grid[layout].border?.[theme])
+      .find((source) => source !== undefined);
+  }, [date, layout, query.theme]);
 
   // Request fullscreen when the page is clicked
   useEffect(() => {
@@ -444,8 +446,8 @@ const OverlayPage: NextPage = () => {
             aria-hidden="true"
             className={classes(
               "pointer-events-none absolute inset-0 select-none",
-              borders?.flip?.x && "-scale-x-100",
-              borders?.flip?.y && "-scale-y-100",
+              grid[layout].border?.flip?.x && "-scale-x-100",
+              grid[layout].border?.flip?.y && "-scale-y-100",
               "debug" in query && "opacity-75",
             )}
           >
