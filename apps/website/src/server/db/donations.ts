@@ -118,6 +118,38 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
   });
 }
 
+export async function removeDonations(
+  donations: { provider: string; providerUniqueId: string }[],
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = !donations.length
+      ? []
+      : await tx.donation.findMany({
+          where: {
+            OR: donations.map(({ provider, providerUniqueId }) => ({
+              provider,
+              providerUniqueId,
+            })),
+          },
+          select: {
+            id: true,
+            providerUniqueId: true,
+            pixels: { select: { identifier: true, muralId: true } },
+          },
+        });
+    const ids = existing.map((donation) => donation.id);
+    await tx.pixel.deleteMany({ where: { donationId: { in: ids } } });
+    await tx.donation.deleteMany({ where: { id: { in: ids } } });
+    // Pixels allocated while their donation was being removed. relationMode
+    // "prisma" does not enforce the foreign key, so clean them up here.
+    const orphanPixels = await tx.$executeRaw`
+      DELETE FROM Pixel
+      WHERE NOT EXISTS (SELECT 1 FROM Donation WHERE Donation.id = Pixel.donationId)
+    `;
+    return { removed: existing, orphanPixels };
+  });
+}
+
 export function getPixelLeaderboard(muralId: string, take: number = 10) {
   return prisma.pixel.groupBy({
     by: ["identifier", "email"],

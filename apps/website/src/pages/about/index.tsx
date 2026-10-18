@@ -793,6 +793,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
+        key: "art-auction-2026",
+        date: "2026-04",
+        content: [
+          "Art Auction fundraiser",
+          "The most successful art auction yet sold 54 pieces of art from the ambassadors, staff and a guest artist, as well as over 800 signed postcards, raising over $117,000 USD.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#art-auction-2026",
+        },
+      },
+      {
         key: "chris",
         date: "2026-06",
         content: [

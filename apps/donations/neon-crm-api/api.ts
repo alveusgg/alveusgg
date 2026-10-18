@@ -19,7 +19,12 @@ export type SchemaParseErrorReporter = (
 
 type FetchSuccess<T = unknown> = { ok: true; data: T };
 type FetchNetworkError = { ok: false; errorType: "network"; error: string };
-type FetchRequestError = { ok: false; errorType: "request"; error: string };
+type FetchRequestError = {
+  ok: false;
+  errorType: "request";
+  error: string;
+  status: number;
+};
 type FetchParseError = { ok: false; errorType: "parse"; error: ZodError };
 
 type FetchResult<T = unknown> =
@@ -76,6 +81,7 @@ export const fetchOk = async (
           ok: false,
           errorType: "request",
           error: `Request failed with status ${response.status}`,
+          status: response.status,
         };
   } catch (error) {
     console.error("Error fetching data from Neon CRM API", {
@@ -107,6 +113,7 @@ export const fetchWithSchema = async <ResponseSchema extends ZodType>(
         ok: false,
         errorType: "request",
         error: `Request failed with status ${response.status}`,
+        status: response.status,
       };
     }
 
