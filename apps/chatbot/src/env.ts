@@ -66,8 +66,7 @@ export const env = createEnv({
     TWITCH_CLIENT_SECRET: z.string(),
 
     // Sentry
-    // An empty value (e.g. `SENTRY_DSN=` in .env) disables Sentry like an unset one
-    SENTRY_DSN: z.url().or(z.literal("")).optional(),
+    SENTRY_DSN: z.url().optional(),
     SENTRY_RELEASE: z.string().optional(),
     SENTRY_ENVIRONMENT: z.string().optional(),
   },

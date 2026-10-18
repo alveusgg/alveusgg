@@ -5,9 +5,9 @@ import {
 
 import { env } from "@/env";
 
-export function getSentryConfig(): NodeOptions {
+export function getSentryConfig(): NodeOptions | undefined {
   if (!env.SENTRY_DSN) {
-    return { enabled: false };
+    return undefined;
   }
 
   return {

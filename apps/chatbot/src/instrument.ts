@@ -6,6 +6,6 @@ import { getSentryConfig } from "@/utils/sentry";
 
 // Skip init entirely without a DSN, as even a disabled client sets up OpenTelemetry
 const config = getSentryConfig();
-if (config.enabled !== false) {
+if (config) {
   Sentry.init(config);
 }
