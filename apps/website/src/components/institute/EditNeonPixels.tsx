@@ -5,6 +5,7 @@ import type { MuralId } from "@/data/murals";
 import { trpc } from "@/utils/trpc";
 
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
+import { RenameStepsLayout } from "@/components/institute/rename/RenameStep";
 import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
@@ -18,10 +19,12 @@ export function EditNeonPixels({
   muralId,
   isLoggedIn,
   hasLoginFailed,
+  returnTo = `/institute/pixels/${muralId}/rename`,
 }: {
   muralId: MuralId;
   isLoggedIn: boolean;
   hasLoginFailed: boolean;
+  returnTo?: string;
 }) {
   const utils = trpc.useUtils();
   const pixels = trpc.donations.getNeonPixels.useQuery(
@@ -32,76 +35,84 @@ export function EditNeonPixels({
 
   const renameMutation = trpc.donations.renameNeonPixels.useMutation();
 
-  const returnTo = `/institute/pixels/${muralId}/rename`;
-
   if (!isLoggedIn) {
     return (
-      <>
-        {hasLoginFailed ? (
-          <MessageBox variant="failure" className="mb-4">
-            Logging in with your donor account did not work. Please try again.
-          </MessageBox>
-        ) : null}
+      <RenameStepsLayout
+        confirm={
+          <>
+            {hasLoginFailed ? (
+              <MessageBox variant="failure" className="mb-4">
+                Logging in with your donor account did not work. Please try
+                again.
+              </MessageBox>
+            ) : null}
 
-        <MessageBox>
-          <p className="mb-4">
-            Donated through the donation form on our website? Log in with the
-            donor account you use to manage your donations to view and rename
-            the pixels of those donations.
-          </p>
+            <MessageBox>
+              <p className="mb-4">
+                Log in with the donor account you use to manage your donations
+                to see all pixels unlocked by donations through the form on our
+                website.
+              </p>
 
-          <form method="get" action="/api/neon/login">
-            <input type="hidden" name="returnTo" value={returnTo} />
-            <Button type="submit" className="bg-alveus-green text-white">
-              <IconGift />
-              <span>Log in with your donor account</span>
-            </Button>
-          </form>
-        </MessageBox>
-      </>
+              <form method="get" action="/api/neon/login">
+                <input type="hidden" name="returnTo" value={returnTo} />
+                <Button type="submit" className="bg-alveus-green text-white">
+                  <IconGift />
+                  <span>Log in with your donor account</span>
+                </Button>
+              </form>
+            </MessageBox>
+          </>
+        }
+        rename={null}
+        renamePlaceholder="Log in with your donor account first."
+      />
     );
   }
 
   return (
-    <>
-      <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <p className="flex flex-row items-center gap-2">
-          <IconCheck className="size-6" />
-          You are logged in with your donor account.
-        </p>
+    <RenameStepsLayout
+      confirm={
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="flex items-center gap-2">
+            <IconCheck className="size-6 shrink-0" />
+            <span>You are logged in with your donor account.</span>
+          </p>
 
-        <form
-          method="post"
-          action={`/api/neon/logout?returnTo=${encodeURIComponent(returnTo)}`}
-        >
-          <Button
-            type="submit"
-            size="small"
-            width="auto"
-            className={secondaryButtonClasses}
+          <form
+            method="post"
+            action={`/api/neon/logout?returnTo=${encodeURIComponent(returnTo)}`}
           >
-            Log out
-          </Button>
-        </form>
-      </div>
-
-      <EditPixelsForm
-        defaultIdentifier={pixels.data?.[0]?.identifier ?? ""}
-        pixelsQuery={pixels}
-        renameMutation={renameMutation}
-        overrideIdentifier={overrideIdentifier}
-        setOverrideIdentifier={setOverrideIdentifier}
-        onRename={(newIdentifier, pixelId) => {
-          renameMutation.mutate(
-            { muralId, newIdentifier, pixelId },
-            {
-              onSuccess: () => {
-                utils.donations.getNeonPixels.invalidate();
+            <Button
+              type="submit"
+              size="small"
+              width="auto"
+              className={secondaryButtonClasses}
+            >
+              Log out
+            </Button>
+          </form>
+        </div>
+      }
+      rename={
+        <EditPixelsForm
+          defaultIdentifier={pixels.data?.[0]?.identifier ?? ""}
+          pixelsQuery={pixels}
+          renameMutation={renameMutation}
+          overrideIdentifier={overrideIdentifier}
+          setOverrideIdentifier={setOverrideIdentifier}
+          onRename={(newIdentifier, pixelId) => {
+            renameMutation.mutate(
+              { muralId, newIdentifier, pixelId },
+              {
+                onSuccess: () => {
+                  utils.donations.getNeonPixels.invalidate();
+                },
               },
-            },
-          );
-        }}
-      />
-    </>
+            );
+          }}
+        />
+      }
+    />
   );
 }
