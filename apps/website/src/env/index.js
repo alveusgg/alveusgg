@@ -130,6 +130,10 @@ export const env = createEnv({
       .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME: z
+      .literal(["auto", "default", "wolf-week"])
+      .optional()
+      .default("auto"),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
@@ -232,6 +236,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME:
+      process.env.NEXT_PUBLIC_STREAM_OVERLAY_THEME,
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
       process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:
