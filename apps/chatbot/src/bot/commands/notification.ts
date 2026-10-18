@@ -1,6 +1,7 @@
 import { checkUserIsAllowedToSendNotifications } from "@/users";
 import { getChannelInfoById } from "@/twitch/api";
 import { safeParsePartialURL } from "@/utils/safeParsePartialURL";
+import { ApiError } from "@/website-api";
 import { createNotification } from "@/website-api/notifications";
 
 import {
@@ -89,6 +90,7 @@ function sendPendingNotification(
   notification: PendingNotification,
   reply: (message: string) => void,
 ) {
+  const startedAt = Date.now();
   createNotification({
     tag: notification.tag,
     text: notification.text,
@@ -103,8 +105,13 @@ function sendPendingNotification(
       reply("poggSpin sent notification");
     })
     .catch((e) => {
-      console.error(e);
-      reply("MADGIES failed to send notification");
+      const elapsed = Date.now() - startedAt;
+      console.error(`Failed to send notification after ${elapsed}ms`, e);
+      reply(
+        e instanceof ApiError
+          ? `MADGIES failed to send notification (${e.summary})`
+          : "MADGIES failed to send notification",
+      );
     });
 }
 
