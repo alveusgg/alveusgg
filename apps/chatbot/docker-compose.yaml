@@ -8,6 +8,9 @@ services:
     restart: always
     environment:
       - CHATBOT_REF_SHA=$CHATBOT_REF_SHA
+      # Sentry release is the deployed commit; the DSN comes from the .env file
+      - SENTRY_RELEASE=$CHATBOT_REF_SHA
+      - SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT:-}
 
 secrets:
   github_token:

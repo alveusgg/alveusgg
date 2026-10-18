@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/node";
+
 import { checkUserIsAllowedToSendNotifications } from "@/users";
 import { getChannelInfoById } from "@/twitch/api";
 import { safeParsePartialURL } from "@/utils/safeParsePartialURL";
@@ -88,6 +90,7 @@ function renderPendingNotification(notification: PendingNotification) {
 
 function sendPendingNotification(
   notification: PendingNotification,
+  channel: string,
   reply: (message: string) => void,
 ) {
   const startedAt = Date.now();
@@ -107,6 +110,16 @@ function sendPendingNotification(
     .catch((e) => {
       const elapsed = Date.now() - startedAt;
       console.error(`Failed to send notification after ${elapsed}ms`, e);
+      Sentry.captureException(e, {
+        tags: { command: "notification", channel },
+        contexts: {
+          notification: {
+            tag: notification.tag,
+            isPush: notification.isPush,
+            isDiscord: notification.isDiscord,
+          },
+        },
+      });
       reply(
         e instanceof ApiError
           ? `MADGIES failed to send notification (${e.summary})`
@@ -217,6 +230,9 @@ export async function createNotificationCommands() {
 
         pendingNotifications.delete(broadcasterId);
         console.error(error);
+        Sentry.captureException(error, {
+          tags: { command: "notification", channel: broadcasterName },
+        });
         reply("MADGIES failed to fetch stream information");
         return;
       }
@@ -232,7 +248,7 @@ export async function createNotificationCommands() {
       }
 
       pendingNotifications.delete(broadcasterId);
-      sendPendingNotification(pendingNotification, reply);
+      sendPendingNotification(pendingNotification, broadcasterName, reply);
     }, 60_000);
 
     reply(
