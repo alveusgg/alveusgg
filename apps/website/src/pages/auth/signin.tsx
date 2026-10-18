@@ -43,14 +43,14 @@ export type SigninPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
-function getThirdPartyClient(callbackUrl: string): ThirdPartyClient {
-  const parsed = new URL(callbackUrl, "http://localhost");
+function getThirdPartyClient(
+  callbackUrl: string,
+): ThirdPartyClient | undefined {
+  const parsed = URL.parse(callbackUrl, "http://localhost");
 
-  const clientId = parsed.searchParams.get("client_id");
-  if (!clientId) throw new Error("Invalid callback URL.");
-
-  const client = getOAuthClient(clientId);
-  if (!client) throw new Error("Invalid client ID.");
+  const clientId = parsed?.searchParams.get("client_id");
+  const client = clientId ? getOAuthClient(clientId) : undefined;
+  if (!client) return undefined;
 
   return {
     clientId: client.clientId,
@@ -88,6 +88,8 @@ export const getServerSideProps = async (
   const isOAuthMode = context.query.mode === "oauth";
   if (isOAuthMode && callbackUrl) {
     const thirdPartyClient = getThirdPartyClient(callbackUrl);
+    if (!thirdPartyClient) return { notFound: true };
+
     return {
       props: {
         mode: "oauth",
