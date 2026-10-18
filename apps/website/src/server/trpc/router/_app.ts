@@ -16,6 +16,7 @@ import { donationsRouter } from "./donations";
 import { formsRouter } from "./forms";
 import { notificationsRouter } from "./notifications";
 import { pushSubscriptionRouter } from "./push/subscription";
+import { shortLinksRouter } from "./short-links";
 import { showAndTellRouter } from "./show-and-tell";
 import { streamRouter } from "./stream";
 
@@ -37,6 +38,7 @@ export const appRouter = router({
   forms: formsRouter,
   notifications: notificationsRouter,
   pushSubscription: pushSubscriptionRouter,
+  shortLinks: shortLinksRouter,
   showAndTell: showAndTellRouter,
   stream: streamRouter,
 });

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
 
-import { defaultTags } from "@/data/notifications";
+import { notificationCategories } from "@/data/notifications";
 
 const baseRegistrationSchema = z.object({
   endpoint: z.string().regex(knownPushServicesRegex),
@@ -65,9 +65,9 @@ export const pushSubscriptionRouter = router({
             auth: input.auth,
             tags: {
               createMany: {
-                data: Object.entries(defaultTags).map(([name, value]) => ({
-                  name,
-                  value,
+                data: notificationCategories.map(({ tag }) => ({
+                  name: tag,
+                  value: "1",
                 })),
               },
             },

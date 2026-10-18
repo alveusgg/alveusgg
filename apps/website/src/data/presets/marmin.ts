@@ -1,3 +1,4 @@
+import abovedoor from "@/assets/presets/marmin/abovedoor.png";
 import behind from "@/assets/presets/marmin/behind.png";
 import domel from "@/assets/presets/marmin/domel.png";
 import domell from "@/assets/presets/marmin/domell.png";
@@ -9,6 +10,8 @@ import domerl from "@/assets/presets/marmin/domerl.png";
 import domerr from "@/assets/presets/marmin/domerr.png";
 import domert from "@/assets/presets/marmin/domert.png";
 import downleft from "@/assets/presets/marmin/downleft.png";
+import flapl from "@/assets/presets/marmin/flapl.png";
+import flapr from "@/assets/presets/marmin/flapr.png";
 import flaps from "@/assets/presets/marmin/flaps.png";
 import floor from "@/assets/presets/marmin/floor.png";
 import floorbranch from "@/assets/presets/marmin/floorbranch.png";
@@ -20,6 +23,7 @@ import leftcornert from "@/assets/presets/marmin/leftcornert.png";
 import nearrightshelf from "@/assets/presets/marmin/nearrightshelf.png";
 import right from "@/assets/presets/marmin/right.png";
 import table from "@/assets/presets/marmin/table.png";
+import tablel from "@/assets/presets/marmin/tablel.png";
 import win1 from "@/assets/presets/marmin/win1.png";
 import win2 from "@/assets/presets/marmin/win2.png";
 import win3 from "@/assets/presets/marmin/win3.png";
@@ -33,6 +37,12 @@ const marminPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 107.61, tilt: -22.9, zoom: 1 },
     // modified: 2025-11-07T22:27:17.457Z
+  },
+  abovedoor: {
+    description: "abovedoor",
+    image: abovedoor,
+    position: { pan: -158.55, tilt: -38.38, zoom: 1 },
+    // modified: 2026-08-10T21:06:57.870Z
   },
   behind: {
     description: "Behind",
@@ -100,6 +110,18 @@ const marminPresets: Record<string, Preset> = {
     position: { pan: 15.05, tilt: -49.51, zoom: 1 },
     // modified: 2025-11-30T18:54:42.538Z
   },
+  flapl: {
+    description: "flapl",
+    image: flapl,
+    position: { pan: 45.9, tilt: -44.44, zoom: 172 },
+    // modified: 2026-08-07T22:40:26.378Z
+  },
+  flapr: {
+    description: "flapr",
+    image: flapr,
+    position: { pan: 60.21, tilt: -34.66, zoom: 172 },
+    // modified: 2026-08-07T22:39:46.396Z
+  },
   flaps: {
     description: "Flaps",
     image: flaps,
@@ -159,6 +181,12 @@ const marminPresets: Record<string, Preset> = {
     image: table,
     position: { pan: 115.86, tilt: -31.87, zoom: 689 },
     // modified: 2025-10-09T11:10:29.916Z
+  },
+  tablel: {
+    description: "tablel",
+    image: tablel,
+    position: { pan: 71.25, tilt: -62.19, zoom: 1 },
+    // modified: 2026-09-15T14:52:53.445Z
   },
   win1: {
     description: "Window 1",

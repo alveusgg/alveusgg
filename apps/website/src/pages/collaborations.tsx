@@ -213,6 +213,7 @@ const Creators = ({ className }: { className?: string }) => {
           >
             {Array.from({ length: dots }).map((_, idx) => (
               <button
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- Each dot identifies a fixed scroll position.
                 key={idx}
                 type="button"
                 className="z-0 p-1"

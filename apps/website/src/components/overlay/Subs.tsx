@@ -19,8 +19,8 @@ const Subs = ({ className, ...props }: HTMLProps<HTMLParagraphElement>) => {
   const total = subscriptions?.total ?? 0;
   const totalFmt = useLocaleString(total);
 
-  // Show a target based on the nearest 100
-  const target = Math.ceil(total / 100) * 100;
+  const increment = total >= 50_000 ? 5000 : 1000;
+  const target = Math.ceil(total / increment) * increment;
   const targetFmt = useLocaleString(target);
 
   if (!subscriptions) return null;

@@ -45,6 +45,7 @@ const subCommandNames: (keyof typeof commands)[] = [
   "ptzfocus",
   "ptzautofocus",
   "swap",
+  "scenecams",
 ];
 
 const subCommands: NamedCommand[] = subCommandNames.map((name) => ({
@@ -99,6 +100,7 @@ const Spec = ({
         </span>
         <span className="flex flex-wrap">
           {item[1].map((value, index) => (
+            // eslint-disable-next-line @eslint-react/no-array-index-key -- These specification values are static content.
             <span key={index} className="flex">
               {index !== 0 && <Bullet />}
               {value}

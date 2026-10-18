@@ -12,7 +12,6 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
-import { Announcements } from "@/components/notifications/Announcements";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 import updateChannels from "@/components/shared/data/updateChannels";
@@ -133,13 +132,6 @@ const UpdatesPage: NextPage = () => {
 
           <section>
             <RecentNotifications tags={notificationTags} />
-          </section>
-
-          <section>
-            <Heading level={3} id="announcements" link>
-              Announcements
-            </Heading>
-            <Announcements />
           </section>
         </div>
       </Section>

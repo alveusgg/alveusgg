@@ -30,18 +30,22 @@ const upstreamCameraMap: Record<string, string> = {
   wolfwolfden2: "wolfcornerwolfden2",
 };
 
+const upstreamNameSchema = z
+  .string()
+  .toLowerCase()
+  .transform((str) => str.replace(/cam$/, ""));
+
+const upstreamModifiedSchema = z.iso
+  .datetime()
+  .transform((str) => new Date(str))
+  .nullable();
+
 const upstreamCameraSchema = z.object({
-  name: z
-    .string()
-    .toLowerCase()
-    .transform((str) => str.replace(/cam$/, "")),
+  name: upstreamNameSchema,
   presets: z.array(
     z.object({
       name: z.string(),
-      modified: z.iso
-        .datetime()
-        .transform((str) => new Date(str))
-        .nullable(),
+      modified: upstreamModifiedSchema,
       pan: z.number().optional(),
       tilt: z.number().optional(),
       zoom: z.number().optional(),
@@ -50,11 +54,8 @@ const upstreamCameraSchema = z.object({
   multi: z
     .object({
       name: z.string(),
-      modified: z.iso
-        .datetime()
-        .transform((str) => new Date(str))
-        .nullable(),
-      cameras: z.array(z.string()),
+      modified: upstreamModifiedSchema,
+      cameras: z.array(upstreamNameSchema),
     })
     .nullable(),
 });

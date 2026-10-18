@@ -13,8 +13,7 @@ type NetworkConnectionWireless = NetworkConnectionCore & {
 };
 
 export type NetworkConnection =
-  | NetworkConnectionWired
-  | NetworkConnectionWireless;
+  NetworkConnectionWired | NetworkConnectionWireless;
 
 type NetworkItemCore = {
   type: string;
@@ -191,30 +190,15 @@ const data: RootNetworkItem[] = [
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
-                links: [
-                  {
-                    type: "camera",
-                    name: "Hank",
-                    model: "AXIS M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "camera",
-                    name: "Hank Corner",
-                    model: "AXIS M1065-LW (Fixed)",
-                    url: "https://www.axis.com/products/axis-m1065-lw",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                ],
+                links: [],
               },
             ],
           },
           {
             type: "switch",
             name: "HQ",
-            model: "Ubiquiti USW-16-PoE",
-            url: "https://store.ui.com/products/usw-16-poe",
+            model: "Ubiquiti USW-Pro-24-PoE",
+            url: "https://store.ui.com/products/usw-pro-24-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
@@ -276,38 +260,86 @@ const data: RootNetworkItem[] = [
                 ],
               },
               {
-                type: "converter",
+                type: "switch",
                 name: "Pasture",
-                model: "TP-Link MC220L",
-                url: "https://www.tp-link.com/us/business-networking/accessory/mc220l/",
+                model: "Ubiquiti USW-Pro-XG-8-PoE",
+                url: "https://store.ui.com/products/usw-pro-xg-8-poe",
                 connection: { type: "fiber", location: "wall" },
                 links: [
                   {
-                    type: "switch",
-                    name: "Pasture",
-                    model: "Ubiquiti USW-Lite-8-PoE",
-                    url: "https://store.ui.com/products/usw-lite-8-poe",
+                    type: "interface",
+                    name: "Pasture Audio I/O",
+                    model: "AXIS T6112 Mk II",
+                    url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
-                        type: "interface",
-                        name: "Pasture Audio I/O",
-                        model: "AXIS T6112 Mk II",
-                        url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
+                        type: "camera",
+                        name: "Pasture",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "microphone",
+                        name: "Pasture Microphone",
+                        model: "AXIS TU1001-VE",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                  {
+                    type: "camera",
+                    name: "Pasture Feeder",
+                    model: "AXIS Q3536-LVE (Fixed)",
+                    url: "https://www.axis.com/products/axis-q3536-lve",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "switch",
+                    name: "Gate",
+                    model: "Ubiquiti USW-Pro-XG-8-PoE",
+                    url: "https://store.ui.com/products/usw-pro-xg-8-poe",
+                    connection: { type: "fiber", location: "buried" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Pasture Lower",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "accessPoint",
+                name: "HQ Radio",
+                model: "airMAX Lite AP",
+                url: "https://store.ui.com/products/lap-120",
+                connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "accessPoint",
+                    name: "Cabin Radio",
+                    model: "airMAX NanoStation 5AC",
+                    url: "https://store.ui.com/products/ns-5ac",
+                    connection: { type: "wifi" },
+                    links: [
+                      {
+                        type: "switch",
+                        name: "Roof",
+                        model: "Ubiquiti USW-Flex-2.5G-8-PoE",
+                        url: "https://store.ui.com/products/usw-flex-2-5g-8-poe",
                         connection: { type: "ethernet", location: "wall" },
                         links: [
                           {
                             type: "camera",
-                            name: "Pasture",
-                            model: "AXIS Q6318-LE (PTZ)",
-                            url: "https://www.axis.com/products/axis-q6318-le",
-                            connection: { type: "ethernet", location: "wall" },
-                          },
-                          {
-                            type: "microphone",
-                            name: "Pasture Microphone",
-                            model: "AXIS TU1001-VE",
-                            url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                            name: "Nature",
+                            model: "AXIS Q6358-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6358-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                         ],
@@ -634,8 +666,8 @@ const data: RootNetworkItem[] = [
                   {
                     type: "switch",
                     name: "Marmoset",
-                    model: "Ubiquiti USW-24-PoE",
-                    url: "https://store.ui.com/products/usw-24-poe",
+                    model: "Ubiquiti USW-Pro-24-PoE",
+                    url: "https://store.ui.com/products/usw-pro-24-poe",
                     connection: { type: "ethernet", location: "buried" },
                     links: [
                       {
@@ -678,9 +710,35 @@ const data: RootNetworkItem[] = [
                       {
                         type: "camera",
                         name: "Emu",
+                        model: "AXIS Q6358-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6358-le",
+                        connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Emu Cover",
                         model: "AXIS P5676-LE (PTZ)",
                         url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "buried" },
+                      },
+                      {
+                        type: "switch",
+                        name: "Emu",
+                        model: "Ubiquiti USW-Lite-8-PoE",
+                        url: "https://store.ui.com/products/usw-lite-8-poe",
+                        connection: { type: "ethernet", location: "buried" },
+                        links: [
+                          {
+                            type: "camera",
+                            name: "Emu Pond",
+                            model: "AXIS M2036-LE (Fixed)",
+                            url: "https://www.axis.com/products/axis-m2036-le",
+                            connection: {
+                              type: "ethernet",
+                              location: "buried",
+                            },
+                          },
+                        ],
                       },
                     ],
                   },
@@ -744,6 +802,16 @@ const data: RootNetworkItem[] = [
                                 },
                               },
                             ],
+                          },
+                          {
+                            type: "camera",
+                            name: "Serval Indoor",
+                            model: "AXIS P5676-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-p5676-le",
+                            connection: {
+                              type: "ethernet",
+                              location: "buried",
+                            },
                           },
                         ],
                       },

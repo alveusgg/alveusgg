@@ -4,6 +4,7 @@ import { useCallback, useMemo } from "react";
 
 import { notificationCategories } from "@/data/notifications";
 
+import { classes } from "@/utils/classes";
 import { usePushSubscription } from "@/utils/push-subscription";
 
 import IconLoading from "@/icons/IconLoading";
@@ -23,9 +24,9 @@ export function NotificationSettingsForm({
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
-      notificationCategories.forEach(({ tag }) => {
+      notificationCategories.forEach(({ tag, hidden }) => {
         tags[tag] = String(
-          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0",
+          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : hidden ? "1" : "0",
         );
       });
       await updateTags(tags);
@@ -66,12 +67,11 @@ export function NotificationSettingsForm({
   return (
     <form
       onSubmit={submitHandler}
-      className={
-        "pb-2 transition-opacity " +
-        (enableSettings
-          ? ""
-          : "pointer-events-none cursor-default opacity-50 select-none")
-      }
+      className={classes(
+        "pb-2 transition-opacity",
+        !enableSettings &&
+          "pointer-events-none cursor-default opacity-50 select-none",
+      )}
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>
@@ -83,18 +83,21 @@ export function NotificationSettingsForm({
           </p>
         )}
 
-        {notificationCategories.map((category) => (
-          <NotificationCategoryCheckbox
-            key={category.tag}
-            tag={category.tag}
-            label={category.label}
-            tags={tags}
-            enabled={enableSettings}
-            endpoint={endpoint}
-            handleChange={handleChange}
-            isRegistered={isRegistered}
-          />
-        ))}
+        {notificationCategories.map(
+          ({ tag, label, hidden }) =>
+            !hidden && (
+              <NotificationCategoryCheckbox
+                key={tag}
+                tag={tag}
+                label={label}
+                tags={tags}
+                enabled={enableSettings}
+                endpoint={endpoint}
+                handleChange={handleChange}
+                isRegistered={isRegistered}
+              />
+            ),
+        )}
       </fieldset>
     </form>
   );

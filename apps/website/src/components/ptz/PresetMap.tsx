@@ -58,7 +58,6 @@ const PresetMapNode = ({ data }: NodeProps<Node<PresetMapNodeData>>) => {
       </PresetCard>
     ),
     aria: `${data.name}: ${data.preset.description}`,
-    className: "z-90",
     interactive: true,
   });
 

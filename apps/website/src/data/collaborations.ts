@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import adapt from "@/assets/collaborations/adapt.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
@@ -18,6 +19,7 @@ import carlyIncontro from "@/assets/collaborations/carly-incontro.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
 import cdawg from "@/assets/collaborations/cdawg.png";
 import chrisnxtdoor from "@/assets/collaborations/chrisnxtdoor.png";
+import christinaAmber from "@/assets/collaborations/christina-amber.png";
 import cinna from "@/assets/collaborations/cinna.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import dailyDose from "@/assets/collaborations/daily-dose.png";
@@ -30,7 +32,6 @@ import esfandtv from "@/assets/collaborations/esfandtv.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import extraEmily from "@/assets/collaborations/extra-emily.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
-import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -48,12 +49,13 @@ import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
 import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
+import jynxzi from "@/assets/collaborations/jynxzi.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
-import lacari from "@/assets/collaborations/lacari.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
+import mAndJTV from "@/assets/collaborations/m-and-j-tv.png";
 import mari from "@/assets/collaborations/mari.png";
 import marlon from "@/assets/collaborations/marlon.png";
 import misterArther from "@/assets/collaborations/mister-arther.png";
@@ -66,12 +68,14 @@ import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sidemen from "@/assets/collaborations/sidemen.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
 import stableRonaldo from "@/assets/collaborations/stable-ronaldo.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
+import tedNivison from "@/assets/collaborations/ted-nivison.png";
 import thePrimeagen from "@/assets/collaborations/the-primeagen.png";
 import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import trihex from "@/assets/collaborations/trihex.png";
@@ -81,6 +85,7 @@ import xchocobars from "@/assets/collaborations/xchocobars.png";
 import yourRage from "@/assets/collaborations/your-rage.png";
 import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
+import zelinaVega from "@/assets/collaborations/zelina-vega.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
 export type Creator = {
@@ -102,10 +107,117 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Jynxzi",
+      link: "https://www.twitch.tv/jynxzi",
+      date: new Date("2026-09-17"),
+      videoId: "HDe20xr-RJ4",
+      creators: [
+        {
+          name: "Jynxzi",
+          image: jynxzi,
+          popularity: 11_300_000, // Twitch followers, 2026-09-20
+        },
+      ],
+    },
+    {
+      name: "MandJTV",
+      link: "https://www.youtube.com/@MandJTV",
+      date: new Date("2026-09-10"),
+      videoId: "0moCZWpYsOc",
+      creators: [
+        {
+          name: "MandJTV",
+          image: mAndJTV,
+          popularity: 2_670_000, // YouTube subscribers, 2026-09-10
+        },
+      ],
+    },
+    {
+      name: "Julien",
+      link: "https://www.twitch.tv/julien",
+      date: new Date("2026-08-06"),
+      videoId: "rzka0Zdo324",
+      vodId: "acQCPHDxKN4",
+      creators: [
+        {
+          name: "Julien",
+          image: julien,
+          popularity: 791_000, // Twitch followers, 2026-08-23
+        },
+      ],
+    },
+    {
+      name: "Christina & Amber",
+      link: "https://www.twitch.tv/christinaandamber",
+      date: new Date("2026-08-11"),
+      videoId: "MLalNcDbE80",
+      creators: [
+        {
+          name: "Christina & Amber",
+          image: christinaAmber,
+          popularity: 146_000, // Twitch followers, 2026-08-15
+        },
+      ],
+    },
+    {
+      name: "Sidemen",
+      link: "https://www.youtube.com/@Sidemen",
+      date: new Date("2026-07-26"),
+      videoId: "SPqt2U92mEE",
+      creators: [
+        {
+          name: "Sidemen",
+          image: sidemen,
+          popularity: 23_400_000, // YouTube subscribers, 2026-08-15
+        },
+      ],
+    },
+    {
+      name: "Adapt",
+      link: "https://www.twitch.tv/adapt",
+      date: new Date("2026-06-26"),
+      videoId: "zxjdjHnHTWI",
+      creators: [
+        {
+          name: "Adapt",
+          image: adapt,
+          popularity: 1_500_000, // Twitch followers, 2026-06-28
+        },
+      ],
+    },
+    {
+      name: "Zelina Vega",
+      link: "https://www.twitch.tv/theatrinidad",
+      date: new Date("2026-06-09"),
+      videoId: "-wAICXiEDQ0",
+      creators: [
+        {
+          name: "Zelina Vega",
+          image: zelinaVega,
+          popularity: 117_000, // Twitch followers, 2026-06-12
+        },
+      ],
+    },
+    {
+      name: "Ted Nivison",
+      link: "https://www.youtube.com/@TedNivison",
+      date: new Date("2026-05-25"),
+      videoId: "FymAIdEYbQY",
+      vodId: "BbI8fAy9BH0",
+      creators: [
+        {
+          name: "Ted Nivison",
+          image: tedNivison,
+          popularity: 2_370_000, // YouTube subscribers, 2026-05-29
+        },
+      ],
+    },
+    {
       name: "Jacksepticeye",
       link: "https://www.youtube.com/@jacksepticeye",
       date: new Date("2026-05-19"),
-      videoId: "qberatnwFhU",
+      videoId: "U7hGfOk9eOU",
+      vodId: "qberatnwFhU",
       creators: [
         {
           name: "Jacksepticeye",
@@ -519,11 +631,7 @@ const collaborations: Collaboration[] = (
           image: fazeSilky,
           popularity: 654_000, // Twitch followers, 2024-11-13
         },
-        {
-          name: "FaZe Adapt",
-          image: fazeAdapt,
-          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
-        },
+        // Adapt has a more recent collaboration
       ],
     },
     {
@@ -634,13 +742,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2024-04-25"),
       videoId: "46ECIvC4MUo",
       vodId: "yWtkfbfmNGs",
-      creators: [
-        {
-          name: "Julien",
-          image: julien,
-          popularity: 760_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Julien has a more recent collaboration
     },
     {
       name: "Fuslie",
@@ -957,20 +1059,6 @@ const collaborations: Collaboration[] = (
           name: "Caroline Kwan",
           image: carolineKwan,
           popularity: 136_000, // Twitch followers, 2024-10-4
-        },
-      ],
-    },
-    {
-      name: "Lacari",
-      link: "https://www.twitch.tv/lacari",
-      date: new Date("2023-05-02"),
-      videoId: "IssAfvy_bmo",
-      vodId: "mVOypbE5YNs",
-      creators: [
-        {
-          name: "Lacari",
-          image: lacari,
-          popularity: 349_000, // Twitch followers, 2024-10-4
         },
       ],
     },

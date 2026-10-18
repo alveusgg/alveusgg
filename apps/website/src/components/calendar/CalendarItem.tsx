@@ -36,7 +36,7 @@ export function CalendarItem({
       custom
       {...props}
     >
-      <p className="font-semibold">{event.title}</p>
+      <p className="font-semibold wrap-break-word">{event.title}</p>
       {event.hasTime && (
         <p className="text-sm tabular-nums">
           {event.startAt.toLocaleTimeString(

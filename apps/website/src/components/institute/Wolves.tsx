@@ -26,7 +26,7 @@ const Wolves = ({
             <span className="opacity-10 select-none" aria-hidden="true">
               0
             </span>
-            26
+            21
           </span>{" "}
           Red wolves exist in the wild today.{" "}
           <Link
@@ -64,8 +64,8 @@ const Wolves = ({
           href="https://www.fws.gov/project/red-wolf-recovery-program"
           dark
         >
-          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update -
-          February 2026
+          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update - August
+          2026
         </Link>
       </li>
       <li className="mb-1">

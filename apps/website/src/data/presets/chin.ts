@@ -6,7 +6,8 @@ const chinPresets: Record<string, Preset> = {
   home: {
     description: "Home, cam cannot move",
     image: home,
-    position: { pan: 0, tilt: 0, zoom: 1 },
+    position: { pan: 0, tilt: 0, zoom: 0 },
+    // modified: 2026-05-31T16:13:43.852Z
   },
 };
 

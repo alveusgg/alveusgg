@@ -1,12 +1,11 @@
-import type { AppRouter } from "@alveusgg/alveusgg-website";
 import type { Donation } from "@alveusgg/donations-core";
 import * as Sentry from "@sentry/cloudflare";
-import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import superjson, { parse } from "superjson";
+import { parse } from "superjson";
 import { setSentryTagsMiddleware } from "./utils/middleware";
 import { getSentryConfig } from "./utils/sentry";
+import { createSiteApi } from "./utils/site-api";
 import { forwardWithoutRoutePrefix } from "./utils/url";
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
@@ -29,25 +28,23 @@ app.all("/pixels/*", async (c) => {
 
 export default Sentry.withSentry<Env, string>(getSentryConfig, {
   fetch: app.fetch,
-  queue: async (batch, env) => {
-    const headers: Record<string, string> = {};
-    if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
-      headers["x-vercel-protection-bypass"] =
-        env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
-    }
-
-    const api = createTRPCProxyClient<AppRouter>({
-      links: [
-        httpLink({
-          url: `${env.SITE_URL}/api/trpc`,
-          transformer: superjson,
-          headers: {
-            Authorization: `ApiKey ${env.SHARED_KEY}`,
-            ...headers,
-          },
-        }),
-      ],
+  scheduled: async (_, env) => {
+    const manager = env.DONATIONS_MANAGER.getByName("alveus");
+    const response = await manager.fetch("https://donations/neon/sync", {
+      method: "POST",
+      headers: {
+        Authorization: `ApiKey ${env.SHARED_KEY}`,
+      },
     });
+
+    if (!response.ok) {
+      throw new Error(
+        `Neon donation sync failed with status ${response.status}: ${await response.text()}`,
+      );
+    }
+  },
+  queue: async (batch, env) => {
+    const api = createSiteApi(env);
 
     const donations: Donation[] = batch.messages.map((message) =>
       parse(message.body),

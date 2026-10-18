@@ -155,12 +155,20 @@ export const regularEventsWeekly = [
   // Friday
   [
     {
-      title: "Show & Tell",
+      title: "Chandler Power Hour",
       description:
-        "Join Maya as she reviews this week's community submissions for Show and Tell.",
+        "Join Chandler for an hour of chaos around the sanctuary to start your Friday.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 13, minute: 30 },
+      startTime: { hour: 10, minute: 0 },
+    },
+    {
+      title: "Show & Tell",
+      description:
+        "Join us as we look at what the Alveus community has been doing recently.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 13, minute: 0 },
     },
   ],
   // Saturday

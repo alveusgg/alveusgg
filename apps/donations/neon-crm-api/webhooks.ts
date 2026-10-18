@@ -1,15 +1,24 @@
 import {
-  type WebhookResponse,
+  type CreateWebhookInput,
   type WebhookPayload,
   DonationWebhookPayload,
 } from "./schema.js";
 import { type Options, buildBasicAuth } from "./env.js";
-import { createWebhook, getWebhooks } from "./index.js";
+import { createWebhook, deleteWebhook, getWebhooks } from "./index.js";
 import { fixTimestampsTimezone, isSameUrlWithoutQuery } from "./utils";
+import type { ZodError } from "zod";
 
 export type { DonationWebhookPayload } from "./schema.js";
 
-type WebhookOptions = Pick<Options, "organizationId" | "localTimezone">;
+type WebhookOptions = Pick<Options, "organizationId" | "localTimezone"> & {
+  onParseError?: (
+    error: ZodError,
+    context: {
+      kind: "webhook";
+      eventTrigger: string | undefined;
+    },
+  ) => void;
+};
 
 type WebhookTypeSchemas = (typeof WebhookPayload.def.options)[number];
 
@@ -22,6 +31,16 @@ export const parseWebhook = async <Schema extends WebhookTypeSchemas>(
   if (!payload.success) {
     console.error("Failed to parse Neon webhook payload", {
       error: payload.error,
+    });
+    options.onParseError?.(payload.error, {
+      kind: "webhook",
+      eventTrigger:
+        typeof body === "object" &&
+        body !== null &&
+        "eventTrigger" in body &&
+        typeof body.eventTrigger === "string"
+          ? body.eventTrigger
+          : undefined,
     });
     return false;
   }
@@ -48,29 +67,44 @@ export const parseDonationWebhook = async (
 
 export async function setupWebhook(
   url: string,
-  trigger: WebhookResponse["trigger"],
+  trigger: CreateWebhookInput["trigger"],
   options: Options,
 ) {
   const existingWebhooks = await getWebhooks(options);
-  const webhookSetUp =
-    existingWebhooks.ok &&
-    existingWebhooks.data.some(
+  if (!existingWebhooks.ok) {
+    throw new Error(
+      `Failed to list Neon webhooks before setup: ${existingWebhooks.error}`,
+    );
+  }
+
+  const matchingWebhooks = existingWebhooks.data
+    .filter(
       (webhook) =>
         isSameUrlWithoutQuery(webhook.url, url, ["uuid"]) &&
         webhook.trigger === trigger &&
+        webhook.httpBasic !== null &&
         webhook.httpBasic.userName === options.basicAuthUsername,
-    );
+    )
+    .sort((a, b) => Number(a.id) - Number(b.id));
 
-  if (webhookSetUp) {
+  if (matchingWebhooks.length > 0) {
+    for (const duplicate of matchingWebhooks.slice(1)) {
+      const deleted = await deleteWebhook(options, duplicate.id);
+      if (!deleted.ok) {
+        throw new Error(
+          `Failed to delete duplicate Neon webhook ${duplicate.id}: ${deleted.error}`,
+        );
+      }
+    }
     return;
   }
 
-  const uuid = crypto.randomUUID();
+  const uuid = getWebhookUuid(url, trigger);
   const urlWithUuid = new URL(url);
   urlWithUuid.searchParams.set("uuid", uuid);
 
   const created = await createWebhook(options, {
-    name: `alveusgg-donations-${uuid}`,
+    name: getWebhookName(url, trigger),
     url: String(urlWithUuid),
     trigger,
     httpBasic: buildBasicAuth(options),
@@ -81,7 +115,19 @@ export async function setupWebhook(
       },
     ],
   });
-  if (!created) {
-    throw new Error("Failed to create Neon webhook");
+  if (!created.ok) {
+    throw new Error(`Failed to create Neon webhook: ${created.error}`);
   }
+}
+
+function getWebhookName(url: string, trigger: CreateWebhookInput["trigger"]) {
+  const hostname = new URL(url).hostname.replace(/[^a-zA-Z0-9]+/g, "-");
+  return `alveusgg-donations-${trigger.toLowerCase()}-${hostname}`;
+}
+
+function getWebhookUuid(url: string, trigger: CreateWebhookInput["trigger"]) {
+  const normalizedUrl = new URL(url);
+  normalizedUrl.searchParams.delete("uuid");
+  normalizedUrl.searchParams.sort();
+  return `${trigger}:${normalizedUrl}`;
 }

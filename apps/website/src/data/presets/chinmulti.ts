@@ -6,7 +6,7 @@ const chinmulti = {
   multi: {
     description: "Picture-in-picture of all three chin cameras",
     image: multi,
-    cameras: ["chin3", "chin2", "chin"],
+    cameras: ["chin3", "chin", "chin2"],
     // modified: 2025-10-09T11:10:30.500Z
   },
 };

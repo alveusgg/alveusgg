@@ -2,9 +2,13 @@ import barn1r from "@/assets/presets/garden/barn1r.png";
 import barn2 from "@/assets/presets/garden/barn2.png";
 import bughotel2 from "@/assets/presets/garden/bughotel2.png";
 import bughotel from "@/assets/presets/garden/bughotel.png";
+import butterflyplant from "@/assets/presets/garden/butterflyplant.png";
 import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
+import milkweed from "@/assets/presets/garden/milkweed.png";
+import milkweedtop from "@/assets/presets/garden/milkweedtop.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
+import pasturefarright from "@/assets/presets/garden/pasturefarright.png";
 import pasturegrove from "@/assets/presets/garden/pasturegrove.png";
 import pastureleft from "@/assets/presets/garden/pastureleft.png";
 import pasturepole from "@/assets/presets/garden/pasturepole.png";
@@ -17,6 +21,7 @@ import sunriser from "@/assets/presets/garden/sunriser.png";
 import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
+import water from "@/assets/presets/garden/water.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -48,8 +53,14 @@ const gardenPresets: Record<string, Preset> = {
   bughotel2: {
     description: "Bug Hotel 2",
     image: bughotel2,
-    position: { pan: 158.68, tilt: -9.03, zoom: 6726 },
-    // modified: 2025-10-09T11:10:30.320Z
+    position: { pan: 158.68, tilt: -9.59, zoom: 6726 },
+    // modified: 2026-06-30T16:08:59.271Z
+  },
+  butterflyplant: {
+    description: "butterflyplant",
+    image: butterflyplant,
+    position: { pan: 97.41, tilt: -10.28, zoom: 721 },
+    // modified: 2026-07-14T14:53:07.551Z
   },
   gate: {
     description: "Gate",
@@ -57,11 +68,29 @@ const gardenPresets: Record<string, Preset> = {
     position: { pan: -24.36, tilt: -3.94, zoom: 1 },
     // modified: 2025-10-09T11:10:30.312Z
   },
+  milkweed: {
+    description: "milkweed",
+    image: milkweed,
+    position: { pan: 79.23, tilt: -14.6, zoom: 1610 },
+    // modified: 2026-09-18T22:46:53.035Z
+  },
+  milkweedtop: {
+    description: "milkweedtop",
+    image: milkweedtop,
+    position: { pan: 79.38, tilt: -13.42, zoom: 4425 },
+    // modified: 2026-09-18T22:45:46.499Z
+  },
   pasturebrush: {
     description: "Pasture Brush",
     image: pasturebrush,
     position: { pan: -133.21, tilt: -11.39, zoom: 1048 },
     // modified: 2026-04-29T14:01:54.742Z
+  },
+  pasturefarright: {
+    description: "pasturefarright",
+    image: pasturefarright,
+    position: { pan: -41.42, tilt: -5.58, zoom: 1145 },
+    // modified: 2026-06-27T14:05:47.034Z
   },
   pasturegrove: {
     description: "Pasture Grove",
@@ -134,6 +163,12 @@ const gardenPresets: Record<string, Preset> = {
     image: tcright,
     position: { pan: 107.8, tilt: -6.38, zoom: 154 },
     // modified: 2025-10-09T11:10:30.316Z
+  },
+  water: {
+    description: "water",
+    image: water,
+    position: { pan: 37.83, tilt: -14.74, zoom: 406 },
+    // modified: 2026-07-14T14:52:14.767Z
   },
 };
 

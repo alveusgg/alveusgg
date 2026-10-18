@@ -92,10 +92,14 @@ const secondsToIso8601 = (seconds: number): string => {
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
   featured: {
-    [key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]]: (typeof ambassadors)[key];
+    [
+      key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]
+    ]: (typeof ambassadors)[key];
   };
   related: {
-    [key in (typeof animalQuest)[number]["ambassadors"]["related"][number]]: (typeof ambassadors)[key];
+    [
+      key in (typeof animalQuest)[number]["ambassadors"]["related"][number]
+    ]: (typeof ambassadors)[key];
   };
   icon?: AmbassadorImage;
 };
@@ -468,6 +472,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               title="Prezi presentation"
               referrerPolicy="no-referrer"
               allow="autoplay; fullscreen"
+              // eslint-disable-next-line @eslint-react/dom-no-unsafe-iframe-sandbox -- The Prezi embed runs on a separate origin and requires scripts and its own origin.
               sandbox="allow-same-origin allow-scripts"
               className="aspect-video h-auto w-full rounded-2xl"
             ></iframe>

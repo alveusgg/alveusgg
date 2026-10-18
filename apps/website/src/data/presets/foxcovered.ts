@@ -3,9 +3,12 @@ import downleft from "@/assets/presets/foxcovered/downleft.png";
 import downright from "@/assets/presets/foxcovered/downright.png";
 import farcorner from "@/assets/presets/foxcovered/farcorner.png";
 import home from "@/assets/presets/foxcovered/home.png";
+import insidedoor from "@/assets/presets/foxcovered/insidedoor.png";
 import left from "@/assets/presets/foxcovered/left.png";
 import middle from "@/assets/presets/foxcovered/middle.png";
+import middler from "@/assets/presets/foxcovered/middler.png";
 import platform from "@/assets/presets/foxcovered/platform.png";
+import platformbl from "@/assets/presets/foxcovered/platformbl.png";
 import platformbr from "@/assets/presets/foxcovered/platformbr.png";
 import platformfl from "@/assets/presets/foxcovered/platformfl.png";
 import platformfr from "@/assets/presets/foxcovered/platformfr.png";
@@ -46,6 +49,12 @@ const foxcoveredPresets: Record<string, Preset> = {
     position: { pan: -136.61, tilt: -5.8, zoom: 937 },
     // modified: 2026-04-18T13:26:11.654Z
   },
+  insidedoor: {
+    description: "insidedoor",
+    image: insidedoor,
+    position: { pan: -68.44, tilt: -12.26, zoom: 152 },
+    // modified: 2026-07-06T13:43:18.659Z
+  },
   left: {
     description: "left",
     image: left,
@@ -58,35 +67,47 @@ const foxcoveredPresets: Record<string, Preset> = {
     position: { pan: -121.34, tilt: -21.42, zoom: 1 },
     // modified: 2026-04-18T13:23:24.036Z
   },
+  middler: {
+    description: "middler",
+    image: middler,
+    position: { pan: -109.48, tilt: -11.06, zoom: 155 },
+    // modified: 2026-09-25T15:21:06.787Z
+  },
   platform: {
     description: "platform",
     image: platform,
     position: { pan: -143.87, tilt: -0.93, zoom: 1604 },
-    // modified: 2026-04-18T13:16:49.326Z
+    // modified: 2026-06-06T12:36:06.085Z
+  },
+  platformbl: {
+    description: "platformbl",
+    image: platformbl,
+    position: { pan: -144.94, tilt: -0.13, zoom: 2417 },
+    // modified: 2026-06-06T12:34:11.051Z
   },
   platformbr: {
     description: "platformbr",
     image: platformbr,
-    position: { pan: -142.73, tilt: -1.16, zoom: 4039 },
-    // modified: 2026-04-18T13:18:33.995Z
+    position: { pan: -141.12, tilt: -0.9, zoom: 2803 },
+    // modified: 2026-09-11T21:26:24.806Z
   },
   platformfl: {
     description: "platformfl",
     image: platformfl,
     position: { pan: -145.14, tilt: -0.87, zoom: 3363 },
-    // modified: 2026-05-20T13:14:30.113Z
+    // modified: 2026-06-06T12:35:14.684Z
   },
   platformfr: {
     description: "platformfr",
     image: platformfr,
     position: { pan: -140.72, tilt: -1.11, zoom: 3601 },
-    // modified: 2026-04-18T13:19:07.544Z
+    // modified: 2026-06-06T12:36:41.278Z
   },
   rampb: {
     description: "rampb",
     image: rampb,
-    position: { pan: -141.43, tilt: -6.69, zoom: 2021 },
-    // modified: 2026-04-18T13:19:45.312Z
+    position: { pan: -139.37, tilt: -8.81, zoom: 6462 },
+    // modified: 2026-06-01T14:47:14.749Z
   },
   right: {
     description: "right",

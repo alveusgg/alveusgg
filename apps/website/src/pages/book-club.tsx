@@ -31,8 +31,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type BookOrPlaceholder =
-  | ({ type: "book" } & BookInfo)
-  | { type: "placeholder"; month: Month };
+  ({ type: "book" } & BookInfo) | { type: "placeholder"; month: Month };
 
 const booksWithPlaceholders = books.reduce<BookOrPlaceholder[]>(
   (acc, book, index) => {
@@ -47,16 +46,18 @@ const booksWithPlaceholders = books.reduce<BookOrPlaceholder[]>(
 
       // Add cover placeholders for each missing month
       const monthDiff =
-        (currentDate.getFullYear() - nextDate.getFullYear()) * 12 +
-        (currentDate.getMonth() - nextDate.getMonth());
+        (currentDate.getUTCFullYear() - nextDate.getUTCFullYear()) * 12 +
+        (currentDate.getUTCMonth() - nextDate.getUTCMonth());
       for (let i = 1; i < monthDiff; i++) {
         const date = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - i,
-          1,
+          Date.UTC(
+            currentDate.getUTCFullYear(),
+            currentDate.getUTCMonth() - i,
+            1,
+          ),
         );
         const monthString =
-          `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}` as Month;
+          `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1).toString().padStart(2, "0")}` as Month;
 
         acc.push({ type: "placeholder", month: monthString });
       }
@@ -303,9 +304,9 @@ const BookClubPage: NextPage = () => {
 
         <Section className="grow">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {booksWithPlaceholders.map((book, i) =>
+            {booksWithPlaceholders.map((book) =>
               book.type === "placeholder" ? (
-                <div key={`placeholder-${i}`} className="mx-auto w-64">
+                <div key={`placeholder-${book.month}`} className="mx-auto w-64">
                   <Cover className="opacity-50" />
 
                   <Heading level={2} className="relative mt-4 mb-0">
@@ -331,6 +332,7 @@ const BookClubPage: NextPage = () => {
               length: (4 - (booksWithPlaceholders.length % 4)) % 4,
             }).map((_, i) => (
               <div
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- These empty placeholders only pad the end of the grid.
                 key={i}
                 className={classes(
                   "mx-auto hidden w-64",

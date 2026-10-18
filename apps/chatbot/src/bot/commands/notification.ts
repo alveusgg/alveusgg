@@ -8,39 +8,24 @@ import {
   type CommandHandler,
 } from "@/bot/commands/shared/command";
 import { createOptions } from "@/bot/commands/shared/options";
-import { inputValueDatetimeLocalToUtc } from "@/utils/datetime-local";
 
 const defaultNotificationTitle = "Live Now";
 
-type DateStr =
-  | `${number}-${number}-${number}`
-  | `${number}-${number}-${number}T${number}:${number}`;
-
 type PendingNotification = {
-  tag: "stream" | "announcements";
+  tag: "stream";
   text?: string;
   linkUrl?: string;
   imageUrl?: string;
   vodUrl?: string;
   title: string;
-  expiresAt: number;
+  timeout?: ReturnType<typeof setTimeout>;
   isPush: boolean;
   isDiscord: boolean;
-  start?: DateStr;
-  end?: DateStr;
+  reply: (message: string) => void;
 };
 
 // These URLs are likely not meant to be used as notification links without a path
 const partialUrlFilterList = ["https://twitch.tv/", "https://youtube.com/"];
-
-function createPendingNotification(
-  data: Omit<PendingNotification, "expiresAt">,
-): PendingNotification {
-  return {
-    ...data,
-    expiresAt: Date.now() + 60_000,
-  };
-}
 
 const options = createOptions({
   help: {
@@ -78,37 +63,6 @@ function parseOptionalLinkUrl(broadcasterName: string, params: string[]) {
   return { linkUrl, restParams };
 }
 
-function parseOptionalStartAndEnd(params: string[]): {
-  start?: DateStr;
-  end?: DateStr;
-  restParams: string[];
-} {
-  // YYYY-MM-DD[ HH:II] YYYY-MM-DD[ HH:II]
-  if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
-    let endDateString;
-    let startDateString = params.shift();
-    if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-      startDateString += "T" + params.shift();
-    }
-
-    if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
-      endDateString = params.shift();
-
-      if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-        endDateString += "T" + params.shift();
-      }
-    }
-
-    return {
-      start: startDateString as DateStr,
-      end: endDateString as DateStr,
-      restParams: params,
-    };
-  }
-
-  return { restParams: params };
-}
-
 function parseTitleAndText(params: string[]) {
   const textParts = params.join(" ").split("|");
   const title = textParts[0]?.trim();
@@ -119,8 +73,6 @@ function parseTitleAndText(params: string[]) {
 function renderPendingNotification(notification: PendingNotification) {
   return [
     notification.tag,
-    notification.start,
-    notification.end,
     notification.title,
     notification.text,
     notification.linkUrl,
@@ -133,8 +85,50 @@ function renderPendingNotification(notification: PendingNotification) {
     .join(" | ");
 }
 
+function sendPendingNotification(
+  notification: PendingNotification,
+  reply: (message: string) => void,
+) {
+  createNotification({
+    tag: notification.tag,
+    text: notification.text,
+    linkUrl: notification.linkUrl,
+    title: notification.title,
+    isDiscord: notification.isDiscord,
+    isPush: notification.isPush,
+    imageUrl: notification.imageUrl,
+    vodUrl: notification.vodUrl,
+  })
+    .then(() => {
+      reply("poggSpin sent notification");
+    })
+    .catch((e) => {
+      console.error(e);
+      reply("MADGIES failed to send notification");
+    });
+}
+
 export async function createNotificationCommands() {
   const pendingNotifications = new Map<string, PendingNotification>();
+
+  function clearPendingNotification(
+    broadcasterId: string,
+    notifyPreviousCommand = false,
+  ) {
+    const pendingNotification = pendingNotifications.get(broadcasterId);
+    if (!pendingNotification) return false;
+
+    if (pendingNotification.timeout) {
+      clearTimeout(pendingNotification.timeout);
+    }
+    pendingNotifications.delete(broadcasterId);
+
+    if (notifyPreviousCommand) {
+      pendingNotification.reply("poggSpin cancelled notification");
+    }
+
+    return true;
+  }
 
   const notificationCommand: CommandHandler = async (
     params,
@@ -155,6 +149,8 @@ export async function createNotificationCommands() {
     if (optionValues.help) {
       reply(
         `Usage: !notify [link] [title] [|text] | ` +
+          `Cancel: !notify cancel | ` +
+          `Notifications are sent automatically after 1 minute | ` +
           `Arguments: link = URL | ` +
           `Options: ${options.renderHelp()}`,
       );
@@ -166,159 +162,81 @@ export async function createNotificationCommands() {
       return;
     }
 
+    if (
+      paramsWithoutOptions.length === 1 &&
+      paramsWithoutOptions[0]?.toLowerCase() === "cancel"
+    ) {
+      if (clearPendingNotification(broadcasterId)) {
+        reply("poggSpin cancelled notification");
+      } else {
+        reply("mojjcheck no pending notification");
+      }
+      return;
+    }
+
     const { linkUrl, restParams } = parseOptionalLinkUrl(
       broadcasterName,
       paramsWithoutOptions,
     );
-    let { title, text } = parseTitleAndText(restParams);
+    const { title, text } = parseTitleAndText(restParams);
+
+    const pendingNotification: PendingNotification = {
+      tag: "stream",
+      linkUrl,
+      title: title || defaultNotificationTitle,
+      text,
+      isPush: !optionValues["no-push"],
+      isDiscord: !optionValues["no-discord"],
+      imageUrl: optionValues.image,
+      vodUrl: optionValues.vod,
+      reply,
+    };
+
+    clearPendingNotification(broadcasterId, true);
+    pendingNotifications.set(broadcasterId, pendingNotification);
 
     if (!title) {
-      const channelInfo = await getChannelInfoById(broadcasterId);
-      if (channelInfo) {
-        title = channelInfo.title.split("|")[0];
-        text = channelInfo.gameName;
+      try {
+        const channelInfo = await getChannelInfoById(broadcasterId);
+        if (channelInfo) {
+          pendingNotification.title =
+            channelInfo.title.split("|")[0]?.trim() || defaultNotificationTitle;
+          pendingNotification.text = channelInfo.gameName;
+        }
+      } catch (error) {
+        if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+          return;
+        }
+
+        pendingNotifications.delete(broadcasterId);
+        console.error(error);
+        reply("MADGIES failed to fetch stream information");
+        return;
       }
     }
 
-    title = title || defaultNotificationTitle;
+    if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+      return;
+    }
 
-    const pendingNotification = createPendingNotification({
-      tag: "stream",
-      linkUrl,
-      title,
-      text,
-      isPush: !optionValues["no-push"],
-      isDiscord: !optionValues["no-discord"],
-      imageUrl: optionValues.image,
-      vodUrl: optionValues.vod,
-    });
-    pendingNotifications.set(broadcasterId, pendingNotification);
+    pendingNotification.timeout = setTimeout(() => {
+      if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+        return;
+      }
+
+      pendingNotifications.delete(broadcasterId);
+      sendPendingNotification(pendingNotification, reply);
+    }, 60_000);
 
     reply(
-      `PauseChamp please !confirm: ${renderPendingNotification(
+      `PauseChamp queued notification: ${renderPendingNotification(
         pendingNotification,
-      )}`,
+      )} | will send in 1 minute; use !notify cancel to cancel`,
     );
-  };
-
-  const announcementCommand: CommandHandler = async (
-    params,
-    { broadcasterId, broadcasterName, userName, reply },
-  ) => {
-    const isMod = await checkUserIsAllowedToSendNotifications(userName);
-    if (!isMod) {
-      reply("mayaHalt you are not allowed to send announcements");
-      return;
-    }
-
-    const {
-      restParams: paramsWithoutOptions,
-      values: optionValues,
-      errors,
-    } = options.parseParams(params);
-
-    if (optionValues.help) {
-      reply(
-        `Usage: !announce [link] [start] [end] [title] [|text] | ` +
-          `Arguments: link = URL, start/end = YYYY-MM-DD[ HH:II] | ` +
-          `Options: ${options.renderHelp()}`,
-      );
-      return;
-    }
-
-    if (errors.length) {
-      reply(`Error: ${errors.join(", ")}`);
-      return;
-    }
-
-    const { linkUrl, restParams } = parseOptionalLinkUrl(
-      broadcasterName,
-      paramsWithoutOptions,
-    );
-    const {
-      start,
-      end,
-      restParams: restParams2,
-    } = parseOptionalStartAndEnd(restParams);
-    const { title, text } = parseTitleAndText(restParams2);
-
-    if (!title) {
-      reply("WeirdCat add some title to your announcement");
-      return;
-    }
-
-    const pendingNotification = createPendingNotification({
-      tag: "announcements",
-      text,
-      linkUrl,
-      title,
-      start,
-      end,
-      isPush: !optionValues["no-push"],
-      isDiscord: !optionValues["no-discord"],
-      imageUrl: optionValues.image,
-      vodUrl: optionValues.vod,
-    });
-    pendingNotifications.set(broadcasterId, pendingNotification);
-
-    reply(
-      `PauseChamp please !confirm: ${renderPendingNotification(
-        pendingNotification,
-      )}`,
-    );
-  };
-
-  const confirmCommand: CommandHandler = async (
-    params,
-    { broadcasterId, userName, reply },
-  ) => {
-    const isMod = await checkUserIsAllowedToSendNotifications(userName);
-    if (!isMod) {
-      reply("mayaHalt you are not allowed to confirm notifications");
-      return;
-    }
-
-    const pendingNotification = pendingNotifications.get(broadcasterId);
-
-    if (!pendingNotification || pendingNotification.expiresAt < Date.now()) {
-      if (pendingNotification) pendingNotifications.delete(broadcasterId);
-
-      reply("mojjcheck no pending notification");
-      return;
-    }
-
-    createNotification({
-      tag: pendingNotification.tag,
-      text: pendingNotification.text,
-      linkUrl: pendingNotification.linkUrl,
-      title: pendingNotification.title,
-      isDiscord: pendingNotification.isDiscord,
-      isPush: pendingNotification.isPush,
-      imageUrl: pendingNotification.imageUrl,
-      vodUrl: pendingNotification.vodUrl,
-      scheduledStartAt:
-        pendingNotification.start &&
-        inputValueDatetimeLocalToUtc(pendingNotification.start),
-      scheduledEndAt:
-        pendingNotification.end &&
-        inputValueDatetimeLocalToUtc(pendingNotification.end),
-    })
-      .then(() => {
-        reply("poggSpin sent notification");
-      })
-      .catch((e) => {
-        console.error(e);
-        reply("MADGIES failed to send notification");
-      });
-
-    pendingNotifications.delete(broadcasterId);
   };
 
   return [
     createBotCommand("notify", notificationCommand),
     createBotCommand("notification", notificationCommand),
-    createBotCommand("announce", announcementCommand),
-    createBotCommand("announcement", announcementCommand),
-    createBotCommand("confirm", confirmCommand),
   ];
 }

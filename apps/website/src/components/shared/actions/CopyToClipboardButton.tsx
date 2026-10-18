@@ -45,6 +45,7 @@ const CopyToClipboardButton = ({
         content,
         aria: statusText,
         force: status !== undefined,
+        className: "z-110",
       }}
     />
   );

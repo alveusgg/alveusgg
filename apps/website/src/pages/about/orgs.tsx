@@ -24,7 +24,7 @@ type Video = {
   title: string;
 } & ({ youtube: string } | { instagram: string });
 type Organization = {
-  key: string;
+  id: string;
   title: string;
   description?: string;
   videos: Video[];
@@ -32,7 +32,7 @@ type Organization = {
 
 const orgs: Organization[] = [
   {
-    key: "san-diego-zoo-wildlife-alliance",
+    id: "san-diego-zoo-wildlife-alliance",
     title: "San Diego Zoo Wildlife Alliance",
     description:
       "Documenting SDZWA's California Condor Center and exploring themes of diversity in both nature and across conservation related careers.",
@@ -52,7 +52,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "whale-and-dolphin-conservation",
+    id: "whale-and-dolphin-conservation",
     title: "Whale and Dolphin Conservation",
     description: "Documenting the plight of the North Atlantic Right Whale.",
     videos: [
@@ -71,7 +71,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "purple-martin-conservation-association",
+    id: "purple-martin-conservation-association",
     title: "Purple Martin Conservation Association",
     description:
       "Travelling to the Amazon Rainforest alongside PMCA to follow and document purple martins on their 5000 mile migration.",
@@ -83,7 +83,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "rainforest-alliance",
+    id: "rainforest-alliance",
     title: "Rainforest Alliance",
     description:
       "Travelling to the Amazon Rainforest and amplifying Rainforest Alliance's mission work to protect rainforests from deforestation, mitigating climate change, and promoting the rights and livelihoods of rural communities.",
@@ -103,7 +103,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "world-bird-sanctuary",
+    id: "world-bird-sanctuary",
     title: "World Bird Sanctuary",
     description:
       "Promoting vulture conservation and fundraising for World Bird Sanctuary's education, breeding, and recovery programs.",
@@ -115,7 +115,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "bat-conservation-international",
+    id: "bat-conservation-international",
     title: "Bat Conservation International",
     description:
       "Visiting the largest colony of bats in the world and fundraising for Bat Conservation International's education, research, and conservation work.",
@@ -131,7 +131,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "austin-pets-alive",
+    id: "austin-pets-alive",
     title: "Austin Pets Alive!",
     description:
       "Fundraising for an animal shelter focusing on saving animals at risk of euthanasia.",
@@ -143,7 +143,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "world-wildlife-fund",
+    id: "world-wildlife-fund",
     title: "World Wildlife Fund",
     description:
       "Amplifying various initiatives for World Wildlife Fund to direct action towards sustainable palm oil consumption, environmental advocacy, combating the wildlife trade, and more.",
@@ -167,7 +167,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "xerces-society",
+    id: "xerces-society",
     title: "Xerces Society",
     description:
       "Partnering with Xerces society to promote the protection of our natural world via invertebrate conservation and invertebrate habitat conservation.",
@@ -183,7 +183,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "natural-resources-defense-council",
+    id: "natural-resources-defense-council",
     title: "Natural Resources Defense Council",
     description:
       "Promoting environmental advocacy in partnership with the Natural Resources Defense Council by encouraging viewers to use their political voice and voting power to safeguard nature.",
@@ -199,7 +199,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "carnivero-plant-nursery",
+    id: "carnivero-plant-nursery",
     title: "Carnivero Carnivorous Plant & Rare Plant Nursery",
     description:
       "Documenting and promoting plant conservation via captive breeding efforts to combat plant poaching.",
@@ -211,7 +211,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "wolf-conservation-center",
+    id: "wolf-conservation-center",
     title: "Wolf Conservation Center",
     description:
       "Fundraising for and promoting Wolf Conservation Center's education, research, and recovery programs for Red Wolves and Mexican Gray Wolves.",
@@ -223,7 +223,7 @@ const orgs: Organization[] = [
     ],
   },
   {
-    key: "associacao-amigos-do-peixe-boi",
+    id: "associacao-amigos-do-peixe-boi",
     title: "Associação Amigos do Peixe-Boi",
     description:
       "Visiting Associação Amigos do Peixe-Boi in Brazil and documenting their rehabilitation program for Amazonian Manatees and Pink River Dolphins.",
@@ -237,12 +237,12 @@ const orgs: Organization[] = [
 ];
 
 const Org = ({
-  orgKey,
+  id,
   title,
   description,
   videos,
   idx,
-}: Omit<Organization, "key"> & { orgKey: string; idx: number }) => {
+}: Organization & { idx: number }) => {
   const [lightboxOpen, setLightboxOpen] = useState<string>();
 
   const lightboxItems = useMemo(
@@ -325,7 +325,7 @@ const Org = ({
           <div
             className={classes("mb-6", videos.length > 1 && "col-span-full")}
           >
-            <Heading id={orgKey} level={2} link className="text-balance">
+            <Heading id={id} level={2} link className="text-balance">
               {title}
             </Heading>
 
@@ -452,8 +452,8 @@ const AboutOrgsPage: NextPage = () => {
         </Section>
       </div>
 
-      {orgs.map(({ key, ...org }, idx) => (
-        <Org key={key} orgKey={key} {...org} idx={idx} />
+      {orgs.map((org, idx) => (
+        <Org key={org.id} {...org} idx={idx} />
       ))}
 
       {/* Grow the last section to cover the page */}

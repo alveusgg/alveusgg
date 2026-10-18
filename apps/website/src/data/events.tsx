@@ -5,10 +5,13 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
 import artAuction2022 from "@/assets/events/art-auction-2022.png";
 import artAuction2023 from "@/assets/events/art-auction-2023.png";
 import artAuction2024 from "@/assets/events/art-auction-2024.png";
 import artAuction2025 from "@/assets/events/art-auction-2025.png";
+import artAuction2026 from "@/assets/events/art-auction-2026.png";
 import fallCarnival2023 from "@/assets/events/fall-carnival-2023.png";
 import fundathon2021 from "@/assets/events/fundathon-2021.png";
 import halloween2021 from "@/assets/events/halloween-2021.png";
@@ -31,6 +34,74 @@ export type Event = {
 
 const events: Event[] = (
   [
+    {
+      name: "Art Auction 2026",
+      date: new Date("2026-04-29"),
+      video: {
+        id: "751710702c90f16b25368389f8c9fabc",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: artAuction2026,
+      stats: {
+        totalDonations: {
+          title: "Raised for Alveus Sanctuary",
+          stat: "$117,114",
+        },
+        artworksSold: {
+          title: "Artworks sold",
+          stat: "54",
+        },
+        signedPrints: {
+          title: "Signed postcards for donors",
+          stat: "834",
+        },
+        averagePrice: {
+          title: "Average donation for each artwork",
+          stat: "$1,666",
+        },
+      },
+      info: (
+        <>
+          <p>
+            The 2026 Art Auction was our most successful one yet, with 54 pieces
+            of art up for auction. Alongside paintings created by the
+            ambassadors, the staff at Alveus contributed their own art, from
+            paintings to a bug collection and even a door, and guest artist
+            ipaintbirbs painted Stompy for the event. Livestream viewers bid on
+            every piece via chat, and anyone who didn&apos;t win one could
+            donate for a signed postcard.
+          </p>
+          <p>
+            By the end of the event, we raised $117,114 for Alveus Sanctuary,
+            with 834 signed postcards sent out to donors. The top piece this
+            year was a painting of a serval by Maya herself, won by Emiru for
+            $30,000. Our most successful ambassador artist was{" "}
+            <Link href="/ambassadors/winnie-the-moo">Winnie</Link>, with her two
+            paintings raising $5,500 combined. The painting of Stompy by
+            ipaintbirbs sold for $3,666, Lukas&apos; painting of{" "}
+            <Link href="/ambassadors/push-pop">Push Pop</Link>, who painted the
+            bottom part herself, sold for $3,500, and{" "}
+            <Link href="/ambassadors/tico">Tico</Link> and{" "}
+            <Link href="/ambassadors/miley">Miley</Link>&apos;s joint painting
+            sold for $2,501.
+          </p>
+          <p>
+            A huge thank you to our top donors, Emiru ($30,000), crownedeye
+            ($7,111), sarahnova__ ($6,750), dnomaids ($3,150) and brokenrobotart
+            ($3,000), and to everyone who participated by bidding on an item,
+            donating for a signed postcard, or just watching the livestream!
+          </p>
+          <p>
+            <Link
+              href="https://imgur.com/a/alveus-art-auction-2026-item-list-sPHE1ex"
+              external
+            >
+              See all the pieces that were up for auction
+            </Link>
+          </p>
+        </>
+      ),
+    },
     {
       name: "Summer Camp 2025",
       date: new Date("2025-08-06"),
@@ -657,17 +728,25 @@ const events: Event[] = (
         },
       },
       info: (
-        <p>
-          The event that started it all! A 20-hour-long mega-stream with a bunch
-          of donation goals along the way, aiming to raise as much money as
-          possible to kick-start Alveus. Each donor that donated $100 or more
-          got their name engraved on a golden leaf that form part of six donor
-          trees now affixed to the back of the studio building. The final goal
-          for the stream was that at $500k raised Maya would shave her head, and
-          we were able to reach that goal with $573,004 raised for Alveus over
-          the whole stream. Thank you to all the leafers, everyone that donated
-          and everyone that watched!
-        </p>
+        <>
+          <p>
+            The event that started it all! A 20-hour-long mega-stream with a
+            bunch of donation goals along the way, aiming to raise as much money
+            as possible to kick-start Alveus. Each donor that donated $100 or
+            more got their name engraved on a golden leaf that form part of six
+            donor trees now affixed to the walls of the Emu enclosure. The final
+            goal for the stream was that at $500k raised Maya would shave her
+            head, and we were able to reach that goal with $573,004 raised for
+            Alveus over the whole stream. Thank you to all the leafers, everyone
+            that donated and everyone that watched!
+          </p>
+          <p>
+            <Link href="/about/events/donor-trees">
+              Find your name on the donor trees
+              <IconArrowRight className="ml-1 inline-block size-4" />
+            </Link>
+          </p>
+        </>
       ),
     },
   ] as const

@@ -19,6 +19,10 @@ export const TwitchSubscriptionPayload = z.object({
   }),
 });
 
+export const TwitchRevocationPayload = z.object({
+  subscription: TwitchSubscriptionPayload,
+});
+
 export const TwitchAmountPayload = z.object({
   value: z.number().describe("The amount of the donation in USD cents."),
   decimal_places: z

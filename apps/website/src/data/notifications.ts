@@ -10,7 +10,7 @@ type NotificationLinkSuggestion = {
 export type NotificationTag = (typeof notificationCategories)[number]["tag"];
 
 export const defaultTitle = "Alveus Update";
-export const defaultTag = "announcements" satisfies NotificationTag;
+export const defaultTag = "stream" satisfies NotificationTag;
 
 export const welcomeTitle = "Welcome!";
 export const welcomeMessage = "Your Alveus notifications are set up.";
@@ -18,18 +18,13 @@ export const welcomeMessage = "Your Alveus notifications are set up.";
 export const iconUrl = `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`;
 export const badgeUrl = `${env.NEXT_PUBLIC_BASE_URL}/notification-badge.png`;
 
-export const defaultTags = {
-  stream: "1",
-  vod: "1",
-  announcements: "1",
-} as const satisfies Record<NotificationTag, string>;
-
 export type NotificationCategory = {
   tag: string;
   label: string;
   ttl: number;
   ttl_after_event: number;
   urgency: NotificationUrgency;
+  hidden: boolean;
 };
 
 export const notificationCategories = [
@@ -37,23 +32,27 @@ export const notificationCategories = [
     tag: "stream",
     label: "Stream notifications",
     ttl: 30 * 60, // 30 minutes
-    ttl_after_event: 30 * 60, // 30 mintutes
+    ttl_after_event: 30 * 60, // 30 minutes
     urgency: "HIGH",
+    hidden: false,
   },
-  //{
-  //  tag: "vod",
-  //  label: "Video releases",
-  //  ttl: 5 * 24 * 60 * 60, // 5 days
-  //  urgency: "HIGH",
-  //},
+  {
+    tag: "vod",
+    label: "Video releases",
+    ttl: 5 * 24 * 60 * 60, // 5 days
+    ttl_after_event: 2 * 60 * 60, // 2 hours
+    urgency: "HIGH",
+    hidden: true,
+  },
   {
     tag: "announcements",
     label: "Announcements",
     ttl: 5 * 24 * 60 * 60, // 5 days
     ttl_after_event: 2 * 60 * 60, // 2 hours
     urgency: "HIGH",
+    hidden: true,
   },
-] satisfies NotificationCategory[];
+] as const satisfies NotificationCategory[];
 
 export function getNotificationCategory(tag: string) {
   return notificationCategories.find((c) => c.tag === tag);

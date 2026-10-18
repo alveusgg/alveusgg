@@ -9,9 +9,7 @@ export type { PartialDateString };
 
 const splitPartialDateString = (date: PartialDateString) =>
   date.split("-").map((x) => parseInt(x)) as
-    | [number]
-    | [number, number]
-    | [number, number, number];
+    [number] | [number, number] | [number, number, number];
 
 export const parsePartialDateString = (
   date: PartialDateString,

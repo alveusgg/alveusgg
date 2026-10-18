@@ -83,8 +83,7 @@ type ShowAndTellEntryFormProps = {
 };
 
 type LocalAttachment =
-  | { type: "image"; file: FileReference }
-  | { type: "video"; url: string };
+  { type: "image"; file: FileReference } | { type: "video"; url: string };
 
 const makeSavedFileRef = (
   imageAttachment: ImageAttachment,

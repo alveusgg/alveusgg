@@ -68,16 +68,26 @@ export const mainNavStructure: NavStructure = {
           },
         },
       },
+      community: {
+        title: "Get Involved",
+        links: {
+          showAndTell: {
+            title: "Show & Tell",
+            link: "/show-and-tell",
+          },
+          pollinatorCensus: {
+            title: "Pollinator Census",
+            link: "/census",
+            external: true,
+          },
+        },
+      },
       series: {
         title: "Series",
         links: {
           animalQuest: {
             title: "Animal Quest",
             link: "/animal-quest",
-          },
-          showAndTell: {
-            title: "Show & Tell",
-            link: "/show-and-tell",
           },
           bookClub: {
             title: "Alveus Book Club",
@@ -117,6 +127,10 @@ export const mainNavStructure: NavStructure = {
           annualReports: {
             title: "Annual Reports",
             link: "/about/annual-reports",
+          },
+          grants: {
+            title: "Grants",
+            link: "/donate/grants",
           },
         },
       },

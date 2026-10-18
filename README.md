@@ -18,7 +18,7 @@ For development:
 - PNPM with workspaces
 - Prettier (code formatting)
 - ESLint (code linting)
-- Docker (Compose) (local MySQL + S3 \[MinIO])
+- Docker (Compose) (local MySQL + S3)
 
 Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
@@ -73,7 +73,7 @@ If you aren't working on features related to Twitch authentication, you can set 
    1. Use your GitHub username (lowercase) as the username when prompted
    2. Create a [GitHub personal access token (classic)](https://github.com/settings/tokens/new) with the `read:packages` scope and use it as the password when prompted
 4. Install dependencies: `pnpm install --frozen-lockfile`
-5. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, Redis, and an S3 bucket with MinIO.
+5. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, Redis, and an S3 bucket.
 6. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. If your feature is not related to Twitch authentication, you can set `DISABLE_ADMIN_AUTH` to `true` in order to use the admin dashboard without authentication. Otherwise, fill in `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` as mentioned above.
    2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
@@ -91,6 +91,7 @@ If you aren't working on features related to Twitch authentication, you can set 
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio` from within `apps/database`
+- To change the database schema, see [`apps/database/README.md`](apps/database/README.md)
 - You can access a direct MySQL CLI to the database with `docker compose exec db sh -c 'MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql alveusgg'`
 - If you're using VSCode, add `"typescript.tsdk": "node_modules/typescript/lib"` + `"eslint.workingDirectories": [{ "pattern": "apps/*" }]` to `.vscode/settings.json` to ensure you're using the correct TypeScript version + ESLint working directories
 

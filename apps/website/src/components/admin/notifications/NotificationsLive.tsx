@@ -103,7 +103,7 @@ export function NotificationsLive() {
                     <Button
                       width="auto"
                       size="small"
-                      title="Cancel announcement"
+                      title="Cancel notification"
                       confirmationMessage="Are you sure you want to cancel this notification?"
                       onClick={() => {
                         cancelMutation.mutate(notification.id);
