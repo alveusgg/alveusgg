@@ -174,7 +174,7 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
         if (!this.env.PAYPAL_PIXEL_CAMPAIGN_ID) return false;
         return donation.tags.campaign === this.env.PAYPAL_PIXEL_CAMPAIGN_ID;
       case "twitch":
-        return false;
+        return true;
       case "thegivingblock":
         return false;
       default:
