@@ -16,7 +16,7 @@ import useLocalStorage from "@/hooks/storage";
 
 import Video from "@/components/content/Video";
 import Crunch from "@/components/overlay/Crunch";
-import Cycle, { type CycleItemProps } from "@/components/overlay/Cycle";
+import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
 import Raid from "@/components/overlay/Raid";
@@ -509,20 +509,19 @@ const OverlayPage: NextPage = () => {
 
       <Cycle
         items={useMemo(
-          () =>
-            [
-              !hide.has("socials") && {
-                key: "socials",
-                // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
-                render: (props: CycleItemProps) => (
-                  <Socials interval={cycleTime / 3} {...props} />
-                ),
-              },
-              !hide.has("event") && {
-                key: "event",
-                render: (props: CycleItemProps) => <Event {...props} />,
-              },
-            ].filter((x) => !!x),
+          () => [
+            !hide.has("socials") && {
+              key: "socials",
+              // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
+              render: (props) => (
+                <Socials interval={cycleTime / 3} {...props} />
+              ),
+            },
+            !hide.has("event") && {
+              key: "event",
+              render: (props) => <Event {...props} />,
+            },
+          ],
           [hide],
         )}
         interval={cycleTime}
@@ -531,25 +530,24 @@ const OverlayPage: NextPage = () => {
 
       <Cycle
         items={useMemo(
-          () =>
-            [
-              !hide.has("disclaimer") &&
-                !disclaimer && {
-                  key: "disclaimer",
-                  render: ({ className, ref }: CycleItemProps) => (
-                    <Text
-                      className={classes("text-xl text-stroke", className)}
-                      ref={ref}
-                    >
-                      {disclaimerText}
-                    </Text>
-                  ),
-                },
-              !hide.has("subs") && {
-                key: "subs",
-                render: (props: CycleItemProps) => <Subs {...props} />,
+          () => [
+            !hide.has("disclaimer") &&
+              !disclaimer && {
+                key: "disclaimer",
+                render: ({ className, ref }) => (
+                  <Text
+                    className={classes("text-xl text-stroke", className)}
+                    ref={ref}
+                  >
+                    {disclaimerText}
+                  </Text>
+                ),
               },
-            ].filter((x) => !!x),
+            !hide.has("subs") && {
+              key: "subs",
+              render: (props) => <Subs {...props} />,
+            },
+          ],
           [hide, disclaimer],
         )}
         interval={cycleTime / 2}

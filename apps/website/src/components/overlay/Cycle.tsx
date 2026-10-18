@@ -25,12 +25,18 @@ const Cycle = ({
   className,
   interval = 60,
 }: {
-  items: CycleItem[];
+  // Items can be false, so they can be conditionally included inline
+  items: (CycleItem | false)[];
   className?: string;
   interval?: number;
 }) => {
+  const included = useMemo(
+    () => items.filter((item) => item !== false),
+    [items],
+  );
+
   const refs = useRef<(Element | null)[]>([]);
-  const count = items.length;
+  const count = included.length;
 
   const [index, setIndex] = useState(0);
   const next = useCallback(
@@ -74,7 +80,7 @@ const Cycle = ({
 
   const entries = useMemo(
     () =>
-      items.map(({ key, render }, idx) => ({
+      included.map(({ key, render }, idx) => ({
         key,
         render,
         // Whenever an item is (un)mounted, update the ref and check if we need to advance
@@ -87,7 +93,7 @@ const Cycle = ({
           }
         },
       })),
-    [items, next],
+    [included, next],
   );
 
   return entries.map(({ key, render, ref }, idx) => (
