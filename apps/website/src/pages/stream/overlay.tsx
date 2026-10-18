@@ -7,12 +7,9 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
-import { streamThemeOverrideSchema } from "@/data/stream-themes";
-
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { getToday } from "@/utils/datetime";
-import { type StreamTheme, getStreamThemes } from "@/utils/stream-themes";
 
 import useChat from "@/hooks/chat";
 import useLocalStorage from "@/hooks/storage";
@@ -68,6 +65,25 @@ const debug = [
   "bg-pink",
   "bg-gray",
 ];
+
+const themesMonthly = new Map(
+  Object.entries({
+    10: "halloween",
+    12: "christmas",
+  } as const),
+);
+
+const themesSchedule = [
+  { start: "2026-10-18", end: "2026-10-25", theme: "wolf-week" },
+] as const satisfies readonly { start: string; end: string; theme: string }[];
+
+const themesSchema = z.literal([
+  "default",
+  ...themesMonthly.values(),
+  ...themesSchedule.map(({ theme }) => theme),
+]);
+
+type StreamTheme = z.infer<typeof themesSchema>;
 
 type StreamBorder = StaticImageData | typeof border6camWolfWeek;
 
@@ -362,14 +378,25 @@ const OverlayPage: NextPage = () => {
   // Determine which border theme to use based on the current date and override
   const border = useMemo(() => {
     // Valid URL overrides take priority over the configured theme
-    const theme = streamThemeOverrideSchema
-      .optional()
-      .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME)
-      .parse(query.theme);
+    const schema = themesSchema.optional().catch(undefined);
+    const theme =
+      schema.parse(query.theme) ??
+      schema.parse(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME);
 
-    return getStreamThemes(date, theme)
-      .map((theme) => grid[layout].border?.[theme])
-      .find((source) => source !== undefined);
+    // Every bordered layout must have a default theme, so short-circuit then
+    if (theme === "default") return grid[layout].border?.default;
+
+    // Select the highest priority border theme that the layout supports
+    return [
+      theme,
+      date &&
+        themesSchedule.find(({ start, end }) => date >= start && date < end)
+          ?.theme,
+      date && themesMonthly.get(date.slice(5, 7)),
+      "default" as const,
+    ]
+      .map((theme) => theme && grid[layout].border?.[theme])
+      .find((source) => !!source);
   }, [date, layout, query.theme]);
 
   // Request fullscreen when the page is clicked
