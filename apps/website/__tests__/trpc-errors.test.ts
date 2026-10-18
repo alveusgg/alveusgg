@@ -1,10 +1,12 @@
+import { type inferRouterError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { type Context } from "@/server/trpc/context";
 import { publicProcedure, router } from "@/server/trpc/trpc";
-import { formatZodError } from "@/server/utils/zod-error";
+
+import { getProcedureErrorMessages } from "@/utils/trpc-errors";
 
 vi.mock("@/env", () => {
   return {
@@ -22,21 +24,26 @@ const schema = z.object({
 const getError = (input: unknown) => {
   const result = schema.safeParse(input);
   if (result.success) throw new Error("Expected input to be invalid");
-  return result.error;
+  return {
+    message: result.error.message,
+    data: { zodIssues: result.error.issues },
+  };
 };
 
 it("prefixes each issue with its field", () => {
   expect(
-    formatZodError(getError({ title: "", startAt: new Date(), links: [] })),
-  ).toBe("Title: Please enter a title");
-  expect(formatZodError(getError({ title: "Hi", links: [] }))).toMatch(
-    /^Start at: /,
-  );
+    getProcedureErrorMessages(
+      getError({ title: "", startAt: new Date(), links: [] }),
+    ),
+  ).toEqual(["Title: Please enter a title"]);
+  expect(
+    getProcedureErrorMessages(getError({ title: "Hi", links: [] })),
+  ).toEqual([expect.stringMatching(/^Start at: /)]);
 });
 
 it("uses the last named key of nested fields", () => {
   expect(
-    formatZodError(
+    getProcedureErrorMessages(
       getError({
         title: "Hi",
         startAt: new Date(),
@@ -44,27 +51,45 @@ it("uses the last named key of nested fields", () => {
         address: { addressLine1: "" },
       }),
     ),
-  ).toBe("Address line 1: Required");
+  ).toEqual(["Address line 1: Required"]);
 });
 
-it("puts every issue on its own line and drops duplicates", () => {
-  const message = formatZodError(
-    getError({ title: "", startAt: new Date(), links: ["a", "b"] }),
-  );
+it("drops duplicate display messages without changing the original issues", () => {
+  const error = getError({ title: "", startAt: new Date(), links: ["a", "b"] });
+  const original = structuredClone(error);
 
-  expect(message.split("\n")).toEqual([
+  expect(getProcedureErrorMessages(error)).toEqual([
     "Title: Please enter a title",
     "Links: Invalid URL",
+  ]);
+  expect(error).toEqual(original);
+  expect(error.data.zodIssues.map(({ path }) => path)).toEqual([
+    ["title"],
+    ["links", 0],
+    ["links", 1],
   ]);
 });
 
 it("keeps issues without a field as they are", () => {
-  expect(formatZodError(getError("not an object"))).toBe(
+  expect(getProcedureErrorMessages(getError("not an object"))).toEqual([
     "Invalid input: expected object, received string",
-  );
+  ]);
 });
 
-it("is used for input errors of tRPC procedures", async () => {
+it("keeps the original message when there are no validation issues", () => {
+  const message = "Something broke\nPlease try again";
+  for (const data of [
+    undefined,
+    null,
+    {},
+    { zodIssues: null },
+    { zodIssues: [] },
+  ]) {
+    expect(getProcedureErrorMessages({ message, data })).toEqual([message]);
+  }
+});
+
+it("preserves raw input errors over HTTP and supplies issues for client formatting", async () => {
   const testRouter = router({
     submit: publicProcedure.input(schema).query(() => "ok"),
     fail: publicProcedure.query(() => {
@@ -83,12 +108,27 @@ it("is used for input errors of tRPC procedures", async () => {
       router: testRouter,
       createContext: () => ({}) as Context,
     });
-    return ((await res.json()) as { error: { json: { message: string } } })
-      .error.json.message;
+    return (
+      (await res.json()) as {
+        error: { json: inferRouterError<typeof testRouter> };
+      }
+    ).error.json;
   };
 
-  expect(await call("submit", { title: "", links: [] })).toBe(
-    formatZodError(getError({ title: "", links: [] })),
-  );
-  expect(await call("fail", undefined)).toBe("Something broke");
+  const input = { title: "", links: ["a", "b"], address: { addressLine1: "" } };
+  const expected = getError(input);
+  const error = await call("submit", input);
+  expect(error.message).toBe(expected.message);
+  expect(error.data.zodIssues).toEqual(expected.data.zodIssues);
+  expect(getProcedureErrorMessages(error)).toEqual([
+    "Title: Please enter a title",
+    expect.stringMatching(/^Start at: /),
+    "Links: Invalid URL",
+    "Address line 1: Required",
+  ]);
+
+  const failure = await call("fail", undefined);
+  expect(failure.message).toBe("Something broke");
+  expect(failure.data.zodIssues).toBeNull();
+  expect(getProcedureErrorMessages(failure)).toEqual(["Something broke"]);
 });

@@ -1,19 +1,23 @@
+import {
+  type ProcedureError,
+  getProcedureErrorMessages,
+} from "@/utils/trpc-errors";
+
 type ProcedureErrorMessageProps = {
-  error: { message: string };
+  error: ProcedureError;
 };
 
 /**
- * Shows the message of a failed tRPC procedure. Input validation errors come
- * with one line per issue (see the error formatter), which we show as a list.
+ * Show readable validation issues while keeping the raw tRPC error available.
  */
 export function ProcedureErrorMessage({ error }: ProcedureErrorMessageProps) {
-  const lines = error.message.split("\n");
-  if (lines.length < 2) return error.message;
+  const messages = getProcedureErrorMessages(error);
+  if (messages.length < 2) return messages[0];
 
   return (
     <ul className="list-disc pl-5">
-      {lines.map((line, index) => (
-        <li key={index}>{line}</li>
+      {messages.map((message) => (
+        <li key={message}>{message}</li>
       ))}
     </ul>
   );
