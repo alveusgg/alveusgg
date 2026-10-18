@@ -13,6 +13,8 @@ const allRoles = [
   "ptzControl",
   "roundsChecks",
   "donations",
+  "census_admin",
+  "census_moderator",
 ];
 
 type SeedUser = {
