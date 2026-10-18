@@ -114,8 +114,6 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
     SENTRY_DSN: z.url().optional(),
-    SENTRY_RELEASE: z.string().optional(),
-    SENTRY_ENVIRONMENT: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -225,8 +223,6 @@ export const env = createEnv({
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
-    SENTRY_RELEASE: process.env.SENTRY_RELEASE,
-    SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,

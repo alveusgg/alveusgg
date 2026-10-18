@@ -68,9 +68,6 @@ export function getSentryConfig(): Sentry.NodeOptions {
   return {
     dsn: env.SENTRY_DSN,
     integrations: [sourceMapFramesIntegration],
-    environment:
-      env.SENTRY_ENVIRONMENT || process.env.VERCEL_ENV || env.NODE_ENV,
-    release: env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA,
     dataCollection: {
       userInfo: false,
       cookies: false,
