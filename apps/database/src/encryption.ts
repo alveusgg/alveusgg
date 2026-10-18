@@ -40,7 +40,7 @@ export type DecryptOptions = {
 
 export type FieldEncryptionOptions = {
   /** Comma-separated list of `<key id>:<base64 32-byte key>`, the first key is used to encrypt */
-  keys: string;
+  keys: string | undefined;
   /** Base64 32-byte key for blind indexes, only needed to create blind indexes */
   blindIndexKey?: string;
 };
@@ -57,7 +57,7 @@ function decodeKey(key: string, name: string) {
  * Parse a keyring definition (`<key id>:<base64 key>,...`), the first key is the active one.
  * Error messages never include key material.
  */
-export function parseKeyring(keys: string) {
+function parseKeyring(keys: string) {
   const entries = keys
     .split(",")
     .map((entry) => entry.trim())
@@ -98,13 +98,6 @@ function getAdditionalData(keyId: string, { model, field }: EncryptionContext) {
 export function isEncrypted(value: string) {
   return ENCRYPTED_PREFIX_PATTERN.test(value);
 }
-
-/** Normalize an email address before creating a blind index for it */
-export function normalizeEmail(email: string) {
-  return email.trim().toLowerCase();
-}
-
-export type FieldEncryption = ReturnType<typeof createFieldEncryption>;
 
 /**
  * Create the encryption helpers for a keyring. The configuration is parsed lazily on first use,
@@ -233,9 +226,8 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
   }
 
   /**
-   * Keyed hash of a (normalized) value, to look up encrypted values without decrypting them.
-   * The purpose separates hashes of different kinds of values, use the same purpose for values
-   * that should match across tables (e.g. `email`).
+   * Keyed hash of a normalized value, to look up encrypted values without decrypting them.
+   * The purpose keeps hashes of different kinds of values apart.
    */
   async function blindIndex(purpose: string, value: string) {
     const signature = await crypto.subtle.sign(
@@ -246,9 +238,9 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     return Buffer.from(signature).toString("base64url");
   }
 
-  /** Blind index of an email address, shared by all tables that store emails */
+  /** Blind index of an email address, the same in every table that stores emails */
   function blindIndexEmail(email: string) {
-    return blindIndex("email", normalizeEmail(email));
+    return blindIndex("email", email.trim().toLowerCase());
   }
 
   return {
@@ -257,11 +249,6 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     encryptOptional,
     decryptOptional,
     needsReencryption,
-    blindIndex,
     blindIndexEmail,
-    isEncrypted,
-    get activeKeyId() {
-      return getKeyring().activeKeyId;
-    },
   };
 }
