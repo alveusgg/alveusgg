@@ -7,6 +7,7 @@ import {
   type ImageAttachment,
   type ImageMetadata,
   type LinkAttachment,
+  Prisma,
   type ShowAndTellEntry$attachmentsArgs,
   type ShowAndTellEntryAttachment,
   type ShowAndTellEntryAttachmentCreateWithoutEntryInput,
@@ -14,7 +15,11 @@ import {
   prisma,
 } from "@alveusgg/database";
 
-import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import {
+  type CheckedUploadedImage,
+  checkUploadedImage,
+  markImageFileStorageObjectUploaded,
+} from "@/server/utils/file-storage";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
 import {
@@ -27,6 +32,8 @@ import {
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
+
+export const uploadPrefix = "show-and-tell/";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
   fileStorageObject:
@@ -147,6 +154,18 @@ const attachmentSchema = z.union([
   videoSchema,
 ]);
 
+type AttachmentInput = z.infer<typeof attachmentSchema>;
+type NewImageInput = z.infer<typeof imageNewSchema>;
+type ExistingImageInput = z.infer<typeof imageExistingSchema>;
+
+const isNewImage = (attachment: AttachmentInput): attachment is NewImageInput =>
+  attachment.type === "image" && !("id" in attachment);
+
+const isExistingImage = (
+  attachment: AttachmentInput,
+): attachment is ExistingImageInput =>
+  attachment.type === "image" && "id" in attachment;
+
 const attachmentsSchema = z
   .array(attachmentSchema)
   .refine(
@@ -231,45 +250,96 @@ function createVideoAttachment({
   } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
 }
 
-async function createOrUpdateImageAttachment({
-  type: _,
-  ...attachment
-}: z.infer<typeof imageNewSchema> | z.infer<typeof imageExistingSchema>) {
-  if ("id" in attachment) {
-    const { id, ...attachmentData } = attachment;
+const uploadError = (message: string, cause?: unknown) =>
+  new TRPCError({
+    code: "BAD_REQUEST",
+    message: `Error uploading file: ${message}`,
+    cause,
+  });
 
-    await prisma.imageAttachment.update({
-      where: { id },
-      data: attachmentData,
-    });
+const uploadInUseMessage = "Image is already in use, please upload it again";
 
-    return {
-      attachmentType: "image",
-      imageAttachment: { connect: { id } },
-    } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
+// Check all new images before anything is saved, so a rejected image can't
+// leave the other images of the submission behind
+async function checkNewImageUploads(attachments: AttachmentInput[]) {
+  const ids = attachments
+    .filter(isNewImage)
+    .map(({ fileStorageObjectId }) => fileStorageObjectId);
+  if (new Set(ids).size !== ids.length) {
+    throw uploadError("The same image was added more than once");
   }
 
-  const { error, metaData } = await checkAndFixUploadedImageFileStorageObject(
-    attachment.fileStorageObjectId,
+  const uploads = ids.length
+    ? await prisma.fileStorageObject.findMany({
+        where: { id: { in: ids }, prefix: uploadPrefix },
+        include: {
+          imageMetadata: true,
+          imageAttachment: { select: { id: true } },
+        },
+      })
+    : [];
+  if (uploads.length !== ids.length) {
+    throw uploadError("Upload not found");
+  }
+  if (uploads.some((upload) => upload.imageAttachment)) {
+    throw uploadError(uploadInUseMessage);
+  }
+
+  const images = await Promise.all(
+    uploads.map((upload) => checkUploadedImage(upload)),
   );
 
-  if (error || !metaData) {
+  return new Map(
+    images.map((image) => {
+      if (image.error !== undefined) {
+        throw uploadError(image.error);
+      }
+
+      return [image.fileStorageObject.id, image];
+    }),
+  );
+}
+
+// An upload can still be attached by a concurrent submission after it was
+// checked, which fails the transaction
+function throwSaveError(err: unknown): never {
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError &&
+    (err.code === "P2002" || err.code === "P2014")
+  ) {
+    throw uploadError(uploadInUseMessage, err);
+  }
+  throw err;
+}
+
+function createAttachment(
+  attachment: AttachmentInput,
+  images: Map<string, CheckedUploadedImage>,
+) {
+  if (attachment.type === "video") {
+    return createVideoAttachment(attachment);
+  }
+
+  if (!isNewImage(attachment)) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: `Error uploading file: ${error}`,
+      message: "Existing image attachments cannot be created.",
     });
   }
 
-  const imageAttachment = await prisma.imageAttachment.create({
-    data: {
-      ...attachment,
-      url: metaData.url,
-    },
-  });
+  const { type: _, fileStorageObjectId, ...data } = attachment;
+  const image = images.get(fileStorageObjectId);
+  if (!image) throw new Error("Image upload has not been checked");
 
   return {
     attachmentType: "image",
-    imageAttachment: { connect: { id: imageAttachment.id } },
+    imageAttachment: {
+      create: {
+        ...data,
+        url: image.metaData.url,
+        fileStorageObject: { connect: { id: fileStorageObjectId } },
+      },
+    },
   } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
 }
 
@@ -281,32 +351,23 @@ export async function createPost(
 ) {
   const text = sanitizeUserHtml(input.text);
 
-  const processedAttachments = await Promise.all(
-    input.attachments.map((attachment) => {
-      if (attachment.type === "image") {
-        if ("id" in attachment) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message:
-              "Existing image attachments cannot be used when creating a post.",
-          });
-        }
+  if (input.attachments.some(isExistingImage)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message:
+        "Existing image attachments cannot be used when creating a post.",
+    });
+  }
 
-        return createOrUpdateImageAttachment(attachment);
-      }
+  const images = await checkNewImageUploads(input.attachments);
 
-      if (attachment.type === "video") {
-        return createVideoAttachment(attachment);
-      }
+  const processedAttachments = input.attachments.map((attachment, order) => ({
+    ...createAttachment(attachment, images),
+    order,
+  }));
 
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Unknown attachment type",
-      });
-    }),
-  ).then((results) => results.map((res, idx) => ({ ...res, order: idx })));
-
-  const result = await prisma.showAndTellEntry.create({
+  // Prisma queries only run once awaited, so this runs as part of the transaction
+  const createEntry = prisma.showAndTellEntry.create({
     data: {
       ...(importAt
         ? {
@@ -328,6 +389,13 @@ export async function createPost(
       dominantColor: input.dominantColor,
     },
   });
+
+  const [result] = await prisma
+    .$transaction([
+      createEntry,
+      ...[...images.values()].flatMap(markImageFileStorageObjectUploaded),
+    ])
+    .catch(throwSaveError);
   revalidateCache(res);
   return result;
 }
@@ -485,33 +553,30 @@ export async function updatePost(
       .filter((id) => id !== null),
   );
 
+  // Existing images are kept and updated, all other attachments are (re-)created
+  const existingImages = input.attachments.flatMap((attachment, order) =>
+    isExistingImage(attachment) ? [{ attachment, order }] : [],
+  );
+
   // Check that the only existing image attachments that are connected to the entry are updated
-  const processedAttachments = await Promise.all(
-    input.attachments.map((attachment) => {
-      if (attachment.type === "image") {
-        if ("id" in attachment) {
-          if (!existingEntryImageAttachmentIds.has(attachment.id)) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message:
-                "Tried to update attachment that is not connected to the entry.",
-            });
-          }
-        }
+  if (
+    existingImages.some(
+      ({ attachment }) => !existingEntryImageAttachmentIds.has(attachment.id),
+    )
+  ) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Tried to update attachment that is not connected to the entry.",
+    });
+  }
 
-        return createOrUpdateImageAttachment(attachment);
-      }
+  const images = await checkNewImageUploads(input.attachments);
 
-      if (attachment.type === "video") {
-        return createVideoAttachment(attachment);
-      }
-
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Unknown attachment type",
-      });
-    }),
-  ).then((results) => results.map((res, idx) => ({ ...res, order: idx })));
+  const newAttachments = input.attachments.flatMap((attachment, order) =>
+    isExistingImage(attachment)
+      ? []
+      : [{ ...createAttachment(attachment, images), order }],
+  );
 
   const text = sanitizeUserHtml(input.text);
   const notePrivate =
@@ -527,7 +592,7 @@ export async function updatePost(
   const wasApproved = getEntityStatus(existingEntry) === "approved";
 
   // TODO: Webhook? Notify mods?
-  await prisma.showAndTellEntry.update({
+  const updateEntry = prisma.showAndTellEntry.update({
     where: {
       id: input.id,
     },
@@ -548,31 +613,18 @@ export async function updatePost(
             {
               attachmentType: "image",
               imageAttachmentId: {
-                notIn: processedAttachments
-                  .filter((att) => att.attachmentType === "image")
-                  .map((att) => att.imageAttachment.connect.id),
+                notIn: existingImages.map(({ attachment }) => attachment.id),
               },
             },
           ],
         },
         // Create any new attachments (all videos and new images)
-        create: processedAttachments.filter(
-          (att) =>
-            att.attachmentType !== "image" ||
-            !existingEntryImageAttachmentIds.has(
-              att.imageAttachment.connect.id,
-            ),
-        ),
+        create: newAttachments,
         // Ensure existing images have the correct order applied
-        updateMany: processedAttachments
-          .filter((att) => att.attachmentType === "image")
-          .filter((att) =>
-            existingEntryImageAttachmentIds.has(att.imageAttachment.connect.id),
-          )
-          .map((att) => ({
-            where: { imageAttachmentId: att.imageAttachment.connect.id },
-            data: { order: att.order },
-          })),
+        updateMany: existingImages.map(({ attachment, order }) => ({
+          where: { imageAttachmentId: attachment.id },
+          data: { order },
+        })),
       },
       location: input.location,
       longitude: input.longitude,
@@ -582,6 +634,16 @@ export async function updatePost(
       dominantColor: input.dominantColor,
     },
   });
+
+  await prisma
+    .$transaction([
+      ...existingImages.map(({ attachment: { type: _, id, ...data } }) =>
+        prisma.imageAttachment.update({ where: { id }, data }),
+      ),
+      updateEntry,
+      ...[...images.values()].flatMap(markImageFileStorageObjectUploaded),
+    ])
+    .catch(throwSaveError);
   revalidateCache(res);
 }
 

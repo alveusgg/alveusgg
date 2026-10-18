@@ -15,6 +15,7 @@ import {
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
+  uploadPrefix,
 } from "@/server/db/show-and-tell";
 import {
   protectedProcedure,
@@ -29,8 +30,6 @@ import {
 import { imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { extractInfoFromMapFeatures } from "@/utils/locations";
-
-const uploadPrefix = "show-and-tell/";
 
 const entriesPerPage = 10;
 

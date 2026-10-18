@@ -8,7 +8,11 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createId } from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
 
-import { prisma } from "@alveusgg/database";
+import {
+  type FileStorageObject,
+  type ImageMetadata,
+  prisma,
+} from "@alveusgg/database";
 
 import { env } from "@/env";
 
@@ -130,51 +134,79 @@ export async function createFileStorageUpload({
   };
 }
 
-export async function checkAndFixUploadedImageFileStorageObject(id: string) {
-  const data = await prisma.fileStorageObject.findUniqueOrThrow({
-    where: { id },
-    include: { imageMetadata: true },
-  });
+type FileStorageObjectWithImageMetadata = FileStorageObject & {
+  imageMetadata: ImageMetadata | null;
+};
+
+export type CheckedUploadedImage = {
+  fileStorageObject: FileStorageObjectWithImageMetadata;
+  metaData: Exclude<Awaited<ReturnType<typeof probeImageMeta>>, false>;
+};
+
+// Check an upload before using it. This doesn't mark it as uploaded, so it can
+// run before the transaction that uses it. The only write is deleting an upload
+// that isn't a valid image.
+export async function checkUploadedImage(
+  fileStorageObject: FileStorageObjectWithImageMetadata,
+) {
   if (
-    data.deletedAt !== null ||
-    (data.expiresAt && data.expiresAt < new Date())
+    fileStorageObject.deletedAt !== null ||
+    (fileStorageObject.expiresAt && fileStorageObject.expiresAt < new Date())
   ) {
     return { error: "Upload has expired" };
   }
 
-  const url = String(getViewUrlForFileStorageObjectKey(data.key));
+  const url = String(getViewUrlForFileStorageObjectKey(fileStorageObject.key));
   const metaData = await probeImageMeta(url);
 
-  if (!metaData || metaData.mimeType !== data.type) {
-    await deleteFileStorageObject(data.id);
+  if (!metaData || metaData.mimeType !== fileStorageObject.type) {
+    await deleteFileStorageObject(fileStorageObject.id);
     return { error: "Invalid image" };
   }
 
-  const tasks = [];
-  tasks.push(
+  return { fileStorageObject, metaData };
+}
+
+// Returns the queries without running them, so they can be part of a transaction
+export function markImageFileStorageObjectUploaded({
+  fileStorageObject,
+  metaData,
+}: CheckedUploadedImage) {
+  return [
     prisma.fileStorageObject.update({
-      where: { id },
+      where: { id: fileStorageObject.id },
       data: {
         uploadedAt: new Date(),
         expiresAt: null,
       },
     }),
-  );
+    ...(fileStorageObject.imageMetadata
+      ? []
+      : [
+          prisma.imageMetadata.create({
+            data: {
+              fileStorageObjectId: fileStorageObject.id,
+              mimeType: metaData.mimeType,
+              width: metaData.width,
+              height: metaData.height,
+            },
+          }),
+        ]),
+  ];
+}
 
-  if (!data.imageMetadata) {
-    tasks.push(
-      prisma.imageMetadata.create({
-        data: {
-          fileStorageObjectId: id,
-          mimeType: metaData.mimeType,
-          width: metaData.width,
-          height: metaData.height,
-        },
-      }),
-    );
+export async function checkAndFixUploadedImageFileStorageObject(id: string) {
+  const data = await prisma.fileStorageObject.findUniqueOrThrow({
+    where: { id },
+    include: { imageMetadata: true },
+  });
+
+  const image = await checkUploadedImage(data);
+  if (image.error !== undefined) {
+    return { error: image.error };
   }
 
-  await Promise.allSettled(tasks);
+  await Promise.allSettled(markImageFileStorageObjectUploaded(image));
 
-  return { success: true, metaData };
+  return { success: true, metaData: image.metaData };
 }
