@@ -4,6 +4,8 @@ import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { trpc } from "@/utils/trpc";
 
+import { DashboardQueryError } from "@/components/admin/dashboard/DashboardQueryError";
+
 import IconBox from "@/icons/IconBox";
 import IconCalendar from "@/icons/IconCalendar";
 import IconExternal from "@/icons/IconExternal";
@@ -16,7 +18,7 @@ const nf = new Intl.NumberFormat();
 
 export function DashboardOverviewStats() {
   const stats = trpc.adminDashboard.getOverviewStats.useQuery(undefined, {
-    refetchInterval: 60_000, // Refresh every 60 seconds
+    refetchInterval: 5 * 60_000, // Refresh every 5 minutes
     staleTime: 30_000, // Consider data fresh for 30 seconds
     refetchOnWindowFocus: false, // Don't refetch when tab becomes active
   });
@@ -26,15 +28,24 @@ export function DashboardOverviewStats() {
   const isSuperUser = session?.user?.isSuperUser || false;
 
   if (!stats.data) {
+    if (stats.isError) {
+      return (
+        <DashboardQueryError
+          section="overview statistics"
+          retry={() => void stats.refetch()}
+        />
+      );
+    }
+
     return (
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
             className="animate-pulse rounded-xl border border-gray-700 bg-gray-800 p-4"
           >
-            <div className="h-8 w-20 rounded bg-gray-700"></div>
-            <div className="mt-2 h-4 w-24 rounded bg-gray-700"></div>
+            <div className="h-8 w-20 rounded-sm bg-gray-700"></div>
+            <div className="mt-2 h-4 w-24 rounded-sm bg-gray-700"></div>
           </div>
         ))}
       </div>
@@ -101,7 +112,7 @@ export function DashboardOverviewStats() {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {cards
         .filter(
           (card) =>
@@ -118,7 +129,7 @@ export function DashboardOverviewStats() {
                 <strong className="block text-3xl">
                   {nf.format(card.value!)}
                 </strong>
-                <Icon className="h-8 w-8" />
+                <Icon className="size-8" />
               </div>
               <p className="mt-1 text-sm opacity-90">{card.label}</p>
             </div>

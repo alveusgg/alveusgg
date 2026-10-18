@@ -96,7 +96,7 @@
     "react-stately": "^3.51.0",
     "react-textarea-autosize": "^8.5.9",
     "react-to-text": "^2.0.1",
-    "recharts": "^3.3.0",
+    "recharts": "^3.10.1",
     "remark-heading-id": "^1.0.1",
     "schema-dts": "^2.1.0",
     "slugify": "^1.6.9",

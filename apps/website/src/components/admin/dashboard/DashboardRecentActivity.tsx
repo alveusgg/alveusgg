@@ -2,7 +2,10 @@ import Link from "next/link";
 
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
+import { getEntityStatus } from "@/utils/entity-helpers";
 import { trpc } from "@/utils/trpc";
+
+import { DashboardQueryError } from "@/components/admin/dashboard/DashboardQueryError";
 
 const formatRelativeTime = (date: Date) => {
   const now = new Date();
@@ -19,7 +22,7 @@ const formatRelativeTime = (date: Date) => {
 
 export function DashboardRecentActivity() {
   const activity = trpc.adminDashboard.getRecentActivity.useQuery(undefined, {
-    refetchInterval: 45_000, // Refresh every 45 seconds (reduced frequency)
+    refetchInterval: 5 * 60_000, // Refresh every 5 minutes
     staleTime: 30_000, // Consider data fresh for 30 seconds
     refetchOnWindowFocus: false, // Don't refetch when tab becomes active
   });
@@ -35,22 +38,31 @@ export function DashboardRecentActivity() {
     isSuperUser ||
     checkRolesGivePermission(userRoles, permissions.manageNotifications);
 
-  if (!activity.data) {
-    return <p className="text-gray-400">Loading recent activity...</p>;
-  }
-
   // Don't show anything if user can't view either section
   if (!canViewShowAndTell && !canViewNotifications) {
     return null;
   }
 
+  if (!activity.data) {
+    if (activity.isError) {
+      return (
+        <DashboardQueryError
+          section="recent activity"
+          retry={() => void activity.refetch()}
+        />
+      );
+    }
+
+    return <p className="text-gray-400">Loading recent activity...</p>;
+  }
+
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* Recent Show & Tell */}
       {canViewShowAndTell && (
         <div className="rounded-xl border border-gray-700 bg-gray-800 p-4">
           <h3 className="mb-3 flex items-center gap-2 font-semibold">
-            <span>📸</span> Recent Show & Tell
+            <span aria-hidden="true">📸</span> Recent Show & Tell
           </h3>
           {activity.data.recentShowAndTell.length === 0 ? (
             <p className="text-sm text-gray-400">No recent posts</p>
@@ -63,19 +75,22 @@ export function DashboardRecentActivity() {
                 >
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/admin/show-and-tell`}
-                      className="truncate font-medium text-blue-300 hover:text-blue-200"
+                      href={`/admin/show-and-tell/review/${post.id}`}
+                      className="block truncate font-medium text-blue-300 hover:text-blue-200"
                     >
                       {post.title}
                     </Link>
                     <p className="text-xs text-gray-400">
                       by {post.user?.name || "Anonymous"}
-                      {post.approvedAt && (
-                        <span className="ml-1 text-green-400">✓</span>
+                      {getEntityStatus(post) === "approved" && (
+                        <span className="ml-1 text-green-400">
+                          <span aria-hidden="true">✓</span>
+                          <span className="sr-only">approved</span>
+                        </span>
                       )}
                     </p>
                   </div>
-                  <span className="text-xs whitespace-nowrap text-gray-500">
+                  <span className="text-xs whitespace-nowrap text-gray-400">
                     {formatRelativeTime(post.createdAt)}
                   </span>
                 </li>
@@ -89,7 +104,7 @@ export function DashboardRecentActivity() {
       {canViewNotifications && (
         <div className="rounded-xl border border-gray-700 bg-gray-800 p-4">
           <h3 className="mb-3 flex items-center gap-2 font-semibold">
-            <span>🔔</span> Recent Notifications
+            <span aria-hidden="true">🔔</span> Recent Notifications
           </h3>
           {activity.data.recentNotifications.length === 0 ? (
             <p className="text-sm text-gray-400">No recent notifications</p>
@@ -103,16 +118,24 @@ export function DashboardRecentActivity() {
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/admin/notifications`}
-                      className="truncate font-medium text-blue-300 hover:text-blue-200"
+                      className="block truncate font-medium text-blue-300 hover:text-blue-200"
                     >
                       {notification.title || notification.message}
                     </Link>
                     <p className="text-xs text-gray-400">
-                      {notification.isPush && "📱"}
-                      {notification.isDiscord && "💬"}
+                      {notification.isPush && (
+                        <span role="img" aria-label="Push">
+                          📱
+                        </span>
+                      )}
+                      {notification.isDiscord && (
+                        <span role="img" aria-label="Discord">
+                          💬
+                        </span>
+                      )}
                     </p>
                   </div>
-                  <span className="text-xs whitespace-nowrap text-gray-500">
+                  <span className="text-xs whitespace-nowrap text-gray-400">
                     {formatRelativeTime(notification.createdAt)}
                   </span>
                 </li>
