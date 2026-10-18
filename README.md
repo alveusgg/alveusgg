@@ -178,19 +178,17 @@ We use Base64-encoded random strings for various secrets. To generate these secr
 
 ### Data encryption keys
 
-Personal data and secrets (e.g. OAuth tokens) are encrypted in the database with the keys in `DATA_ENCRYPTION_KEYS`, a comma-separated list of `<key id>:<base64 key>`. Key ids may contain `a-z` and `0-9`. The first key encrypts new values, every key in the list can decrypt. The chatbot reads some of these values too, so it needs the same keys.
+`DATA_ENCRYPTION_KEYS` holds the keys for encrypting personal data and secrets (e.g. OAuth tokens) in the database: a comma-separated list of `<key id>:<base64 key>`. Key ids may contain `a-z` and `0-9`. The first key encrypts new values, every key in the list can decrypt.
 
 To rotate a key:
 
-1. Add the new key at the end of the list everywhere it is used (website and chatbot), e.g. `k1:<old>,k2:<new>`, and deploy.
+1. Add the new key at the end of the list everywhere the keys are set, e.g. `k1:<old>,k2:<new>`, and deploy. This way everything that's running can decrypt `k2` values before the first one is written.
 2. Move the new key to the front, e.g. `k2:<new>,k1:<old>`, and deploy. New values are now encrypted with `k2`.
 3. Re-encrypt the existing values, then remove the old key.
 
 `DATA_BLIND_INDEX_KEY` is used for keyed hashes that let us look up encrypted values (e.g. email addresses) without decrypting them. Changing it means recomputing every stored hash, so it is not rotated with the encryption keys.
 
 Keep a copy of every key outside of the deployment environment (e.g. in the team's password manager): data encrypted with a lost key can't be recovered.
-
-The shared helpers reserve values starting with `v<number>.` for encrypted data, including malformed values and unsupported versions. `allowPlaintext` never bypasses this check. If an existing plaintext value has that prefix (e.g. `v2.k1.john@example.com`), migrate it by passing the known plaintext directly to `encrypt`. `isEncrypted` and `needsReencryption` inspect the format only; use `decrypt` to authenticate a value before trusting it.
 
 ### Weather API
 

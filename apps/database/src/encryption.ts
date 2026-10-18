@@ -4,7 +4,8 @@
  * Values are encrypted with AES-256-GCM and stored as `v2.<key id>.<base64url(iv | ciphertext | tag)>`.
  * - The key id allows rotating keys: the first key of the keyring encrypts, every key can decrypt.
  * - The model and field are bound to the ciphertext as additional authenticated data, so an
- *   encrypted value can't be moved to another column (e.g. given name <-> family name).
+ *   encrypted value can't be moved to another column (e.g. given name <-> family name). It isn't
+ *   bound to its row, so values can still be swapped between rows of the same column.
  *
  * Blind indexes are keyed hashes (HMAC-SHA-256) of normalized values. They let us look up or
  * enforce uniqueness on encrypted values (e.g. emails) without storing them in plain text.
