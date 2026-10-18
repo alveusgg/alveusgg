@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@alveusgg/database": "workspace:*",
+    "@sentry/node": "^11.8.0",
     "@t3-oss/env-core": "^0.13.11",
     "@twurple/api": "^8.0.3",
     "@twurple/auth": "^8.2.0",
@@ -31,11 +32,13 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.17.1",
-    "typescript-eslint": "^8.71.1"
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3"
   },
   "scripts": {
-    "start": "tsx --env-file=.env src/server.ts",
+    "start": "tsx --env-file=.env --import ./src/instrument.ts src/server.ts",
     "lint": "eslint . --max-warnings 0",
-    "types": "tsc --noEmit"
+    "types": "tsc --noEmit",
+    "test": "vitest"
   }
 }
