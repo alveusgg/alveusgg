@@ -71,7 +71,7 @@ export const AdminPageLayout = ({
             </ul>
           </nav>
 
-          <div className="flex-1 p-4">
+          <div className="min-w-0 flex-1 p-4">
             <div>{children}</div>
           </div>
         </div>

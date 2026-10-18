@@ -6,7 +6,10 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Panel } from "@/components/admin/Panel";
+import { Headline } from "@/components/admin/Headline";
+import { DashboardOverviewStats } from "@/components/admin/dashboard/DashboardOverviewStats";
+import { DashboardRecentActivity } from "@/components/admin/dashboard/DashboardRecentActivity";
+import { DashboardTrendCharts } from "@/components/admin/dashboard/DashboardTrendCharts";
 import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -29,10 +32,27 @@ const AdminDashboardPage: NextPage<
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Admin" />
+      <Meta title="Admin Dashboard" />
 
       <AdminPageLayout title="Dashboard" menuItems={menuItems}>
-        <Panel>TODO: Add something useful here</Panel>
+        <div className="space-y-6">
+          {/* Overview Statistics */}
+          <section>
+            <Headline>Overview</Headline>
+            <DashboardOverviewStats />
+          </section>
+
+          {/* Trend Charts */}
+          <section>
+            <DashboardTrendCharts />
+          </section>
+
+          {/* Recent Activity */}
+          <section>
+            <Headline>Recent Activity</Headline>
+            <DashboardRecentActivity />
+          </section>
+        </div>
       </AdminPageLayout>
     </>
   );
