@@ -70,7 +70,7 @@ export function QRCode({
   children,
   value,
   ...attributes
-}: { value: string } & React.SVGAttributes<SVGSVGElement>) {
+}: { value: string } & React.SVGProps<SVGSVGElement>) {
   const { length, path } = useMemo(() => {
     const modules = QrCode.encodeText(value).getModules();
     return {
