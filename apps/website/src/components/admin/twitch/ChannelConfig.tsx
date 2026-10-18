@@ -152,7 +152,7 @@ function ChannelConfigRow({
 }
 
 export function ChannelConfig() {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   const channels = trpc.adminTwitch.getChannels.useQuery();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

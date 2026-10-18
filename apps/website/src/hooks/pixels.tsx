@@ -313,9 +313,7 @@ export const PixelProvider = ({
   }, [sync]);
 
   return (
-    <PixelSyncProviderContext.Provider value={sync}>
-      {children}
-    </PixelSyncProviderContext.Provider>
+    <PixelSyncProviderContext value={sync}>{children}</PixelSyncProviderContext>
   );
 };
 
