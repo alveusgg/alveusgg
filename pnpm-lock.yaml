@@ -59,8 +59,8 @@ importers:
         version: 4.6.5
     devDependencies:
       '@eslint/js':
-        specifier: ^9.39.2
-        version: 9.39.2
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.12.0)
       '@types/luxon':
         specifier: ^3.7.6
         version: 3.7.6
@@ -112,8 +112,8 @@ importers:
         version: 4.6.5
     devDependencies:
       '@eslint/js':
-        specifier: ^9.39.2
-        version: 9.39.2
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.12.0)
       '@types/node':
         specifier: ^24.19.1
         version: 24.19.1
@@ -149,8 +149,8 @@ importers:
         version: 4.6.5
     devDependencies:
       '@eslint/js':
-        specifier: ^9.39.2
-        version: 9.39.2
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.12.0)
       '@types/luxon':
         specifier: ^3.7.6
         version: 3.7.6
@@ -213,8 +213,8 @@ importers:
         version: 4.6.5
     devDependencies:
       '@eslint/js':
-        specifier: ^9.39.2
-        version: 9.39.2
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.12.0)
       '@types/node':
         specifier: ^24.19.1
         version: 24.19.1
@@ -1349,10 +1349,6 @@ packages:
     peerDependenciesMeta:
       eslint:
         optional: true
-
-  '@eslint/js@9.39.2':
-    resolution: {integrity: sha512-q1mjIoW1VX4IvSocvM/vbTiveKC4k9eLrajNEuSsmjymSDEbpGddtpfOoN7YGAqBK3NG+uqo8ia4PDTt8buCYA==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@3.0.5':
     resolution: {integrity: sha512-vqTaUEgxzm+YDSdElad6PiRoX4t8VGDjCtt05zn4nU810UIx/uNEV7/lZJ6KwFThKZOzOxzXy48da+No7HZaMw==}
@@ -7112,8 +7108,6 @@ snapshots:
   '@eslint/js@10.0.1(eslint@10.12.0)':
     optionalDependencies:
       eslint: 10.12.0(jiti@2.7.0)(supports-color@10.2.2)
-
-  '@eslint/js@9.39.2': {}
 
   '@eslint/object-schema@3.0.5': {}
 
