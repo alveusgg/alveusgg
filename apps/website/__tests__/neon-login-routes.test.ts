@@ -1,0 +1,169 @@
+import { NextRequest } from "next/server";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+
+import {
+  createNeonOAuthState,
+  getNeonDonorSession,
+} from "@/server/utils/neon-donor-session";
+
+import { GET as callback } from "@/app/api/neon/callback/route";
+import { GET as login } from "@/app/api/neon/login/route";
+import { POST as logout } from "@/app/api/neon/logout/route";
+
+const { mockEnv } = vi.hoisted(() => ({
+  mockEnv: {
+    DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",
+    NEXT_PUBLIC_BASE_URL: "http://127.0.0.1:3000",
+    NEON_CRM_ORG_ID: "alveustest",
+    NEON_OAUTH_CLIENT_ID: "client-id" as string | undefined,
+    NEON_OAUTH_CLIENT_SECRET: "client-secret",
+  },
+}));
+
+vi.mock("@/env", () => ({ env: mockEnv }));
+
+const base = "http://127.0.0.1:3000";
+const stateCookieName = "alveus.neon-oauth-state";
+const sessionCookieName = "alveus.neon-donor";
+
+function request(path: string, cookies: Record<string, string> = {}) {
+  return new NextRequest(`${base}${path}`, {
+    headers: {
+      cookie: Object.entries(cookies)
+        .map(([name, value]) => `${name}=${encodeURIComponent(value)}`)
+        .join("; "),
+    },
+  });
+}
+
+beforeEach(() => {
+  mockEnv.NEON_OAUTH_CLIENT_ID = "client-id";
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
+describe("login", () => {
+  test("redirects to Neon and remembers the state", async () => {
+    const response = await login(
+      request("/api/neon/login?returnTo=/institute/pixels/x/rename"),
+    );
+
+    const location = new URL(response.headers.get("location") ?? "");
+    expect(location.origin).toBe("https://alveustest.app.neoncrm.com");
+    expect(location.searchParams.get("redirect_uri")).toBe(
+      `${base}/api/neon/callback`,
+    );
+
+    const state = location.searchParams.get("state");
+    expect(state).toBeTruthy();
+    const stateCookie = response.cookies.get(stateCookieName);
+    expect(stateCookie?.httpOnly).toBe(true);
+    expect(stateCookie?.sameSite).toBe("lax");
+  });
+
+  test("is not available without config", async () => {
+    mockEnv.NEON_OAUTH_CLIENT_ID = undefined;
+    const response = await login(request("/api/neon/login"));
+    expect(response.status).toBe(404);
+  });
+});
+
+describe("callback", () => {
+  test("creates a donor session for a valid code", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => Response.json({ access_token: "101177" })),
+    );
+    const { state, cookie } = await createNeonOAuthState(
+      "/institute/pixels/x/rename",
+    );
+
+    const response = await callback(
+      request(`/api/neon/callback?code=abc&state=${state}`, {
+        [stateCookieName]: cookie,
+      }),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      `${base}/institute/pixels/x/rename`,
+    );
+    expect(response.cookies.get(stateCookieName)?.value).toBe("");
+    const session = response.cookies.get(sessionCookieName);
+    expect(session?.maxAge).toBe(3600);
+    await expect(getNeonDonorSession(session?.value)).resolves.toEqual({
+      accountId: "101177",
+    });
+  });
+
+  test("rejects a state that does not match the cookie", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { cookie } = await createNeonOAuthState("/institute/pixels/x/rename");
+
+    const response = await callback(
+      request("/api/neon/callback?code=abc&state=forged", {
+        [stateCookieName]: cookie,
+      }),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      `${base}/institute/pixels?neonLogin=failed`,
+    );
+    expect(response.cookies.get(sessionCookieName)).toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test("reports a cancelled login", async () => {
+    const { state, cookie } = await createNeonOAuthState("/donate?a=1");
+
+    const response = await callback(
+      request(`/api/neon/callback?state=${state}`, {
+        [stateCookieName]: cookie,
+      }),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      `${base}/donate?a=1&neonLogin=failed`,
+    );
+  });
+
+  test("reports a failed code exchange", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("Invalid Request", { status: 400 })),
+    );
+    const { state, cookie } = await createNeonOAuthState("/donate");
+
+    const response = await callback(
+      request(`/api/neon/callback?code=expired&state=${state}`, {
+        [stateCookieName]: cookie,
+      }),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      `${base}/donate?neonLogin=failed`,
+    );
+    expect(response.cookies.get(sessionCookieName)).toBeUndefined();
+  });
+});
+
+describe("logout", () => {
+  test("clears the session and logs out of Neon", async () => {
+    const response = await logout(
+      request("/api/neon/logout?returnTo=/institute/pixels/x/rename"),
+    );
+
+    expect(response.status).toBe(303);
+    const location = new URL(response.headers.get("location") ?? "");
+    expect(location.origin).toBe("https://alveustest.app.neoncrm.com");
+    expect(location.pathname).toBe("/np/logout.do");
+    expect(location.searchParams.get("targetUrl")).toBe(
+      `${base}/institute/pixels/x/rename`,
+    );
+    expect(response.cookies.get(sessionCookieName)?.value).toBe("");
+  });
+});

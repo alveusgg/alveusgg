@@ -1,9 +1,10 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import murals from "@/data/murals";
 
-import { typeSafeObjectEntries } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import { PixelProvider } from "@/hooks/pixels";
 
@@ -11,11 +12,22 @@ import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import SubNav from "@/components/content/SubNav";
-import { EditExternalPixels } from "@/components/institute/EditExternalPixels";
-import { EditMyPixels } from "@/components/institute/EditMyPixels";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { MessageBox } from "@/components/shared/MessageBox";
+import { formatPixelRenameLockDuration } from "@/components/institute/EditPixelForm";
+import { RenameMethodCards } from "@/components/institute/rename/RenameMethodCards";
+import {
+  RenameMethodContent,
+  type RenameMethodState,
+} from "@/components/institute/rename/RenameMethodContent";
+import { RenameMuralPicker } from "@/components/institute/rename/RenameMuralPicker";
+import {
+  RenameStep,
+  RenameStepsLayout,
+} from "@/components/institute/rename/RenameStep";
+import {
+  type RenameMethodId,
+  renameMethodIds,
+  useRenameMethod,
+} from "@/components/institute/rename/methods";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -25,14 +37,37 @@ import type { InstitutePixelsPageProps } from "./index";
 
 export { getStaticPaths, getStaticProps } from "./index";
 
-const links = typeSafeObjectEntries(murals).map(([muralId, muralData]) => ({
-  href: `/institute/pixels/${muralId}/rename`,
-  name: muralData.name,
-}));
-
 const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
   const session = useSession();
+  const neonDonor = trpc.donations.getNeonDonor.useQuery();
+  const router = useRouter();
   const mural = murals[muralId];
+
+  const user = session.data?.user;
+  const isNeonEnabled = neonDonor.data?.isEnabled ?? false;
+  const isNeonLoggedIn = neonDonor.data?.isLoggedIn ?? false;
+
+  const available = renameMethodIds.filter(
+    (id) => id !== "website" || isNeonEnabled,
+  );
+  const loggedIn = ([] as RenameMethodId[]).concat(
+    user ? ["twitch"] : [],
+    isNeonLoggedIn ? ["website"] : [],
+  );
+  const { selected, select } = useRenameMethod({ available, loggedIn });
+
+  const status: Partial<Record<RenameMethodId, string>> = {
+    twitch: user ? `Logged in as ${user.name ?? "anonymous"}` : undefined,
+    website: isNeonLoggedIn ? "Logged in with your donor account" : undefined,
+  };
+  const state: RenameMethodState = {
+    user,
+    neon: {
+      isEnabled: isNeonEnabled,
+      isLoggedIn: isNeonLoggedIn,
+      hasLoginFailed: router.query.neonLogin === "failed",
+    },
+  };
 
   return (
     <PixelProvider muralId={muralId}>
@@ -53,6 +88,10 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
         <div className="shrink grow text-balance">
           <Heading>Alveus Research & Recovery Institute {mural.name}</Heading>
           <p className="text-xl">Rename Your Pixels</p>
+          <p className="mt-2 text-alveus-tan/80">
+            Each pixel can be renamed once every{" "}
+            {formatPixelRenameLockDuration()}.
+          </p>
         </div>
         <Button
           href={`/institute/pixels/${muralId}`}
@@ -64,41 +103,36 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
         </Button>
       </Section>
 
-      <SubNav links={links} className="z-20" />
-
-      <Section containerClassName="space-y-4 text-lg">
-        <Heading level={2}>Pixels connected with your Twitch account</Heading>
-
-        <div className="mt-6">
-          {!session.data?.user ? (
-            <MessageBox>
-              <p className="mb-4">
-                You need to be logged in to view and rename pixels connected to
-                your Twitch account.
-              </p>
-
-              <LoginWithTwitchButton />
-            </MessageBox>
-          ) : (
-            <EditMyPixels
-              key={muralId}
-              muralId={muralId}
-              user={session.data.user}
-            />
-          )}
-        </div>
-      </Section>
-
       {/* Grow the last section to cover the page */}
-      <Section className="grow" containerClassName="space-y-4 text-lg">
-        <Heading level={2}>Pixels through other donations</Heading>
+      <Section className="grow" containerClassName="space-y-12 text-lg">
+        <RenameStep number={1} title="Which mural are your pixels on?">
+          <RenameMuralPicker muralId={muralId} method={selected} />
+        </RenameStep>
 
-        <p>
-          Search for pixels to rename using the exact PayPal or Giving Block
-          donation information used to unlock them.
-        </p>
+        <RenameStep number={2} title="How did you unlock your pixels?">
+          <p className="max-w-3xl">
+            Every pixel is linked to the donation that unlocked it, so start
+            with how you donated.
+          </p>
 
-        <EditExternalPixels key={muralId} muralId={muralId} />
+          <RenameMethodCards
+            methods={available}
+            selected={selected}
+            status={status}
+            onSelect={select}
+          />
+        </RenameStep>
+
+        {selected ? (
+          <RenameMethodContent
+            key={selected}
+            method={selected}
+            muralId={muralId}
+            state={state}
+          />
+        ) : (
+          <RenameStepsLayout confirm={null} rename={null} />
+        )}
       </Section>
     </PixelProvider>
   );
