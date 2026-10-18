@@ -5,13 +5,19 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 
+import { env } from "@/env";
+
+import { streamThemeOverrideSchema } from "@/data/stream-themes";
+
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { getToday } from "@/utils/datetime";
+import { type StreamTheme, getStreamThemes } from "@/utils/stream-themes";
 
 import useChat from "@/hooks/chat";
 import useLocalStorage from "@/hooks/storage";
 
+import Video from "@/components/content/Video";
 import Crunch from "@/components/overlay/Crunch";
 import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
@@ -30,6 +36,7 @@ import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6camHalloween from "@/assets/stream/border-6cam-halloween.png";
+import border6camWolfWeek from "@/assets/stream/border-6cam-wolf-week.webm";
 import border6cam from "@/assets/stream/border-6cam.png";
 import borderPipChristmas from "@/assets/stream/border-pip-christmas.png";
 import borderPip from "@/assets/stream/border-pip.png";
@@ -62,12 +69,12 @@ const debug = [
   "bg-gray",
 ];
 
+type StreamBorder = StaticImageData | typeof border6camWolfWeek;
+
 interface Grid {
   grid: string;
-  border?: {
+  border?: Partial<Record<StreamTheme, StreamBorder>> & {
     default: StaticImageData;
-    christmas?: StaticImageData;
-    halloween?: StaticImageData;
     flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
@@ -118,6 +125,7 @@ const grid: Record<Layout, Grid> = {
       default: border6cam,
       christmas: border6camChristmas,
       halloween: border6camHalloween,
+      "wolf-week": border6camWolfWeek,
     },
     slots: [
       "1 / 2 / span 2 / span 2", // top-right
@@ -340,19 +348,26 @@ const OverlayPage: NextPage = () => {
   );
 
   // Track the current date to switch borders to non-default variants
-  const [date, setDate] = useState<`${number}-${number}`>();
+  const [date, setDate] = useState<string | null>(null);
   useEffect(() => {
     const updateDate = () => {
-      const today = getToday();
-      const month = String(today.month).padStart(2, "0");
-      const day = String(today.day).padStart(2, "0");
-      setDate(`${month}-${day}` as `${number}-${number}`);
+      setDate(getToday().toISODate());
     };
 
     updateDate();
     const interval = setInterval(updateDate, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Valid URL overrides take priority over the configured theme.
+  const theme = streamThemeOverrideSchema
+    .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto")
+    .parse(query.theme);
+
+  const borders = grid[layout].border;
+  const border = getStreamThemes(date, theme)
+    .map((theme) => borders?.[theme])
+    .find((source) => source !== undefined);
 
   // Request fullscreen when the page is clicked
   useEffect(() => {
@@ -424,23 +439,33 @@ const OverlayPage: NextPage = () => {
           ))}
         </div>
 
-        {!hide.has("border") && grid[layout].border && (
-          <Image
-            src={
-              (date?.startsWith("12-") && grid[layout].border.christmas) ||
-              (date?.startsWith("10-") && grid[layout].border.halloween) ||
-              grid[layout].border.default
-            }
-            alt=""
-            fill
-            priority
+        {!hide.has("border") && border && (
+          <div
+            aria-hidden="true"
             className={classes(
-              "pointer-events-none select-none",
-              grid[layout].border?.flip?.x && "-scale-x-100",
-              grid[layout].border?.flip?.y && "-scale-y-100",
+              "pointer-events-none absolute inset-0 select-none",
+              borders?.flip?.x && "-scale-x-100",
+              borders?.flip?.y && "-scale-y-100",
               "debug" in query && "opacity-75",
             )}
-          />
+          >
+            {"sources" in border ? (
+              <Video
+                sources={border.sources}
+                poster={border.poster}
+                className="size-full object-fill"
+                width={2560}
+                height={1440}
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+              />
+            ) : (
+              <Image src={border} alt="" fill priority />
+            )}
+          </div>
         )}
       </div>
 

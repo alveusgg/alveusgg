@@ -4,6 +4,7 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { streamThemeOverrideSchema } from "../data/stream-themes.js";
 import {
   checkBase64UrlEncoded,
   checkPrivateKey,
@@ -130,6 +131,9 @@ export const env = createEnv({
       .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME: streamThemeOverrideSchema
+      .optional()
+      .default("auto"),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
@@ -232,6 +236,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME:
+      process.env.NEXT_PUBLIC_STREAM_OVERLAY_THEME,
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
       process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:
