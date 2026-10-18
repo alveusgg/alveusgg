@@ -15,11 +15,11 @@ const VERSION = "v2";
 const KEY_LENGTH = 32;
 const IV_LENGTH = 12;
 
-const KEY_ID_PATTERN = /^[a-z0-9]{1,16}$/;
+const KEYRING_ENTRY_PATTERN = /^([a-z0-9]{1,16}):(.+)$/;
 // Reserve version prefixes independently of payload validity. Corrupted ciphertext and unknown
 // versions must never be treated as plain text while migrating existing rows.
 const ENCRYPTED_PREFIX_PATTERN = /^v[0-9]+\./;
-const ENCRYPTED_VALUE_PATTERN = /^v2\.([a-z0-9]{1,16})\.([A-Za-z0-9_-]*)$/;
+const ENCRYPTED_VALUE_PATTERN = /^v2\.([a-z0-9]{1,16})\.([A-Za-z0-9_-]+)$/;
 
 /** Length of a blind index (base64url of a SHA-256 HMAC), e.g. for `@db.Char(43)` columns */
 export const BLIND_INDEX_LENGTH = 43;
@@ -62,16 +62,11 @@ function parseKeyring(keys: string) {
     .split(",")
     .map((entry) => entry.trim())
     .filter(Boolean);
-  if (entries.length === 0) {
-    throw new Error("No encryption keys configured");
-  }
 
-  let activeKeyId: string | undefined;
   const keyring = new Map<string, Buffer>();
   for (const entry of entries) {
-    const separator = entry.indexOf(":");
-    const id = entry.slice(0, Math.max(separator, 0));
-    if (!KEY_ID_PATTERN.test(id)) {
+    const [, id, key] = KEYRING_ENTRY_PATTERN.exec(entry) ?? [];
+    if (!id || !key) {
       throw new Error(
         "Encryption keys must be formatted as <key id>:<base64 key>, key ids may only contain a-z and 0-9",
       );
@@ -79,15 +74,14 @@ function parseKeyring(keys: string) {
     if (keyring.has(id)) {
       throw new Error(`Duplicate encryption key id ${id}`);
     }
-
-    keyring.set(
-      id,
-      decodeKey(entry.slice(separator + 1), `Encryption key ${id}`),
-    );
-    activeKeyId ??= id;
+    keyring.set(id, decodeKey(key, `Encryption key ${id}`));
   }
 
-  return { activeKeyId: activeKeyId!, keyring };
+  const [activeKeyId] = keyring.keys();
+  if (!activeKeyId) {
+    throw new Error("No encryption keys configured");
+  }
+  return { activeKeyId, keyring };
 }
 
 function getAdditionalData(keyId: string, { model, field }: EncryptionContext) {
@@ -168,21 +162,17 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     context: EncryptionContext,
     { allowPlaintext = false }: DecryptOptions = {},
   ) {
-    const match = ENCRYPTED_VALUE_PATTERN.exec(value);
-    if (!match) {
-      if (isEncrypted(value)) {
-        throw new Error(`Could not decrypt ${context.model}.${context.field}`, {
-          cause: new Error("Invalid or unsupported encrypted value format"),
-        });
-      }
+    if (!isEncrypted(value)) {
       if (allowPlaintext) return value;
       throw new Error(`${context.model}.${context.field} is not encrypted`);
     }
 
-    const keyId = match[1]!;
-    const payload = match[2]!;
-    const key = await getKey(keyId);
     try {
+      const [, keyId, payload] = ENCRYPTED_VALUE_PATTERN.exec(value) ?? [];
+      if (!keyId || !payload) {
+        throw new Error("Invalid or unsupported encrypted value format");
+      }
+
       const bytes = Buffer.from(payload, "base64url");
       const plaintext = await crypto.subtle.decrypt(
         {
@@ -190,7 +180,7 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
           iv: bytes.subarray(0, IV_LENGTH),
           additionalData: getAdditionalData(keyId, context),
         },
-        key,
+        await getKey(keyId),
         bytes.subarray(IV_LENGTH),
       );
       return Buffer.from(plaintext).toString();
@@ -221,8 +211,8 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
 
   /** Whether a value isn't encrypted with the active key yet (for backfills and key rotation) */
   function needsReencryption(value: string) {
-    const match = ENCRYPTED_VALUE_PATTERN.exec(value);
-    return !match || match[1] !== getKeyring().activeKeyId;
+    const [, keyId] = ENCRYPTED_VALUE_PATTERN.exec(value) ?? [];
+    return keyId !== getKeyring().activeKeyId;
   }
 
   /**

@@ -94,9 +94,10 @@ describe("key rotation", () => {
     const encrypted = await encryption.encrypt("John", givenName);
 
     const removed = createFieldEncryption({ keys: `k2:${key2}` });
-    await expect(removed.decrypt(encrypted, givenName)).rejects.toThrow(
-      "Unknown encryption key id k1",
-    );
+    await expect(removed.decrypt(encrypted, givenName)).rejects.toMatchObject({
+      message: "Could not decrypt FormEntry.givenName",
+      cause: { message: "Unknown encryption key id k1" },
+    });
 
     // The key id is authenticated as well, so a key can't be renamed
     const renamed = createFieldEncryption({ keys: `k9:${key1}` });
