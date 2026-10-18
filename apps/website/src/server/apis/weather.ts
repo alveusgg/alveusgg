@@ -120,8 +120,9 @@ export async function getCurrentObservation<T extends boolean>(
 
     // Attempt to acquire a lock from Redis if there isn't already a lock
     try {
-      lock = crypto.randomUUID();
-      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry });
+      const token = crypto.randomUUID();
+      await redis.set(`${cache}:lock`, token, { overwrite: false, expiry });
+      lock = token;
     } catch (err) {
       if (!(err instanceof RedisValueAlreadyExistsError)) {
         throw err;

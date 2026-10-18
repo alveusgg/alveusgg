@@ -123,7 +123,7 @@ export default tseslint.config(
       ],
       "react-hooks/set-state-in-effect": "off",
       "@eslint-react/dom-no-unsafe-target-blank": "error",
-      // Additional React migrations are tracked in https://github.com/alveusgg/alveusgg/issues/2466.
+      // TODO: Additional React migrations are tracked in https://github.com/alveusgg/alveusgg/issues/2466.
       "@eslint-react/naming-convention-ref-name": "off",
       "@eslint-react/set-state-in-effect": "off",
       "@eslint-react/use-state": "off",
