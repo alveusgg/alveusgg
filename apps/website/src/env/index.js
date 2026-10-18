@@ -114,6 +114,7 @@ export const env = createEnv({
     CF_STREAM_HOST: z.string().optional(),
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
+    SENTRY_DSN: z.url().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -225,6 +226,7 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
