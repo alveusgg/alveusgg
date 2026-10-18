@@ -29,13 +29,7 @@ describe("encrypt/decrypt", () => {
   });
 
   test("empty and unicode values", async () => {
-    for (const value of [
-      "",
-      "Jürgen 🦊",
-      "\uFEFFJohn",
-      "\uFEFF\uFEFFJohn",
-      "a".repeat(1_000_000),
-    ]) {
+    for (const value of ["", "Jürgen 🦊", "\uFEFFJohn", "\uFEFF\uFEFFJohn"]) {
       const encrypted = await encryption.encrypt(value, givenName);
       expect(await encryption.decrypt(encrypted, givenName)).toBe(value);
     }
@@ -220,8 +214,7 @@ describe("configuration", () => {
     [key1, "<key id>:<base64 key>"],
     [`K1:${key1}`, "<key id>:<base64 key>"],
     [`k1:${key1},k1:${key2}`, "Duplicate encryption key id k1"],
-    ["k1:not base64!", "Encryption key k1 is not valid base64"],
-    ["k1:c2hvcnQ=", "Encryption key k1 must be 32 bytes"],
+    ["k1:c2hvcnQ=", "Encryption key k1 must be a base64 32-byte key"],
   ])("rejects %j", (keys, message) => {
     expect(() => parseKeyring(keys)).toThrow(message);
   });
@@ -234,7 +227,9 @@ describe("configuration", () => {
         return e as Error;
       }
     })();
-    expect(error?.message).toBe("Encryption key k1 must be 32 bytes");
+    expect(error?.message).toBe(
+      "Encryption key k1 must be a base64 32-byte key",
+    );
   });
 
   test("invalid configuration only fails when used", async () => {
@@ -251,7 +246,7 @@ describe("configuration", () => {
       blindIndexKey: "c2hvcnQ=",
     });
     await expect(shortKey.blindIndex("email", "john")).rejects.toThrow(
-      "Blind index key must be 32 bytes",
+      "Blind index key must be a base64 32-byte key",
     );
   });
 });

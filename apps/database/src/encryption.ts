@@ -8,14 +8,12 @@
  *
  * Blind indexes are keyed hashes (HMAC-SHA-256) of normalized values. They let us look up or
  * enforce uniqueness on encrypted values (e.g. emails) without storing them in plain text.
- *
- * Only uses Web Crypto, so it works in Node.js, Next.js and Cloudflare Workers alike.
  */
+import type { webcrypto } from "node:crypto";
 
 const VERSION = "v2";
 const KEY_LENGTH = 32;
 const IV_LENGTH = 12;
-const TAG_LENGTH = 16;
 
 const KEY_ID_PATTERN = /^[a-z0-9]{1,16}$/;
 // Reserve version prefixes independently of payload validity. Corrupted ciphertext and unknown
@@ -26,12 +24,7 @@ const ENCRYPTED_VALUE_PATTERN = /^v2\.([a-z0-9]{1,16})\.([A-Za-z0-9_-]*)$/;
 /** Length of a blind index (base64url of a SHA-256 HMAC), e.g. for `@db.Char(43)` columns */
 export const BLIND_INDEX_LENGTH = 43;
 
-// The package has no DOM types and Node's `CryptoKey` is only declared as a value
-type Key = Awaited<ReturnType<typeof crypto.subtle.importKey>>;
-
-const encoder = new TextEncoder();
-// A leading U+FEFF is part of the stored value, not a byte-order marker to strip.
-const decoder = new TextDecoder("utf-8", { ignoreBOM: true });
+type Key = webcrypto.CryptoKey;
 
 export type EncryptionContext = {
   /** Prisma model name, e.g. `FormEntry` */
@@ -52,47 +45,11 @@ export type FieldEncryptionOptions = {
   blindIndexKey?: string;
 };
 
-function bytesToBase64(bytes: Uint8Array) {
-  // Convert in chunks, spreading large arrays into fromCharCode exceeds the call stack
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  }
-  return btoa(binary);
-}
-
-function base64ToBytes(str: string) {
-  const binary = atob(str);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-}
-
-function bytesToBase64Url(bytes: Uint8Array) {
-  return bytesToBase64(bytes)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-function base64UrlToBytes(str: string) {
-  return base64ToBytes(str.replace(/-/g, "+").replace(/_/g, "/"));
-}
-
 function decodeKey(key: string, name: string) {
-  let bytes: Uint8Array<ArrayBuffer>;
-  try {
-    bytes = base64ToBytes(key.trim());
-  } catch {
-    throw new Error(`${name} is not valid base64`);
-  }
-
+  const bytes = Buffer.from(key, "base64");
   if (bytes.length !== KEY_LENGTH) {
-    throw new Error(`${name} must be ${KEY_LENGTH} bytes`);
+    throw new Error(`${name} must be a base64 ${KEY_LENGTH}-byte key`);
   }
-
   return bytes;
 }
 
@@ -110,7 +67,7 @@ export function parseKeyring(keys: string) {
   }
 
   let activeKeyId: string | undefined;
-  const keyring = new Map<string, Uint8Array<ArrayBuffer>>();
+  const keyring = new Map<string, Buffer>();
   for (const entry of entries) {
     const separator = entry.indexOf(":");
     const id = entry.slice(0, Math.max(separator, 0));
@@ -134,7 +91,7 @@ export function parseKeyring(keys: string) {
 }
 
 function getAdditionalData(keyId: string, { model, field }: EncryptionContext) {
-  return encoder.encode(`${VERSION}.${keyId}:${model}.${field}`);
+  return Buffer.from(`${VERSION}.${keyId}:${model}.${field}`);
 }
 
 /** Whether a value has an encryption version prefix. Does not validate or authenticate it. */
@@ -201,13 +158,11 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
         additionalData: getAdditionalData(activeKeyId, context),
       },
       await getKey(activeKeyId),
-      encoder.encode(plaintext),
+      Buffer.from(plaintext),
     );
 
-    const payload = new Uint8Array(IV_LENGTH + ciphertext.byteLength);
-    payload.set(iv);
-    payload.set(new Uint8Array(ciphertext), IV_LENGTH);
-    return `${VERSION}.${activeKeyId}.${bytesToBase64Url(payload)}`;
+    const payload = Buffer.concat([iv, new Uint8Array(ciphertext)]);
+    return `${VERSION}.${activeKeyId}.${payload.toString("base64url")}`;
   }
 
   /**
@@ -235,11 +190,7 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     const payload = match[2]!;
     const key = await getKey(keyId);
     try {
-      const bytes = base64UrlToBytes(payload);
-      if (bytes.length < IV_LENGTH + TAG_LENGTH) {
-        throw new Error("Value is too short");
-      }
-
+      const bytes = Buffer.from(payload, "base64url");
       const plaintext = await crypto.subtle.decrypt(
         {
           name: "AES-GCM",
@@ -249,7 +200,7 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
         key,
         bytes.subarray(IV_LENGTH),
       );
-      return decoder.decode(plaintext);
+      return Buffer.from(plaintext).toString();
     } catch (cause) {
       // Don't include the value, the error might end up in logs
       throw new Error(`Could not decrypt ${context.model}.${context.field}`, {
@@ -290,9 +241,9 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     const signature = await crypto.subtle.sign(
       "HMAC",
       await getBlindIndexKey(),
-      encoder.encode(`${purpose}\0${value}`),
+      Buffer.from(`${purpose}\0${value}`),
     );
-    return bytesToBase64Url(new Uint8Array(signature));
+    return Buffer.from(signature).toString("base64url");
   }
 
   /** Blind index of an email address, shared by all tables that store emails */
