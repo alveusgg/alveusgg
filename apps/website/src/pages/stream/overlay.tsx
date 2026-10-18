@@ -421,7 +421,7 @@ const OverlayPage: NextPage = () => {
         <div className={classes("absolute inset-0 grid", grid[layout].grid)}>
           {grid[layout].slots.map((slot, index) => (
             <div
-              key={`${layout}-${index}`}
+              key={`${layout}-${slot}`}
               className={classes(
                 "relative size-full",
                 "debug" in query && debug[index % debug.length],

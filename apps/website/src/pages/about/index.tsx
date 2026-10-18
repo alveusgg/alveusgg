@@ -850,6 +850,7 @@ const transformHistoryItem = (item: HistoryItem) => ({
     <>
       <p className="font-serif text-lg font-bold">{item.content[0]}</p>
       {item.content.slice(1).map((paragraph, idx) => (
+        // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content in the timeline entry.
         <p key={idx} className="mt-2">
           {paragraph}
         </p>
@@ -1016,7 +1017,7 @@ const AboutAlveusPage: NextPage = () => {
 
           <ul className="mt-8 text-left text-xs opacity-75" id="twitch-sources">
             {Object.values(sources).map((source, idx) => (
-              <li key={idx} className="mb-1">
+              <li key={source.link} className="mb-1">
                 [{idx + 1}]{" "}
                 <Link external href={source.link}>
                   {source.text}
