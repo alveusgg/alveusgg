@@ -30,20 +30,19 @@ const Cycle = ({
   interval?: number;
 }) => {
   const refs = useRef<(Element | null)[]>([]);
-  const count = items.length;
 
   const [index, setIndex] = useState(0);
   const next = useCallback(
     (check = false) => {
       setIndex((prev) => {
         // If we have no items, stay where we are
-        if (count === 0) {
+        if (items.length === 0) {
           return prev;
         }
 
         // If check is true, only advance if the current ref is null
         // However, if the current index is beyond the items length, we must advance
-        if (check && prev < count) {
+        if (check && prev < items.length) {
           const currentRef = refs.current[prev];
           if (currentRef) {
             return prev;
@@ -51,9 +50,9 @@ const Cycle = ({
         }
 
         // Move to the next item that has a ref
-        let next = (prev + 1) % count;
+        let next = (prev + 1) % items.length;
         while (!refs.current[next]) {
-          next = (next + 1) % count;
+          next = (next + 1) % items.length;
 
           if (next === prev) {
             // All refs are null, stay on the current index
@@ -63,7 +62,7 @@ const Cycle = ({
         return next;
       });
     },
-    [count],
+    [items.length],
   );
 
   // Whenever index changes, start a timer for cycling to the next item
