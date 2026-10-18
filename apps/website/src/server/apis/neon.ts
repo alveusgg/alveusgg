@@ -38,10 +38,10 @@ export function getNeonAuthorizeUrl(
   return url.toString();
 }
 
-export function getNeonLogoutUrl(config: NeonOAuthConfig, targetUrl: string) {
-  const url = new URL(`https://${config.orgId}.app.neoncrm.com/np/logout.do`);
-  url.searchParams.set("targetUrl", targetUrl);
-  return url.toString();
+// Neon's donor portal logout. It can't send donors back to us, and without a
+// Neon session it shows Neon's staff login instead, so we only link to it.
+export function getNeonLogoutUrl(config: NeonOAuthConfig) {
+  return `https://${config.orgId}.app.neoncrm.com/nx/logout`;
 }
 
 // Neon does not issue real access tokens: the "access token" is the account ID

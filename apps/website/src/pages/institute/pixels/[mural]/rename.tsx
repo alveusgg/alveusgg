@@ -104,6 +104,8 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
               muralId={muralId}
               isLoggedIn={neonDonor.data.isLoggedIn}
               hasLoginFailed={router.query.neonLogin === "failed"}
+              hasLoggedOut={router.query.neonLogin === "loggedOut"}
+              neonLogoutUrl={neonDonor.data.logoutUrl}
             />
           </div>
         </Section>

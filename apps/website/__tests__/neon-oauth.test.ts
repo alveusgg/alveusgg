@@ -45,15 +45,9 @@ describe("getNeonAuthorizeUrl", () => {
 });
 
 describe("getNeonLogoutUrl", () => {
-  test("sends the user back to the target URL", () => {
-    const url = new URL(
-      getNeonLogoutUrl(config, "http://127.0.0.1:3000/institute/pixels"),
-    );
-
-    expect(url.origin).toBe("https://alveustest.app.neoncrm.com");
-    expect(url.pathname).toBe("/np/logout.do");
-    expect(url.searchParams.get("targetUrl")).toBe(
-      "http://127.0.0.1:3000/institute/pixels",
+  test("points to the donor portal logout of the org", () => {
+    expect(getNeonLogoutUrl(config)).toBe(
+      "https://alveustest.app.neoncrm.com/nx/logout",
     );
   });
 });

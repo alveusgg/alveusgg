@@ -4,6 +4,7 @@ import type { MuralId } from "@/data/murals";
 
 import { trpc } from "@/utils/trpc";
 
+import Link from "@/components/content/Link";
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
 import { MessageBox } from "@/components/shared/MessageBox";
 import {
@@ -18,10 +19,14 @@ export function EditNeonPixels({
   muralId,
   isLoggedIn,
   hasLoginFailed,
+  hasLoggedOut,
+  neonLogoutUrl,
 }: {
   muralId: MuralId;
   isLoggedIn: boolean;
   hasLoginFailed: boolean;
+  hasLoggedOut: boolean;
+  neonLogoutUrl: string | null;
 }) {
   const utils = trpc.useUtils();
   const pixels = trpc.donations.getNeonPixels.useQuery(
@@ -40,6 +45,22 @@ export function EditNeonPixels({
         {hasLoginFailed ? (
           <MessageBox variant="failure" className="mb-4">
             Logging in with your donor account did not work. Please try again.
+          </MessageBox>
+        ) : null}
+
+        {hasLoggedOut ? (
+          <MessageBox variant="success" className="mb-4">
+            You are logged out here.
+            {neonLogoutUrl ? (
+              <>
+                {" "}
+                On a shared device, also{" "}
+                <Link href={neonLogoutUrl} external>
+                  log out of your donor account
+                </Link>{" "}
+                so the next person can&apos;t log in as you.
+              </>
+            ) : null}
           </MessageBox>
         ) : null}
 

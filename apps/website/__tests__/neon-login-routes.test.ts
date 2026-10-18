@@ -152,18 +152,25 @@ describe("callback", () => {
 });
 
 describe("logout", () => {
-  test("clears the session and logs out of Neon", async () => {
+  test("clears the session and goes back to the page", async () => {
     const response = await logout(
-      request("/api/neon/logout?returnTo=/institute/pixels/x/rename"),
+      request(
+        `/api/neon/logout?returnTo=${encodeURIComponent("/institute/pixels/x/rename?via=website")}`,
+      ),
     );
 
     expect(response.status).toBe(303);
-    const location = new URL(response.headers.get("location") ?? "");
-    expect(location.origin).toBe("https://alveustest.app.neoncrm.com");
-    expect(location.pathname).toBe("/np/logout.do");
-    expect(location.searchParams.get("targetUrl")).toBe(
-      `${base}/institute/pixels/x/rename`,
+    expect(response.headers.get("location")).toBe(
+      `${base}/institute/pixels/x/rename?via=website&neonLogin=loggedOut`,
     );
     expect(response.cookies.get(sessionCookieName)?.value).toBe("");
+  });
+
+  test("does not leave the site", async () => {
+    const response = await logout(
+      request("/api/neon/logout?returnTo=https://evil.example/"),
+    );
+
+    expect(new URL(response.headers.get("location") ?? "").origin).toBe(base);
   });
 });
