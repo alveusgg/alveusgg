@@ -11,17 +11,18 @@ export type StreamTheme = Exclude<StreamThemeOverride, "auto">;
 
 const themesByMonth: Partial<Record<string, StreamTheme>> = monthlyThemes;
 
-// Return themes in priority order so layouts can skip unavailable variants.
+// Return in priority order so layouts can skip unavailable themes
 export const getStreamThemes = (
   date: string | null,
   override: StreamThemeOverride = "auto",
 ): StreamTheme[] => {
-  const scheduledTheme = themeSchedule.find(
-    ({ start, end }) => date !== null && date >= start && date < end,
-  )?.theme;
   let selectedTheme: StreamTheme | undefined;
   if (override === "auto") {
-    selectedTheme = scheduledTheme;
+    if (date) {
+      selectedTheme = themeSchedule.find(
+        ({ start, end }) => date >= start && date < end,
+      )?.theme;
+    }
   } else if (override !== "default") {
     selectedTheme = override;
   }
