@@ -6,30 +6,25 @@ import {
   themeSchedule,
 } from "@/data/stream-themes";
 
-type StreamThemeOverride = z.infer<typeof streamThemeOverrideSchema>;
-export type StreamTheme = Exclude<StreamThemeOverride, "auto">;
+export type StreamTheme = z.infer<typeof streamThemeOverrideSchema>;
 
 const themesByMonth: Partial<Record<string, StreamTheme>> = monthlyThemes;
 
 // Return in priority order so layouts can skip unavailable themes
 export const getStreamThemes = (
   date: string | null,
-  override: StreamThemeOverride = "auto",
+  override?: StreamTheme,
 ): StreamTheme[] => {
-  let selectedTheme: StreamTheme | undefined;
-  if (override === "auto") {
-    if (date) {
-      selectedTheme = themeSchedule.find(
-        ({ start, end }) => date >= start && date < end,
-      )?.theme;
-    }
-  } else if (override !== "default") {
-    selectedTheme = override;
-  }
+  // Every layout must have default, so short-circuit if that's the override
+  if (override === "default") return ["default"];
 
   return [
-    selectedTheme,
-    themesByMonth[date?.slice(5, 7) ?? ""],
+    override,
+    date
+      ? themeSchedule.find(({ start, end }) => date >= start && date < end)
+          ?.theme
+      : undefined,
+    date ? themesByMonth[date.slice(5, 7)] : undefined,
     "default" as const,
   ].filter((theme) => theme !== undefined);
 };

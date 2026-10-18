@@ -363,7 +363,8 @@ const OverlayPage: NextPage = () => {
   const border = useMemo(() => {
     // Valid URL overrides take priority over the configured theme
     const theme = streamThemeOverrideSchema
-      .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME ?? "auto")
+      .optional()
+      .catch(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME)
       .parse(query.theme);
 
     return getStreamThemes(date, theme)

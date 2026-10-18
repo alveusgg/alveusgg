@@ -25,39 +25,32 @@ describe("stream themes", () => {
     expect(getStreamThemes(date)).toEqual(expected);
   });
 
-  it("disables the event while preserving seasonal themes", () => {
-    expect(getStreamThemes("2026-10-20", "default")).toEqual([
-      "halloween",
-      "default",
-    ]);
-    expect(getStreamThemes("2026-12-25", "default")).toEqual([
-      "christmas",
-      "default",
-    ]);
-  });
-
-  it("forces the event outside its dates with seasonal fallbacks", () => {
-    expect(getStreamThemes("2026-12-25", "wolf-week")).toEqual([
-      "wolf-week",
-      "christmas",
-      "default",
-    ]);
+  it("accepts a forced theme outside its usual dates", () => {
     expect(getStreamThemes(null, "wolf-week")).toEqual([
       "wolf-week",
       "default",
     ]);
+
+    expect(getStreamThemes("2026-07-01", "christmas")).toEqual([
+      "christmas",
+      "default",
+    ]);
   });
 
-  it.each(["christmas", "halloween"])(
-    "accepts %s as a forced theme outside its month",
-    (theme) => {
-      const override = streamThemeOverrideSchema.parse(theme);
-      expect(getStreamThemes("2026-07-01", override)).toEqual([
-        theme,
-        "default",
-      ]);
-    },
-  );
+  it("includes any scheduled theme when an override is applied", () => {
+    expect(getStreamThemes("2026-10-18", "christmas")).toEqual([
+      "christmas",
+      "wolf-week",
+      "halloween",
+      "default",
+    ]);
+  });
+
+  it("accepts a forced default theme during any date", () => {
+    expect(getStreamThemes("2026-07-01", "default")).toEqual(["default"]);
+    expect(getStreamThemes("2026-12-25", "default")).toEqual(["default"]);
+    expect(getStreamThemes(null, "default")).toEqual(["default"]);
+  });
 
   it.each([
     { theme: undefined },

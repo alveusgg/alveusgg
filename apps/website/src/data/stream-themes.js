@@ -12,7 +12,6 @@ export const themeSchedule = /** @type {const} */ ([
 ]);
 
 export const streamThemeOverrideSchema = z.literal([
-  "auto",
   "default",
   ...Object.values(monthlyThemes),
   ...themeSchedule.map(({ theme }) => theme),
