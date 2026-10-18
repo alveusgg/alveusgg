@@ -86,24 +86,28 @@ export const getServerSideProps = async (
       : undefined;
 
   const isOAuthMode = context.query.mode === "oauth";
-  if (isOAuthMode && callbackUrl) {
-    const thirdPartyClient = getThirdPartyClient(callbackUrl);
-    if (!thirdPartyClient) return { notFound: true };
+  if (isOAuthMode) {
+    const thirdPartyClient = callbackUrl && getThirdPartyClient(callbackUrl);
 
-    return {
-      props: {
-        mode: "oauth",
-        callbackUrl,
-        thirdPartyClient,
-      },
-    };
+    if (thirdPartyClient) {
+      return {
+        props: {
+          mode: "oauth",
+          callbackUrl,
+          thirdPartyClient,
+        },
+      };
+    }
+
+    // Invalid OAuth input falls through to the sign-in error page below.
+    context.res.statusCode = 400;
   }
 
   return {
     props: {
       mode: "error",
       banner: getBannerFromQuery(context.query),
-      callbackUrl,
+      callbackUrl: isOAuthMode ? undefined : callbackUrl,
     },
   };
 };
