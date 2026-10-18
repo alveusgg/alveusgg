@@ -127,8 +127,6 @@ export default tseslint.config(
       "@eslint-react/naming-convention-ref-name": "off",
       "@eslint-react/set-state-in-effect": "off",
       "@eslint-react/use-state": "off",
-      "@eslint-react/no-use-context": "off",
-      "@eslint-react/no-context-provider": "off",
       "@eslint-react/no-children-map": "off",
       "@eslint-react/no-clone-element": "off",
       "@eslint-react/no-unnecessary-use-prefix": "off",
