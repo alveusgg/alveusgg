@@ -139,6 +139,11 @@
     },
     "preview": {
       "route": "https://donation-manager.preview.workers.alveussanctuary.org",
+      // Production syncs the same Neon organization on the hour, and Neon only
+      // allows one donation search at a time.
+      "triggers": {
+        "crons": ["30 * * * *"],
+      },
 
       "migrations": [
         {
