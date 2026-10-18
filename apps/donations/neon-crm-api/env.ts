@@ -12,8 +12,7 @@ export const serverEnv = {
   NEON_CRM_LOCAL_TIMEZONE: z.string().default("America/Chicago"),
 } as const;
 
-export type Env = z.output<typeof _EnvSchema>;
-const _EnvSchema = z.object(serverEnv);
+export type Env = z.output<z.ZodObject<typeof serverEnv>>;
 
 export type Options = ReturnType<typeof envToOptions>;
 
