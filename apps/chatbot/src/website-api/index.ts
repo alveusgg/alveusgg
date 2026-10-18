@@ -26,17 +26,6 @@ export class ApiError extends Error {
     this.status = options?.status;
   }
 
-  /** Whether repeating the same request could plausibly succeed. */
-  get isTransient() {
-    return (
-      this.kind !== "http" ||
-      this.status === undefined ||
-      this.status >= 500 ||
-      this.status === 408 ||
-      this.status === 429
-    );
-  }
-
   /** Short description that is safe to show in chat. */
   get summary() {
     switch (this.kind) {
