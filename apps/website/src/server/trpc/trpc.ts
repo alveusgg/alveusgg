@@ -1,16 +1,23 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
+import { ZodError } from "zod";
 
 import { env } from "@/env";
 
 import { type Context } from "@/server/trpc/context";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+import { formatZodError } from "@/server/utils/zod-error";
 
 import type { PermissionConfig } from "@/data/permissions";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
+  errorFormatter({ shape, error }) {
+    // Input validation failed, replace the JSON dump with readable lines
+    if (error.code === "BAD_REQUEST" && error.cause instanceof ZodError) {
+      return { ...shape, message: formatZodError(error.cause) };
+    }
+
     return shape;
   },
 });
