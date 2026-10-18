@@ -5,8 +5,6 @@
  * - The key id allows rotating keys: the first key of the keyring encrypts, every key can decrypt.
  * - The model and field are bound to the ciphertext as additional authenticated data, so an
  *   encrypted value can't be moved to another column (e.g. given name <-> family name).
- * - Values written by the previous helpers (v1: PBKDF2-derived key per record, `salt` column)
- *   can still be decrypted with the legacy passphrase.
  *
  * Blind indexes are keyed hashes (HMAC-SHA-256) of normalized values. They let us look up or
  * enforce uniqueness on encrypted values (e.g. emails) without storing them in plain text.
@@ -24,9 +22,6 @@ const KEY_ID_PATTERN = /^[a-z0-9]{1,16}$/;
 // versions must never be treated as plain text while migrating existing rows.
 const ENCRYPTED_PREFIX_PATTERN = /^v[0-9]+\./;
 const ENCRYPTED_VALUE_PATTERN = /^v2\.([a-z0-9]{1,16})\.([A-Za-z0-9_-]*)$/;
-
-const LEGACY_KEY_LENGTH = 32;
-const LEGACY_HASH_ITERATIONS = 10_000;
 
 /** Length of a blind index (base64url of a SHA-256 HMAC), e.g. for `@db.Char(43)` columns */
 export const BLIND_INDEX_LENGTH = 43;
@@ -46,8 +41,6 @@ export type EncryptionContext = {
 };
 
 export type DecryptOptions = {
-  /** Salt of the record for v1 values; null/undefined means no legacy decryption */
-  legacySalt?: string | null;
   /** Return plaintext during migration. Values starting with `v<number>.` are always reserved. */
   allowPlaintext?: boolean;
 };
@@ -57,8 +50,6 @@ export type FieldEncryptionOptions = {
   keys: string;
   /** Base64 32-byte key for blind indexes, only needed to create blind indexes */
   blindIndexKey?: string;
-  /** Passphrase used by the v1 helpers, only needed to decrypt values with a legacy salt */
-  legacyPassphrase?: string;
 };
 
 function bytesToBase64(bytes: Uint8Array) {
@@ -199,66 +190,6 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
     ));
   };
 
-  const legacyKeys = new Map<string, Promise<Key>>();
-  const getLegacyKey = (salt: string) => {
-    let key = legacyKeys.get(salt);
-    if (!key) {
-      const passphrase = encoder.encode(options.legacyPassphrase ?? "");
-      if (passphrase.length !== LEGACY_KEY_LENGTH) {
-        throw new Error("Legacy encryption passphrase is not configured");
-      }
-
-      key = crypto.subtle
-        .importKey("raw", passphrase, { name: "PBKDF2" }, false, ["deriveKey"])
-        .then((baseKey) =>
-          crypto.subtle.deriveKey(
-            {
-              name: "PBKDF2",
-              salt: base64ToBytes(salt),
-              iterations: LEGACY_HASH_ITERATIONS,
-              hash: "SHA-256",
-            },
-            baseKey,
-            { name: "AES-GCM", length: 256 },
-            false,
-            ["decrypt"],
-          ),
-        );
-      // Every record has its own salt, so only keep the key while decrypting its fields
-      legacyKeys.clear();
-      legacyKeys.set(salt, key);
-    }
-    return key;
-  };
-
-  async function decryptLegacy(
-    value: string,
-    salt: string,
-    context: EncryptionContext,
-  ) {
-    // The v1 helpers stored anonymized values as empty strings
-    if (value === "") return "";
-
-    try {
-      const bytes = base64ToBytes(value);
-      if (bytes.length < IV_LENGTH + TAG_LENGTH) {
-        throw new Error("Value is too short");
-      }
-
-      const plaintext = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: bytes.subarray(0, IV_LENGTH) },
-        await getLegacyKey(salt),
-        bytes.subarray(IV_LENGTH),
-      );
-      return decoder.decode(plaintext);
-    } catch (cause) {
-      throw new Error(
-        `Could not decrypt legacy ${context.model}.${context.field}`,
-        { cause },
-      );
-    }
-  }
-
   /** Encrypt a value for the given model field with the active key */
   async function encrypt(plaintext: string, context: EncryptionContext) {
     const { activeKeyId } = getKeyring();
@@ -281,13 +212,13 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
 
   /**
    * Decrypt a value of the given model field. Values without a version prefix are only accepted
-   * with a `legacySalt` (v1 helpers) or `allowPlaintext` (rows not migrated yet). Version-prefixed
-   * plaintext must be encrypted directly, rather than passed through this migration fallback.
+   * with `allowPlaintext` (rows not migrated yet). Version-prefixed plaintext must be encrypted
+   * directly, rather than passed through this migration fallback.
    */
   async function decrypt(
     value: string,
     context: EncryptionContext,
-    { legacySalt, allowPlaintext = false }: DecryptOptions = {},
+    { allowPlaintext = false }: DecryptOptions = {},
   ) {
     const match = ENCRYPTED_VALUE_PATTERN.exec(value);
     if (!match) {
@@ -296,7 +227,6 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
           cause: new Error("Invalid or unsupported encrypted value format"),
         });
       }
-      if (legacySalt != null) return decryptLegacy(value, legacySalt, context);
       if (allowPlaintext) return value;
       throw new Error(`${context.model}.${context.field} is not encrypted`);
     }

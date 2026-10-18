@@ -11,12 +11,10 @@ import {
 const key1 = "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=";
 const key2 = "ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=";
 const blindIndexKey = "YmxpbmQtaW5kZXgta2V5LWZvci10ZXN0cy0xMjM0NTY=";
-const legacyPassphrase = "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37";
 
 const encryption = createFieldEncryption({
   keys: `k1:${key1}`,
   blindIndexKey,
-  legacyPassphrase,
 });
 
 const givenName = { model: "FormEntry", field: "givenName" };
@@ -172,61 +170,6 @@ describe("key rotation", () => {
     await expect(
       renamed.decrypt(encrypted.replace("v2.k1.", "v2.k9."), givenName),
     ).rejects.toThrow("Could not decrypt");
-  });
-});
-
-describe("legacy v1 values", () => {
-  // Written by the v1 helpers (see db-encryption.test.ts)
-  const salt = "tZyLgCOOYjRw4p3cjQQJXw==";
-  const name = "jPNJft+LPw8ykfjEVdB7NAzCgKN/jx0d8gtoCV86yipx9gL4";
-  const email =
-    "OXQlCnHhebRqnU78wkHGgk1lvGt3sSrDUc6kzQQwn6d5zG775ZORCLvF5d8bDxM=";
-
-  test("decrypt with the record's salt", async () => {
-    expect(
-      await encryption.decrypt(name, givenName, { legacySalt: salt }),
-    ).toBe("John Doe");
-    expect(
-      await encryption.decrypt(email, givenName, { legacySalt: salt }),
-    ).toBe("john.doe@domain.tld");
-  });
-
-  test("anonymized (empty) values stay empty", async () => {
-    for (const legacySalt of [salt, ""]) {
-      expect(await encryption.decrypt("", givenName, { legacySalt })).toBe("");
-    }
-  });
-
-  test("an empty legacy salt never falls back to plaintext", async () => {
-    await expect(
-      encryption.decrypt(name, givenName, {
-        legacySalt: "",
-        allowPlaintext: true,
-      }),
-    ).rejects.toThrow("Could not decrypt legacy FormEntry.givenName");
-  });
-
-  test("v2 values ignore the legacy salt", async () => {
-    const encrypted = await encryption.encrypt("John", givenName);
-    expect(
-      await encryption.decrypt(encrypted, givenName, { legacySalt: salt }),
-    ).toBe("John");
-  });
-
-  test("wrong salt or missing passphrase fails", async () => {
-    await expect(
-      encryption.decrypt(name, givenName, {
-        legacySalt: "AAAAAAAAAAAAAAAAAAAAAA==",
-      }),
-    ).rejects.toThrow("Could not decrypt legacy FormEntry.givenName");
-
-    const withoutLegacy = createFieldEncryption({
-      keys: `k1:${key1}`,
-      blindIndexKey,
-    });
-    await expect(
-      withoutLegacy.decrypt(name, givenName, { legacySalt: salt }),
-    ).rejects.toThrow();
   });
 });
 

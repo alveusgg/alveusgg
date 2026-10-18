@@ -9,5 +9,4 @@ import { env } from "@/env";
 export const fieldEncryption = createFieldEncryption({
   keys: env.DATA_ENCRYPTION_KEYS,
   blindIndexKey: env.DATA_BLIND_INDEX_KEY,
-  legacyPassphrase: env.DATA_ENCRYPTION_PASSPHRASE,
 });
