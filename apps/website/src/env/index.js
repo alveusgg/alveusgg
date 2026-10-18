@@ -115,6 +115,12 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
     SENTRY_DSN: z.url().optional(),
+    NEON_CRM_ORG_ID: z
+      .string()
+      .regex(/^[a-z0-9-]+$/i)
+      .default("alveussanctuary"),
+    NEON_OAUTH_CLIENT_ID: z.string().optional(),
+    NEON_OAUTH_CLIENT_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -227,6 +233,9 @@ export const env = createEnv({
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
+    NEON_CRM_ORG_ID: process.env.NEON_CRM_ORG_ID || undefined,
+    NEON_OAUTH_CLIENT_ID: process.env.NEON_OAUTH_CLIENT_ID,
+    NEON_OAUTH_CLIENT_SECRET: process.env.NEON_OAUTH_CLIENT_SECRET,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
