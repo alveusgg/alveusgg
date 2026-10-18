@@ -48,7 +48,7 @@ describe("encrypt/decrypt", () => {
     await expect(encryption.decrypt("John", givenName)).rejects.toThrow(
       "FormEntry.givenName is not encrypted",
     );
-    for (const value of ["John", "john@example.com", "v2john@example.com"]) {
+    for (const value of ["John", "v1.john@example.com", "v2john@example.com"]) {
       expect(isEncrypted(value)).toBe(false);
       expect(
         await encryption.decrypt(value, givenName, { allowPlaintext: true }),
@@ -64,7 +64,6 @@ describe("encrypt/decrypt", () => {
       "v2.k1.",
       encrypted + "\n",
       encrypted.replace("v2.k1.", "v2.K1."),
-      encrypted.replace("v2.", "v3."),
       // Known plaintext like this has to be passed to encrypt directly
       "v2.k1.john@example.com",
     ]) {

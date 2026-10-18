@@ -17,9 +17,6 @@ const KEY_LENGTH = 32;
 const IV_LENGTH = 12;
 
 const KEYRING_ENTRY_PATTERN = /^([a-z0-9]{1,16}):(.+)$/;
-// Reserve version prefixes independently of payload validity. Corrupted ciphertext and unknown
-// versions must never be treated as plain text while migrating existing rows.
-const ENCRYPTED_PREFIX_PATTERN = /^v[0-9]+\./;
 const ENCRYPTED_VALUE_PATTERN = /^v2\.([a-z0-9]{1,16})\.([A-Za-z0-9_-]+)$/;
 
 /** Length of a blind index (base64url of a SHA-256 HMAC), e.g. for `@db.Char(43)` columns */
@@ -35,7 +32,7 @@ export type EncryptionContext = {
 };
 
 export type DecryptOptions = {
-  /** Return plaintext during migration. Values starting with `v<number>.` are always reserved. */
+  /** Return values that aren't encrypted as they are, for rows that aren't migrated yet */
   allowPlaintext?: boolean;
 };
 
@@ -89,9 +86,12 @@ function getAdditionalData(keyId: string, { model, field }: EncryptionContext) {
   return Buffer.from(`${VERSION}.${keyId}:${model}.${field}`);
 }
 
-/** Whether a value has an encryption version prefix. Does not validate or authenticate it. */
+/**
+ * Whether a value is in the encrypted format, i.e. starts with `v2.`. Doesn't check that it can
+ * be decrypted, use `decrypt` for that.
+ */
 export function isEncrypted(value: string) {
-  return ENCRYPTED_PREFIX_PATTERN.test(value);
+  return value.startsWith(`${VERSION}.`);
 }
 
 /**
@@ -154,9 +154,9 @@ export function createFieldEncryption(options: FieldEncryptionOptions) {
   }
 
   /**
-   * Decrypt a value of the given model field. Values without a version prefix are only accepted
-   * with `allowPlaintext` (rows not migrated yet). Version-prefixed plaintext must be encrypted
-   * directly, rather than passed through this migration fallback.
+   * Decrypt a value of the given model field. Plaintext is only returned with `allowPlaintext`.
+   * Values in the encrypted format always have to decrypt, so broken ones are never mistaken for
+   * plaintext. Known plaintext that happens to start with `v2.` has to be encrypted directly.
    */
   async function decrypt(
     value: string,
