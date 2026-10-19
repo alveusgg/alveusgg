@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useMemo } from "react";
 
 import IconGitHub from "@/icons/IconGitHub";
 
@@ -10,18 +8,9 @@ const footerLinkClasses =
   "underline decoration-gray-600 underline-offset-2 transition-colors hover:text-gray-300";
 
 export const Footer = () => {
-  const router = useRouter();
-  const hideSocials = useMemo(
-    () =>
-      router.pathname === "/admin" ||
-      router.pathname.startsWith("/admin/") ||
-      router.pathname.startsWith("/bingo/"),
-    [router.pathname],
-  );
-
   return (
     <>
-      {!hideSocials && <Socials />}
+      <Socials />
 
       <footer className="bg-gray-800 px-2 py-4 text-gray-400 md:px-0 md:py-2">
         <h2 className="sr-only">Page footer</h2>
