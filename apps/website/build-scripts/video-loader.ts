@@ -1,79 +1,66 @@
-// @ts-nocheck
-const { randomBytes } = require("crypto");
-const { join, dirname } = require("path");
-const { execFile } = require("child_process");
-const {
-  readFile,
+import { execFile } from "node:child_process";
+import { randomBytes } from "node:crypto";
+import {
   mkdir,
+  readFile,
   readdir,
+  rename,
   stat,
   unlink,
-  rename,
   writeFile,
-} = require("fs/promises");
-const { interpolateName, getHashDigest } = require("loader-utils");
-const ffmpeg = require("@ffmpeg-installer/ffmpeg");
-const ffprobe = require("@ffprobe-installer/ffprobe");
+} from "node:fs/promises";
+import { dirname, join } from "node:path";
 
-/**
- * @typedef {Object} VideoLoaderOptions
- * @property {string} [quality] Default video quality
- * @property {boolean} isDevelopment Is the loader being run in development mode
- */
+import ffmpeg from "@ffmpeg-installer/ffmpeg";
+import ffprobe from "@ffprobe-installer/ffprobe";
+import type * as FileType from "file-type";
+import { getHashDigest, interpolateName } from "loader-utils";
 
-/**
- * @typedef {Object} LoaderContext
- * @property {string} resourcePath Input video path
- * @property {string} [resourceQuery] Resource query
- * @property {string} [rootContext] Project root
- * @property {() => VideoLoaderOptions} getOptions Get loader options
- * @property {() => (error: Error | null, output?: string) => void} async Get the completion callback
- */
+type VideoLoaderOptions = {
+  quality?: string;
+  isDevelopment: boolean;
+};
 
-/**
- * @typedef {Object} VideoLoaderContext
- * @property {LoaderContext} context Loader context
- * @property {string} format Output filename format
- * @property {Buffer} content Input video content
- * @property {string} cache Directory to cache the resized video in
- * @property {string} output Directory to serve generated videos from
- */
+type LoaderContext = {
+  resourcePath: string;
+  resourceQuery?: string;
+  rootContext?: string;
+  getOptions: () => VideoLoaderOptions;
+  async: () => (error: Error | null, output?: string) => void;
+};
 
-/**
- * @typedef {Object} VideoLoaderOutput
- * @property {string} name Output filename
- * @property {Buffer | null} content Output video content
- * @property {number} [height] Output video height
- * @property {string} [type] Output video mime type
- * @property {boolean} cached Whether the output was cached
- * @property {boolean} skipped Whether the video processing was skipped
- */
+type VideoLoaderContext = {
+  context: LoaderContext;
+  format: string;
+  content: Buffer;
+  cache: string;
+  output: string;
+};
+
+type VideoLoaderOutput = {
+  name: string;
+  content: Buffer;
+  cached: boolean;
+  skipped: boolean;
+};
 
 /**
  * Run a shell command
- *
- * @param {string} file Executable to run
- * @param {string[]} args Arguments to pass to the executable
- * @return {Promise<{ stdout: string, stderr: string }>}
  */
-const exec = (file, args) =>
-  new Promise((resolve, reject) => {
+const exec = (file: string, args: string[]) =>
+  new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
     execFile(file, args, (error, stdout, stderr) => {
       if (error) reject({ error, stdout, stderr });
       else resolve({ stdout, stderr });
     });
   });
 
-/** @type {import("file-type")} */
-let fileTypeCache;
+let fileTypeCache: typeof FileType | undefined;
 
 /**
  * Get the file type of a buffer
- *
- * @param {Buffer} buffer Buffer to get the file type of
- * @return {Promise<ReturnType<import("file-type").fileTypeFromBuffer>>}
  */
-const fileType = async (buffer) => {
+const fileType = async (buffer: Buffer) => {
   if (!fileTypeCache) fileTypeCache = await import("file-type");
   return fileTypeCache.fileTypeFromBuffer(buffer);
 };
@@ -82,11 +69,8 @@ const cacheDir = "./.next/cache/video-loader";
 
 /**
  * Get the raw video data
- *
- * @param {VideoLoaderContext} ctx Video loader context
- * @return {Promise<VideoLoaderOutput>}
  */
-const videoRaw = async (ctx) => {
+const videoRaw = async (ctx: VideoLoaderContext) => {
   // Use ffprobe to get the height
   const { stdout } = await exec(ffprobe.path, [
     "-v",
@@ -99,7 +83,8 @@ const videoRaw = async (ctx) => {
     "json",
     ctx.context.resourcePath,
   ]);
-  const { height } = JSON.parse(stdout).streams[0];
+  const { height } = (JSON.parse(stdout) as { streams: [{ height: number }] })
+    .streams[0];
 
   // Use file-type to get the mime type
   const { mime } = (await fileType(ctx.content)) || {};
@@ -124,12 +109,11 @@ const videoRaw = async (ctx) => {
  * Get a scale filter for ffmpeg
  *
  * One of width or height must be set
- *
- * @param {number} [width] Optional width for the filter
- * @param {number} [height] Optional height for the filter
- * @return {string}
  */
-const scaleFilter = (width = undefined, height = undefined) => {
+const scaleFilter = (
+  width: number | undefined = undefined,
+  height: number | undefined = undefined,
+) => {
   if (width === undefined && height === undefined)
     throw new Error("One of width or height must be set");
 
@@ -144,27 +128,18 @@ const scaleFilter = (width = undefined, height = undefined) => {
 
 /**
  * Get a resized version of the video
- *
- * @param {VideoLoaderContext} ctx Video loader context
- * @param {string} [extension] Optional output extension (will default to input extension)
- * @param {number} [width] Optional width for the filter
- * @param {number} [height] Optional height for the filter
- * @param {number} [fps] Optional output frame rate
- * @param {string[]} [args=[]] Additional arguments to pass to ffmpeg
- * @param {string[]} [iargs=[]] Additional arguments to pass to ffmpeg (before the input file)
- * @return {Promise<VideoLoaderOutput>}
  */
 const videoResized = async (
-  ctx,
+  ctx: VideoLoaderContext,
   {
     extension = undefined,
     width = undefined,
     height = undefined,
     fps = undefined,
-  },
-  args = [],
-  iargs = [],
-) => {
+  }: { extension?: string; width?: number; height?: number; fps?: number },
+  args: string[] = [],
+  iargs: string[] = [],
+): Promise<VideoLoaderOutput> => {
   // Get the original extension
   const originalExtension = interpolateName(ctx.context, "[ext]", {
     context: ctx.context.rootContext,
@@ -262,12 +237,8 @@ const videoResized = async (
 
 /**
  * Get the requested quality from the resource query, or the default options
- *
- * @param {{ quality: string | null }} options Webpack loader options
- * @param {string} query Resource query
- * @return {string | null}
  */
-const getQuality = (options, query) => {
+const getQuality = (options: VideoLoaderOptions, query: string | undefined) => {
   if (typeof query === "string" && query[0] === "?") {
     const params = new URLSearchParams(query.slice(1));
     const quality = params.get("quality");
@@ -319,20 +290,18 @@ const defaultTypes = {
   ],
 };
 
-/**
- * @typedef {Object} VideoLoaderResult
- * @property {string} output Output video content
- * @property {{ cached: number, skipped: number, total: number }} stats Stats on the video processing
- */
+type VideoLoaderResult = {
+  output: string;
+  stats: { cached: number; skipped: number; total: number };
+};
 
 /**
  * Run the video loader
- *
- * @param {VideoLoaderContext["context"]} context Loader context
- * @param {Buffer} content Input video content
- * @return {Promise<VideoLoaderResult>}
  */
-const videoLoader = async (context, content) => {
+const videoLoader = async (
+  context: LoaderContext,
+  content: Buffer,
+): Promise<VideoLoaderResult> => {
   console.log(`Processing video ${context.resourcePath} ...`);
 
   // Get the prefix for the output files
@@ -341,7 +310,7 @@ const videoLoader = async (context, content) => {
 
   // Get the quality
   const quality =
-    getQuality(options, context.resourceQuery) || Object.keys(defaultTypes)[0];
+    getQuality(options, context.resourceQuery) || Object.keys(defaultTypes)[0]!;
   if (quality === "poster" || !Object.hasOwn(defaultTypes, quality))
     throw new Error(`Invalid quality: ${quality}`);
 
@@ -353,10 +322,12 @@ const videoLoader = async (context, content) => {
     cache: join(context.rootContext || process.cwd(), cacheDir),
     output: join(context.rootContext || process.cwd(), "public/videos"),
   };
-  const files = [];
-  /** @typedef {{ src: string, size: number, type: string }} Source */
-  /** @type {{ poster: string | undefined, sources: Array<Source> }} */
-  const obj = { poster: undefined, sources: [] };
+  const files: VideoLoaderOutput[] = [];
+  type Source = { src: string; size: number; type: string };
+  const obj: { poster: string | undefined; sources: Source[] } = {
+    poster: undefined,
+    sources: [],
+  };
 
   // Load the raw video so we know the type
   const raw = await videoRaw(ctx);
@@ -380,7 +351,7 @@ const videoLoader = async (context, content) => {
 
   // When not in development mode, process the video
   if (!options.isDevelopment) {
-    const resizeOpts = defaultTypes[quality].filter(
+    const resizeOpts = defaultTypes[quality as "high" | "low"].filter(
       ({ type }) => type === raw.type,
     );
     if (resizeOpts.length) {
@@ -449,10 +420,11 @@ const videoLoader = async (context, content) => {
   };
 };
 
-/**
- * @type {[VideoLoaderContext["context"], Buffer, { resolve: Function, reject: Function }][]}
- */
-const queue = [];
+type QueueCallbacks = {
+  resolve: (result: VideoLoaderResult) => void;
+  reject: (error: unknown) => void;
+};
+const queue: [LoaderContext, Buffer, QueueCallbacks][] = [];
 let processing = false;
 
 /**
@@ -464,7 +436,7 @@ const queueProcess = async () => {
   console.log("Processing video queue ...");
 
   while (queue.length) {
-    const [context, content, { resolve, reject }] = queue.shift();
+    const [context, content, { resolve, reject }] = queue.shift()!;
     try {
       const res = await videoLoader(context, content);
       // Prune after queued videos have reused their cached conversions.
@@ -485,17 +457,14 @@ const queueProcess = async () => {
 
 /**
  * Run the video loader
- *
- * @param {VideoLoaderContext["context"]} context Loader context
- * @param {Buffer} content Input video content
- * @return {Promise<VideoLoaderResult>}
  */
-const queueVideo = async (context, content) => {
+const queueVideo = async (context: LoaderContext, content: Buffer) => {
   console.log(`Queueing video ${context.resourcePath} ...`);
 
   // Create a promise to represent this video processing
-  let resolve, reject;
-  const promise = new Promise((res, rej) => {
+  let resolve!: QueueCallbacks["resolve"];
+  let reject!: QueueCallbacks["reject"];
+  const promise = new Promise<VideoLoaderResult>((res, rej) => {
     resolve = res;
     reject = rej;
   });
@@ -510,11 +479,8 @@ const queueVideo = async (context, content) => {
 
 /**
  * Clean up old cache files
- *
- * @param {string} cache Directory containing cached conversions
- * @return {Promise<void>}
  */
-const cacheCleanup = async (cache) => {
+const cacheCleanup = async (cache: string) => {
   // Get all files in the cache dir
   const cacheFiles = await readdir(cache, { withFileTypes: true })
     .then((file) => file.filter((f) => f.isFile()).map((f) => f.name))
@@ -531,11 +497,7 @@ const cacheCleanup = async (cache) => {
   );
 };
 
-/**
- * @this {LoaderContext}
- * @param {Buffer} content Input video content
- */
-module.exports = function (content) {
+export default function (this: LoaderContext, content: Buffer) {
   const callback = this.async();
   queueVideo(this, content)
     .then((res) => {
@@ -548,6 +510,6 @@ module.exports = function (content) {
       console.error(` ... ${this.resourcePath} failed`, e);
       callback(e);
     });
-};
+}
 
-module.exports.raw = true;
+export const raw = true;
