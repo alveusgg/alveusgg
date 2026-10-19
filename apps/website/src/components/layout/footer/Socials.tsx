@@ -62,8 +62,10 @@ const Socials = () => {
   const crawler = useCrawler();
 
   return (
-    <Section dark className="z-0 py-0">
+    <Section dark className="z-0 py-0" as="footer">
       <div className="grid grid-cols-1 gap-8 pt-8 lg:grid-cols-5 lg:grid-rows-auto-2">
+        <h2 className="sr-only">Page footer</h2>
+
         <div className="grid h-fit grid-cols-auto-2 justify-start gap-4 lg:col-span-2 lg:row-start-1">
           <Image
             src={logoImage}
