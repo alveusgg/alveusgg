@@ -14,6 +14,7 @@ import updateChannels from "@/components/shared/data/updateChannels";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
 
+import logoImage from "@/assets/logo.png";
 import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
@@ -29,68 +30,96 @@ const Socials = () => {
 
   return (
     <Section dark className="z-0 py-0">
-      <div className="flex flex-wrap-reverse gap-y-4 pt-8">
-        <div className="mt-auto basis-full md:basis-1/2 md:pr-8">
-          <div className="relative mx-auto aspect-[1.1/1] size-full max-w-lg overflow-hidden">
-            <Link
-              href="https://www.instagram.com/p/CoIq_hvOxiQ/"
-              rel="noreferrer"
-              target="_blank"
-              className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-3/5 rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
-            >
-              <span className="sr-only">
-                Open Instagram post of Georgie, Alveus&apos; African Bullfrog
-              </span>
-              {crawler || reducedMotion ? (
-                <Image
-                  src={reelVideo.poster || ""}
-                  alt=""
-                  width={400}
-                  height={680}
-                  loading="lazy"
-                  className="absolute inset-0 size-full object-cover"
-                />
-              ) : (
-                <Video
-                  sources={reelVideo.sources}
-                  poster={reelVideo.poster}
-                  className="absolute inset-0 size-full object-cover"
-                  width={400}
-                  height={680}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              )}
-              <IconInstagram
-                className="absolute top-0 right-0 m-3 opacity-60"
-                size={30}
-              />
-            </Link>
-            <Link
-              href="https://x.com/AlveusSanctuary/status/1627138286140461063/"
-              rel="noreferrer"
-              target="_blank"
-              className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-102"
-            >
-              <Image
-                src={pic}
-                width={400}
-                height={400}
-                loading="lazy"
-                alt="A picture of Winnie the Moo, Alveus' Red Angus cow, on X (Twitter)"
-                className="absolute inset-0"
-              />
-              <IconTwitter
-                className="absolute top-0 right-0 m-3 opacity-80"
-                size={30}
-              />
-            </Link>
-          </div>
+      <div className="grid grid-cols-1 gap-8 pt-8 lg:grid-cols-5 lg:grid-rows-auto-2">
+        <div className="grid h-fit grid-cols-auto-2 justify-start gap-4 lg:col-span-2 lg:row-start-1">
+          <Image
+            src={logoImage}
+            alt="Alveus Sanctuary Inc."
+            height={120}
+            className="h-28 w-auto"
+          />
+
+          <p className="my-auto w-fit uppercase">
+            <span className="flex justify-between font-serif text-4xl leading-none">
+              {"Alveus".split("").map((letter, index) => (
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- Each letter is at a fixed position
+                <span key={index}>{letter}</span>
+              ))}
+            </span>{" "}
+            <span className="flex justify-between pr-0.5 text-xl leading-none font-extrabold">
+              {"Sanctuary".split("").map((letter, index) => (
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- Each letter is at a fixed position
+                <span key={index}>{letter}</span>
+              ))}
+            </span>
+          </p>
+
+          <p className="col-start-2 text-sm font-semibold">
+            Registered 501(c)(3) nonprofit
+            <br />
+            EIN 86-1772907
+          </p>
         </div>
 
-        <div className="my-auto basis-full py-4 md:basis-1/2">
+        <div className="relative aspect-[1.1/1] size-full h-fit max-w-lg self-end overflow-y-clip max-lg:order-last lg:col-span-2 lg:row-start-2">
+          <Link
+            href="https://www.instagram.com/p/CoIq_hvOxiQ/"
+            rel="noreferrer"
+            target="_blank"
+            className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-3/5 rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
+          >
+            <span className="sr-only">
+              Open Instagram post of Georgie, Alveus&apos; African Bullfrog
+            </span>
+            {crawler || reducedMotion ? (
+              <Image
+                src={reelVideo.poster || ""}
+                alt=""
+                width={400}
+                height={680}
+                loading="lazy"
+                className="absolute inset-0 size-full object-cover"
+              />
+            ) : (
+              <Video
+                sources={reelVideo.sources}
+                poster={reelVideo.poster}
+                className="absolute inset-0 size-full object-cover"
+                width={400}
+                height={680}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            )}
+            <IconInstagram
+              className="absolute top-0 right-0 m-3 opacity-60"
+              size={30}
+            />
+          </Link>
+          <Link
+            href="https://x.com/AlveusSanctuary/status/1627138286140461063/"
+            rel="noreferrer"
+            target="_blank"
+            className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-102"
+          >
+            <Image
+              src={pic}
+              width={400}
+              height={400}
+              loading="lazy"
+              alt="A picture of Winnie the Moo, Alveus' Red Angus cow, on X (Twitter)"
+              className="absolute inset-0"
+            />
+            <IconTwitter
+              className="absolute top-0 right-0 m-3 opacity-80"
+              size={30}
+            />
+          </Link>
+        </div>
+
+        <div className="my-auto py-4 lg:col-span-3 lg:row-span-full">
           <Heading level={2}>Stay Updated!</Heading>
 
           <p className="mt-4 mb-2">
