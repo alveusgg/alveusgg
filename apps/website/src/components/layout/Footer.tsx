@@ -54,7 +54,7 @@ const links: { title: string; href: string }[] = [
   },
 ];
 
-const Socials = () => {
+const Footer = () => {
   const reducedMotion = usePrefersReducedMotion();
 
   // If this is a known crawler, we'll not load the video
@@ -251,4 +251,4 @@ const Socials = () => {
   );
 };
 
-export default Socials;
+export default Footer;
