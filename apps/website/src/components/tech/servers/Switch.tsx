@@ -48,6 +48,7 @@ const Ports = ({
               ? "after:-bottom-1/3 after:left-1/6"
               : "after:-top-1/3 after:right-1/6"),
         )}
+        // eslint-disable-next-line @eslint-react/no-array-index-key -- These diagram elements have fixed physical positions.
         key={i}
       />
     ))}
@@ -86,6 +87,7 @@ const Switch = ({
             <div className="h-[0.5cqw] w-[calc((1/15*100%)+2cqw)] rounded-sm bg-blue-500" />
           )}
           {Array.from({ length: 5 }).map((_, i) => (
+            // eslint-disable-next-line @eslint-react/no-array-index-key -- These diagram elements have fixed physical positions.
             <div className="h-[0.5cqw] grow rounded-sm bg-gray-900" key={i} />
           ))}
         </div>
@@ -101,6 +103,7 @@ const Switch = ({
               {Array.from({ length: drives }).map((_, i) => (
                 <div
                   className="relative aspect-5/1 h-[4.5cqw] rounded-sm border-[0.25cqw] border-gray-600"
+                  // eslint-disable-next-line @eslint-react/no-array-index-key -- These diagram elements have fixed physical positions.
                   key={i}
                 >
                   <div className="h-full w-[0.25cqw] bg-gray-600" />

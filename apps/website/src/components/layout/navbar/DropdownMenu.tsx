@@ -1,12 +1,5 @@
 import { MenuItem, MenuItems } from "@headlessui/react";
-import {
-  Children,
-  type LiHTMLAttributes,
-  type ReactElement,
-  type ReactNode,
-  type Ref,
-  cloneElement,
-} from "react";
+import { type ReactNode } from "react";
 
 import {
   type NavStructureDropdown,
@@ -14,20 +7,6 @@ import {
 } from "@/data/navigation";
 
 import { NavLinkSub } from "@/components/layout/navbar/NavLink";
-
-const DropdownMenuItem = ({
-  children,
-  ref,
-  ...props
-}: LiHTMLAttributes<HTMLLIElement> & {
-  children: ReactElement<{ ref?: Ref<HTMLElement> }>;
-  ref?: Ref<HTMLElement>;
-}) => (
-  <li {...props}>
-    {/* eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down */}
-    {Children.map(children, (child) => cloneElement(child, { ref }))}
-  </li>
-);
 
 function DropdownLinks({
   links,
@@ -39,19 +18,21 @@ function DropdownLinks({
   return (
     <>
       {Object.entries(links).map(([key, link]) => (
-        <MenuItem as={DropdownMenuItem} key={key} className="group/item">
-          {({ close }) => (
-            <NavLinkSub
-              href={link.link}
-              active={active === link.link}
-              external={link.external}
-              className="w-full min-w-max outline-blue-500 group-data-focus/item:not-hover:outline-2"
-              onClick={close}
-            >
-              {link.title}
-            </NavLinkSub>
-          )}
-        </MenuItem>
+        <li key={key}>
+          <MenuItem>
+            {({ close }) => (
+              <NavLinkSub
+                href={link.link}
+                active={active === link.link}
+                external={link.external}
+                className="w-full min-w-max outline-blue-500 data-focus:not-hover:outline-2"
+                onClick={close}
+              >
+                {link.title}
+              </NavLinkSub>
+            )}
+          </MenuItem>
+        </li>
       ))}
     </>
   );
