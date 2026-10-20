@@ -12,8 +12,8 @@ import {
   type ReactNode,
   type Ref,
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -378,7 +378,7 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useConsent = () => {
-  const context = useContext(Context);
+  const context = use(Context);
   if (context === undefined)
     throw new Error("useConsent must be used within a ConsentProvider");
   return context;

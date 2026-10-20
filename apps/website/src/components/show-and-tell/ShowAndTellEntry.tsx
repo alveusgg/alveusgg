@@ -105,11 +105,11 @@ const Header = ({
             [entry.seenOnStream, "Seen on stream"],
           ] satisfies [boolean, string][]
         ).map(
-          ([cond, text], i) =>
+          ([cond, text]) =>
             cond && (
               <Badge
                 dark={isPresentationView}
-                key={i}
+                key={text}
                 pulse={isPresentationView}
               >
                 {text}

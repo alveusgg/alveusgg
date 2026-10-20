@@ -326,6 +326,7 @@ const AboutTechPresetsPage: NextPage = () => {
                           {Array.from({ length: 6 }).map((_, i) =>
                             !selectedPosition || selectedPosition === i + 1 ? (
                               <ActionButton
+                                // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
                                 key={i}
                                 onClick={() =>
                                   setSelectedPosition(
@@ -344,6 +345,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               />
                             ) : (
                               <RunCommandButton
+                                // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
                                 key={i}
                                 command="swap"
                                 args={[
