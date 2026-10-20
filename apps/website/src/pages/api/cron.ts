@@ -9,6 +9,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  // Without a secret anyone could trigger the scheduled tasks, so only allow
+  // that outside of production (e.g. for local development)
+  if (!env.CRON_SECRET && env.NODE_ENV === "production") {
+    console.error("[cron] CRON_SECRET is not set, not running scheduled tasks");
+    return res.status(500).json({ message: "Cron secret not configured" });
+  }
+
   // Check for secret to confirm this is a valid request
   const { authorization } = req.headers;
   if (

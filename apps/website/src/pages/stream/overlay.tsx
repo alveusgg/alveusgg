@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 
+import { env } from "@/env";
+
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { getToday } from "@/utils/datetime";
@@ -12,8 +14,9 @@ import { getToday } from "@/utils/datetime";
 import useChat from "@/hooks/chat";
 import useLocalStorage from "@/hooks/storage";
 
+import Video from "@/components/content/Video";
 import Crunch from "@/components/overlay/Crunch";
-import Cycle from "@/components/overlay/Cycle";
+import Cycle, { type CycleItemProps } from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
 import Raid from "@/components/overlay/Raid";
@@ -30,6 +33,7 @@ import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6camHalloween from "@/assets/stream/border-6cam-halloween.png";
+import border6camWolfWeek from "@/assets/stream/border-6cam-wolf-week.webm";
 import border6cam from "@/assets/stream/border-6cam.png";
 import borderPipChristmas from "@/assets/stream/border-pip-christmas.png";
 import borderPip from "@/assets/stream/border-pip.png";
@@ -62,12 +66,31 @@ const debug = [
   "bg-gray",
 ];
 
+const themesMonthly = new Map(
+  Object.entries({
+    10: "halloween",
+    12: "christmas",
+  } as const),
+);
+
+const themesSchedule = [
+  { start: "2026-10-18", end: "2026-10-25", theme: "wolf-week" },
+] as const satisfies readonly { start: string; end: string; theme: string }[];
+
+const themesSchema = z.literal([
+  "default",
+  ...themesMonthly.values(),
+  ...themesSchedule.map(({ theme }) => theme),
+]);
+
+type StreamTheme = z.infer<typeof themesSchema>;
+
+type StreamBorder = StaticImageData | typeof border6camWolfWeek;
+
 interface Grid {
   grid: string;
-  border?: {
+  border?: Partial<Record<StreamTheme, StreamBorder>> & {
     default: StaticImageData;
-    christmas?: StaticImageData;
-    halloween?: StaticImageData;
     flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
@@ -118,6 +141,7 @@ const grid: Record<Layout, Grid> = {
       default: border6cam,
       christmas: border6camChristmas,
       halloween: border6camHalloween,
+      "wolf-week": border6camWolfWeek,
     },
     slots: [
       "1 / 2 / span 2 / span 2", // top-right
@@ -339,20 +363,41 @@ const OverlayPage: NextPage = () => {
     ),
   );
 
-  // Track the current date to switch borders to non-default variants
-  const [date, setDate] = useState<`${number}-${number}`>();
+  // Track the current date to switch borders to non-default themes
+  const [date, setDate] = useState<string | null>(null);
   useEffect(() => {
     const updateDate = () => {
-      const today = getToday();
-      const month = String(today.month).padStart(2, "0");
-      const day = String(today.day).padStart(2, "0");
-      setDate(`${month}-${day}` as `${number}-${number}`);
+      setDate(getToday().toISODate());
     };
 
     updateDate();
     const interval = setInterval(updateDate, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Determine which border theme to use based on the current date and override
+  const border = useMemo(() => {
+    // Valid URL overrides take priority over the configured theme
+    const schema = themesSchema.optional().catch(undefined);
+    const theme =
+      schema.parse(query.theme) ??
+      schema.parse(env.NEXT_PUBLIC_STREAM_OVERLAY_THEME);
+
+    // Every bordered layout must have a default theme, so short-circuit then
+    if (theme === "default") return grid[layout].border?.default;
+
+    // Select the highest priority border theme that the layout supports
+    return [
+      theme,
+      date &&
+        themesSchedule.find(({ start, end }) => date >= start && date < end)
+          ?.theme,
+      date && themesMonthly.get(date.slice(5, 7)),
+      "default" as const,
+    ]
+      .map((theme) => theme && grid[layout].border?.[theme])
+      .find((source) => !!source);
+  }, [date, layout, query.theme]);
 
   // Request fullscreen when the page is clicked
   useEffect(() => {
@@ -376,7 +421,7 @@ const OverlayPage: NextPage = () => {
         <div className={classes("absolute inset-0 grid", grid[layout].grid)}>
           {grid[layout].slots.map((slot, index) => (
             <div
-              key={`${layout}-${index}`}
+              key={`${layout}-${slot}`}
               className={classes(
                 "relative size-full",
                 "debug" in query && debug[index % debug.length],
@@ -424,23 +469,33 @@ const OverlayPage: NextPage = () => {
           ))}
         </div>
 
-        {!hide.has("border") && grid[layout].border && (
-          <Image
-            src={
-              (date?.startsWith("12-") && grid[layout].border.christmas) ||
-              (date?.startsWith("10-") && grid[layout].border.halloween) ||
-              grid[layout].border.default
-            }
-            alt=""
-            fill
-            priority
+        {!hide.has("border") && border && (
+          <div
+            aria-hidden="true"
             className={classes(
-              "pointer-events-none select-none",
+              "pointer-events-none absolute inset-0 select-none",
               grid[layout].border?.flip?.x && "-scale-x-100",
               grid[layout].border?.flip?.y && "-scale-y-100",
               "debug" in query && "opacity-75",
             )}
-          />
+          >
+            {"sources" in border ? (
+              <Video
+                sources={border.sources}
+                poster={border.poster}
+                className="size-full object-fill"
+                width={2560}
+                height={1440}
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+              />
+            ) : (
+              <Image src={border} alt="" fill priority />
+            )}
+          </div>
         )}
       </div>
 
@@ -456,11 +511,17 @@ const OverlayPage: NextPage = () => {
         items={useMemo(
           () =>
             [
-              !hide.has("socials") && (
+              !hide.has("socials") && {
+                key: "socials",
                 // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
-                <Socials interval={cycleTime / 3} key="socials" />
-              ),
-              !hide.has("event") && <Event key="event" />,
+                render: (props: CycleItemProps) => (
+                  <Socials interval={cycleTime / 3} {...props} />
+                ),
+              },
+              !hide.has("event") && {
+                key: "event",
+                render: (props: CycleItemProps) => <Event {...props} />,
+              },
             ].filter((x) => !!x),
           [hide],
         )}
@@ -472,12 +533,22 @@ const OverlayPage: NextPage = () => {
         items={useMemo(
           () =>
             [
-              !hide.has("disclaimer") && !disclaimer && (
-                <Text key="disclaimer" className="text-xl text-stroke">
-                  {disclaimerText}
-                </Text>
-              ),
-              !hide.has("subs") && <Subs key="subs" />,
+              !hide.has("disclaimer") &&
+                !disclaimer && {
+                  key: "disclaimer",
+                  render: ({ className, ref }: CycleItemProps) => (
+                    <Text
+                      className={classes("text-xl text-stroke", className)}
+                      ref={ref}
+                    >
+                      {disclaimerText}
+                    </Text>
+                  ),
+                },
+              !hide.has("subs") && {
+                key: "subs",
+                render: (props: CycleItemProps) => <Subs {...props} />,
+              },
             ].filter((x) => !!x),
           [hide, disclaimer],
         )}

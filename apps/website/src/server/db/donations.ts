@@ -228,6 +228,20 @@ export type PixelWithDonation = Awaited<
   ReturnType<typeof getFilteredPixelsByDonation>
 >[number];
 
+function filterDonationByNeonAccountId<T extends string>(accountId: T) {
+  if (!accountId) {
+    throw new Error("Neon account ID is required for Neon donations filter");
+  }
+
+  return {
+    provider: "neon" satisfies Providers,
+    providerMetadata: {
+      path: "$.neonAccountId",
+      equals: accountId,
+    },
+  } as const satisfies Prisma.DonationWhereInput;
+}
+
 async function getFilteredPixelsByDonation(
   muralId: string,
   filters: Prisma.DonationWhereInput[],
@@ -274,6 +288,18 @@ export async function getExternalPixelsByVerification(
   return getFilteredPixelsByDonation(
     muralId,
     [filterDonationByExternalVerification(verification)],
+    pixelId,
+  );
+}
+
+export async function getNeonPixels(
+  muralId: string,
+  neonAccountId: string,
+  pixelId?: string,
+) {
+  return getFilteredPixelsByDonation(
+    muralId,
+    [filterDonationByNeonAccountId(neonAccountId)],
     pixelId,
   );
 }
