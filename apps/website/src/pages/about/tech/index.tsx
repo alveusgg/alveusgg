@@ -38,9 +38,6 @@ const sectionLinks = [
 ];
 
 const subCommandNames: (keyof typeof commands)[] = [
-  "ptzlist",
-  "ptzload",
-  "ptzhome",
   "ptzzoom",
   "ptzfocus",
   "ptzautofocus",
@@ -163,9 +160,10 @@ const AboutTechPage: NextPage = () => {
               Alveus Sanctuary on Twitch
             </Link>{" "}
             can control the position of the cameras currently shown on the
-            livestream! Use the commands below in the Twitch chat to load preset
-            positions, change the layout of the stream, or even tweak the focus
-            or zoom of the cameras.
+            livestream! Load camera presets from the{" "}
+            <Link href="/about/tech/presets">camera presets page</Link>. Use the
+            commands below in Twitch chat to change the layout of the stream or
+            tweak the focus or zoom of the cameras.
           </p>
 
           <Commands commands={subCommands} className="my-8" />
@@ -205,12 +203,10 @@ const AboutTechPage: NextPage = () => {
 
         <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
           <p className="text-lg">
-            Overwhelmed by the number of camera presets available, or just
-            don&apos;t want to run commands by hand in chat? We&apos;ve got you
-            covered with our camera presets page! View thumbnail previews and
-            descriptions of all the camera presets available, and if you&apos;re
-            signed in as a subscriber, you can load them directly from the page
-            to control what views are shown on stream.
+            View thumbnail previews and descriptions of camera presets on our
+            camera presets page. If you&apos;re signed in as a subscriber, you
+            can load them directly from the page to control what views are shown
+            on stream.
           </p>
 
           <Button href="/about/tech/presets" className="shrink-0">

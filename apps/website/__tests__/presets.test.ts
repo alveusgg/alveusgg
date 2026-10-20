@@ -247,6 +247,38 @@ describe("durable preset commands", () => {
     ).toBe("completed");
     expect(db.cameraPresetOperation.update).not.toHaveBeenCalled();
   });
+
+  test("unknown load outcomes are durable and a UUID retry cannot dispatch them again", async () => {
+    const load = {
+      ...operation,
+      action: "load",
+      command: { ...command, action: "load" as const },
+      preset: { id, version: 1, position: capture.position },
+    };
+    const error =
+      "Load outcome unknown; it will not be automatically repeated.";
+    db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(load);
+    expect(
+      await completePresetOperation({ id, status: "unknown", error }),
+    ).toMatchObject({ id, status: "unknown", error });
+    expect(db.cameraPresetOperation.update).toHaveBeenCalledWith({
+      where: { id },
+      data: { status: "unknown", error },
+    });
+    const settled = { ...load, status: "unknown", error };
+    db.cameraPresetOperation.findUnique.mockResolvedValue(settled);
+    db.cameraPresetOperation.findUniqueOrThrow.mockResolvedValue(settled);
+    expect(await commandPreset(load.command)).toMatchObject({
+      id,
+      status: "unknown",
+      error,
+    });
+    expect(
+      await completePresetOperation({ id, status: "completed" }),
+    ).toMatchObject({ status: "unknown", error });
+    expect(db.cameraPresetOperation.create).not.toHaveBeenCalled();
+    expect(dispatchFetch).not.toHaveBeenCalled();
+  });
 });
 
 describe("capture delivery and publication", () => {
