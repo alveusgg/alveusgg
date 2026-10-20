@@ -17,6 +17,7 @@ import IconGitHub from "@/icons/IconGitHub";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
 
+import charityNavigatorImage from "@/assets/charity-navigator-badge.svg";
 import logoImage from "@/assets/logo.png";
 import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
@@ -242,6 +243,55 @@ const Footer = () => {
               <p className="text-xs/loose tracking-widest text-alveus-green-200 uppercase">
                 Founder, Alveus Sanctuary
               </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div>
+              <p className="font-bold tracking-widest text-alveus-tan-200 uppercase">
+                Independent charity ratings
+              </p>
+              <Heading level={2} className="my-0 font-sans text-xl">
+                Recognized for transparency and accountability.
+              </Heading>
+              <p className="text-alveus-green-200">
+                Helping donors and funders make informed decisions about their
+                support.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-4">
+              <Link
+                title="Candid."
+                href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
+                rel="noreferrer"
+                target="_blank"
+                className="group border-l border-l-alveus-green-300 pl-4"
+              >
+                <Image
+                  className="size-20 transition-transform group-hover:scale-105"
+                  src="https://widgets.guidestar.org/prod/v1/pdp/transparency-seal/10965548/svg"
+                  width={100}
+                  height={100}
+                  alt="Platinum Transparency Seal by Candid"
+                />
+              </Link>
+
+              <Link
+                title="Charity Navigator"
+                href="https://www.charitynavigator.org/ein/861772907"
+                rel="noreferrer"
+                target="_blank"
+                className="group border-l border-l-alveus-green-300 pl-4"
+              >
+                <Image
+                  className="size-20 transition-transform group-hover:scale-105"
+                  src={charityNavigatorImage}
+                  width={100}
+                  height={100}
+                  alt="Three-Star Charity Rating Badge by Charity Navigator"
+                />
+              </Link>
             </div>
           </div>
 
