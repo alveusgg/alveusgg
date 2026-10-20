@@ -18,12 +18,14 @@ export const NotificationsButton = ({
   openDirectionX = "left",
   openDirectionY = "bottom",
   showLabel = false,
+  size,
   className,
   containerClassName,
 }: {
   openDirectionX?: "left" | "right";
   openDirectionY?: "top" | "bottom";
   showLabel?: boolean;
+  size?: number;
   className?: string;
   containerClassName?: string;
 }) => {
@@ -51,7 +53,7 @@ export const NotificationsButton = ({
         className={classes("flex gap-2", className)}
         title={!showLabel ? "Push Notifications" : undefined}
       >
-        <Icon />
+        <Icon size={size} />
 
         {showLabel && <span>Push Notifications on this device</span>}
       </PopoverButton>

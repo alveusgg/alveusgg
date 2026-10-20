@@ -22,7 +22,7 @@ import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
 const buttonClasses =
-  "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";
+  "block rounded-xl border border-alveus-tan p-2 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green";
 
 const linkClasses =
   "underline decoration-alveus-green-200 transition-colors text-alveus-tan hover:text-alveus-tan-50 hover:decoration-alveus-tan";
@@ -154,57 +154,75 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col justify-between gap-4 lg:col-span-3 lg:row-span-full lg:pb-8">
-          <div>
-            <Heading level={2}>Stay Updated!</Heading>
+        <div className="flex flex-col justify-between gap-8 lg:col-span-3 lg:row-span-full lg:pb-8">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <div>
+              <p className="font-bold tracking-widest text-alveus-tan-200 uppercase">
+                @alveussanctuary
+              </p>
+              <Heading level={2} className="text-5xl text-balance">
+                Stay connected to the sanctuary.
+              </Heading>
+              <p className="text-alveus-green-200">
+                Follow along with the ambassadors, their care, and our work.
+              </p>
+            </div>
 
-            <p className="mt-4 mb-2">
-              follow <span className="font-bold">@alveussanctuary</span> on all
-              social platforms!
-            </p>
+            <div className="flex flex-col gap-4 xl:justify-self-end">
+              <div>
+                <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
+                  Follow us
+                </p>
 
-            <ul className="flex flex-wrap gap-4">
-              {Object.entries(socials).map(([key, social]) => (
-                <li key={key}>
-                  <a
-                    className={buttonClasses}
-                    href={social.link}
-                    target="_blank"
-                    rel="noreferrer me"
-                    title={social.title}
-                  >
-                    <social.icon size={24} />
-                  </a>
-                </li>
-              ))}
-            </ul>
+                <ul className="flex flex-wrap gap-2">
+                  {Object.entries(socials).map(([key, social]) => (
+                    <li key={key}>
+                      <a
+                        className={buttonClasses}
+                        href={social.link}
+                        target="_blank"
+                        rel="noreferrer me"
+                        title={social.title}
+                      >
+                        <social.icon size={24} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            <p className="mt-4 mb-2">
-              and keep up-to-date with our announcement channels:
-            </p>
+              <div>
+                <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
+                  Announcement channels
+                </p>
 
-            <ul className="flex flex-wrap gap-4">
-              <li>
-                <NotificationsButton
-                  className={buttonClasses}
-                  openDirectionX="right"
-                  openDirectionY="top"
-                />
-              </li>
-              {Object.entries(updateChannels).map(([key, updateChannel]) => (
-                <li key={key}>
-                  <a
-                    className={buttonClasses}
-                    href={updateChannel.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    title={updateChannel.title}
-                  >
-                    <updateChannel.icon size={24} />
-                  </a>
-                </li>
-              ))}
-            </ul>
+                <ul className="flex flex-wrap gap-2">
+                  <li>
+                    <NotificationsButton
+                      size={24}
+                      className={buttonClasses}
+                      openDirectionX="right"
+                      openDirectionY="top"
+                    />
+                  </li>
+                  {Object.entries(updateChannels).map(
+                    ([key, updateChannel]) => (
+                      <li key={key}>
+                        <a
+                          className={buttonClasses}
+                          href={updateChannel.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          title={updateChannel.title}
+                        >
+                          <updateChannel.icon size={24} />
+                        </a>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">
