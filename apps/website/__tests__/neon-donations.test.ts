@@ -158,7 +158,9 @@ test.each(["later page", "missing donation"])(
     }
     fetchMock.mockResolvedValueOnce(new Response(null, { status: 500 }));
 
-    await expect(syncNeonDonationAccounts("200")).rejects.toThrow();
+    await expect(syncNeonDonationAccounts("200")).rejects.toMatchObject({
+      cause: new Error("Request failed with status 500"),
+    });
 
     expect(updateAccounts).not.toHaveBeenCalled();
     expect(cache.get(key)?.value).toBe("pending");

@@ -36,7 +36,14 @@ export async function syncNeonDonationAccounts(accountId: string) {
   const owners = new Map<string, string>();
   for (let page = 0, pages = 1; page < pages; page++) {
     const response = await getAccountDonations(options, accountId, page);
-    if (!response.ok) throw new Error("Failed to fetch Neon account donations");
+    if (!response.ok) {
+      throw new Error("Failed to fetch Neon account donations", {
+        cause:
+          response.error instanceof Error
+            ? response.error
+            : new Error(response.error),
+      });
+    }
 
     const { donations, pagination } = response.data;
     pages = pagination.totalPages;
@@ -76,7 +83,12 @@ export async function syncNeonDonationAccounts(accountId: string) {
       } else if (response.errorType === "request" && response.status === 404) {
         owner = null;
       } else {
-        throw new Error("Failed to verify Neon donation ownership");
+        throw new Error("Failed to verify Neon donation ownership", {
+          cause:
+            response.error instanceof Error
+              ? response.error
+              : new Error(response.error),
+        });
       }
     }
     const metadata = donation.providerMetadata as { neonAccountId?: string };

@@ -16,6 +16,7 @@ import {
   getNeonCookieOptions,
   verifyNeonOAuthState,
 } from "@/server/utils/neon-donor-session";
+import { captureException } from "@/server/utils/sentry";
 
 function redirectTo(path: string, { failed }: { failed: boolean }) {
   const url = new URL(`${env.NEXT_PUBLIC_BASE_URL}${path}`);
@@ -59,6 +60,9 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       // A temporary CRM/cache failure must not prevent the donor from logging in.
       console.error("Failed to sync Neon donation ownership", error);
+      captureException(error, {
+        tags: { integration: "neon-crm", operation: "donation-ownership-sync" },
+      });
     }
     const session = await createNeonDonorSession(accountId);
 
@@ -71,6 +75,9 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error("Neon login failed", err);
+    captureException(err, {
+      tags: { integration: "neon-crm", operation: "donor-login" },
+    });
     return redirectTo(returnTo, { failed: true });
   }
 }
