@@ -21,6 +21,8 @@ import logoImage from "@/assets/logo.png";
 import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
+import { MayaSignature } from "../content/Maya";
+
 const buttonClasses =
   "block rounded-xl border border-alveus-tan p-2 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green";
 
@@ -222,6 +224,24 @@ const Footer = () => {
                   )}
                 </ul>
               </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="font-serif text-2xl text-alveus-green-100">
+              <span>&ldquo;</span>I love the natural world with my whole heart
+              and entire being.
+              <br className="hidden sm:block" /> All I want is to inspire that
+              same love in others.
+              <span>&rdquo;</span>
+            </p>
+
+            <div className="flex items-start gap-2">
+              <MayaSignature className="h-8 text-alveus-green-200" />
+              <p className="sr-only">Maya Higa</p>
+              <p className="text-xs/loose tracking-widest text-alveus-green-200 uppercase">
+                Founder, Alveus Sanctuary
+              </p>
             </div>
           </div>
 
