@@ -260,6 +260,9 @@ importers:
       '@alveusgg/donations-core':
         specifier: workspace:*
         version: link:../donations/core
+      '@alveusgg/neon-crm-api':
+        specifier: workspace:*
+        version: link:../donations/neon-crm-api
       '@auth/prisma-adapter':
         specifier: ^2.11.3
         version: 2.11.3(@prisma/client@7.10.0)

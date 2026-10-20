@@ -7,6 +7,7 @@ import {
   getNeonOAuthConfig,
   getNeonOAuthRedirectUri,
 } from "@/server/apis/neon";
+import { syncNeonDonationAccounts } from "@/server/utils/neon-donations";
 import {
   DEFAULT_NEON_RETURN_TO,
   NEON_DONOR_SESSION_COOKIE,
@@ -53,6 +54,12 @@ export async function GET(request: NextRequest) {
       code,
       redirectUri: getNeonOAuthRedirectUri(),
     });
+    try {
+      await syncNeonDonationAccounts(accountId);
+    } catch (error) {
+      // A temporary CRM/cache failure must not prevent the donor from logging in.
+      console.error("Failed to sync Neon donation ownership", error);
+    }
     const session = await createNeonDonorSession(accountId);
 
     const response = redirectTo(returnTo, { failed: false });

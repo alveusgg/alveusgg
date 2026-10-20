@@ -10,7 +10,8 @@ import { GET as callback } from "@/app/api/neon/callback/route";
 import { GET as login } from "@/app/api/neon/login/route";
 import { POST as logout } from "@/app/api/neon/logout/route";
 
-const { mockEnv } = vi.hoisted(() => ({
+const { mockEnv, syncDonations } = vi.hoisted(() => ({
+  syncDonations: vi.fn(),
   mockEnv: {
     DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",
     NEXT_PUBLIC_BASE_URL: "http://127.0.0.1:3000",
@@ -21,6 +22,9 @@ const { mockEnv } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/env", () => ({ env: mockEnv }));
+vi.mock("@/server/utils/neon-donations", () => ({
+  syncNeonDonationAccounts: syncDonations,
+}));
 
 const base = "http://127.0.0.1:3000";
 const stateCookieName = "alveus.neon-oauth-state";
@@ -38,6 +42,7 @@ function request(path: string, cookies: Record<string, string> = {}) {
 
 beforeEach(() => {
   mockEnv.NEON_OAUTH_CLIENT_ID = "client-id";
+  syncDonations.mockReset().mockResolvedValue(undefined);
 });
 
 afterEach(() => {
@@ -96,6 +101,32 @@ describe("callback", () => {
     await expect(getNeonDonorSession(session?.value)).resolves.toEqual({
       accountId: "101177",
     });
+    expect(syncDonations).toHaveBeenCalledExactlyOnceWith("101177");
+  });
+
+  test("still logs in when donation ownership sync fails", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    syncDonations.mockRejectedValue(new Error("Neon temporarily unavailable"));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => Response.json({ access_token: "101177" })),
+    );
+    const { state, cookie } = await createNeonOAuthState(
+      "/institute/pixels/two/rename",
+    );
+
+    const response = await callback(
+      request(`/api/neon/callback?code=abc&state=${state}`, {
+        [stateCookieName]: cookie,
+      }),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      `${base}/institute/pixels/two/rename`,
+    );
+    await expect(
+      getNeonDonorSession(response.cookies.get(sessionCookieName)?.value),
+    ).resolves.toEqual({ accountId: "101177" });
   });
 
   test("rejects a state that does not match the cookie", async () => {
