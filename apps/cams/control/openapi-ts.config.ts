@@ -2,7 +2,10 @@ import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
   input: "./openapi.json",
-  output: "src/generated",
+  output: {
+    path: "src/generated",
+    clean: true,
+  },
   parser: {
     patch: {
       operations: (_method, _path, operation) => {
