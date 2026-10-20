@@ -6,6 +6,7 @@ import type { MuralId } from "@/data/murals";
 import { trpc } from "@/utils/trpc";
 
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
+import { RenameStepsLayout } from "@/components/institute/rename/RenameStep";
 
 import IconCheck from "@/icons/IconCheck";
 
@@ -25,29 +26,34 @@ export function EditMyPixels({
   const renameMutation = trpc.donations.renameMyPixels.useMutation();
 
   return (
-    <>
-      <p className="mb-4 flex flex-row items-center gap-2">
-        <IconCheck className="size-6" />
-        You are logged in as <strong>{username}</strong> ({email}).
-      </p>
-
-      <EditPixelsForm
-        defaultIdentifier={`@${username}`}
-        pixelsQuery={pixels}
-        renameMutation={renameMutation}
-        overrideIdentifier={overrideIdentifier}
-        setOverrideIdentifier={setOverrideIdentifier}
-        onRename={(newIdentifier, pixelId) => {
-          renameMutation.mutate(
-            { muralId, newIdentifier, pixelId },
-            {
-              onSuccess: () => {
-                utils.donations.getMyPixels.invalidate();
+    <RenameStepsLayout
+      confirm={
+        <p className="flex items-center gap-2">
+          <IconCheck className="size-6 shrink-0" />
+          <span>
+            You are logged in as <strong>{username}</strong> ({email}).
+          </span>
+        </p>
+      }
+      rename={
+        <EditPixelsForm
+          defaultIdentifier={`@${username}`}
+          pixelsQuery={pixels}
+          renameMutation={renameMutation}
+          overrideIdentifier={overrideIdentifier}
+          setOverrideIdentifier={setOverrideIdentifier}
+          onRename={(newIdentifier, pixelId) => {
+            renameMutation.mutate(
+              { muralId, newIdentifier, pixelId },
+              {
+                onSuccess: () => {
+                  utils.donations.getMyPixels.invalidate();
+                },
               },
-            },
-          );
-        }}
-      />
-    </>
+            );
+          }}
+        />
+      }
+    />
   );
 }

@@ -9,6 +9,36 @@ interface FetchOptions<RequestBody> {
 
 const defaultTimeout = 10_000;
 
+export type ApiErrorKind = "timeout" | "network" | "http";
+
+export class ApiError extends Error {
+  readonly kind: ApiErrorKind;
+  readonly status?: number;
+
+  constructor(
+    kind: ApiErrorKind,
+    message: string,
+    options?: { status?: number; cause?: unknown },
+  ) {
+    super(message, { cause: options?.cause });
+    this.name = "ApiError";
+    this.kind = kind;
+    this.status = options?.status;
+  }
+
+  /** Short description that is safe to show in chat. */
+  get summary() {
+    switch (this.kind) {
+      case "timeout":
+        return "request timed out";
+      case "network":
+        return "could not reach website";
+      case "http":
+        return `website returned HTTP ${this.status}`;
+    }
+  }
+}
+
 export async function fetchApi<RequestBody = unknown>({
   url,
   method,
@@ -22,23 +52,37 @@ export async function fetchApi<RequestBody = unknown>({
     timeoutId = setTimeout(() => controller.abort(), timeout);
   }
 
-  const response = await fetch(url, {
-    method,
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${env.API_SECRET}`,
-    },
-    signal: controller.signal,
-  });
-
-  if (timeoutId) {
-    clearTimeout(timeoutId);
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_SECRET}`,
+      },
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new ApiError("timeout", `Request timed out after ${timeout}ms`, {
+        cause: error,
+      });
+    }
+    throw new ApiError("network", "Network error while fetching", {
+      cause: error,
+    });
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
   }
 
   if (!response.ok) {
-    throw new Error(
+    throw new ApiError(
+      "http",
       `HTTP error! status: ${response.status} ${response.statusText}`,
+      { status: response.status },
     );
   }
 

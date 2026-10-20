@@ -62,6 +62,7 @@ export const StreamableEmbed = ({ videoId, caption }: EmbedProps) => (
         title="Video embed"
         referrerPolicy="strict-origin-when-cross-origin"
         allow="fullscreen; encrypted-media"
+        // eslint-disable-next-line @eslint-react/dom-no-unsafe-iframe-sandbox -- The Streamable embed runs on a separate origin and requires scripts and its own origin.
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
         loading="lazy"
         className="pointer-events-auto my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green-800 shadow-xl"

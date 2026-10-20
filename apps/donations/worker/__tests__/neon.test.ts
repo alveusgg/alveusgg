@@ -223,6 +223,72 @@ describe("manually entered Neon donations", () => {
   });
 });
 
+describe("Neon donations without a positive amount", () => {
+  it("skips a $0 donation, imports the next donation, and advances sync", async () => {
+    vi.mocked(searchDonations).mockResolvedValue({
+      ok: true,
+      data: {
+        pagination: {
+          currentPage: 0,
+          pageSize: 50,
+          totalPages: 1,
+          totalResults: 2,
+        },
+        searchResults: [{ "Donation ID": "1" }, { "Donation ID": "2" }],
+      },
+    });
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id,
+        amount: id === "1" ? 0 : 5,
+        anonymousType: "No",
+      }),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 2,
+      imported: 1,
+      skipped: 1,
+      retrying: 0,
+    });
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-2", amount: 500 }),
+    );
+    expect(getAccount).toHaveBeenCalledOnce();
+    expect(service.config.set).toHaveBeenCalledWith("neon-sync", {
+      lastSyncedAt: "2026-01-02T00:00:00.000Z",
+    });
+  });
+
+  it("acknowledges a $0 webhook without importing it", async () => {
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      new Request("https://example.com/neon/live", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${btoa("donations:example")}`,
+        },
+        body: JSON.stringify({
+          eventTrigger: "createDonation",
+          eventTimestamp: "2026-01-01T12:00:00Z",
+          organizationId: "example",
+          data: { ...rawDonation, amount: 0, anonymousType: "No" },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).not.toHaveBeenCalled();
+    expect(getAccount).not.toHaveBeenCalled();
+  });
+});
+
 describe("bounded Neon catch-up", () => {
   function page(ids: string[], totalPages = 1) {
     return {

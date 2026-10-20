@@ -5,6 +5,7 @@ import { prisma } from "@alveusgg/database";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
+import { captureException } from "@/server/utils/sentry";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
@@ -57,6 +58,14 @@ export default createTokenProtectedApiHandler(
       return true;
     } catch (e) {
       console.error("Failed to create notification", e);
+      captureException(e, {
+        contexts: {
+          notification: {
+            notificationId: options.notificationId,
+            subscriptionCount: options.subscriptionIds.length,
+          },
+        },
+      });
       return false;
     }
   },

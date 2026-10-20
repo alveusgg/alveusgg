@@ -304,9 +304,9 @@ const BookClubPage: NextPage = () => {
 
         <Section className="grow">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {booksWithPlaceholders.map((book, i) =>
+            {booksWithPlaceholders.map((book) =>
               book.type === "placeholder" ? (
-                <div key={`placeholder-${i}`} className="mx-auto w-64">
+                <div key={`placeholder-${book.month}`} className="mx-auto w-64">
                   <Cover className="opacity-50" />
 
                   <Heading level={2} className="relative mt-4 mb-0">
@@ -332,6 +332,7 @@ const BookClubPage: NextPage = () => {
               length: (4 - (booksWithPlaceholders.length % 4)) % 4,
             }).map((_, i) => (
               <div
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- These empty placeholders only pad the end of the grid.
                 key={i}
                 className={classes(
                   "mx-auto hidden w-64",
