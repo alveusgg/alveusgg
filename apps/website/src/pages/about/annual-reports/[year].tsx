@@ -17,7 +17,6 @@ import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Transparency from "@/components/content/Transparency";
 
 import IconDownload from "@/icons/IconDownload";
 import IconLoading from "@/icons/IconLoading";
@@ -105,7 +104,11 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         </Button>
       </Section>
 
-      <Section containerClassName="flex flex-col gap-16 items-center">
+      {/* Grow the last section to cover the page */}
+      <Section
+        className="grow"
+        containerClassName="flex flex-col gap-16 items-center"
+      >
         {graphic && (
           <Box
             dark
@@ -138,9 +141,6 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
           </Button>
         </div>
       </Section>
-
-      {/* Grow the last section to cover the page */}
-      <Transparency className="grow" />
     </>
   );
 };
