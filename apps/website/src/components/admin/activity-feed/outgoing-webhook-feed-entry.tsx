@@ -19,7 +19,7 @@ export const OutgoingWebhookFeedEntry = ({
   let details = <>{item.body}</>;
   let label = item.type;
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   const retryOutgoingWebhook =
     trpc.adminActivityFeed.retryOutgoingWebhook.useMutation({
       onSettled: async () => {

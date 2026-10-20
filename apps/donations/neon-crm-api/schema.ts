@@ -205,7 +205,7 @@ export const DonationWebhookPayload = z.object({
     .object({
       id: RecordId,
       accountId: RecordId,
-      amount: z.number().positive(),
+      amount: z.number(),
       campaign: IdNamePairBase.nullish(),
       fund: IdNamePairBase.nullish(),
       timestamps: Timestamps,
@@ -243,7 +243,7 @@ export const DonationResponse = z
   .object({
     id: RecordId,
     accountId: RecordId,
-    amount: z.number().positive(),
+    amount: z.number(),
     purpose: z.string().nullable().optional(),
     campaign: DonationIdNamePair,
     fund: DonationIdNamePair,
@@ -348,7 +348,7 @@ const Contact = z.object({
   email1: z.string().nullable(),
   email2: z.string().nullable(),
   email3: z.string().nullable(),
-  deceased: z.boolean(),
+  deceased: z.boolean().nullable(),
   department: z.string().nullable(),
   title: z.string().nullable(),
   primaryContact: z.boolean().nullable(),

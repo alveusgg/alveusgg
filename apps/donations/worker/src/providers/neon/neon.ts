@@ -175,7 +175,10 @@ export class NeonDonationProvider implements DonationProvider {
 
     const { data } = payload;
 
-    if (this.shouldSkipAmountAnonymousDonation(data)) {
+    if (
+      this.shouldSkipAmountAnonymousDonation(data) ||
+      this.shouldSkipNonPositiveDonation(data)
+    ) {
       return new Response("OK", { status: 200 });
     }
 
@@ -569,7 +572,10 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private shouldSyncDonation(data: Donation) {
-    if (this.shouldSkipAmountAnonymousDonation(data)) {
+    if (
+      this.shouldSkipAmountAnonymousDonation(data) ||
+      this.shouldSkipNonPositiveDonation(data)
+    ) {
       return false;
     }
 
@@ -604,6 +610,16 @@ export class NeonDonationProvider implements DonationProvider {
     // The public donation/pixel pipeline exposes amounts. Acknowledge but skip
     // these donations until that pipeline can honor amount privacy.
     console.info("Skipping amount-anonymous Neon donation", { id: data.id });
+    return true;
+  }
+
+  private shouldSkipNonPositiveDonation(data: NeonDonationData) {
+    if (data.amount > 0) return false;
+
+    // Pixels are bought with the amount, so there is nothing to award.
+    console.info("Skipping Neon donation without a positive amount", {
+      id: data.id,
+    });
     return true;
   }
 

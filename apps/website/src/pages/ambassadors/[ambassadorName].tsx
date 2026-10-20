@@ -368,6 +368,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               {[ambassador.story, ambassador.mission]
                 .flatMap((text) => text.split("\n\n"))
                 .map((text, idx) => (
+                  // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content for the ambassador.
                   <p key={idx}>{text}</p>
                 ))}
             </div>
@@ -448,6 +449,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 </Heading>
 
                 {ambassador.fact.split("\n\n").map((fact, idx) => (
+                  // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content for the ambassador.
                   <p key={idx} className="text-lg">
                     {fact}
                   </p>

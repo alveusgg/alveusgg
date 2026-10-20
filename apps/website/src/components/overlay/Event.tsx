@@ -1,5 +1,5 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import { type HTMLProps, useEffect, useRef, useState } from "react";
+import { type HTMLProps, useEffect, useState } from "react";
 
 import type { CalendarEvent } from "@alveusgg/database";
 
@@ -15,7 +15,6 @@ const Event = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
-  const upcomingRangeInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const updateRange = () => {
       const now = new Date();
@@ -25,8 +24,8 @@ const Event = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
     };
 
     updateRange();
-    upcomingRangeInterval.current = setInterval(updateRange, 60 * 1000);
-    return () => clearInterval(upcomingRangeInterval.current ?? undefined);
+    const interval = setInterval(updateRange, 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   // Get the upcoming events and the first event ID

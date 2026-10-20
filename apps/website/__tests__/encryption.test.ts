@@ -64,6 +64,20 @@ test("decrypt", async () => {
   expect(decrypted).toEqual("hello");
 });
 
+test("decryption failures do not expose the internal cause", async () => {
+  const key = await createSaltedEncryptionKey(await generateSalt());
+  const encrypted = "OGWBKBR87FPiqMFckXnMXSq/9Al6IfNUSMRYuMdJU2CQ";
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    const result = decrypt(encrypted, key);
+    await expect(result).rejects.toThrow("Could not decrypt");
+    await expect(result).rejects.not.toHaveProperty("cause");
+  } finally {
+    log.mockRestore();
+  }
+});
+
 test("decrypting empty value should not fail", async () => {
   let failed = false;
   let decrypted;
