@@ -25,6 +25,7 @@ import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import { YouTubeEmbed } from "@/components/content/YouTube";
 import { CamListDropdown, CamListFull } from "@/components/ptz/CamList";
 import PresetList from "@/components/ptz/PresetList";
+import LoginWithExtraScopes from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
@@ -56,7 +57,7 @@ const getPositionIcon = (position: number) => {
 
 const AboutTechPresetsPage: NextPage = () => {
   const access = usePresetAccess();
-  const { subscription } = useSubscriberAccess();
+  const { hasScopes, subscription } = useSubscriberAccess();
 
   // Allow the camera UI to be focused with other page UI hidden
   const [focused, setFocused] = useLocalStorage(
@@ -245,6 +246,17 @@ const AboutTechPresetsPage: NextPage = () => {
                   zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
                 )}
               >
+                {!hasScopes && (
+                  <div className="mb-4">
+                    <p className="mb-2 text-sm">
+                      Optionally enable Twitch chat permissions to use zoom and
+                      camera swaps. Loading presets does not require chat
+                      permissions.
+                    </p>
+                    <LoginWithExtraScopes scopeGroup="chat" />
+                  </div>
+                )}
+
                 {access.data?.canManage && (
                   <Link href="/admin/presets">Manage camera presets</Link>
                 )}
@@ -312,59 +324,57 @@ const AboutTechPresetsPage: NextPage = () => {
                         </Switch>
                       </Field>
                     </div>
-
-                    {subscription.isSuccess && subscription.data && (
-                      <Field className="flex flex-wrap items-center justify-between gap-2">
-                        <Label className="flex flex-col leading-tight">
-                          <span>Swap camera positions on stream</span>
-                          <span className="text-sm text-alveus-green-400 italic">
-                            (select two grid positions to swap them)
-                          </span>
-                        </Label>
-
-                        <div className="flex">
-                          {Array.from({ length: 6 }).map((_, i) =>
-                            !selectedPosition || selectedPosition === i + 1 ? (
-                              <ActionButton
-                                // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
-                                key={i}
-                                onClick={() =>
-                                  setSelectedPosition(
-                                    selectedPosition === i + 1
-                                      ? undefined
-                                      : i + 1,
-                                  )
-                                }
-                                icon={getPositionIcon(i + 1)}
-                                tooltip={{
-                                  content:
-                                    selectedPosition === i + 1
-                                      ? "Cancel position swap"
-                                      : `Swap position ${i + 1} with another`,
-                                }}
-                              />
-                            ) : (
-                              <RunCommandButton
-                                // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
-                                key={i}
-                                command="swap"
-                                args={[
-                                  selectedPosition.toString(),
-                                  (i + 1).toString(),
-                                ]}
-                                tooltip={{
-                                  text: `Run swap command for positions ${selectedPosition} and ${i + 1}`,
-                                }}
-                                icon={getPositionIcon(i + 1)}
-                                onClick={() => setSelectedPosition(undefined)}
-                                className="text-highlight hover:text-black"
-                              />
-                            ),
-                          )}
-                        </div>
-                      </Field>
-                    )}
                   </>
+                )}
+
+                {subscription.isSuccess && subscription.data && (
+                  <Field className="flex flex-wrap items-center justify-between gap-2">
+                    <Label className="flex flex-col leading-tight">
+                      <span>Swap camera positions on stream</span>
+                      <span className="text-sm text-alveus-green-400 italic">
+                        (select two grid positions to swap them)
+                      </span>
+                    </Label>
+
+                    <div className="flex">
+                      {Array.from({ length: 6 }).map((_, i) =>
+                        !selectedPosition || selectedPosition === i + 1 ? (
+                          <ActionButton
+                            // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
+                            key={i}
+                            onClick={() =>
+                              setSelectedPosition(
+                                selectedPosition === i + 1 ? undefined : i + 1,
+                              )
+                            }
+                            icon={getPositionIcon(i + 1)}
+                            tooltip={{
+                              content:
+                                selectedPosition === i + 1
+                                  ? "Cancel position swap"
+                                  : `Swap position ${i + 1} with another`,
+                            }}
+                          />
+                        ) : (
+                          <RunCommandButton
+                            // eslint-disable-next-line @eslint-react/no-array-index-key -- The six preset slots have fixed positional identities.
+                            key={i}
+                            command="swap"
+                            args={[
+                              selectedPosition.toString(),
+                              (i + 1).toString(),
+                            ]}
+                            tooltip={{
+                              text: `Run swap command for positions ${selectedPosition} and ${i + 1}`,
+                            }}
+                            icon={getPositionIcon(i + 1)}
+                            onClick={() => setSelectedPosition(undefined)}
+                            className="text-highlight hover:text-black"
+                          />
+                        ),
+                      )}
+                    </div>
+                  </Field>
                 )}
               </div>
             </div>

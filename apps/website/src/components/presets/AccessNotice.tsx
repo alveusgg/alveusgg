@@ -1,8 +1,12 @@
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+
+import { scopeGroups } from "@/data/twitch";
 
 import usePresetAccess from "@/hooks/preset-access";
 
 export default function AccessNotice() {
+  const { data: session } = useSession();
   const access = usePresetAccess();
   if (access.isPending)
     return (
@@ -39,12 +43,26 @@ export default function AccessNotice() {
       ) : reason === "subscription" ? (
         "An active Alveus Twitch subscription is required to load presets."
       ) : reason === "subscription-scope" ? (
-        <Link
-          href="/auth/signin?callbackUrl=/about/tech/presets"
+        <button
+          type="button"
           className="underline"
+          onClick={() =>
+            void signIn(
+              "twitch",
+              { callbackUrl: "/about/tech/presets" },
+              {
+                scope: [
+                  ...new Set([
+                    ...scopeGroups.default,
+                    ...(session?.user?.scopes ?? []),
+                  ]),
+                ].join(" "),
+              },
+            )
+          }
         >
           Sign in again to allow subscription verification.
-        </Link>
+        </button>
       ) : (
         "Preset controls are unavailable. Please try again later."
       )}
