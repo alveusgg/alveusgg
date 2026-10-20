@@ -7,7 +7,7 @@ export function getSentryConfig(env: Env): CloudflareOptions {
 
   return {
     dsn: env.SENTRY_DSN,
-    environment: env.SANDBOX ? "preview" : "production",
+    environment: env.SENTRY_ENVIRONMENT || "development",
     release: env.SENTRY_RELEASE,
   };
 }
