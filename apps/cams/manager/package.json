@@ -1,0 +1,30 @@
+{
+  "name": "@alveusgg/cams-manager",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types && tsc",
+    "lint": "wrangler types && eslint . --max-warnings 0",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@alveusgg/cams-control-client": "workspace:*",
+    "hono": "^4.13.8",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.13.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.151.0"
+  }
+}

@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `pnpm dev`.
+#
+# The control API's shared key (SHARED_KEY on the rack). Requests through the
+# VPC service reach the real cameras, so treat this like production access.
+CONTROL_API_TOKEN=
