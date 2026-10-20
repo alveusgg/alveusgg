@@ -9,6 +9,13 @@ import {
   canManagePresets,
   presetAccess,
 } from "@/server/presets/access";
+import {
+  authorizeChatPresetAction,
+  chatActorSchema,
+  ownedChatOperation,
+  requireChatbotPresetKey,
+  resolveChatActor,
+} from "@/server/presets/chat";
 import { setSubscriberPolicy } from "@/server/presets/policy";
 import {
   cameraSchema,
@@ -47,7 +54,64 @@ const presetUserProcedure = presetSessionProcedure.use(({ ctx, next }) => {
   });
 });
 
+const chatbotPresetProcedure = publicProcedure.use(({ ctx, next }) => {
+  requireChatbotPresetKey(ctx.req.headers.authorization);
+  return next();
+});
+
 export const presetsRouter = router({
+  chatCommand: chatbotPresetProcedure
+    .input(
+      z.strictObject({ command: userCommandSchema, actor: chatActorSchema }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const camera = resolveControlCamera(input.command.camera);
+      if (!camera)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unknown control camera",
+        });
+      const actor = await resolveChatActor(input.actor);
+      const existing = await ownedChatOperation(input.command.id, actor);
+      const authorization = existing
+        ? undefined
+        : await authorizeChatPresetAction(actor, input.command.action, camera);
+      try {
+        return await commandPreset(
+          {
+            ...input.command,
+            camera,
+            actor: {
+              id: existing?.actor.id ?? actor.id,
+              ...(actor.name ? { name: actor.name } : {}),
+            },
+            ...(authorization ? { authorization } : {}),
+          },
+          { cooldownUserId: actor.id },
+        );
+      } catch (error) {
+        if (error instanceof TRPCError && error.code === "TOO_MANY_REQUESTS")
+          ctx.res.setHeader("Retry-After", "2");
+        throw error;
+      }
+    }),
+  chatOperation: chatbotPresetProcedure
+    .input(
+      z.strictObject({
+        id: z.uuid(),
+        actor: chatActorSchema.pick({ twitchUserId: true }),
+      }),
+    )
+    .query(async ({ input }) => {
+      const actor = await resolveChatActor(input.actor);
+      const operation = await ownedChatOperation(input.id, actor);
+      if (!operation)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Preset operation not found",
+        });
+      return operation;
+    }),
   setSubscriberControl: presetUserProcedure
     .input(
       z.strictObject({

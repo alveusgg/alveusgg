@@ -125,6 +125,7 @@ export const env = createEnv({
     CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
     CF_STREAM_HOST: z.string().optional(),
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
+    CHATBOT_PRESETS_SHARED_KEY: z.string().min(32).regex(/^\S+$/).optional(),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
     SENTRY_DSN: z.url().optional(),
     NEON_CRM_ORG_ID: z
@@ -241,6 +242,7 @@ export const env = createEnv({
     CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,
     CF_STREAM_HOST: process.env.CF_STREAM_HOST,
     TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
+    CHATBOT_PRESETS_SHARED_KEY: process.env.CHATBOT_PRESETS_SHARED_KEY,
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,

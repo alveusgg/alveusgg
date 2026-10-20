@@ -8,9 +8,17 @@ services:
     restart: always
     environment:
       - CHATBOT_REF_SHA=$CHATBOT_REF_SHA
+      - PRESETS_SITE_KEY_FILE
       # Sentry release is the deployed commit; the DSN comes from the .env file
       - SENTRY_RELEASE=$CHATBOT_REF_SHA
       - SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT:-}
+    volumes:
+      - type: bind
+        source: ${PRESETS_SITE_KEY_FILE:-/dev/null}
+        target: ${PRESETS_SITE_KEY_FILE:-/run/secrets/chatbot-presets-key}
+        read_only: true
+        bind:
+          create_host_path: false
 
 secrets:
   github_token:
