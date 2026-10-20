@@ -76,16 +76,7 @@ const staff: Record<string, Staff> = {
     image: [mayaHigaImage, mayaHigaFunImage],
     name: "Maya Higa",
     title: "Founder & Executive Director",
-    description: (
-      <>
-        <MayaText />
-        <p className="font-serif text-lg font-bold text-alveus-green">
-          <span>&ldquo;</span>I love the natural world with my whole heart and
-          entire being. All I want is to inspire that same love in others.
-          <span>&rdquo;</span>
-        </p>
-      </>
-    ),
+    description: <MayaText />,
     joined: "2021-02",
     department: "leadership",
   },
