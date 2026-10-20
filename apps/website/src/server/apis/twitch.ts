@@ -52,6 +52,48 @@ async function getUserAuthHeaders(
 
 const paginationSchema = z.object({ cursor: z.string().optional() });
 
+const bannedUserResponseSchema = z.object({
+  data: z
+    .array(
+      z.object({
+        user_id: z.string(),
+        expires_at: z.union([z.literal(""), z.iso.datetime({ offset: true })]),
+      }),
+    )
+    .max(1),
+});
+
+export async function getUserBanFromBroadcaster(
+  broadcasterAccessToken: string,
+  broadcasterId: string,
+  userId: string,
+  signal: AbortSignal,
+): Promise<{ expiresAt: string | null } | null> {
+  const params = new URLSearchParams({
+    broadcaster_id: broadcasterId,
+    user_id: userId,
+  });
+  const response = await fetch(
+    `https://api.twitch.tv/helix/moderation/banned?${params}`,
+    {
+      method: "GET",
+      headers: await getUserAuthHeaders(broadcasterAccessToken),
+      signal,
+      cache: "no-store",
+      redirect: "error",
+    },
+  );
+  if (!response.ok) throw new Error("Could not verify Twitch chat ban status.");
+  const parsed = bannedUserResponseSchema.safeParse(await response.json());
+  if (
+    !parsed.success ||
+    parsed.data.data.some((entry) => entry.user_id !== userId)
+  )
+    throw new Error("Invalid Twitch chat ban response.");
+  const ban = parsed.data.data[0];
+  return ban ? { expiresAt: ban.expires_at || null } : null;
+}
+
 const channelsFollowedResponseSchema = z.object({
   total: z.number(),
   data: z.array(

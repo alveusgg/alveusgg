@@ -38,6 +38,8 @@ export default function AccessNotice() {
         >
           Log in to load presets.
         </Link>
+      ) : reason === "banned" ? (
+        "Preset controls are unavailable while you are banned or timed out in Alveus Sanctuary chat."
       ) : reason === "paused" ? (
         "Subscriber preset loading is paused. Operators can still manage and load presets."
       ) : reason === "subscription" ? (

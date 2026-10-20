@@ -6,6 +6,7 @@ import { env } from "@/env";
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import {
   authorizePresetAction,
+  authorizeSubscriberControl,
   canManagePresets,
   presetAccess,
 } from "@/server/presets/access";
@@ -120,12 +121,8 @@ export const presetsRouter = router({
         resumeAt: z.iso.datetime().nullable().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      if (!canManagePresets(ctx.session))
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Camera operator access is required.",
-        });
+    .mutation(async ({ ctx, input }) => {
+      await authorizeSubscriberControl(ctx.session, input.paused);
       const camera = input.camera
         ? resolveControlCamera(input.camera)
         : undefined;

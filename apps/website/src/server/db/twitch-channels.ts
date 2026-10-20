@@ -4,6 +4,33 @@ import { env } from "@/env";
 
 import { refreshAccessToken } from "@/server/utils/oauth2";
 
+import { channels } from "@/data/twitch";
+
+export async function getAlveusBroadcasterToken(scope: string) {
+  const channel = await prisma.twitchChannel.findUnique({
+    where: { channelId: channels.alveus.id },
+    select: {
+      broadcasterAccount: {
+        select: {
+          provider: true,
+          providerAccountId: true,
+          access_token: true,
+          scope: true,
+        },
+      },
+    },
+  });
+  const account = channel?.broadcasterAccount;
+  if (
+    account?.provider !== "twitch" ||
+    account.providerAccountId !== channels.alveus.id ||
+    !account.access_token ||
+    !account.scope?.split(" ").includes(scope)
+  )
+    return null;
+  return account.access_token;
+}
+
 export async function getTwitchChannels() {
   return prisma.twitchChannel.findMany({
     include: {
