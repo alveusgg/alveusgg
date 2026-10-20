@@ -22,10 +22,12 @@ env:
   CHATBOT_PATH: ${{ vars.CHATBOT_PATH }}
   REF_NAME: ${{ github.ref_name }}
   REF_SHA: ${{ github.sha }}
+  SENTRY_ENVIRONMENT: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions:
-  packages: read
+  contents: read # Associate the deployed commit with the Sentry release.
+  packages: read # Authenticate package downloads during the remote image build.
 
 jobs:
   deploy:
@@ -35,10 +37,15 @@ jobs:
     if: github.repository == 'alveusgg/alveusgg'
     timeout-minutes: 10
     steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: Update Chatbot via SSH
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         with:
-          envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA,GITHUB_TOKEN
+          envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA,SENTRY_ENVIRONMENT,GITHUB_TOKEN
           host: ${{ secrets.CHATBOT_HOST }}
           username: ${{ secrets.CHATBOT_USERNAME }}
           key: ${{ secrets.CHATBOT_KEY }}
@@ -49,5 +56,19 @@ jobs:
             cd $CHATBOT_PATH
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
-            CHATBOT_REF_SHA=$REF_SHA docker compose up --build --detach
+            CHATBOT_REF_SHA=$REF_SHA SENTRY_ENVIRONMENT=$SENTRY_ENVIRONMENT docker compose up --build --detach
             docker system prune --force
+
+      - name: Create Sentry Release
+        uses: getsentry/action-release@6fb9aeade7061441cf3864e34fbe11a1457ad7dc # v3.7.1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: alveus-sanctuary
+          SENTRY_PROJECT: chatbot
+        with:
+          # The chatbot runs uncompiled via tsx, so there are no sourcemaps to upload
+          ignore_missing: true
+          ignore_empty: true
+          inject: false
+          release: ${{ github.sha }}
+          environment: ${{ env.SENTRY_ENVIRONMENT }}
