@@ -212,7 +212,9 @@ async function applyMigration(
         (error.$metadata as { httpStatusCode?: number }).httpStatusCode === 404
       )
         return false;
-      throw new Error("Could not verify a legacy storage object");
+      throw new Error("Could not verify a legacy storage object", {
+        cause: error,
+      });
     }
     if (
       !object.Body ||
