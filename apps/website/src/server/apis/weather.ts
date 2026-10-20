@@ -120,15 +120,15 @@ export async function getCurrentObservation<T extends boolean>(
 
     // Attempt to acquire a lock from Redis if there isn't already a lock
     try {
-      lock = crypto.randomUUID();
-      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry });
+      const token = crypto.randomUUID();
+      await redis.set(`${cache}:lock`, token, { overwrite: false, expiry });
+      lock = token;
     } catch (err) {
       if (!(err instanceof RedisValueAlreadyExistsError)) {
         throw err;
       }
 
       // If there is already lock in Redis, wait up to the timeout for cached data
-      lock = undefined;
       for (let attempt = 0; attempt < timeout * 10; attempt += 1) {
         await new Promise((resolve) => setTimeout(resolve, 1000 / 10));
         const data = await cached();
@@ -136,6 +136,7 @@ export async function getCurrentObservation<T extends boolean>(
       }
       throw new Error(
         "Failed to get weather data from cache after waiting for lock",
+        { cause: err },
       );
     }
   }

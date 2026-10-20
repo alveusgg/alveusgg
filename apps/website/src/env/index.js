@@ -131,6 +131,13 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     CHATBOT_PRESETS_SHARED_KEY: z.string().min(32).regex(/^\S+$/).optional(),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
+    SENTRY_DSN: z.url().optional(),
+    NEON_CRM_ORG_ID: z
+      .string()
+      .regex(/^[a-z0-9-]+$/i)
+      .default("alveussanctuary"),
+    NEON_OAUTH_CLIENT_ID: z.string().optional(),
+    NEON_OAUTH_CLIENT_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -148,6 +155,7 @@ export const env = createEnv({
       .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
@@ -243,6 +251,10 @@ export const env = createEnv({
     CHATBOT_PRESETS_SHARED_KEY: process.env.CHATBOT_PRESETS_SHARED_KEY,
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    NEON_CRM_ORG_ID: process.env.NEON_CRM_ORG_ID || undefined,
+    NEON_OAUTH_CLIENT_ID: process.env.NEON_OAUTH_CLIENT_ID,
+    NEON_OAUTH_CLIENT_SECRET: process.env.NEON_OAUTH_CLIENT_SECRET,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
@@ -254,6 +266,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME:
+      process.env.NEXT_PUBLIC_STREAM_OVERLAY_THEME,
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
       process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:

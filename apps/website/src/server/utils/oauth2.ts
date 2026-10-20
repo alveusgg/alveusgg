@@ -171,8 +171,7 @@ export async function getClientCredentialsAccessToken(
       oauth2.getOAuthAccessToken(
         "",
         { grant_type: "client_credentials" },
-        (error, access_token, refresh_token, results) => {
-          console.info({ results });
+        (error, access_token) => {
           resolve({ error, access_token });
         },
       );
@@ -180,7 +179,7 @@ export async function getClientCredentialsAccessToken(
 
     if (res.access_token) {
       accessToken = res.access_token;
-      console.info("obtained access token", { accessToken });
+      console.info("obtained access token");
 
       await prisma.clientAccessToken.upsert({
         where: { service_client_id: { service, client_id: clientId } },

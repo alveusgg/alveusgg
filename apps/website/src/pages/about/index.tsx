@@ -40,6 +40,7 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
+import cnn from "@/assets/in-the-news/cnn.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
 import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
@@ -161,6 +162,13 @@ const news: Record<string, News> = {
     quote:
       "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
     logo: forbes,
+  },
+  cnn: {
+    title: "CNN",
+    href: "https://edition.cnn.com/world/trail-cam-livestreams-inspiring-new-generation-conservationists-c2e-spc",
+    quote:
+      "How trail cams and livestreams are inspiring a new generation of conservationists",
+    logo: cnn,
   },
   youtube: {
     title: "YouTube Official Blog",
@@ -850,6 +858,7 @@ const transformHistoryItem = (item: HistoryItem) => ({
     <>
       <p className="font-serif text-lg font-bold">{item.content[0]}</p>
       {item.content.slice(1).map((paragraph, idx) => (
+        // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content in the timeline entry.
         <p key={idx} className="mt-2">
           {paragraph}
         </p>
@@ -1016,7 +1025,7 @@ const AboutAlveusPage: NextPage = () => {
 
           <ul className="mt-8 text-left text-xs opacity-75" id="twitch-sources">
             {Object.values(sources).map((source, idx) => (
-              <li key={idx} className="mb-1">
+              <li key={source.link} className="mb-1">
                 [{idx + 1}]{" "}
                 <Link external href={source.link}>
                   {source.text}
