@@ -40,6 +40,7 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
+import cnn from "@/assets/in-the-news/cnn.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
 import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
@@ -161,6 +162,13 @@ const news: Record<string, News> = {
     quote:
       "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
     logo: forbes,
+  },
+  cnn: {
+    title: "CNN",
+    href: "https://edition.cnn.com/world/trail-cam-livestreams-inspiring-new-generation-conservationists-c2e-spc",
+    quote:
+      "How trail cams and livestreams are inspiring a new generation of conservationists",
+    logo: cnn,
   },
   youtube: {
     title: "YouTube Official Blog",
