@@ -58,6 +58,19 @@ export const env = createEnv({
     OAUTH_PRIVATE_KEY_PEM: z.string().optional(),
     OAUTH_KID: z.string().optional(),
     OAUTH_CLIENTS_JSON: z.string().optional(),
+    CAM_MANAGER_URL: z
+      .url()
+      .refine((value) => {
+        const url = new URL(value);
+        return (
+          !url.username &&
+          !url.password &&
+          (url.protocol === "https:" ||
+            (url.protocol === "http:" &&
+              ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)))
+        );
+      }, "Use HTTPS, or loopback HTTP for local cams-manager")
+      .optional(),
     TWITCH_EXCLUDED_CLIPS: listOfSchema(z.string()).optional(),
     ACTION_API_SECRET: z.string(),
     CRON_SECRET: z.string().optional(),
@@ -182,6 +195,7 @@ export const env = createEnv({
     OAUTH_PRIVATE_KEY_PEM: process.env.OAUTH_PRIVATE_KEY_PEM,
     OAUTH_KID: process.env.OAUTH_KID,
     OAUTH_CLIENTS_JSON: process.env.OAUTH_CLIENTS_JSON,
+    CAM_MANAGER_URL: process.env.CAM_MANAGER_URL,
     TWITCH_EXCLUDED_CLIPS: process.env.TWITCH_EXCLUDED_CLIPS,
     ACTION_API_SECRET: process.env.ACTION_API_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,

@@ -41,15 +41,13 @@ async function getApplicationAuthHeaders() {
   return authHeaders;
 }
 
-async function getUserAuthHeaders(userAccessToken: string) {
-  const clientId = env.TWITCH_CLIENT_ID;
-
-  authHeaders = {
-    "Client-Id": clientId,
+async function getUserAuthHeaders(
+  userAccessToken: string,
+): Promise<AuthHeaders> {
+  return {
+    "Client-Id": env.TWITCH_CLIENT_ID,
     Authorization: `Bearer ${userAccessToken}`,
   };
-
-  return authHeaders;
 }
 
 const paginationSchema = z.object({ cursor: z.string().optional() });
@@ -156,6 +154,7 @@ export async function getUserSubscribedToBroadcaster(
   userAccessToken: string,
   userId: string,
   broadcasterId: string,
+  options: { signal?: AbortSignal; quiet?: boolean } = {},
 ) {
   const response = await fetch(
     `https://api.twitch.tv/helix/subscriptions/user?${new URLSearchParams({
@@ -164,13 +163,14 @@ export async function getUserSubscribedToBroadcaster(
     })}`,
     {
       method: "GET",
+      signal: options.signal,
       headers: {
         ...(await getUserAuthHeaders(userAccessToken)),
       },
     },
   );
 
-  if (response.status === 403) {
+  if (response.status === 401 || response.status === 403) {
     throw new ExpiredAccessTokenError();
   }
 
@@ -180,7 +180,7 @@ export async function getUserSubscribedToBroadcaster(
 
   const json = await response.json();
   if (response.status !== 200) {
-    console.error(json);
+    if (!options.quiet) console.error(json);
     throw new Error("Could not get subscription status!");
   }
 
