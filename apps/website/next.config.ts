@@ -368,6 +368,21 @@ const config: NextConfig = {
       destination: "/about/events/donor-trees",
       permanent: false,
     },
+    {
+      source: "/land-acknowledgment",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
+    {
+      source: "/land-acknowledgement",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
+    {
+      source: "/about/land-acknowledgement",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
