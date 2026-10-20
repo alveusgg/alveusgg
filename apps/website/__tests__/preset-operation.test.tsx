@@ -44,17 +44,17 @@ vi.mock("@/utils/trpc", () => ({
 vi.mock("next-auth/react", () => ({
   useSession: () => ({ data: { user: { id: mock.userId } } }),
 }));
-function Harness() {
+function Harness({ action = "save" }: { action?: "save" | "load" }) {
   const operation = usePresetOperation("test-preset-operation");
   return (
     <>
       <button
         disabled={operation.busy}
         onClick={() =>
-          operation.run({ action: "save", camera: "garden", name: "home" })
+          operation.run({ action, camera: "garden", name: "home" })
         }
       >
-        Save
+        {action === "load" ? "Load" : "Save"}
       </button>
       <OperationStatus operation={operation} />
     </>
@@ -144,6 +144,72 @@ describe("website preset operations", () => {
       id: mock.mutateAsync.mock.calls[0]![0].id,
     });
   });
+  it.each(["response", "poll"])(
+    "retains a Worker-reported unknown load from the %s until acknowledged",
+    async (source) => {
+      vi.useFakeTimers();
+      const message =
+        "Load outcome unknown; it will not be automatically repeated.";
+      mock.mutateAsync.mockImplementation(async (command) => ({
+        id: command.id,
+        status: source === "response" ? "unknown" : "pending",
+        error: source === "response" ? message : null,
+      }));
+      mock.fetch.mockImplementation(async ({ id }) => ({
+        id,
+        status: "unknown",
+        error: message,
+      }));
+      await act(async () => root.render(<Harness action="load" />));
+      await act(async () => container.querySelector("button")!.click());
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(750);
+      });
+      const original = mock.mutateAsync.mock.calls[0]![0];
+      expect(container.textContent).toContain("Completion unknown");
+      expect(container.textContent).not.toContain("Operation failed");
+      expect(container.textContent).not.toContain("Retry original request");
+      expect(container.querySelector("button")!.disabled).toBe(true);
+      expect(
+        JSON.parse(sessionStorage.getItem("test-preset-operation:test-user")!),
+      ).toEqual(original);
+      const polls = mock.fetch.mock.calls.length;
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(3000);
+      });
+      expect(mock.fetch).toHaveBeenCalledTimes(polls);
+      expect(mock.mutateAsync).toHaveBeenCalledOnce();
+
+      mock.userId = "another-user";
+      await act(async () => root.render(<Harness action="load" />));
+      expect(container.textContent).not.toContain("Completion unknown");
+      mock.userId = "test-user";
+      await act(async () => root.render(<Harness action="load" />));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(750);
+      });
+      expect(container.textContent).toContain("Acknowledge unknown outcome");
+
+      await act(async () => root.unmount());
+      root = createRoot(container);
+      await act(async () => root.render(<Harness action="load" />));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(750);
+      });
+      expect(mock.fetch).toHaveBeenLastCalledWith({ id: original.id });
+      expect(container.querySelector("button")!.disabled).toBe(true);
+      expect(sessionStorage.length).toBe(1);
+      const acknowledge = [...container.querySelectorAll("button")].find(
+        (button) => button.textContent === "Acknowledge unknown outcome",
+      )!;
+      await act(async () => acknowledge.click());
+      expect(sessionStorage.length).toBe(0);
+      expect(container.querySelector("button")!.disabled).toBe(false);
+      expect(mock.mutateAsync).toHaveBeenCalledOnce();
+      await act(async () => container.querySelector("button")!.click());
+      expect(mock.mutateAsync.mock.calls[1]![0].id).not.toBe(original.id);
+    },
+  );
   it.each(["UNAUTHORIZED", "FORBIDDEN", "TOO_MANY_REQUESTS"])(
     "keeps the original UUID unknown after %s on recovery",
     async (code) => {
@@ -193,30 +259,35 @@ describe("website preset operations", () => {
       sessionStorage.getItem("test-preset-operation:another-user"),
     ).toBeNull();
   });
-  it("does not replace a trusted terminal poll result with a late network error", async () => {
-    vi.useFakeTimers();
-    let fail!: (error: Error) => void;
-    mock.mutateAsync.mockImplementation(
-      () =>
-        new Promise((_resolve, reject) => {
-          fail = reject;
-        }),
-    );
-    mock.fetch.mockImplementation(async ({ id }) => ({
-      id,
-      status: "completed",
-      error: null,
-    }));
-    await act(async () => root.render(<Harness />));
-    await act(async () => container.querySelector("button")!.click());
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(750);
-    });
-    expect(container.textContent).toContain("Operation completed");
-    await act(async () => fail(new Error("lost response")));
-    expect(container.textContent).toContain("Operation completed");
-    expect(sessionStorage.length).toBe(0);
-  });
+  it.each(["completed", "unknown"])(
+    "does not replace a terminal %s poll result with a late network error",
+    async (status) => {
+      vi.useFakeTimers();
+      let fail!: (error: Error) => void;
+      mock.mutateAsync.mockImplementation(
+        () =>
+          new Promise((_resolve, reject) => {
+            fail = reject;
+          }),
+      );
+      mock.fetch.mockImplementation(async ({ id }) => ({
+        id,
+        status,
+        error: null,
+      }));
+      await act(async () => root.render(<Harness />));
+      await act(async () => container.querySelector("button")!.click());
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(750);
+      });
+      const message =
+        status === "completed" ? "Operation completed" : "Completion unknown";
+      expect(container.textContent).toContain(message);
+      await act(async () => fail(new Error("lost response")));
+      expect(container.textContent).toContain(message);
+      expect(sessionStorage.length).toBe(status === "completed" ? 0 : 1);
+    },
+  );
   it("cancels and refreshes cached access when the signed-in identity changes", async () => {
     function AccessHarness() {
       usePresetAccess();
@@ -241,6 +312,9 @@ describe("website preset operations", () => {
       newName: "new",
     };
     expect(commandForRetry({ command, status: "unknown" })).toBe(command);
+    expect(
+      commandForRetry({ command, status: "unknown", terminal: true }),
+    ).toBeUndefined();
     expect(commandForRetry({ command, status: "completed" })).toBeUndefined();
   });
 });

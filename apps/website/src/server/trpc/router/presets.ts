@@ -154,7 +154,7 @@ export const presetsRouter = router({
     .input(
       z.object({
         id: z.uuid(),
-        status: z.enum(["completed", "failed"]),
+        status: z.enum(["completed", "failed", "unknown"]),
         error: z.string().max(2000).optional(),
         result: z.json().optional(),
       }),

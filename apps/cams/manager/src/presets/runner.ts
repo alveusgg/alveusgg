@@ -121,7 +121,7 @@ export async function runPresetJob(job: PresetJob, deps: Dependencies) {
     if (job.loadDispatched) {
       await deps.website.presets.complete.mutate({
         id: job.id,
-        status: "failed",
+        status: "unknown",
         error: "Load outcome unknown; it will not be automatically repeated.",
       });
       return;
@@ -174,7 +174,7 @@ export async function runPresetJob(job: PresetJob, deps: Dependencies) {
     } catch {
       await deps.website.presets.complete.mutate({
         id: job.id,
-        status: "failed",
+        status: "unknown",
         error: "Load outcome unknown; it will not be automatically repeated.",
       });
       return;

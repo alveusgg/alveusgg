@@ -5,6 +5,8 @@ export type PresetIntent = Omit<PresetCommand, "id">;
 export type PresetOperationState = {
   command?: PresetCommand;
   status: "idle" | "pending" | "completed" | "failed" | "unknown";
+  // A terminal unknown outcome needs acknowledgement, rather than more retries.
+  terminal?: boolean;
   message?: string;
 };
 export function operationFailure(error: unknown): {
@@ -37,5 +39,7 @@ export function operationFailure(error: unknown): {
 export function commandForRetry(
   state: PresetOperationState,
 ): PresetCommand | undefined {
-  return state.status === "unknown" ? state.command : undefined;
+  return state.status === "unknown" && !state.terminal
+    ? state.command
+    : undefined;
 }

@@ -44,6 +44,7 @@ export default function usePresetOperation(baseStorageKey: string) {
   );
   useEffect(() => {
     generation.current++;
+    terminalId.current = undefined;
     let command: PresetCommand | undefined;
     try {
       const raw = sessionStorage.getItem(storageKey);
@@ -68,7 +69,7 @@ export default function usePresetOperation(baseStorageKey: string) {
       command: PresetCommand,
       result: {
         id: string;
-        status: "pending" | "completed" | "failed";
+        status: "pending" | "completed" | "failed" | "unknown";
         error: string | null;
       },
     ) => {
@@ -83,15 +84,16 @@ export default function usePresetOperation(baseStorageKey: string) {
         return;
       }
       const terminal = result.status !== "pending";
-      locked.current = !terminal;
+      locked.current = !terminal || result.status === "unknown";
       setState({
         command,
         status: result.status,
+        terminal,
         message: result.error ?? undefined,
       });
       if (terminal) {
         terminalId.current = command.id;
-        save();
+        if (result.status !== "unknown") save();
         void utils.presets.catalog.invalidate();
       }
     },
@@ -125,7 +127,8 @@ export default function usePresetOperation(baseStorageKey: string) {
     },
     [accept, mutation, save],
   );
-  const active = state.status === "pending" || state.status === "unknown";
+  const busy = state.status === "pending" || state.status === "unknown";
+  const active = busy && !state.terminal;
   useEffect(() => {
     const command = state.command;
     if (!command || !active) return;
@@ -171,5 +174,12 @@ export default function usePresetOperation(baseStorageKey: string) {
     const command = commandForRetry(state);
     if (command) void submit(command, true);
   }, [state, submit]);
-  return { state, busy: active, run, retry };
+  const acknowledge = useCallback(() => {
+    if (state.status !== "unknown" || !state.terminal) return;
+    invalidateGeneration();
+    locked.current = false;
+    save();
+    setState({ status: "idle" });
+  }, [state, invalidateGeneration, save]);
+  return { state, busy, run, retry, acknowledge };
 }

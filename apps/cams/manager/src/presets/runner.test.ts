@@ -351,14 +351,25 @@ describe("preset load execution", () => {
       "website offline",
     );
     expect(f.job.loadDispatched).toBe(true);
+    expect(f.website.presets.complete.mutate).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        status: "unknown",
+        error: expect.stringContaining("unknown"),
+      }),
+    );
     await runPresetJob(structuredClone(f.job), f.deps);
     expect(f.loads()).toHaveLength(1);
     expect(f.website.presets.complete.mutate).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        status: "failed",
+        status: "unknown",
         error: expect.stringContaining("unknown"),
       }),
     );
+    await runPresetJob(structuredClone(f.job), f.deps);
+    expect(f.loads()).toHaveLength(1);
+    expect(f.website.presets.claimLoad.mutate).toHaveBeenCalledTimes(1);
+    expect(f.website.presets.complete.mutate).toHaveBeenCalledTimes(2);
   });
 
   it("fails a malformed stored position without a movement or endless retries", async () => {
@@ -418,7 +429,7 @@ it("does not move or reclaim after the dispatch claim response is lost", async (
   expect(f.control).not.toHaveBeenCalled();
   expect(f.website.presets.complete.mutate).toHaveBeenCalledWith(
     expect.objectContaining({
-      status: "failed",
+      status: "unknown",
       error: expect.stringContaining("unknown"),
     }),
   );

@@ -62,7 +62,7 @@ export function operationDto(operation: CameraPresetOperation) {
     name: command.name,
     newName: command.newName,
     actor: command.actor,
-    status: operation.status as "pending" | "completed" | "failed",
+    status: operation.status as "pending" | "completed" | "failed" | "unknown",
     createdAt: operation.createdAt.toISOString(),
     expiresAt: operation.expiresAt.toISOString(),
     preset: operation.preset as {
@@ -631,7 +631,7 @@ export async function commitPresetCapture(
 
 export async function completePresetOperation(input: {
   id: string;
-  status: "completed" | "failed";
+  status: "completed" | "failed" | "unknown";
   error?: string;
   result?: unknown;
 }) {
@@ -646,6 +646,8 @@ export async function completePresetOperation(input: {
     if (operation.status !== "pending") return operationDto(operation);
     if (operation.action !== "load" && input.status === "completed")
       conflict("Only commitCapture can complete a save");
+    if (operation.action !== "load" && input.status === "unknown")
+      conflict("Only load operations can have an unknown movement outcome");
     const update = await tx.cameraPresetOperation.update({
       where: { id: input.id },
       data: {

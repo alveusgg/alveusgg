@@ -30,7 +30,18 @@ export default function OperationStatus({
           {state.command.id}
         </p>
       )}
-      {state.status === "unknown" && (
+      {state.status === "unknown" && state.terminal ? (
+        <>
+          <p>Check the live camera before starting another action.</p>
+          <button
+            type="button"
+            onClick={operation.acknowledge}
+            className="mt-1 underline"
+          >
+            Acknowledge unknown outcome
+          </button>
+        </>
+      ) : state.status === "unknown" ? (
         <button
           type="button"
           onClick={operation.retry}
@@ -38,7 +49,7 @@ export default function OperationStatus({
         >
           Retry original request
         </button>
-      )}
+      ) : null}
     </div>
   );
 }
