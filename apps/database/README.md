@@ -15,6 +15,12 @@ All commands below are run with `pnpm` from `apps/database` unless noted.
 
 Finally, run `pnpm types` and `pnpm lint` in `apps/database`, and `pnpm types` in `apps/website` and `apps/chatbot` to confirm the changes type-check downstream.
 
+## Example content
+
+`pnpm seed` fills a local database with example content: users with roles, forms, show-and-tell posts, notifications, short links and calendar events. Run it after `pnpm prisma db push`. Every seeder upserts on a stable key, so running it again updates the example rows instead of adding duplicates. Seeded users can't log in (the website uses Twitch login), so set `DISABLE_ADMIN_AUTH=true` in `apps/website/.env` to open the admin pages.
+
+The seed stops unless `DATABASE_URL` points at a local host (`localhost`, `127.0.0.1`, `[::1]` or `db`). Set `SEED_ALLOW_REMOTE=1` to seed another database, such as a PlanetScale development branch. Don't seed production: the example admin has every role, and the example forms are public.
+
 ## Deploying schema changes to production (PlanetScale)
 
 Production uses [PlanetScale](https://planetscale.com/), and schema changes reach the production database through PlanetScale deploy requests. `pnpm prisma db push` is for development databases: your local MySQL, PlanetScale development branches, or a database that doesn't use deploy requests.
