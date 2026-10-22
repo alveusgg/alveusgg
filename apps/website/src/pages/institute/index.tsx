@@ -7,7 +7,6 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
-import Transparency from "@/components/content/Transparency";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
@@ -177,7 +176,50 @@ const InstitutePage: NextPage = () => {
           className="pointer-events-none absolute -top-32 right-0 z-10 hidden h-auto w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
-        <Transparency className="grow" />
+        <Section
+          className="grow"
+          containerClassName="grid gap-x-8 gap-y-10 lg:grid-cols-2 xl:grid-cols-3"
+        >
+          <div className="max-w-3xl lg:row-span-2 xl:row-span-1">
+            <Heading level={2}>Support the Institute</Heading>
+            <p className="mt-4 text-lg text-balance">
+              Help advance conservation breeding and recovery work for
+              endangered wolves by supporting the development of the Alveus
+              Research &amp; Recovery Institute.
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start">
+            <Heading level={3}>Individual donations</Heading>
+            <p className="text-balance">
+              Individual donations can unlock pixels on our mural and help fund
+              the Institute&apos;s development.
+            </p>
+            <Button
+              href="/institute/pixels/two"
+              filled
+              className="mt-4 inline-flex items-center gap-2 px-6"
+            >
+              Donate through Pixel Project 2
+              <IconArrowRight className="size-5" />
+            </Button>
+          </div>
+
+          <div className="flex flex-col items-start">
+            <Heading level={3}>Foundation &amp; corporate grants</Heading>
+            <p className="text-balance">
+              If you represent a foundation or corporation, learn how grant
+              support can help advance Alveus&apos; mission.
+            </p>
+            <Button
+              href="/donate/grants"
+              className="mt-4 inline-flex items-center gap-2 px-6"
+            >
+              Explore grant opportunities
+              <IconArrowRight className="size-5" />
+            </Button>
+          </div>
+        </Section>
       </div>
     </>
   );

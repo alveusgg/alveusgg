@@ -9,7 +9,7 @@ import Meta from "@/components/content/Meta";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import { Footer } from "./footer/Footer";
+import Footer from "./Footer";
 import { Navbar } from "./navbar/Navbar";
 
 type LayoutProps = {
