@@ -23,7 +23,7 @@ remote, so you need:
 - A Cloudflare login (`wrangler login` or `CLOUDFLARE_API_TOKEN`) for the
   Alveus account with Workers access and the Connectivity Directory Bind
   role, and `CLOUDFLARE_ACCOUNT_ID` set to that account.
-- `.dev.vars` with `CONTROL_API_TOKEN` (see `.dev.vars.example`).
+- Copy `.env.example` to `.env` and set `CONTROL_API_TOKEN`.
 
 Requests made this way reach the real cameras.
 
