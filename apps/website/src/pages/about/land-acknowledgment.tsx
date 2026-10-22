@@ -4,11 +4,11 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 
-const AboutLandAcknowledgementPage: NextPage = () => {
+const AboutLandAcknowledgmentPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Land Acknowledgement"
+        title="Land Acknowledgment"
         description="Alveus Sanctuary acknowledges and respects the traditional and ancestral lands of the Tonkawa, Comanche, Lipan Apache, and other Indigenous communities, recognizing their deep connection to this land and its preservation."
       />
 
@@ -16,7 +16,7 @@ const AboutLandAcknowledgementPage: NextPage = () => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section dark className="py-8">
-        <Heading className="text-center">Land Acknowledgement</Heading>
+        <Heading className="text-center">Land Acknowledgment</Heading>
       </Section>
 
       {/* Grow the last section to cover the page */}
@@ -49,4 +49,4 @@ const AboutLandAcknowledgementPage: NextPage = () => {
   );
 };
 
-export default AboutLandAcknowledgementPage;
+export default AboutLandAcknowledgmentPage;
