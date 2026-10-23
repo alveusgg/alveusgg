@@ -533,34 +533,39 @@ export async function getGiveAnHourStats({
 }) {
   const now = new Date();
   const where = getGiveAnHourEntriesWhere(ranges);
-  const [aggregate, participantsWithUserId, participantsWithoutUserId, places] =
-    await Promise.all([
-      prisma.showAndTellEntry.aggregate({
-        _sum: { volunteeringMinutes: true },
-        _count: { _all: true },
-        where,
-      }),
-      prisma.showAndTellEntry.findMany({
-        select: { userId: true },
-        where: { AND: [where, { userId: { not: null } }] },
-        distinct: ["userId"],
-      }),
-      prisma.showAndTellEntry.findMany({
-        select: { displayName: true },
-        where: {
-          AND: [where, { userId: null }, { displayName: { not: null } }],
-        },
-        distinct: ["displayName"],
-      }),
-      prisma.showAndTellEntry.findMany({
-        select: { location: true },
-        where: { AND: [where, { location: { not: null } }] },
-        distinct: ["location"],
-      }),
-    ]);
-  const campaigns = await Promise.all(
-    ranges.map((range) => getGiveAnHourCampaignSummary(range, now)),
-  );
+  const [
+    aggregate,
+    participantsWithUserId,
+    participantsWithoutUserId,
+    places,
+    campaigns,
+  ] = await Promise.all([
+    prisma.showAndTellEntry.aggregate({
+      _sum: { volunteeringMinutes: true },
+      _count: { _all: true },
+      where,
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { userId: true },
+      where: { AND: [where, { userId: { not: null } }] },
+      distinct: ["userId"],
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { displayName: true },
+      where: {
+        AND: [where, { userId: null }, { displayName: { not: null } }],
+      },
+      distinct: ["displayName"],
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { location: true },
+      where: { AND: [where, { location: { not: null } }] },
+      distinct: ["location"],
+    }),
+    Promise.all(
+      ranges.map((range) => getGiveAnHourCampaignSummary(range, now)),
+    ),
+  ]);
   const minutes = aggregate._sum.volunteeringMinutes ?? 0;
   const participants =
     participantsWithUserId.length + participantsWithoutUserId.length;
