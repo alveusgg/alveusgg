@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { DateTime } from "luxon";
 import type { NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -29,6 +30,7 @@ import { getEntityStatus } from "@/utils/entity-helpers";
 import { countFirstTimeGiveAnHourParticipants } from "@/utils/give-an-hour";
 import { notEmpty } from "@/utils/helpers";
 import { extractInfoFromMapFeatures } from "@/utils/locations";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
@@ -455,7 +457,7 @@ async function getGiveAnHourCampaignSummary(
   { start, end }: GiveAnHourRange,
   now: Date,
 ) {
-  const year = start.getUTCFullYear();
+  const year = DateTime.fromJSDate(start, { zone: DATETIME_ALVEUS_ZONE }).year;
   const ended = end <= now;
 
   // Nothing can have been given for a campaign that hasn't started yet
