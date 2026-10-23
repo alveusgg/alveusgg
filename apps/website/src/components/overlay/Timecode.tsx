@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -6,7 +6,6 @@ const Timecode = ({ className }: { className?: string }) => {
   // Get the current minutes/seconds as a binary code
   // Refresh every 250ms
   const [bits, setBits] = useState<string[]>();
-  const interval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const update = () => {
       const date = new Date();
@@ -17,15 +16,16 @@ const Timecode = ({ className }: { className?: string }) => {
     };
 
     update();
-    interval.current = setInterval(update, 250);
-    return () => clearInterval(interval.current ?? undefined);
+    const interval = setInterval(update, 250);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className={classes(className, "grid grid-cols-12")}>
       {bits?.map((bit, idx) => (
         <div
-          key={`${bit}-${idx}`}
+          // eslint-disable-next-line @eslint-react/no-array-index-key -- Each key identifies a fixed bit position, regardless of its value.
+          key={idx}
           className={classes(
             "size-1",
             bit === "0" ? "bg-gray-400" : "bg-alveus-tan-800",

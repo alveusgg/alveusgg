@@ -33,21 +33,52 @@ type NeonDonationProviderOptions = Options & {
 };
 
 type NeonDonationData = DonationWebhookPayload["data"] | Donation;
+type NeonFailedDonation = { firstFailedAt: string; attempts: number };
 type NeonSyncMetadata = {
   lastSyncedAt?: string;
+  catchUp?: {
+    startedAt: string;
+    sinceDate: string;
+    untilDate: string;
+    lastDonationId?: string;
+  };
+  // Donations that failed to import are retried by later runs, so a single
+  // broken record cannot hold back the cursor.
+  failedDonations?: Record<string, NeonFailedDonation>;
 };
-type NeonSyncResult = {
+export type NeonSyncResult = {
+  complete: boolean;
   found: number;
   imported: number;
   skipped: number;
+  retrying: number;
 };
 
 const SYNC_CONFIG_KEY = "neon-sync";
 const SYNC_LOOKBACK_DAYS = 2;
 const SYNC_MAX_PAGES = 10;
 const SYNC_PAGE_SIZE = 50;
-const SELF_IMPORT_ORIGIN_CATEGORY = "Self-Import";
+// Staff enter these by hand, often to backfill donations that were already
+// counted elsewhere (e.g. Twitch charity donations that received pixels).
+// Search results report a different "Origin Category" than the donation
+// record, so only trust the donation's own origin.
+const MANUAL_ORIGIN_CATEGORIES = new Set([
+  "Batch Donation",
+  "Custom Import",
+  "Data Entry",
+  "Self-Import",
+]);
 const SUCCEEDED_STATUS = "SUCCEEDED";
+const SYNC_MAX_RETRIES_PER_RUN = 10;
+// More failures in a row than this look like an outage rather than a broken
+// record, so the page is replayed instead of skipped.
+const SYNC_MAX_CONSECUTIVE_FAILURES = 3;
+const SYNC_FAILED_DONATION_TTL_MS = 24 * 60 * 60 * 1000;
+const SYNC_CATCH_UP_ALERT_MS = 6 * 60 * 60 * 1000;
+const FAILED_PAYMENT_STATUSES = ["Failed", "Canceled", "Refunded"];
+const FAILED_PAYMENT_LOOKBACK_DAYS = 30;
+// Failed donation IDs from the last sweep, to notice payments that succeed.
+const FAILED_PAYMENTS_CONFIG_KEY = "neon-failed-payments";
 
 function reportNeonParseError(
   error: ZodError,
@@ -69,8 +100,24 @@ function reportNeonParseError(
   });
 }
 
+function reportNeonSyncIssue(
+  kind: string,
+  context: Record<string, unknown>,
+  error?: unknown,
+) {
+  Sentry.withScope((scope) => {
+    scope.setTag("integration", "neon-crm");
+    scope.setTag("error.kind", kind);
+    scope.setContext("neon", context);
+    if (error) Sentry.captureException(error);
+    else Sentry.captureMessage(`Neon donation sync: ${kind}`, "warning");
+  });
+}
+
 export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
+  private syncPromise?: Promise<NeonSyncResult>;
+  private removeFailedPromise?: Promise<void>;
 
   constructor(
     private options: NeonDonationProviderOptions,
@@ -94,18 +141,11 @@ export class NeonDonationProvider implements DonationProvider {
       onParseError: reportNeonParseError,
     };
 
-    try {
-      await setupWebhook(
-        `${env.SELF_URL}/donations/neon/live`,
-        "CREATE_DONATION",
-        options,
-      );
-    } catch (e) {
-      console.error("Failed to set up Neon webhook", e);
-      throw e;
-    }
-
     return new NeonDonationProvider(options, service);
+  }
+
+  async registerWebhook(url: string) {
+    await setupWebhook(url, "CREATE_DONATION", this.options);
   }
 
   async clear() {
@@ -135,6 +175,27 @@ export class NeonDonationProvider implements DonationProvider {
 
     const { data } = payload;
 
+    if (
+      this.shouldSkipAmountAnonymousDonation(data) ||
+      this.shouldSkipNonPositiveDonation(data)
+    ) {
+      return new Response("OK", { status: 200 });
+    }
+
+    let origin = data.origin;
+    if (origin === undefined) {
+      const donationRes = await getDonation(this.options, data.id);
+      if (!donationRes.ok) {
+        return new Response("Failed to fetch this donation's origin.", {
+          status: 500,
+        });
+      }
+      origin = donationRes.data.origin;
+    }
+    if (this.isManualDonation(data.id, origin)) {
+      return new Response("OK", { status: 200 });
+    }
+
     const accountRes = await getAccount(this.options, data.accountId);
     if (!accountRes.ok) {
       if (accountRes.errorType === "request")
@@ -155,23 +216,202 @@ export class NeonDonationProvider implements DonationProvider {
     return new Response("OK", { status: 200 });
   }
 
+  /**
+   * Pixels are awarded before a card payment settles. Remove donations whose
+   * payment has failed or was refunded since. Removing is idempotent and runs
+   * after every completed sync, so a donation recreated by a late queue
+   * delivery is removed again on the next run.
+   */
+  async removeFailedDonations() {
+    this.removeFailedPromise ??= this.removeFailedNow().finally(() => {
+      this.removeFailedPromise = undefined;
+    });
+    return this.removeFailedPromise;
+  }
+
+  private async removeFailedNow() {
+    const since = subtractDays(new Date(), FAILED_PAYMENT_LOOKBACK_DAYS);
+    const sinceDate = formatDateInTimezone(since, this.options.localTimezone);
+    const failed: string[] = [];
+    let searchedAll = true;
+    for (const status of FAILED_PAYMENT_STATUSES) {
+      try {
+        failed.push(...(await this.searchDonationIds(status, sinceDate)));
+      } catch (error) {
+        searchedAll = false;
+        this.reportFailedPaymentIssue(error, { status });
+      }
+    }
+
+    try {
+      // Also runs without failed donations, to clean up orphaned pixels and
+      // resync the mural.
+      await this.service.remove(
+        this.name,
+        failed.map((id) => this.providerUniqueId(id)),
+        "payment failed, canceled or refunded",
+      );
+    } catch (error) {
+      this.reportFailedPaymentIssue(error, { step: "remove" });
+    }
+    const previous =
+      this.service.config.get<string[]>(FAILED_PAYMENTS_CONFIG_KEY) ?? [];
+    const save = (ids: string[]) =>
+      this.service.config.set(
+        FAILED_PAYMENTS_CONFIG_KEY,
+        ids.length ? [...new Set(ids)] : undefined,
+      );
+    // Without every status, a missing ID does not mean it was paid.
+    if (!searchedAll) return save([...previous, ...failed]);
+
+    // A donation that left the failed set may have been paid after all. The
+    // regular sync only looks back a few days, so import it here, and keep
+    // checking while its payment is still unsettled.
+    const current = new Set(failed);
+    const keep: string[] = [];
+    for (const id of previous.filter((id) => !current.has(id))) {
+      try {
+        if (await this.recoverDonation(id, since)) keep.push(id);
+      } catch (error) {
+        keep.push(id);
+        this.reportFailedPaymentIssue(error, { donationId: id });
+      }
+    }
+    save([...failed, ...keep]);
+  }
+
+  /** Imports a paid donation. Returns whether to check it again later. */
+  private async recoverDonation(id: string, since: Date) {
+    const response = await getDonation(this.options, id);
+    if (!response.ok) {
+      if (response.errorType === "request" && response.status === 404) {
+        return false;
+      }
+      throw new Error(`Failed to fetch Neon donation ${id}`);
+    }
+
+    const data = response.data;
+    if (data.status === SUCCEEDED_STATUS) {
+      await this.importDonation(data);
+      return false;
+    }
+    const settled = ["FAILED", "CANCELED", "REFUNDED"].includes(
+      data.status ?? "",
+    );
+    return !settled && data.date >= since;
+  }
+
+  private async searchDonationIds(status: string, sinceDate: string) {
+    const ids: string[] = [];
+    for (let page = 0, pages = 1; page < pages; page++) {
+      const response = await searchDonations(this.options, {
+        searchFields: [
+          { field: "Donation Status", operator: "EQUAL", value: status },
+          {
+            field: "Donation Created Date",
+            operator: "GREATER_AND_EQUAL",
+            value: sinceDate,
+          },
+        ],
+        outputFields: ["Donation ID"],
+        pagination: {
+          currentPage: page,
+          pageSize: 200,
+          sortColumn: "Donation ID",
+          sortDirection: "ASC",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to search Neon donations: ${response.error}`);
+      }
+      pages = response.data.pagination.totalPages;
+      ids.push(
+        ...response.data.searchResults.map((result) =>
+          String(result["Donation ID"]),
+        ),
+      );
+    }
+    return ids;
+  }
+
+  private reportFailedPaymentIssue(
+    error: unknown,
+    context: Record<string, unknown>,
+  ) {
+    console.error("Failed to remove failed Neon donations", {
+      ...context,
+      error,
+    });
+    reportNeonSyncIssue("failed-payment-removal", context, error);
+  }
+
+  private providerUniqueId(id: string) {
+    return `${this.options.organizationId}-${id}`;
+  }
+
   async syncRecentDonations(): Promise<NeonSyncResult> {
+    // Overlapping cron/manual requests must share one checkpoint writer.
+    this.syncPromise ??= this.syncBatch().finally(() => {
+      this.syncPromise = undefined;
+    });
+    return this.syncPromise;
+  }
+
+  private async syncBatch(): Promise<NeonSyncResult> {
     const startedAt = new Date();
     const metadata =
       this.service.config.get<NeonSyncMetadata>(SYNC_CONFIG_KEY) ?? {};
-    const since = subtractDays(
-      metadata.lastSyncedAt ? new Date(metadata.lastSyncedAt) : startedAt,
-      SYNC_LOOKBACK_DAYS,
-    );
-    const sinceDate = formatDateInTimezone(since, this.options.localTimezone);
-
-    let currentPage = 0;
-    let totalPages = 1;
+    const catchUp: NonNullable<NeonSyncMetadata["catchUp"]> =
+      metadata.catchUp ?? {
+        startedAt: startedAt.toISOString(),
+        sinceDate: formatDateInTimezone(
+          subtractDays(
+            metadata.lastSyncedAt ? new Date(metadata.lastSyncedAt) : startedAt,
+            SYNC_LOOKBACK_DAYS,
+          ),
+          this.options.localTimezone,
+        ),
+        // Freeze the local-date window. A later run resumes the same window,
+        // then starts its next lookback from this run's start, not completion.
+        untilDate: subtractDays(
+          new Date(formatDateInTimezone(startedAt, this.options.localTimezone)),
+          -1,
+        )
+          .toISOString()
+          .slice(0, 10),
+      };
+    const failedDonations = { ...metadata.failedDonations };
     let found = 0;
     let imported = 0;
     let skipped = 0;
 
-    while (currentPage < totalPages && currentPage < SYNC_MAX_PAGES) {
+    const retries = Object.entries(failedDonations).slice(
+      0,
+      SYNC_MAX_RETRIES_PER_RUN,
+    );
+    for (const [id, failure] of retries) {
+      // Re-insert failures at the end, so later entries also get their turn.
+      delete failedDonations[id];
+      try {
+        if (await this.importDonationById(id)) imported++;
+        else skipped++;
+      } catch (error) {
+        if (
+          startedAt.getTime() - Date.parse(failure.firstFailedAt) <
+          SYNC_FAILED_DONATION_TTL_MS
+        ) {
+          failedDonations[id] = { ...failure, attempts: failure.attempts + 1 };
+        } else {
+          reportNeonSyncIssue(
+            "donation-abandoned",
+            { donationId: id, attempts: failure.attempts + 1 },
+            error,
+          );
+        }
+      }
+    }
+
+    for (let page = 0; page < SYNC_MAX_PAGES; page++) {
       const response = await searchDonations(this.options, {
         searchFields: [
           {
@@ -180,27 +420,36 @@ export class NeonDonationProvider implements DonationProvider {
             value: "Succeeded",
           },
           {
-            field: "Origin Category",
-            operator: "NOT_EQUAL",
-            value: SELF_IMPORT_ORIGIN_CATEGORY,
+            field: "Donation Created Date",
+            operator: "GREATER_AND_EQUAL",
+            value: catchUp.sinceDate,
           },
           {
             field: "Donation Created Date",
-            operator: "GREATER_AND_EQUAL",
-            value: sinceDate,
+            operator: "LESS_THAN",
+            value: catchUp.untilDate,
           },
+          ...(catchUp.lastDonationId
+            ? [
+                {
+                  field: "Donation ID",
+                  operator: "GREATER_THAN",
+                  value: catchUp.lastDonationId,
+                },
+              ]
+            : []),
         ],
         outputFields: [
           "Donation ID",
           "Donation Created Date",
           "Donation Status",
-          "Origin Category",
         ],
         pagination: {
-          currentPage,
+          // Advance by unique ID rather than a shifting numeric page offset.
+          currentPage: 0,
           pageSize: SYNC_PAGE_SIZE,
-          sortColumn: "Donation Created Date",
-          sortDirection: "DESC",
+          sortColumn: "Donation ID",
+          sortDirection: "ASC",
         },
       });
 
@@ -208,47 +457,107 @@ export class NeonDonationProvider implements DonationProvider {
         throw new Error(`Failed to search Neon donations: ${response.error}`);
       }
 
-      totalPages = response.data.pagination.totalPages;
-      found += response.data.searchResults.length;
-
-      for (const result of response.data.searchResults) {
-        const donationId = result["Donation ID"];
-        if (typeof donationId !== "string") {
-          skipped++;
-          continue;
+      const results = response.data.searchResults;
+      let lastId = catchUp.lastDonationId;
+      const ids = results.map((result) => {
+        const id = result["Donation ID"];
+        if (
+          typeof id !== "string" ||
+          !/^\d+$/.test(id) ||
+          (lastId !== undefined && BigInt(id) <= BigInt(lastId))
+        ) {
+          throw new Error(
+            "Neon donation search did not return increasing numeric IDs",
+          );
         }
-
-        const importedDonation = await this.importDonationById(donationId);
-        if (importedDonation) {
-          imported++;
-        } else {
-          skipped++;
+        lastId = id;
+        return id;
+      });
+      const complete = response.data.pagination.totalPages <= 1;
+      if (!complete && !ids.length) {
+        throw new Error("Neon donation search returned no cursor progress");
+      }
+      found += results.length;
+      const pageFailures: Record<string, NeonFailedDonation> = {};
+      let consecutiveFailures = 0;
+      for (const id of ids) {
+        try {
+          if (await this.importDonationById(id)) imported++;
+          else skipped++;
+          consecutiveFailures = 0;
+        } catch (error) {
+          if (++consecutiveFailures >= SYNC_MAX_CONSECUTIVE_FAILURES) {
+            throw error;
+          }
+          pageFailures[id] = {
+            firstFailedAt: startedAt.toISOString(),
+            attempts: 1,
+          };
+          reportNeonSyncIssue("donation-deferred", { donationId: id }, error);
         }
       }
 
-      currentPage++;
-    }
-
-    if (totalPages > SYNC_MAX_PAGES) {
-      throw new Error(
-        `Neon donation sync found ${totalPages} pages since ${sinceDate}; max pages is ${SYNC_MAX_PAGES}.`,
+      // Checkpoint only a fully processed page; an aborted page is safely
+      // replayed through the existing donation-ID deduplication next time.
+      catchUp.lastDonationId = lastId;
+      Object.assign(failedDonations, pageFailures);
+      const pendingFailures = Object.keys(failedDonations).length
+        ? failedDonations
+        : undefined;
+      await this.service.config.set(
+        SYNC_CONFIG_KEY,
+        complete
+          ? ({
+              lastSyncedAt: catchUp.startedAt,
+              failedDonations: pendingFailures,
+            } satisfies NeonSyncMetadata)
+          : ({
+              ...metadata,
+              catchUp: { ...catchUp },
+              failedDonations: pendingFailures,
+            } satisfies NeonSyncMetadata),
       );
+      const retrying = Object.keys(failedDonations).length;
+      if (complete) {
+        return { complete: true, found, imported, skipped, retrying };
+      }
     }
 
-    this.service.config.set(SYNC_CONFIG_KEY, {
-      lastSyncedAt: startedAt.toISOString(),
-    } satisfies NeonSyncMetadata);
+    const catchUpDuration = startedAt.getTime() - Date.parse(catchUp.startedAt);
+    if (catchUpDuration >= SYNC_CATCH_UP_ALERT_MS) {
+      reportNeonSyncIssue("catch-up-delayed", {
+        catchUpStartedAt: catchUp.startedAt,
+        lastDonationId: catchUp.lastDonationId,
+      });
+    }
 
-    return { found, imported, skipped };
+    return {
+      complete: false,
+      found,
+      imported,
+      skipped,
+      retrying: Object.keys(failedDonations).length,
+    };
   }
 
   private async importDonationById(id: string) {
     const donationResponse = await getDonation(this.options, id);
     if (!donationResponse.ok) {
+      // Search still lists some deleted donations; retrying cannot help.
+      if (
+        donationResponse.errorType === "request" &&
+        donationResponse.status === 404
+      ) {
+        console.info("Skipping deleted Neon donation", { id });
+        return false;
+      }
       throw new Error(`Failed to fetch Neon donation ${id}`);
     }
 
-    const data = donationResponse.data;
+    return this.importDonation(donationResponse.data);
+  }
+
+  private async importDonation(data: Donation) {
     if (!this.shouldSyncDonation(data)) {
       return false;
     }
@@ -263,7 +572,14 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private shouldSyncDonation(data: Donation) {
-    if (data.origin?.originCategory === SELF_IMPORT_ORIGIN_CATEGORY) {
+    if (
+      this.shouldSkipAmountAnonymousDonation(data) ||
+      this.shouldSkipNonPositiveDonation(data)
+    ) {
+      return false;
+    }
+
+    if (this.isManualDonation(data.id, data.origin)) {
       return false;
     }
 
@@ -278,6 +594,33 @@ export class NeonDonationProvider implements DonationProvider {
           payment.paymentStatus && payment.paymentStatus === SUCCEEDED_STATUS,
       )
     );
+  }
+
+  private isManualDonation(id: string, origin: NeonDonationData["origin"]) {
+    const category = origin?.originCategory;
+    if (!category || !MANUAL_ORIGIN_CATEGORIES.has(category)) return false;
+
+    console.info("Skipping manually entered Neon donation", { id, category });
+    return true;
+  }
+
+  private shouldSkipAmountAnonymousDonation(data: NeonDonationData) {
+    if (!data.amountAnonymous) return false;
+
+    // The public donation/pixel pipeline exposes amounts. Acknowledge but skip
+    // these donations until that pipeline can honor amount privacy.
+    console.info("Skipping amount-anonymous Neon donation", { id: data.id });
+    return true;
+  }
+
+  private shouldSkipNonPositiveDonation(data: NeonDonationData) {
+    if (data.amount > 0) return false;
+
+    // Pixels are bought with the amount, so there is nothing to award.
+    console.info("Skipping Neon donation without a positive amount", {
+      id: data.id,
+    });
+    return true;
   }
 
   private createDonation(

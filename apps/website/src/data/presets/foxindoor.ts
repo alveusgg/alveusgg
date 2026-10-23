@@ -1,4 +1,7 @@
+import bedl from "@/assets/presets/foxindoor/bedl.png";
+import bedr from "@/assets/presets/foxindoor/bedr.png";
 import cubby from "@/assets/presets/foxindoor/cubby.png";
+import cubbyz from "@/assets/presets/foxindoor/cubbyz.png";
 import den from "@/assets/presets/foxindoor/den.png";
 import home from "@/assets/presets/foxindoor/home.png";
 import leftcorner from "@/assets/presets/foxindoor/leftcorner.png";
@@ -18,11 +21,29 @@ const foxindoorPresets: Record<string, Preset> = {
     position: { pan: 0, tilt: 0, zoom: 1 },
     // modified: 2026-04-18T13:07:22.077Z
   },
+  bedl: {
+    description: "bedl",
+    image: bedl,
+    position: { pan: -53.02, tilt: -120.33, zoom: 6976 },
+    // modified: 2026-09-25T15:26:48.881Z
+  },
+  bedr: {
+    description: "bedr",
+    image: bedr,
+    position: { pan: 82.08, tilt: -43.08, zoom: 6970 },
+    // modified: 2026-09-25T15:27:34.783Z
+  },
   cubby: {
     description: "cubby",
     image: cubby,
     position: { pan: 51.42, tilt: 3.33, zoom: 7731 },
     // modified: 2026-04-18T13:11:04.772Z
+  },
+  cubbyz: {
+    description: "cubbyz",
+    image: cubbyz,
+    position: { pan: 40.83, tilt: 17.91, zoom: 9068 },
+    // modified: 2026-08-14T17:38:56.098Z
   },
   den: {
     description: "den",

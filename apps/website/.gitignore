@@ -2,6 +2,7 @@
 /public/site.webmanifest
 /public/RootServiceWorker.js*
 /public/push/alveus/
+/public/maplibre-gl/
 /public/robots.txt
 /public/sitemap.xml
 

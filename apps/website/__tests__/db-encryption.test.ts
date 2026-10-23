@@ -91,6 +91,20 @@ test("decrypt record", async () => {
   expect(decryptedRecord.email).toBe(mockRecord.email);
 });
 
+test("record decryption failures do not expose the internal cause", async () => {
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    const result = decryptRecord({ ...mockEncryptedRecord, name: "invalid" }, [
+      "name",
+    ]);
+    await expect(result).rejects.toThrow("Could not decrypt record");
+    await expect(result).rejects.not.toHaveProperty("cause");
+  } finally {
+    log.mockRestore();
+  }
+});
+
 test("decrypting empty values should not fail", async () => {
   let failed = false;
   let decryptedRecord;

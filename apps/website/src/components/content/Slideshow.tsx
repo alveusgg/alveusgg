@@ -100,6 +100,7 @@ const Slideshow = ({
   return (
     <div className="relative z-0 size-full">
       <style
+        // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml -- CSS is generated from React IDs and numeric animation settings.
         dangerouslySetInnerHTML={{
           __html: [
             `@keyframes slideshow-${id}-container { ${animation.keyframes.container} }`,
@@ -112,10 +113,11 @@ const Slideshow = ({
       />
       {images.map(({ src, alt, className }, idx) => (
         <div
-          className={
-            // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- dynamic class name generated alongside the inline @keyframes above
-            `absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`
-          }
+          className={classes(
+            "absolute inset-0 z-0 overflow-clip opacity-0",
+            // eslint-disable-next-line better-tailwindcss/no-concatenated-classes -- dynamic class name generated alongside the inline @keyframes above
+            `slideshow-${id}-container`,
+          )}
           key={
             typeof src === "string"
               ? src

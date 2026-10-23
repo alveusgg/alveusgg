@@ -1,5 +1,20 @@
-import { Input, Tab, TabGroup, TabList } from "@headlessui/react";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import {
+  Input,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Tab,
+  TabGroup,
+  TabList,
+} from "@headlessui/react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
@@ -13,21 +28,28 @@ import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { sortPresets } from "@/utils/sort-presets";
 import { camelToKebab } from "@/utils/string-case";
+import { trpc } from "@/utils/trpc";
 
 import useLocalStorage from "@/hooks/storage";
+import useSubscriberAccess from "@/hooks/subscription";
 import useTooltip from "@/hooks/tooltip";
 
 import Heading from "@/components/content/Heading";
 import PresetCard from "@/components/ptz/PresetCard";
 import PresetMap from "@/components/ptz/PresetMap";
-import RunCommandButton from "@/components/shared/actions/RunCommandButton";
+import ActionPreviewTooltip from "@/components/shared/actions/ActionPreviewTooltip";
 
 import IconMapPin from "@/icons/IconMapPin";
 import IconMenu from "@/icons/IconMenu";
+import IconXCircle from "@/icons/IconXCircle";
 import IconZoomIn from "@/icons/IconZoomIn";
 import IconZoomOut from "@/icons/IconZoomOut";
 
 type PresetView = "list" | "map";
+type ZoomDirection = "in" | "out";
+
+const zoomOutLevels = ["90", "70", "50", "10"] as const;
+const zoomInLevels = ["125", "150", "200", "400", "600"] as const;
 
 const PresetToolsTab = ({
   tooltip,
@@ -56,6 +78,131 @@ const PresetToolsTab = ({
   );
 };
 
+const ZoomOption = ({
+  camera,
+  level,
+  direction,
+}: {
+  camera: string;
+  level: string;
+  direction: ZoomDirection;
+}) => {
+  const percent =
+    direction === "out" ? 100 - Number(level) : Number(level) - 100;
+  const sign = direction === "out" ? "-" : "+";
+
+  const { props, element } = useTooltip({
+    content: (
+      <ActionPreviewTooltip preview={`!ptzzoom ${camera} ${level}`}>
+        {`Zoom ${direction} by ${sign}${percent}%`}
+      </ActionPreviewTooltip>
+    ),
+    aria: `Zoom ${direction} by ${sign}${percent}%`,
+    placement: "right",
+  });
+
+  return (
+    <ListboxOption
+      value={level}
+      className="cursor-pointer rounded-sm px-2 py-1 text-sm data-focus:bg-alveus-green-100"
+      as="li"
+      {...props}
+    >
+      {element}
+      {level}%
+    </ListboxOption>
+  );
+};
+
+const ZoomControl = ({
+  camera,
+  direction,
+  levels,
+}: {
+  camera: string;
+  direction: ZoomDirection;
+  levels: readonly string[];
+}) => {
+  const { mutate: runCommand, status } = trpc.stream.runCommand.useMutation();
+  const isPending = status === "pending";
+
+  const [value, setValue] = useState("");
+
+  const onChange = useCallback(
+    (level: string) => {
+      runCommand({ command: "ptzzoom", args: [camera, level] });
+      // Reset back to the placeholder, the dropdown is an action trigger,
+      // not a reflection of the camera's actual zoom state
+      setValue("");
+    },
+    [runCommand, camera],
+  );
+
+  const [statusText, setStatusText] = useState<string>();
+  useEffect(() => {
+    if (status === "idle") {
+      setStatusText(undefined);
+      return;
+    }
+
+    if (status === "pending") {
+      setStatusText("Sending command...");
+      return;
+    }
+
+    if (status === "success") {
+      setStatusText("Command sent!");
+      const timeout = setTimeout(() => setStatusText(undefined), 2000);
+      return () => clearTimeout(timeout);
+    }
+
+    if (status === "error") {
+      setStatusText("Error sending command");
+      const timeout = setTimeout(() => setStatusText(undefined), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [status]);
+
+  const tooltip = useTooltip({
+    content: statusText ?? `Zoom ${direction}`,
+    force: !!statusText,
+  });
+
+  const Icon = direction === "out" ? IconZoomOut : IconZoomIn;
+
+  return (
+    <Listbox value={value} onChange={onChange} disabled={isPending}>
+      <div className="relative">
+        <ListboxButton
+          className={classes(
+            "inline-block p-1 text-alveus-green-400 hover:text-black focus:outline-none",
+            isPending && "opacity-60",
+          )}
+          {...tooltip.props}
+        >
+          <Icon className="size-5" />
+        </ListboxButton>
+        {tooltip.element}
+
+        <ListboxOptions
+          transition
+          className="absolute top-full z-30 mt-1 flex max-h-60 min-w-18 flex-col gap-0.5 overflow-auto rounded-md border border-alveus-green-200 bg-alveus-green-50 p-1 text-alveus-green-900 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-closed:opacity-0"
+          as="ul"
+        >
+          {levels.map((level) => (
+            <ZoomOption
+              key={level}
+              camera={camera}
+              level={level}
+              direction={direction}
+            />
+          ))}
+        </ListboxOptions>
+      </div>
+    </Listbox>
+  );
+};
+
 const PresetTools = ({
   camera,
   zoom,
@@ -70,67 +217,83 @@ const PresetTools = ({
   onSearch: (value: string) => void;
   view: PresetView;
   onView: (value: PresetView) => void;
-}) => (
-  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-    <Heading
-      level={3}
-      className="my-0 shrink-0 scroll-mt-14 text-2xl"
-      id={`presets:${camelToKebab(camera)}`}
-    >
-      {cameras[camera].title}
-      <span className="text-sm text-alveus-green-400 italic">
-        {` (${camera.toLowerCase()})`}
-      </span>
-    </Heading>
+}) => {
+  const { hasScopes, subscription } = useSubscriberAccess();
+  const canZoom = hasScopes && !!subscription.data;
+  const cameraSlug = camera.toLowerCase();
 
-    {isCameraPTZ(cameras[camera]) && (
-      <>
-        {zoom && (
-          <div className="flex items-center">
-            <RunCommandButton
-              command="ptzzoom"
-              args={[camera.toLowerCase(), "80"]}
-              tooltip={{ text: "Run zoom out command" }}
-              icon={IconZoomOut}
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+      <Heading
+        level={3}
+        className="my-0 shrink-0 scroll-mt-14 text-2xl"
+        id={`presets:${camelToKebab(camera)}`}
+      >
+        {cameras[camera].title}
+        <span className="text-sm text-alveus-green-400 italic">
+          {` (${cameraSlug})`}
+        </span>
+      </Heading>
+
+      {isCameraPTZ(cameras[camera]) && (
+        <>
+          {zoom && canZoom && (
+            <div className="flex items-center">
+              <ZoomControl
+                camera={cameraSlug}
+                direction="out"
+                levels={zoomOutLevels}
+              />
+
+              <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
+
+              <ZoomControl
+                camera={cameraSlug}
+                direction="in"
+                levels={zoomInLevels}
+              />
+            </div>
+          )}
+
+          <div className="relative grow">
+            <Input
+              type="text"
+              placeholder="Search presets..."
+              aria-label="Search presets"
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
+              className="w-full rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 pr-8 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
             />
-
-            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded-sm bg-alveus-green-400" />
-
-            <RunCommandButton
-              command="ptzzoom"
-              args={[camera.toLowerCase(), "120"]}
-              tooltip={{ text: "Run zoom in command" }}
-              icon={IconZoomIn}
-            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => onSearch("")}
+                aria-label="Clear search"
+                className="absolute inset-y-0 right-0 flex items-center pr-2 text-alveus-green-400 hover:text-alveus-green-700"
+              >
+                <IconXCircle className="size-4" />
+              </button>
+            )}
           </div>
-        )}
 
-        <Input
-          type="text"
-          placeholder="Search presets..."
-          aria-label="Search presets"
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-          className="grow rounded-sm border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
-        />
-
-        <TabGroup
-          selectedIndex={view === "list" ? 0 : 1}
-          onChange={(index) => onView(index === 0 ? "list" : "map")}
-        >
-          <TabList className="inline-flex overflow-hidden rounded-sm border border-alveus-green-300 bg-alveus-green-50 text-sm font-semibold shadow-sm">
-            <PresetToolsTab tooltip="List view">
-              <IconMenu className="size-5" />
-            </PresetToolsTab>
-            <PresetToolsTab tooltip="Map view">
-              <IconMapPin className="size-5" />
-            </PresetToolsTab>
-          </TabList>
-        </TabGroup>
-      </>
-    )}
-  </div>
-);
+          <TabGroup
+            selectedIndex={view === "list" ? 0 : 1}
+            onChange={(index) => onView(index === 0 ? "list" : "map")}
+          >
+            <TabList className="inline-flex overflow-hidden rounded-sm border border-alveus-green-300 bg-alveus-green-50 text-sm font-semibold shadow-sm">
+              <PresetToolsTab tooltip="List view">
+                <IconMenu className="size-5" />
+              </PresetToolsTab>
+              <PresetToolsTab tooltip="Map view">
+                <IconMapPin className="size-5" />
+              </PresetToolsTab>
+            </TabList>
+          </TabGroup>
+        </>
+      )}
+    </div>
+  );
+};
 
 const PresetList = ({
   camera,

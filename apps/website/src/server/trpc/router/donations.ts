@@ -15,6 +15,7 @@ import {
 
 import { env } from "@/env";
 
+import { getNeonLogoutUrl, getNeonOAuthConfig } from "@/server/apis/neon";
 import { sendChatMessage } from "@/server/apis/twitch";
 import {
   type PixelWithDonation,
@@ -23,7 +24,9 @@ import {
   getDonationFeed,
   getExternalPixelsByVerification,
   getMyPixels,
+  getNeonPixels,
   getPixels,
+  removeDonations,
   renamePixel,
 } from "@/server/db/donations";
 import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
@@ -34,6 +37,10 @@ import {
   router,
   sharedKeyProcedure,
 } from "@/server/trpc/trpc";
+import {
+  NEON_DONOR_SESSION_COOKIE,
+  getNeonDonorSession,
+} from "@/server/utils/neon-donor-session";
 import { limit } from "@/server/utils/rate-limit";
 
 import murals, { type MuralId, isMuralId } from "@/data/murals";
@@ -100,6 +107,22 @@ async function guardExternalSearchMutation(req: NextApiRequest) {
 
 export type DonationFeed = Awaited<ReturnType<typeof getDonationFeed>>;
 
+function getNeonDonorFromRequest(req: NextApiRequest) {
+  return getNeonDonorSession(req.cookies[NEON_DONOR_SESSION_COOKIE]);
+}
+
+const neonDonorProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  const neonDonor = await getNeonDonorFromRequest(ctx.req);
+  if (!neonDonor) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Not logged in with Neon",
+    });
+  }
+
+  return next({ ctx: { ...ctx, neonDonor } });
+});
+
 export const donationsRouter = router({
   getDonationFeed: protectedProcedure
     .use(createCheckPermissionMiddleware(permissions.manageDonations))
@@ -156,6 +179,53 @@ export const donationsRouter = router({
     .mutation(async ({ input }) => {
       waitUntil(sendChatMessages(input.pixels));
       await createPixels(input.pixels);
+    }),
+
+  removeDonations: sharedKeyProcedure
+    .input(
+      z.object({
+        donations: z.array(
+          z.object({
+            provider: z.string(),
+            providerUniqueId: z.string(),
+          }),
+        ),
+        reason: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { removed, orphanPixels } = await removeDonations(input.donations);
+      const messages = removed
+        .filter((donation) => donation.pixels.length)
+        .map((donation) => {
+          const identifiers = [
+            ...new Set(donation.pixels.map((pixel) => pixel.identifier)),
+          ];
+          return `${donation.providerUniqueId}: removed ${donation.pixels.length} ${pluralize("pixel", donation.pixels.length)} of ${identifiers.join(", ")}`;
+        });
+      if (orphanPixels > 0) {
+        messages.push(
+          `removed ${orphanPixels} ${pluralize("pixel", orphanPixels)} without a donation`,
+        );
+      }
+      if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL && messages.length) {
+        waitUntil(
+          triggerPlainDiscordChannelWebhook({
+            webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+            contentMessage:
+              `Removing donations (${input.reason})\n` + messages.join("\n"),
+          }),
+        );
+      }
+      return {
+        donations: removed.length,
+        pixels:
+          orphanPixels +
+          removed.reduce(
+            (total, donation) => total + donation.pixels.length,
+            0,
+          ),
+      };
     }),
 
   getMyPixels: protectedProcedure
@@ -235,6 +305,51 @@ export const donationsRouter = router({
         pixels,
         input.newIdentifier,
         `Donation info (${input.verification.firstName} ${input.verification.lastName[0]})`,
+      );
+    }),
+
+  getNeonDonor: publicProcedure.query(async ({ ctx }) => {
+    const config = getNeonOAuthConfig();
+    const neonDonor = config ? await getNeonDonorFromRequest(ctx.req) : null;
+    return {
+      isEnabled: config !== null,
+      isLoggedIn: neonDonor !== null,
+      logoutUrl: config ? getNeonLogoutUrl(config) : null,
+    };
+  }),
+
+  getNeonPixels: neonDonorProcedure
+    .input(z.object({ muralId: z.string() }))
+    .query(async ({ input, ctx }) =>
+      mapDonationPixels(
+        await getNeonPixels(input.muralId, ctx.neonDonor.accountId),
+      ),
+    ),
+
+  renameNeonPixels: neonDonorProcedure
+    .input(
+      z.object({
+        muralId: z.string(),
+        newIdentifier: pixelIdentifierSchema,
+        pixelId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const pixels = await getNeonPixels(
+        input.muralId,
+        ctx.neonDonor.accountId,
+        input.pixelId,
+      ).catch(() => {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to find pixels (database)",
+        });
+      });
+
+      return renamePixels(
+        pixels,
+        input.newIdentifier,
+        `Neon login (account ${ctx.neonDonor.accountId})`,
       );
     }),
 });

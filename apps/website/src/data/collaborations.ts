@@ -19,6 +19,7 @@ import carlyIncontro from "@/assets/collaborations/carly-incontro.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
 import cdawg from "@/assets/collaborations/cdawg.png";
 import chrisnxtdoor from "@/assets/collaborations/chrisnxtdoor.png";
+import christinaAmber from "@/assets/collaborations/christina-amber.png";
 import cinna from "@/assets/collaborations/cinna.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import dailyDose from "@/assets/collaborations/daily-dose.png";
@@ -48,11 +49,13 @@ import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
 import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
+import jynxzi from "@/assets/collaborations/jynxzi.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
+import mAndJTV from "@/assets/collaborations/m-and-j-tv.png";
 import mari from "@/assets/collaborations/mari.png";
 import marlon from "@/assets/collaborations/marlon.png";
 import misterArther from "@/assets/collaborations/mister-arther.png";
@@ -65,6 +68,7 @@ import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sidemen from "@/assets/collaborations/sidemen.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import smoshPit from "@/assets/collaborations/smosh-pit.png";
 import squeex from "@/assets/collaborations/squeex.png";
@@ -102,6 +106,72 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Jynxzi",
+      link: "https://www.twitch.tv/jynxzi",
+      date: new Date("2026-09-17"),
+      videoId: "HDe20xr-RJ4",
+      creators: [
+        {
+          name: "Jynxzi",
+          image: jynxzi,
+          popularity: 11_300_000, // Twitch followers, 2026-09-20
+        },
+      ],
+    },
+    {
+      name: "MandJTV",
+      link: "https://www.youtube.com/@MandJTV",
+      date: new Date("2026-09-10"),
+      videoId: "0moCZWpYsOc",
+      creators: [
+        {
+          name: "MandJTV",
+          image: mAndJTV,
+          popularity: 2_670_000, // YouTube subscribers, 2026-09-10
+        },
+      ],
+    },
+    {
+      name: "Julien",
+      link: "https://www.twitch.tv/julien",
+      date: new Date("2026-08-06"),
+      videoId: "rzka0Zdo324",
+      vodId: "acQCPHDxKN4",
+      creators: [
+        {
+          name: "Julien",
+          image: julien,
+          popularity: 791_000, // Twitch followers, 2026-08-23
+        },
+      ],
+    },
+    {
+      name: "Christina & Amber",
+      link: "https://www.twitch.tv/christinaandamber",
+      date: new Date("2026-08-11"),
+      videoId: "MLalNcDbE80",
+      creators: [
+        {
+          name: "Christina & Amber",
+          image: christinaAmber,
+          popularity: 146_000, // Twitch followers, 2026-08-15
+        },
+      ],
+    },
+    {
+      name: "Sidemen",
+      link: "https://www.youtube.com/@Sidemen",
+      date: new Date("2026-07-26"),
+      videoId: "SPqt2U92mEE",
+      creators: [
+        {
+          name: "Sidemen",
+          image: sidemen,
+          popularity: 23_400_000, // YouTube subscribers, 2026-08-15
+        },
+      ],
+    },
     {
       name: "Adapt",
       link: "https://www.twitch.tv/adapt",
@@ -672,13 +742,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2024-04-25"),
       videoId: "46ECIvC4MUo",
       vodId: "yWtkfbfmNGs",
-      creators: [
-        {
-          name: "Julien",
-          image: julien,
-          popularity: 760_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Julien has a more recent collaboration
     },
     {
       name: "Fuslie",

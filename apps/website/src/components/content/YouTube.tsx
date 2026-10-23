@@ -74,7 +74,7 @@ type EmbedProps = {
 const iframeSrc = (id: string, params?: Record<string, string>) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
     id,
-  )}?${new URLSearchParams({ ...params, modestbranding: "1", rel: "0" }).toString()}`;
+  )}?${new URLSearchParams({ ...params, modestbranding: "1", rel: "0", enablejsapi: "1" }).toString()}`;
 
 export const YouTubeEmbed = ({ videoId, videoParams, caption }: EmbedProps) => (
   <div className="flex h-full flex-col">
@@ -84,6 +84,7 @@ export const YouTubeEmbed = ({ videoId, videoParams, caption }: EmbedProps) => (
         title="Video embed"
         referrerPolicy="strict-origin-when-cross-origin"
         allow="fullscreen; encrypted-media"
+        // eslint-disable-next-line @eslint-react/dom-no-unsafe-iframe-sandbox -- The YouTube embed runs on a separate origin and requires scripts and its own origin.
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
         loading="lazy"
         className="pointer-events-auto my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green-800 shadow-xl"

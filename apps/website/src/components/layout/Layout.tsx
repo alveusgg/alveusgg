@@ -9,7 +9,7 @@ import Meta from "@/components/content/Meta";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import { Footer } from "./footer/Footer";
+import Footer from "./Footer";
 import { Navbar } from "./navbar/Navbar";
 
 type LayoutProps = {
@@ -69,7 +69,8 @@ const Layout = ({ children }: LayoutProps) => {
             custom
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
-              {topHat.title} &middot; {topHat.cta}
+              {topHat.title}
+              {topHat.cta && <> &middot; {topHat.cta}</>}
               <IconArrowRight className="size-4" />
             </div>
           </Link>
