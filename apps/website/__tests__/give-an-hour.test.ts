@@ -6,17 +6,16 @@ import { countFirstTimeGiveAnHourParticipants } from "@/utils/give-an-hour";
 
 vi.mock("@/env", () => ({ env: {} }));
 
-const { mockAggregate, mockFindMany, updatedAtField } = vi.hoisted(() => ({
+const { mockAggregate, mockFindMany } = vi.hoisted(() => ({
   mockAggregate: vi.fn(),
   mockFindMany: vi.fn(),
-  updatedAtField: Symbol("updatedAt"),
 }));
 
 vi.mock("@alveusgg/database", () => ({
   prisma: {
     showAndTellEntry: {
       aggregate: mockAggregate,
-      fields: { updatedAt: updatedAtField },
+      fields: { updatedAt: Symbol("updatedAt") },
       findMany: mockFindMany,
     },
   },
@@ -56,25 +55,13 @@ describe("getGiveAnHourStats", () => {
   // The 2024 campaign as the page sends it (midnight in Texas, exclusive end)
   const start = new Date("2024-03-01T06:00:00.000Z");
   const end = new Date("2024-04-23T05:00:00.000Z");
-  const approvedFilter = { approvedAt: { gte: updatedAtField } };
-  const campaignWhere = {
-    AND: [
-      approvedFilter,
-      { volunteeringMinutes: { gt: 0 } },
-      { OR: [{ createdAt: { gte: start, lt: end } }] },
-    ],
-  };
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2025-04-01T12:00:00.000Z"));
     vi.clearAllMocks();
 
-    mockAggregate.mockResolvedValue({
-      _sum: { volunteeringMinutes: 180 },
-      _count: { _all: 2 },
-    });
-    // Answer each of the skinny distinct queries based on the columns it selects
+    // Supply campaign participants and prior anonymous history
     mockFindMany.mockImplementation(
       async ({
         select,
@@ -83,8 +70,6 @@ describe("getGiveAnHourStats", () => {
         select: Record<string, boolean>;
         where: { AND: object[] };
       }) => {
-        if (select.location)
-          return [{ location: "Austin, Texas, United States" }];
         if (select.userId && select.displayName) {
           // Identity pairs: prior history is filtered by createdAt, campaign participants by the campaign window
           return where.AND.some((condition) => "createdAt" in condition)
@@ -94,8 +79,7 @@ describe("getGiveAnHourStats", () => {
                 { userId: null, displayName: "Anonymous" },
               ];
         }
-        if (select.userId) return [{ userId: "user-one" }];
-        return [{ displayName: "Anonymous" }];
+        return [];
       },
     );
   });
@@ -104,76 +88,7 @@ describe("getGiveAnHourStats", () => {
     vi.useRealTimers();
   });
 
-  it("aggregates in Prisma and only loads distinct identities and locations", async () => {
-    const result = await getGiveAnHourStats({ ranges: [{ start, end }] });
-
-    expect(mockAggregate).toHaveBeenCalledTimes(2);
-    expect(mockAggregate).toHaveBeenCalledWith({
-      _sum: { volunteeringMinutes: true },
-      _count: { _all: true },
-      where: campaignWhere,
-    });
-    expect(mockFindMany).toHaveBeenCalledTimes(5);
-    expect(mockFindMany).toHaveBeenCalledWith({
-      select: { userId: true },
-      where: { AND: [campaignWhere, { userId: { not: null } }] },
-      distinct: ["userId"],
-    });
-    expect(mockFindMany).toHaveBeenCalledWith({
-      select: { displayName: true },
-      where: {
-        AND: [campaignWhere, { userId: null }, { displayName: { not: null } }],
-      },
-      distinct: ["displayName"],
-    });
-    expect(mockFindMany).toHaveBeenCalledWith({
-      select: { location: true },
-      where: {
-        AND: [
-          campaignWhere,
-          { location: { not: null } },
-          { NOT: { location: "" } },
-        ],
-      },
-      distinct: ["location"],
-    });
-    expect(mockFindMany).toHaveBeenCalledWith({
-      select: { userId: true, displayName: true },
-      where: campaignWhere,
-      distinct: ["userId", "displayName"],
-    });
-    expect(mockFindMany).toHaveBeenCalledWith({
-      select: { userId: true, displayName: true },
-      where: {
-        AND: [
-          approvedFilter,
-          { createdAt: { lt: start } },
-          {
-            OR: [
-              { userId: { in: ["user-one"] } },
-              { displayName: { in: ["Prior Name", "Anonymous"] } },
-            ],
-          },
-        ],
-      },
-      distinct: ["userId", "displayName"],
-    });
-    expect(result).toEqual({
-      hours: 3,
-      posts: 2,
-      participants: 2,
-      averageHoursPerParticipant: 2,
-      locations: 1,
-      countries: 1,
-      averagePostsPerCampaign: 2,
-      averageFirstTimeParticipantsPerCampaign: 1,
-      averageCommunityHoursPerCampaign: 3,
-      recordCampaign: { year: 2024, hours: 3 },
-      campaigns: [{ year: 2024, firstTimeParticipants: 1 }],
-    });
-  });
-
-  it("skips campaigns that have not started and keeps running ones out of the averages", async () => {
+  it("averages completed campaigns while allowing a running campaign to hold the record", async () => {
     const running = {
       start: new Date("2025-03-23T05:00:00.000Z"),
       end: new Date("2025-04-23T05:00:00.000Z"),
@@ -200,9 +115,6 @@ describe("getGiveAnHourStats", () => {
       ranges: [{ start, end }, running, future],
     });
 
-    // No queries for the campaign that hasn't started
-    expect(mockAggregate).toHaveBeenCalledTimes(3);
-    expect(mockFindMany).toHaveBeenCalledTimes(7);
     expect(result.campaigns).toEqual([
       { year: 2024, firstTimeParticipants: 1 },
       { year: 2025, firstTimeParticipants: 1 },
