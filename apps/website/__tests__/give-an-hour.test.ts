@@ -148,7 +148,7 @@ describe("getGiveAnHourStats", () => {
       averageCommunityHoursPerCampaign: 3,
       recordHighCampaignYear: 2024,
       recordHighCampaignHours: 3,
-      campaigns: [{ year: 2024, firstTimeParticipants: 1, hours: 3 }],
+      campaigns: [{ year: 2024, firstTimeParticipants: 1 }],
     });
   });
 });

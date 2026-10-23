@@ -74,18 +74,18 @@ const GiveAnHourProgressText = ({
   );
 };
 
-type GiveAnHourProgressProps = {
+export const GiveAnHourProgress = ({
+  target,
+  start,
+  end,
+  text = "after",
+}: {
   target?:
     number | ((hours: number, ended: boolean, computed: number) => number);
   start?: DateString;
   end?: DateString;
   text?: "after" | "before";
-  providedHours?: { data: number | undefined; isPending: boolean };
-};
-
-export const GiveAnHourProgress = (props: GiveAnHourProgressProps) => {
-  const { target, start, end, text = "after" } = props;
-  const hasProvidedHours = props.providedHours !== undefined;
+}) => {
   const startDate = useDateString(start);
   const endDate = useDateString(end, 1); // `end` is exclusive in the API, but treated as inclusive as a prop here
   const ended = useMemo(() => {
@@ -100,16 +100,10 @@ export const GiveAnHourProgress = (props: GiveAnHourProgressProps) => {
       end: endDate,
     },
     {
-      enabled: !hasProvidedHours,
-      refetchInterval: hasProvidedHours ? false : 5 * 60 * 1000,
+      refetchInterval: 5 * 60 * 1000,
     },
   );
-  const hours = hasProvidedHours
-    ? (props.providedHours?.data ?? 0)
-    : (hoursQuery.data ?? 0);
-  const isLoading = hasProvidedHours
-    ? (props.providedHours?.isPending ?? false)
-    : hoursQuery.isPending;
+  const hours = hoursQuery.data ?? 0;
 
   const computedTarget = useMemo(() => {
     if (typeof target === "number") return target;
@@ -127,7 +121,7 @@ export const GiveAnHourProgress = (props: GiveAnHourProgressProps) => {
         <GiveAnHourProgressText
           hours={hours}
           target={computedTarget}
-          isLoading={isLoading}
+          isLoading={hoursQuery.isPending}
           ended={ended}
         />
       )}
@@ -138,7 +132,7 @@ export const GiveAnHourProgress = (props: GiveAnHourProgressProps) => {
         <GiveAnHourProgressText
           hours={hours}
           target={computedTarget}
-          isLoading={isLoading}
+          isLoading={hoursQuery.isPending}
           ended={ended}
         />
       )}

@@ -585,13 +585,10 @@ export async function getGiveAnHourStats({
     averageCommunityHoursPerCampaign,
     recordHighCampaignYear: recordHighCampaign.year,
     recordHighCampaignHours: recordHighCampaign.hours,
-    campaigns: campaignSummaries.map(
-      ({ year, firstTimeParticipants, hours }) => ({
-        year,
-        firstTimeParticipants,
-        hours,
-      }),
-    ),
+    campaigns: campaignSummaries.map(({ year, firstTimeParticipants }) => ({
+      year,
+      firstTimeParticipants,
+    })),
   };
 }
 
