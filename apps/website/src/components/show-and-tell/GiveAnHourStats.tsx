@@ -142,9 +142,9 @@ export const GiveAnHourStats = ({
             {
               id: "record-hours",
               label: "most hours in a campaign",
-              value: stats.recordHighCampaignHours,
-              detail: stats.recordHighCampaignYear
-                ? `${stats.recordHighCampaignYear}`
+              value: stats.recordCampaign?.hours ?? 0,
+              detail: stats.recordCampaign
+                ? `${stats.recordCampaign.year}`
                 : undefined,
             },
           ]}

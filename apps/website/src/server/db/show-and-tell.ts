@@ -451,7 +451,18 @@ const getGiveAnHourEntriesWhere = (ranges: GiveAnHourRange[]) =>
     ],
   }) satisfies Prisma.ShowAndTellEntryWhereInput;
 
-async function getGiveAnHourCampaignSummary({ start, end }: GiveAnHourRange) {
+async function getGiveAnHourCampaignSummary(
+  { start, end }: GiveAnHourRange,
+  now: Date,
+) {
+  const year = start.getUTCFullYear();
+  const ended = end <= now;
+
+  // Nothing can have been given for a campaign that hasn't started yet
+  if (start > now) {
+    return { year, ended, minutes: 0, posts: 0, firstTimeParticipants: 0 };
+  }
+
   const where = getGiveAnHourEntriesWhere([{ start, end }]);
   const [aggregate, participants] = await Promise.all([
     prisma.showAndTellEntry.aggregate({
@@ -496,25 +507,31 @@ async function getGiveAnHourCampaignSummary({ start, end }: GiveAnHourRange) {
           distinct: ["userId", "displayName"],
         });
 
-  const minutes = aggregate._sum.volunteeringMinutes ?? 0;
-
   return {
-    hours: Math.round(minutes / 60),
-    minutes,
+    year,
+    ended,
+    minutes: aggregate._sum.volunteeringMinutes ?? 0,
     posts: aggregate._count._all,
     firstTimeParticipants: countFirstTimeGiveAnHourParticipants(
       participants,
       previousParticipants,
     ),
-    year: start.getUTCFullYear(),
   };
 }
+
+const roundedAverage = (values: number[]) =>
+  values.length === 0
+    ? 0
+    : Math.round(
+        values.reduce((total, value) => total + value, 0) / values.length,
+      );
 
 export async function getGiveAnHourStats({
   ranges,
 }: {
   ranges: GiveAnHourRange[];
 }) {
+  const now = new Date();
   const where = getGiveAnHourEntriesWhere(ranges);
   const [aggregate, participantsWithUserId, participantsWithoutUserId, places] =
     await Promise.all([
@@ -541,8 +558,8 @@ export async function getGiveAnHourStats({
         distinct: ["location"],
       }),
     ]);
-  const campaignSummaries = await Promise.all(
-    ranges.map(getGiveAnHourCampaignSummary),
+  const campaigns = await Promise.all(
+    ranges.map((range) => getGiveAnHourCampaignSummary(range, now)),
   );
   const minutes = aggregate._sum.volunteeringMinutes ?? 0;
   const participants =
@@ -552,24 +569,15 @@ export async function getGiveAnHourStats({
       location ? [{ id: String(index), location }] : [],
     ),
   );
-  const campaignCount = campaignSummaries.length;
-  const averageFirstTimeParticipantsPerCampaign = Math.round(
-    campaignSummaries.reduce(
-      (total, { firstTimeParticipants }) => total + firstTimeParticipants,
-      0,
-    ) / campaignCount,
-  );
-  const averageCommunityHoursPerCampaign = Math.round(
-    campaignSummaries.reduce((total, { minutes }) => total + minutes, 0) /
-      60 /
-      campaignCount,
-  );
-  const averagePostsPerCampaign = Math.round(
-    campaignSummaries.reduce((total, { posts }) => total + posts, 0) /
-      campaignCount,
-  );
-  const recordHighCampaign = campaignSummaries.reduce((record, campaign) =>
-    campaign.hours > record.hours ? campaign : record,
+  // Averages only cover campaigns that have ended, so a running one doesn't drag them down
+  const endedCampaigns = campaigns.filter(({ ended }) => ended);
+  // The record can be held by a running campaign
+  const recordCampaign = campaigns.reduce<
+    (typeof campaigns)[number] | undefined
+  >(
+    (record, campaign) =>
+      campaign.minutes > (record?.minutes ?? 0) ? campaign : record,
+    undefined,
   );
 
   return {
@@ -580,12 +588,22 @@ export async function getGiveAnHourStats({
       participants === 0 ? 0 : Math.round(minutes / 60 / participants),
     locations: locations.size,
     countries: countries.size,
-    averagePostsPerCampaign,
-    averageFirstTimeParticipantsPerCampaign,
-    averageCommunityHoursPerCampaign,
-    recordHighCampaignYear: recordHighCampaign.year,
-    recordHighCampaignHours: recordHighCampaign.hours,
-    campaigns: campaignSummaries.map(({ year, firstTimeParticipants }) => ({
+    averagePostsPerCampaign: roundedAverage(
+      endedCampaigns.map(({ posts }) => posts),
+    ),
+    averageFirstTimeParticipantsPerCampaign: roundedAverage(
+      endedCampaigns.map(({ firstTimeParticipants }) => firstTimeParticipants),
+    ),
+    averageCommunityHoursPerCampaign: roundedAverage(
+      endedCampaigns.map(({ minutes }) => minutes / 60),
+    ),
+    recordCampaign: recordCampaign
+      ? {
+          year: recordCampaign.year,
+          hours: Math.round(recordCampaign.minutes / 60),
+        }
+      : null,
+    campaigns: campaigns.map(({ year, firstTimeParticipants }) => ({
       year,
       firstTimeParticipants,
     })),
