@@ -44,7 +44,7 @@ const MetricRow = ({ label, value }: MetricItem) => {
   const formattedValue = useLocaleString(Math.round(value));
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-0.5 px-2 leading-tight">
+    <div className="flex flex-1 flex-col items-center justify-center gap-0.5 px-2 leading-tight">
       <span className="text-lg leading-none font-semibold tabular-nums md:text-xl">
         {formattedValue}
       </span>
@@ -60,15 +60,15 @@ const MetricCard = ({
   icon: ComponentType<IconProps>;
   items: MetricItem[];
 }) => (
-  <div className="flex min-h-44 min-w-0 flex-col rounded-xl bg-white/75 p-3 text-center text-alveus-green-900 shadow-lg backdrop-blur-sm sm:aspect-square sm:min-h-0 md:p-2 md:text-lg lg:aspect-auto lg:h-[270px]">
+  <div className="flex min-w-0 flex-col gap-3 rounded-xl bg-white/75 p-3 text-center text-alveus-green-900 shadow-lg backdrop-blur-sm md:p-4">
     <div className="mx-auto size-8 shrink-0">
       <Icon className="size-full" />
     </div>
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex flex-1 flex-col">
       {items.map((item, index) => (
         <Fragment key={item.id}>
           {index > 0 && (
-            <div className="h-3 flex-none border-t border-alveus-green-900/15" />
+            <div className="my-3 shrink-0 border-t border-alveus-green-900/15" />
           )}
           <MetricRow {...item} />
         </Fragment>
@@ -101,7 +101,7 @@ export const GiveAnHourStats = ({
           {Array.from({ length: 4 }, (_, index) => (
             <div
               key={index}
-              className="min-h-44 rounded-xl bg-alveus-green/10 sm:aspect-square sm:min-h-0 lg:aspect-auto lg:h-[270px]"
+              className="min-h-48 rounded-xl bg-alveus-green/10"
             />
           ))}
         </div>
