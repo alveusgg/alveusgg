@@ -10,6 +10,8 @@ const { mockAggregate, mockFindMany, updatedAtField } = vi.hoisted(() => ({
   updatedAtField: Symbol("updatedAt"),
 }));
 
+vi.mock("@/env", () => ({ env: {} }));
+
 vi.mock("@alveusgg/database", () => ({
   prisma: {
     showAndTellEntry: {
