@@ -7,6 +7,7 @@ import useLocaleString from "@/hooks/locale";
 import {
   type DateString,
   parseDateString,
+  useLocaleHours,
 } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import type { IconProps } from "@/icons/BaseIcon";
@@ -19,7 +20,6 @@ interface MetricItem {
   id: string;
   label: string;
   value: number;
-  detail?: string;
 }
 
 type GiveAnHourCampaignRange = {
@@ -40,7 +40,7 @@ export const useGiveAnHourStats = (ranges: GiveAnHourCampaignRange[]) =>
 
 type GiveAnHourStatsQuery = ReturnType<typeof useGiveAnHourStats>;
 
-const MetricRow = ({ label, value, detail }: MetricItem) => {
+const MetricRow = ({ label, value }: MetricItem) => {
   const formattedValue = useLocaleString(Math.round(value));
 
   return (
@@ -49,7 +49,6 @@ const MetricRow = ({ label, value, detail }: MetricItem) => {
         {formattedValue}
       </span>
       <span className="text-xs md:text-sm">{label}</span>
-      {detail && <span className="text-xs opacity-75">{detail}</span>}
     </div>
   );
 };
@@ -84,14 +83,18 @@ export const GiveAnHourStats = ({
   statsQuery: GiveAnHourStatsQuery;
 }) => {
   const stats = statsQuery.data;
-  const hoursFormatted = useLocaleString(stats?.hours ?? 0);
-  const daysFormatted = useLocaleString(Math.floor((stats?.hours ?? 0) / 24));
   const participantsFormatted = useLocaleString(stats?.participants ?? 0);
+  // Like the progress bars, only show the equivalent days once there are more than 72 hours
+  const hoursFormatted = useLocaleHours(
+    stats?.hours ?? 0,
+    (stats?.hours ?? 0) > 72,
+  );
 
   if (statsQuery.isPending) {
     return (
       <div
         className="mt-4 w-full animate-pulse"
+        role="status"
         aria-label="Loading campaign statistics"
       >
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -114,20 +117,18 @@ export const GiveAnHourStats = ({
     );
   }
 
+  const since = Math.min(...stats.campaigns.map(({ year }) => year));
+
   return (
     <div className="mt-4">
       <p className="mb-4 w-full text-left text-lg">
-        Since 2024,{" "}
+        Since {since},{" "}
         <strong>
           {participantsFormatted}{" "}
           {stats.participants === 1 ? "participant" : "participants"}
         </strong>{" "}
-        in the Alveus community have given{" "}
-        <strong>
-          {hoursFormatted} {stats.hours === 1 ? "hour" : "hours"} (~
-          {daysFormatted} {Math.floor(stats.hours / 24) === 1 ? "day" : "days"})
-        </strong>
-        {" during WWF's Give an Hour for Earth campaigns."}
+        in the Alveus community have given <strong>{hoursFormatted}</strong>{" "}
+        during WWF&apos;s Give an Hour for Earth campaigns.
       </p>
 
       <div className="grid w-full grid-cols-2 gap-4 lg:grid-cols-4">
@@ -141,11 +142,10 @@ export const GiveAnHourStats = ({
             },
             {
               id: "record-hours",
-              label: "most hours in a campaign",
+              label: stats.recordCampaign
+                ? `most hours in a campaign (${stats.recordCampaign.year})`
+                : "most hours in a campaign",
               value: stats.recordCampaign?.hours ?? 0,
-              detail: stats.recordCampaign
-                ? `${stats.recordCampaign.year}`
-                : undefined,
             },
           ]}
         />
