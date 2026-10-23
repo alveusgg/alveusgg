@@ -128,7 +128,13 @@ describe("getGiveAnHourStats", () => {
     });
     expect(mockFindMany).toHaveBeenCalledWith({
       select: { location: true },
-      where: { AND: [campaignWhere, { location: { not: null } }] },
+      where: {
+        AND: [
+          campaignWhere,
+          { location: { not: null } },
+          { NOT: { location: "" } },
+        ],
+      },
       distinct: ["location"],
     });
     expect(mockFindMany).toHaveBeenCalledWith({

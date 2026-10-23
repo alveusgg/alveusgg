@@ -561,7 +561,9 @@ export async function getGiveAnHourStats({
     }),
     prisma.showAndTellEntry.findMany({
       select: { location: true },
-      where: { AND: [where, { location: { not: null } }] },
+      where: {
+        AND: [where, { location: { not: null } }, { NOT: { location: "" } }],
+      },
       distinct: ["location"],
     }),
     Promise.all(
