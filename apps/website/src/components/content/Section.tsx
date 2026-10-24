@@ -11,6 +11,7 @@ type SectionProps = {
   offsetParent?: boolean;
   className?: string;
   containerClassName?: string;
+  as?: "section" | "footer";
 };
 
 const Section = ({
@@ -19,13 +20,14 @@ const Section = ({
   offsetParent = true,
   className,
   containerClassName,
+  as: Component = "section",
 }: SectionProps) => {
   // Determine the texture to use
   const opacity = dark ? "opacity-[0.06]" : "opacity-[0.03]";
   const texture = dark ? dustTexture.src : topographyTexture.src;
 
   return (
-    <section
+    <Component
       className={classes(
         offsetParent && "relative z-0",
         "py-16",
@@ -47,7 +49,7 @@ const Section = ({
       <div className={classes("container mx-auto px-4", containerClassName)}>
         {children}
       </div>
-    </section>
+    </Component>
   );
 };
 

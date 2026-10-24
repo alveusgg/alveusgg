@@ -75,7 +75,7 @@ const Consent = ({
               </div>
             )}
 
-            <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
+            <p className="m-6 mb-3 text-2xl">Awaiting consent for {item}...</p>
 
             <Box className="m-6 mt-3 flex max-w-2xl flex-col gap-4 p-6 py-4 text-alveus-green">
               <p>
