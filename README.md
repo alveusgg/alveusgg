@@ -147,6 +147,7 @@ If you aren't working on features related to Twitch authentication, you can set 
    2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
    3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`), TRPC API secret (`TRPC_API_SHARED_KEY`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
+      - The data encryption keys (`DATA_ENCRYPTION_KEYS`) have to be filled with a key id and a 32-byte Base64-encoded secret, e.g. `k1:<secret>`, and the blind index key (`DATA_BLIND_INDEX_KEY`) with a 32-byte Base64-encoded secret. See [Data encryption keys](#data-encryption-keys) below.
    5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 7. Copy `apps/database/.env.example` to `apps/database/.env`
@@ -174,6 +175,20 @@ We use Base64-encoded random strings for various secrets. To generate these secr
   _You may need to call `python3` instead depending on your installation._
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
+
+### Data encryption keys
+
+`DATA_ENCRYPTION_KEYS` holds the keys for encrypting personal data and secrets (e.g. OAuth tokens) in the database: a comma-separated list of `<key id>:<base64 key>`. Key ids may contain `a-z` and `0-9`. The first key encrypts new values, every key in the list can decrypt.
+
+To rotate a key:
+
+1. Add the new key at the end of the list everywhere the keys are set, e.g. `k1:<old>,k2:<new>`, and deploy. This way everything that's running can decrypt `k2` values before the first one is written.
+2. Move the new key to the front, e.g. `k2:<new>,k1:<old>`, and deploy. New values are now encrypted with `k2`.
+3. Re-encrypt the existing values, then remove the old key.
+
+`DATA_BLIND_INDEX_KEY` is used for keyed hashes that let us look up encrypted values (e.g. email addresses) without decrypting them. Changing it means recomputing every stored hash, so it is not rotated with the encryption keys.
+
+Keep a copy of every key outside of the deployment environment (e.g. in the team's password manager): data encrypted with a lost key can't be recovered.
 
 ### Weather API
 
