@@ -95,14 +95,3 @@ export function isAllowedRedirectUri(clientId: string, redirectUri: string) {
 export function listOAuthClients() {
   return clients;
 }
-
-export function isClientCredentialsGrantAllowed(client: OAuthClient) {
-  return (client.clientCredentialsScopes?.length ?? 0) > 0;
-}
-
-export function isAllowedClientCredentialsScope(
-  client: OAuthClient,
-  scope: string,
-) {
-  return client.clientCredentialsScopes?.includes(scope) ?? false;
-}

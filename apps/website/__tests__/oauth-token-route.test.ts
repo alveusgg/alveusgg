@@ -42,20 +42,8 @@ vi.mock("@/server/oauth/codes", () => {
   };
 });
 
-vi.mock("@/server/oauth/config", async () => {
-  const { isAllowedClientCredentialsScope, isClientCredentialsGrantAllowed } =
-    await vi.importActual<{
-      isAllowedClientCredentialsScope: (
-        client: { clientCredentialsScopes?: string[] },
-        scope: string,
-      ) => boolean;
-      isClientCredentialsGrantAllowed: (client: {
-        clientCredentialsScopes?: string[];
-      }) => boolean;
-    }>("@/server/oauth/config");
+vi.mock("@/server/oauth/config", () => {
   return {
-    isAllowedClientCredentialsScope,
-    isClientCredentialsGrantAllowed,
     OAUTH_ACCESS_TOKEN_TTL_SECONDS: 600,
     OAUTH_AUTHORIZATION_ENDPOINT: "http://localhost:3000/oauth/authorize",
     OAUTH_CODE_CHALLENGE_METHOD: "S256",
