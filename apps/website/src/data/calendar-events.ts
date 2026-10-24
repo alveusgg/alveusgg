@@ -1,6 +1,6 @@
 import { type DateObjectUnits } from "luxon";
 
-import { type CalendarEvent } from "@alveusgg/database";
+import type { CalendarEvent } from "@alveusgg/database";
 
 import { getLinkDisplayText } from "@/utils/link-display";
 

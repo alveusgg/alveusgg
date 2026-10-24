@@ -1,7 +1,10 @@
 import { resolve } from "node:path";
 
 import type { NextConfig } from "next";
-import { withSuperjson } from "next-superjson";
+import {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} from "next/constants";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
@@ -15,6 +18,10 @@ import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import "@/env/index.js";
+
+import { warmSuperjsonPlugin } from "./build-scripts/warm-superjson";
+
+const VIDEO_LOADER = resolve("./build-scripts/video-loader.cjs");
 
 function urlOriginAsRemotePattern(url: string): RemotePattern {
   const parsed = new URL(url);
@@ -614,43 +621,63 @@ const config: NextConfig = {
         },
       ],
     },
+    {
+      // Generated video assets have content-hashed names (build-scripts/video-loader.cjs)
+      source: "/videos/:path*",
+      headers: [
+        { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+      ],
+    },
   ],
-  webpack: (config, options) => {
-    // Add a custom loader for videos
-    config.module.rules.push({
-      test: /\.(mp4|webm)$/,
-      use: [
+  turbopack: {
+    rules: {
+      // Load markdown files as strings
+      "*.md": { type: "text" },
+      // Load PDF and audio files as URLs
+      "*.pdf": { type: "asset" },
+      "*.mp3": { type: "asset" },
+      // Videos: ffmpeg generates a poster + compressed variants, served from
+      // public/videos (see build-scripts/video-loader.cjs)
+      "*.{mp4,webm}": [
         {
-          loader: resolve("./build-scripts/video-loader.cjs"),
-          // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L1907-L1912
-          // and https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L2489-L2490
-          options: {
-            isServer: !!options.isServer,
-            isDevelopment: !!options.dev,
-            assetPrefix: options.config.assetPrefix || "",
-          },
+          condition: { all: [{ not: "foreign" }, "development"] },
+          loaders: [{ loader: VIDEO_LOADER, options: { isDevelopment: true } }],
+          as: "*.js",
+        },
+        {
+          condition: { all: [{ not: "foreign" }, "production"] },
+          loaders: [
+            { loader: VIDEO_LOADER, options: { isDevelopment: false } },
+          ],
+          as: "*.js",
         },
       ],
-    });
-
-    // Load markdown files as strings
-    config.module.rules.push({
-      test: /\.md$/,
-      type: "asset/source",
-    });
-
-    // Load PDF + audio files as URLs
-    config.module.rules.push({
-      test: /\.(pdf|mp3)$/,
-      type: "asset/resource",
-    });
-
-    // Disable Webpack caching if not in development
-    if (!options.dev && config.cache?.type === "filesystem") {
-      config.cache = false;
-    }
-
-    return config;
+      // Use the loader's pinned SWC host: native swcPlugins have an incompatible ABI.
+      // Wire it directly because withSuperjson also adds a Webpack callback.
+      // Based on https://github.com/remorses/next-superjson/blob/3a92473c24f173bdce2c9ac6fda411fda918d479/next-superjson/src/index.ts
+      "*": {
+        condition: {
+          all: [
+            { not: "foreign" },
+            { path: /(^|\/)src\/pages\/.+\.(tsx|ts|js|mjs|jsx)$/ },
+            // The loader skips these and returns them unchanged, so don't run it
+            // (the output is parsed as JS). Mirrors next-superjson's shouldBeSkipped
+            {
+              not: {
+                path: /pages\/api\/|(_document|_error)\.(js|jsx|ts|tsx)/,
+              },
+            },
+          ],
+        },
+        loaders: [
+          {
+            loader: "next-superjson/dist/turbopackLoader",
+            options: { pagesDir: resolve("./src/pages"), isServer: true },
+          },
+        ],
+        as: "*.js",
+      },
+    },
   },
   experimental: {
     // Restore scroll position when navigating back
@@ -658,8 +685,6 @@ const config: NextConfig = {
     // Ensure that server-side code is also minified (with source maps)
     serverMinification: true,
     serverSourceMaps: true,
-    // Enable the usage of threads for Webpack
-    webpackBuildWorker: true,
     // Execute parallelization of server builds
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
@@ -668,7 +693,14 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
-  transpilePackages: ["@alveusgg/donations-core"],
+  transpilePackages: ["@alveusgg/donations-core", "@alveusgg/data"],
 };
 
-export default withSuperjson()(config);
+export default function nextConfig(phase: string): NextConfig {
+  // Only the dev server and builds run the SuperJSON loader, so `next start`
+  // doesn't need to compile the plugin (`next typegen` uses the build phase)
+  if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
+    warmSuperjsonPlugin();
+  }
+  return config;
+}
