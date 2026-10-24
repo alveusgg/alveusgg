@@ -16,7 +16,7 @@ import useLocalStorage from "@/hooks/storage";
 
 import Video from "@/components/content/Video";
 import Crunch from "@/components/overlay/Crunch";
-import Cycle from "@/components/overlay/Cycle";
+import Cycle, { type CycleItemProps } from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
 import Raid from "@/components/overlay/Raid";
@@ -511,11 +511,17 @@ const OverlayPage: NextPage = () => {
         items={useMemo(
           () =>
             [
-              !hide.has("socials") && (
+              !hide.has("socials") && {
+                key: "socials",
                 // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
-                <Socials interval={cycleTime / 3} key="socials" />
-              ),
-              !hide.has("event") && <Event key="event" />,
+                render: (props: CycleItemProps) => (
+                  <Socials interval={cycleTime / 3} {...props} />
+                ),
+              },
+              !hide.has("event") && {
+                key: "event",
+                render: (props: CycleItemProps) => <Event {...props} />,
+              },
             ].filter((x) => !!x),
           [hide],
         )}
@@ -527,12 +533,22 @@ const OverlayPage: NextPage = () => {
         items={useMemo(
           () =>
             [
-              !hide.has("disclaimer") && !disclaimer && (
-                <Text key="disclaimer" className="text-xl text-stroke">
-                  {disclaimerText}
-                </Text>
-              ),
-              !hide.has("subs") && <Subs key="subs" />,
+              !hide.has("disclaimer") &&
+                !disclaimer && {
+                  key: "disclaimer",
+                  render: ({ className, ref }: CycleItemProps) => (
+                    <Text
+                      className={classes("text-xl text-stroke", className)}
+                      ref={ref}
+                    >
+                      {disclaimerText}
+                    </Text>
+                  ),
+                },
+              !hide.has("subs") && {
+                key: "subs",
+                render: (props: CycleItemProps) => <Subs {...props} />,
+              },
             ].filter((x) => !!x),
           [hide, disclaimer],
         )}

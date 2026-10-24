@@ -1,0 +1,41 @@
+{
+  "name": "@alveusgg/cams-control-client",
+  "version": "0.1.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alveusgg/alveusgg.git",
+    "directory": "apps/cams/control"
+  },
+  "bugs": {
+    "url": "https://github.com/alveusgg/alveusgg/issues"
+  },
+  "scripts": {
+    "generate": "openapi-ts && prettier --write src/generated",
+    "types": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest"
+  },
+  "exports": {
+    ".": "./src/generated/index.ts",
+    "./client": "./src/client.ts",
+    "./zod": "./src/generated/zod.gen.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@hey-api/openapi-ts": "^0.99.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.13.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.4"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}
