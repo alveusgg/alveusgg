@@ -6,6 +6,7 @@ export type Options = Pick<
   "organizationId" | "apiKey" | "baseUrl" | "localTimezone"
 > & {
   onParseError?: SchemaParseErrorReporter;
+  signal?: AbortSignal;
 };
 
 type ApiMethod = "GET" | "POST" | "PUT" | "DELETE";
@@ -65,6 +66,7 @@ const fetch = async (
   const request: RequestInit & { headers: Record<string, string> } = {
     method,
     headers: apiHeaders(options),
+    signal: options.signal,
   };
 
   if (body) {

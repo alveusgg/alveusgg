@@ -120,6 +120,7 @@ export const env = createEnv({
       .default("alveussanctuary"),
     NEON_OAUTH_CLIENT_ID: z.string().optional(),
     NEON_OAUTH_CLIENT_SECRET: z.string().optional(),
+    NEON_CRM_API_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -233,6 +234,7 @@ export const env = createEnv({
     NEON_CRM_ORG_ID: process.env.NEON_CRM_ORG_ID || undefined,
     NEON_OAUTH_CLIENT_ID: process.env.NEON_OAUTH_CLIENT_ID,
     NEON_OAUTH_CLIENT_SECRET: process.env.NEON_OAUTH_CLIENT_SECRET,
+    NEON_CRM_API_KEY: process.env.NEON_CRM_API_KEY,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
