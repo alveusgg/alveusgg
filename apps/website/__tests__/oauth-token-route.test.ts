@@ -42,8 +42,20 @@ vi.mock("@/server/oauth/codes", () => {
   };
 });
 
-vi.mock("@/server/oauth/config", () => {
+vi.mock("@/server/oauth/config", async () => {
+  const { isAllowedClientCredentialsScope, isClientCredentialsGrantAllowed } =
+    await vi.importActual<{
+      isAllowedClientCredentialsScope: (
+        client: { clientCredentialsScopes?: string[] },
+        scope: string,
+      ) => boolean;
+      isClientCredentialsGrantAllowed: (client: {
+        clientCredentialsScopes?: string[];
+      }) => boolean;
+    }>("@/server/oauth/config");
   return {
+    isAllowedClientCredentialsScope,
+    isClientCredentialsGrantAllowed,
     OAUTH_ACCESS_TOKEN_TTL_SECONDS: 600,
     OAUTH_AUTHORIZATION_ENDPOINT: "http://localhost:3000/oauth/authorize",
     OAUTH_CODE_CHALLENGE_METHOD: "S256",
@@ -96,7 +108,9 @@ describe("oauth token route", () => {
     mockAuthenticateOAuthClient.mockReturnValue({
       clientId: "census-production",
       clientSecret: "top-secret",
+      name: "Census",
       redirectUris: ["http://localhost:3001/callback"],
+      clientCredentialsScopes: ["dashboard", "forms"],
     });
     mockCompareAuthorizationCode.mockResolvedValue({ sub: "user-1" });
     mockHasOAuthSigningKey.mockReturnValue(true);
@@ -253,6 +267,52 @@ describe("oauth token route", () => {
       clientId: "census-production",
       roles: [],
     });
+  });
+
+  test("rejects client_credentials for clients without an allowlist", async () => {
+    mockAuthenticateOAuthClient.mockReturnValue({
+      clientId: "census-production",
+      clientSecret: "top-secret",
+      name: "Census",
+      redirectUris: ["http://localhost:3001/callback"],
+    });
+
+    const response = await POST(
+      createFormRequest({
+        grant_type: "client_credentials",
+        scope: "dashboard",
+      }),
+    );
+    if (!response) {
+      throw new Error("Expected response.");
+    }
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toStrictEqual({
+      error: "unauthorized_client",
+      error_description:
+        "Client is not authorized to use the client_credentials grant.",
+    });
+    expect(mockIssueAccessToken).not.toHaveBeenCalled();
+  });
+
+  test("rejects client_credentials scopes outside the client allowlist", async () => {
+    const response = await POST(
+      createFormRequest({
+        grant_type: "client_credentials",
+        scope: "dashboard donations",
+      }),
+    );
+    if (!response) {
+      throw new Error("Expected response.");
+    }
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toStrictEqual({
+      error: "invalid_scope",
+      error_description: "Scope is not permitted for this client: donations",
+    });
+    expect(mockIssueAccessToken).not.toHaveBeenCalled();
   });
 
   test("rejects client_credentials with unknown scope values", async () => {

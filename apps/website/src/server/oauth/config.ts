@@ -4,11 +4,22 @@ import { env } from "@/env";
 
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
+import { isValidUserRole } from "@/data/user-roles";
+
 export const OAuthClientSchema = z.object({
   clientId: z.string().min(1),
   clientSecret: z.string().min(1),
   name: z.string().min(1),
   redirectUris: z.array(z.url()).min(1),
+  // Roles this client may request via the client_credentials grant.
+  // Omit (or leave empty) to disable the client_credentials grant for the client.
+  clientCredentialsScopes: z
+    .array(
+      z.string().refine(isValidUserRole, {
+        message: "clientCredentialsScopes must only contain known user roles.",
+      }),
+    )
+    .optional(),
 });
 
 export type OAuthClient = z.infer<typeof OAuthClientSchema>;
@@ -83,4 +94,15 @@ export function isAllowedRedirectUri(clientId: string, redirectUri: string) {
 
 export function listOAuthClients() {
   return clients;
+}
+
+export function isClientCredentialsGrantAllowed(client: OAuthClient) {
+  return (client.clientCredentialsScopes?.length ?? 0) > 0;
+}
+
+export function isAllowedClientCredentialsScope(
+  client: OAuthClient,
+  scope: string,
+) {
+  return client.clientCredentialsScopes?.includes(scope) ?? false;
 }
