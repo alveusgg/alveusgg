@@ -5,6 +5,8 @@ import { prisma } from "@alveusgg/database";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 
+import { getAnalyticsHeaders } from "@/utils/analytics-headers";
+
 const trackClickSchema = z.object({
   id: z.cuid(),
   slug: z.string(),
@@ -23,7 +25,11 @@ export default createTokenProtectedApiHandler(
         create: { id, clicks: 1 },
         update: { clicks: { increment: 1 } },
       });
-      await track("Short link clicked", { slug, link }, { headers });
+      await track(
+        "Short link clicked",
+        { slug, link },
+        { headers: getAnalyticsHeaders(headers) },
+      );
       return true;
     } catch (e) {
       console.error("Failed to track click", e);

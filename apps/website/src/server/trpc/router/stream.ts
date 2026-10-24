@@ -24,6 +24,7 @@ import { getViewUrlForFileStorageObjectKey } from "@/server/utils/file-storage";
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
 
+import { getAnalyticsHeaders } from "@/utils/analytics-headers";
 import invariant from "@/utils/invariant";
 import { createJWT, signJWT } from "@/utils/jwt";
 
@@ -112,7 +113,7 @@ export const streamRouter = router({
         track(
           "Command run",
           { command, args: args?.join(" ") ?? null },
-          { headers: ctx.req.headers },
+          { headers: getAnalyticsHeaders(ctx.req.headers) },
         ),
       );
     }),
