@@ -15,8 +15,7 @@ import ffmpeg from "@ffmpeg-installer/ffmpeg";
 import ffprobe from "@ffprobe-installer/ffprobe";
 import { afterAll, beforeAll, expect, it } from "vitest";
 
-// eslint-disable-next-line import-x/default -- The CommonJS loader uses module.exports.
-import videoLoader from "../build-scripts/video-loader.cjs";
+import videoLoader from "../build-scripts/video-loader";
 
 type LoaderContext = ThisParameterType<typeof videoLoader>;
 

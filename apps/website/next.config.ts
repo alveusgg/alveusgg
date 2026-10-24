@@ -21,7 +21,7 @@ import "@/env/index.js";
 
 import { warmSuperjsonPlugin } from "./build-scripts/warm-superjson";
 
-const VIDEO_LOADER = resolve("./build-scripts/video-loader.cjs");
+const VIDEO_LOADER = resolve("./build-scripts/video-loader.ts");
 
 function urlOriginAsRemotePattern(url: string): RemotePattern {
   const parsed = new URL(url);
@@ -622,7 +622,7 @@ const config: NextConfig = {
       ],
     },
     {
-      // Generated video assets have content-hashed names (build-scripts/video-loader.cjs)
+      // Generated video assets have content-hashed names (build-scripts/video-loader.ts)
       source: "/videos/:path*",
       headers: [
         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
@@ -637,7 +637,7 @@ const config: NextConfig = {
       "*.pdf": { type: "asset" },
       "*.mp3": { type: "asset" },
       // Videos: ffmpeg generates a poster + compressed variants, served from
-      // public/videos (see build-scripts/video-loader.cjs)
+      // public/videos (see build-scripts/video-loader.ts)
       "*.{mp4,webm}": [
         {
           condition: { all: [{ not: "foreign" }, "development"] },
