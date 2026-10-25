@@ -3,7 +3,10 @@ import type { Session } from "next-auth";
 import { beforeEach, expect, test, vi } from "vitest";
 
 import { withLoginOnlyAccounts } from "@/server/auth/accounts";
-import { getVerifiedProviderEmail } from "@/server/auth/profiles";
+import {
+  getProviderAccountProfile,
+  getVerifiedProviderEmail,
+} from "@/server/auth/profiles";
 import { getMyPixels } from "@/server/db/donations";
 
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -185,3 +188,100 @@ test("unverified email claims cannot grant access to donation pixels", async () 
   await getMyPixels("mural", { ...user, emailVerified: true });
   expect(pixels).toHaveBeenCalledOnce();
 });
+
+test("keeps the Twitch identity from the provider's OIDC profile", () => {
+  expect(
+    getProviderAccountProfile("twitch", {
+      preferred_username: "TwitchUser",
+      name: "Unrelated name",
+    }),
+  ).toEqual({ username: "TwitchUser", displayName: null });
+});
+
+test("keeps Discord's unique username separate from its display name", () => {
+  expect(
+    getProviderAccountProfile("discord", {
+      username: "discord_user",
+      discriminator: "0",
+      global_name: "Display Name",
+    }),
+  ).toEqual({ username: "discord_user", displayName: "Display Name" });
+  expect(
+    getProviderAccountProfile("discord", {
+      username: "LegacyUser",
+      discriminator: "1234",
+    }),
+  ).toEqual({ username: "LegacyUser#1234", displayName: null });
+});
+
+test("does not treat a Google profile name as a channel username", () => {
+  expect(
+    getProviderAccountProfile("google", {
+      name: "Google Name",
+      username: "Not a verified YouTube handle",
+    }),
+  ).toEqual({ username: null, displayName: "Google Name" });
+});
+
+test("leaves missing or unsupported profile names empty", () => {
+  expect(getProviderAccountProfile("twitch")).toEqual({
+    username: null,
+    displayName: null,
+  });
+  expect(
+    getProviderAccountProfile("discord", {
+      username: { name: "Invalid username" },
+      global_name: "   ",
+    }),
+  ).toEqual({ username: null, displayName: null });
+  expect(
+    getProviderAccountProfile("unknown", { username: "Untrusted" }),
+  ).toEqual({ username: null, displayName: null });
+});
+
+test.each([
+  {
+    provider: "twitch",
+    profile: { preferred_username: "twitch_user" },
+    expected: { username: "twitch_user", displayName: null },
+  },
+  {
+    provider: "discord",
+    profile: {
+      username: "discord_user",
+      discriminator: "0",
+      global_name: "Provider name",
+    },
+    expected: { username: "discord_user", displayName: "Provider name" },
+  },
+  {
+    provider: "google",
+    profile: { name: "Provider name" },
+    expected: { username: null, displayName: "Provider name" },
+  },
+])(
+  "records $provider names on the connected account after successful sign-in",
+  async ({ provider, profile, expected }) => {
+    await authOptions.events!.signIn!({
+      user: { id: "user", name: "Chosen Alveus name" },
+      account: {
+        type: "oauth",
+        provider,
+        providerAccountId: "provider-id",
+        access_token: "access",
+      },
+      profile,
+    });
+    expect(updateAccount).toHaveBeenCalledWith({
+      where: {
+        provider_providerAccountId: {
+          provider,
+          providerAccountId: "provider-id",
+        },
+        userId: "user",
+      },
+      data: expected,
+    });
+    expect(updateUser).not.toHaveBeenCalled();
+  },
+);

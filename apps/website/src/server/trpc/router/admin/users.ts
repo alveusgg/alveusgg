@@ -1,24 +1,52 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import type { Prisma } from "@alveusgg/database";
+
 import { router, superUserProcedure } from "@/server/trpc/trpc";
 import { checkIsSuperUserId, getSuperUserIds } from "@/server/utils/auth";
 
 import { isValidUserRole } from "@/data/user-roles";
 
+const connectedAccounts = {
+  select: {
+    id: true,
+    provider: true,
+    providerAccountId: true,
+    username: true,
+    displayName: true,
+  },
+  orderBy: [{ provider: "asc" }, { id: "asc" }],
+} satisfies Prisma.AccountFindManyArgs;
+
 export const adminUsersRouter = router({
   searchUsernames: superUserProcedure
-    .input(z.string().min(2).max(100))
+    .input(z.string().trim().min(2).max(100))
     .query(({ ctx, input }) =>
       ctx.prisma.user.findMany({
         where: {
-          name: { contains: input },
+          OR: [
+            { id: input },
+            { name: { contains: input } },
+            {
+              accounts: {
+                some: {
+                  OR: [
+                    { username: { contains: input.replace(/^@/, "") } },
+                    { displayName: { contains: input } },
+                    { providerAccountId: input },
+                  ],
+                },
+              },
+            },
+          ],
         },
         take: 10,
         orderBy: [{ name: "asc" }, { id: "asc" }],
         select: {
           id: true,
           name: true,
+          accounts: connectedAccounts,
         },
       }),
     ),
@@ -91,6 +119,7 @@ export const adminUsersRouter = router({
       },
       include: {
         roles: true,
+        accounts: connectedAccounts,
       },
     });
 

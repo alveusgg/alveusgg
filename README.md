@@ -185,6 +185,8 @@ Existing users should sign in through their original provider and connect additi
 
 The sign-in chooser uses each provider's branding and highlights the last successful login in the current browser. This provider-only preference lasts up to one year, survives sign-out, and can be reset by clearing website cookies. Failed or cancelled logins do not update it; disabled providers are never shown.
 
+Successful sign-ins also update the connected account's provider username and display name, independently of the chosen Alveus display name. Superusers can see and search these identities at `/admin/users` when assigning roles. Existing connections show their provider account ID until the next successful sign-in through that provider. Google connections show the Google profile name, not a YouTube handle; email verification and Twitch API token validation are separate from proof of account ownership at sign-in.
+
 The Google sign-in logo is third-party brand artwork. Its source and usage restrictions are documented in [Login-provider artwork](apps/website/src/assets/auth/README.md).
 
 ### Connected login accounts
