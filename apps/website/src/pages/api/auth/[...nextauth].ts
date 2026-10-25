@@ -11,7 +11,10 @@ import {
   withLoginOnlyAccounts,
 } from "@/server/auth/accounts";
 import { withAccountManagement } from "@/server/auth/options";
-import { getVerifiedProviderEmail } from "@/server/auth/profiles";
+import {
+  getProviderAccountProfile,
+  getVerifiedProviderEmail,
+} from "@/server/auth/profiles";
 import {
   enabledLoginProviders,
   loginAuthProviders,
@@ -166,6 +169,20 @@ export const authOptions: NextAuthOptions = {
   providers: loginAuthProviders,
   events: {
     async signIn({ user, account, profile }) {
+      if (account && profile) {
+        // This event runs after account creation/linking has succeeded. Keep
+        // provider names separate from the user's chosen Alveus display name.
+        await prisma.account.update({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+            userId: user.id,
+          },
+          data: getProviderAccountProfile(account.provider, profile),
+        });
+      }
       // Linking a provider must not replace the original account email. Only
       // attest to that address when the provider actually verified the same one.
       if (

@@ -8,6 +8,7 @@ import { permissions } from "@/data/permissions";
 import type { UserRole } from "@/data/user-roles";
 import { userRoles } from "@/data/user-roles";
 
+import { getAccountLabel } from "@/utils/account-label";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
@@ -42,7 +43,7 @@ export async function getServerSideProps(context: NextPageContext) {
   return { props: adminProps };
 }
 
-const cellClasses = "py-2";
+const cellClasses = "py-2 pr-4 align-top last:pr-0";
 
 const AdminUsersPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
@@ -88,10 +89,10 @@ const AdminUsersPage: NextPage<
             </MessageBox>
           )}
 
-          <div className="flex flex-col gap-5 md:flex-row md:items-end">
+          <div className="grid gap-5 md:grid-cols-2 md:items-end xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)_auto]">
             <div className="min-w-0 flex-1">
               <TextField
-                label="Search users by name"
+                label="Search users or connected accounts"
                 value={userNameSearchTerm}
                 onChange={(value) => {
                   setUserNameSearchTerm(value);
@@ -108,7 +109,10 @@ const AdminUsersPage: NextPage<
                 <option value="">- Please choose -</option>
                 {userNameSuggestions.data?.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.name || "Unnamed user"} ({user.id})
+                    {user.name || "Unnamed user"}
+                    {user.accounts.length > 0 &&
+                      ` — ${user.accounts.map(getAccountLabel).join("; ")}`}
+                    {` (${user.id})`}
                   </option>
                 ))}
               </SelectBoxField>
@@ -150,60 +154,88 @@ const AdminUsersPage: NextPage<
                 <p>There have not been any roles given to users.</p>
               )}
               {getUserWithRoles.data.length > 0 && (
-                <table className="w-full">
-                  <thead>
-                    <tr>
-                      <th className="text-left">Username</th>
-                      <th className="text-left">Roles</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getUserWithRoles.data.map((user) => (
-                      <tr key={user.id} className="border-t">
-                        <td className={cellClasses}>
-                          {user.name || "Unnamed user"}
-                          <span className="block text-sm">{user.id}</span>
-                        </td>
-                        <td className={cellClasses}>
-                          <ul className="flex flex-row gap-2">
-                            {user.isSuperUser && (
-                              <li className="flex flex-row rounded-sm bg-red-800 text-sm text-white">
-                                <span className="px-2 py-0.5">Super User</span>
-                              </li>
-                            )}
-
-                            {user.roles
-                              .filter(({ role }) => role in userRoles)
-                              .map(({ role }) => (
-                                <li
-                                  key={role}
-                                  className="flex flex-row rounded-sm bg-gray-800 text-sm text-white"
-                                >
-                                  <span className="py-0.5 pl-2">
-                                    {userRoles[role as UserRole].label}
-                                  </span>
-                                  <Button
-                                    size="small"
-                                    width="auto"
-                                    className=""
-                                    onClick={() =>
-                                      removeRole.mutate({
-                                        userId: user.id,
-                                        role,
-                                      })
-                                    }
-                                  >
-                                    <IconMinusCircle className="size-4" />
-                                    <span className="sr-only">Remove role</span>
-                                  </Button>
-                                </li>
-                              ))}
-                          </ul>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-2xl">
+                    <thead>
+                      <tr>
+                        <th className="text-left">Username</th>
+                        <th className="text-left">Connected accounts</th>
+                        <th className="text-left">Roles</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {getUserWithRoles.data.map((user) => (
+                        <tr key={user.id} className="border-t">
+                          <td className={cellClasses}>
+                            {user.name || "Unnamed user"}
+                            <span className="block text-sm">{user.id}</span>
+                          </td>
+                          <td className={cellClasses}>
+                            {user.accounts.length > 0 ? (
+                              <ul className="space-y-2">
+                                {user.accounts.map((account) => (
+                                  <li key={account.id}>
+                                    <span className="block">
+                                      {getAccountLabel(account)}
+                                    </span>
+                                    {(account.username ||
+                                      account.displayName) && (
+                                      <span className="block text-sm">
+                                        ID: {account.providerAccountId}
+                                      </span>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <span>No connected accounts</span>
+                            )}
+                          </td>
+                          <td className={cellClasses}>
+                            <ul className="flex flex-wrap gap-2">
+                              {user.isSuperUser && (
+                                <li className="flex flex-row rounded-sm bg-red-800 text-sm text-white">
+                                  <span className="px-2 py-0.5">
+                                    Super User
+                                  </span>
+                                </li>
+                              )}
+
+                              {user.roles
+                                .filter(({ role }) => role in userRoles)
+                                .map(({ role }) => (
+                                  <li
+                                    key={role}
+                                    className="flex flex-row rounded-sm bg-gray-800 text-sm text-white"
+                                  >
+                                    <span className="py-0.5 pl-2">
+                                      {userRoles[role as UserRole].label}
+                                    </span>
+                                    <Button
+                                      size="small"
+                                      width="auto"
+                                      className=""
+                                      onClick={() =>
+                                        removeRole.mutate({
+                                          userId: user.id,
+                                          role,
+                                        })
+                                      }
+                                    >
+                                      <IconMinusCircle className="size-4" />
+                                      <span className="sr-only">
+                                        Remove role
+                                      </span>
+                                    </Button>
+                                  </li>
+                                ))}
+                            </ul>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </>
           )}
