@@ -147,6 +147,7 @@ If you aren't working on features related to Twitch authentication, you can set 
    2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
    3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`), TRPC API secret (`TRPC_API_SHARED_KEY`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
+      - The data encryption keys (`DATA_ENCRYPTION_KEYS`) have to be filled with a key id and a 32-byte Base64-encoded secret, e.g. `k1:<secret>`, and the blind index key (`DATA_BLIND_INDEX_KEY`) with a 32-byte Base64-encoded secret. See [Data encryption keys](#data-encryption-keys) below.
    5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 7. Copy `apps/database/.env.example` to `apps/database/.env`
@@ -174,6 +175,17 @@ We use Base64-encoded random strings for various secrets. To generate these secr
   _You may need to call `python3` instead depending on your installation._
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
+
+### Data encryption keys
+
+Set these values in `apps/website/.env` using two separately generated 32-byte Base64 secrets (see [Generate secrets](#generate-secrets)):
+
+- `DATA_ENCRYPTION_KEYS`: prefix the secret with a key id, e.g. `k1:<secret>`.
+- `DATA_BLIND_INDEX_KEY`: use the other secret as-is for lookups of encrypted values.
+
+Use different keys for local development, preview and production. Keep deployment keys in the team's password manager: data encrypted with a lost key can't be recovered.
+
+See [Field encryption](docs/field-encryption.md) for the keyring format, key rotation, backfills and backup recovery.
 
 ### Weather API
 
