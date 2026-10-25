@@ -406,20 +406,33 @@ async function renamePixels(
     ),
   );
 
-  if (env.NEXT_PUBLIC_DONATIONS_MANAGER_URL) {
+  // The donations worker only knows one key, the first one in the list
+  const [sharedKey] = env.TRPC_API_SHARED_KEY;
+  if (env.NEXT_PUBLIC_DONATIONS_MANAGER_URL && sharedKey) {
     const doesAffectLiveMural = affectedMurals
       .values()
       .some((muralId) => murals[muralId].type === "live");
 
     if (doesAffectLiveMural) {
-      // Trigger a rebuild of the dynamic mural cache
-      fetch(`${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/resync`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `ApiKey ${env.TRPC_API_SHARED_KEY}`,
-        },
-      }).catch((_err) => {});
+      // Trigger a rebuild of the dynamic mural cache, without delaying the
+      // response but making sure the request isn't cut off after it
+      waitUntil(
+        fetch(`${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/resync`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `ApiKey ${sharedKey}`,
+          },
+        })
+          .then((res) => {
+            if (!res.ok) {
+              console.error(
+                `[pixels] mural resync responded with ${res.status}`,
+              );
+            }
+          })
+          .catch((err) => console.error("[pixels] mural resync failed", err)),
+      );
     }
   }
 

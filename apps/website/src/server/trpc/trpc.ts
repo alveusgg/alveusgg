@@ -6,6 +6,7 @@ import { env } from "@/env";
 
 import { type Context } from "@/server/trpc/context";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
 import type { PermissionConfig } from "@/data/permissions";
 
@@ -106,7 +107,7 @@ export const superUserProcedure = t.procedure
  * the request comes with a trusted shared key
  */
 const isAuthedSharedKey = t.middleware(({ ctx, next }) => {
-  if (!env.TRPC_API_SHARED_KEY) {
+  if (env.TRPC_API_SHARED_KEY.length === 0) {
     console.log(
       `[${new Date().toISOString()}] A shared key trpc procedure was called but the shared key is not set. Set the TRPC_API_SHARED_KEY environment variable.`,
     );
@@ -114,7 +115,13 @@ const isAuthedSharedKey = t.middleware(({ ctx, next }) => {
   }
   const header = ctx.req.headers["authorization"];
   const [type, key] = header?.split(" ") ?? [];
-  if (type !== "ApiKey" || !key || !env.TRPC_API_SHARED_KEY.includes(key)) {
+  if (
+    type !== "ApiKey" ||
+    !key ||
+    !env.TRPC_API_SHARED_KEY.some((sharedKey) =>
+      timingSafeCompareString(sharedKey, key),
+    )
+  ) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({ ctx });

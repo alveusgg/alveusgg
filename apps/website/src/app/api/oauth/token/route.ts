@@ -134,7 +134,10 @@ async function issueTokenPairForUser(userId: string, clientId: string) {
   };
 }
 
-function rolesFromOAuthScope(scope: string | undefined): string[] {
+function rolesFromOAuthScope(
+  scope: string | undefined,
+  allowedScopes: readonly string[],
+): string[] {
   if (!scope?.trim()) {
     return [];
   }
@@ -151,6 +154,13 @@ function rolesFromOAuthScope(scope: string | undefined): string[] {
         `Unknown or invalid scope: ${token}`,
       );
     }
+    if (!allowedScopes.includes(token)) {
+      throw new OAuthRequestError(
+        400,
+        "invalid_scope",
+        `Scope is not permitted for this client: ${token}`,
+      );
+    }
     if (seen.has(token)) {
       continue;
     }
@@ -165,7 +175,16 @@ async function handleClientCredentialsGrant(
   { scope }: ClientCredentialsGrantRequest,
   client: OAuthClient,
 ) {
-  const roles = rolesFromOAuthScope(scope);
+  const allowedScopes = client.clientCredentialsScopes ?? [];
+  if (allowedScopes.length === 0) {
+    throw new OAuthRequestError(
+      400,
+      "unauthorized_client",
+      "Client is not authorized to use the client_credentials grant.",
+    );
+  }
+
+  const roles = rolesFromOAuthScope(scope, allowedScopes);
   const access_token = await issueAccessToken({
     subject: client.clientId,
     clientId: client.clientId,

@@ -25,6 +25,33 @@ const donation = {
   date: "2026-01-01",
 };
 
+describe("donation purpose", () => {
+  it.each(["ACTIVE", "INACTIVE", null, undefined])(
+    "accepts a purpose object with status %s",
+    (status) => {
+      const purpose = { id: "3", name: "General support", status };
+      const response = DonationResponse.parse({ ...donation, purpose });
+
+      expect(response.purpose).toEqual(purpose);
+    },
+  );
+
+  it.each([null, undefined])("accepts an unset purpose: %s", (purpose) => {
+    const response = DonationResponse.parse({ ...donation, purpose });
+
+    expect(response.purpose).toBe(purpose);
+  });
+
+  it("rejects malformed purpose objects", () => {
+    expect(
+      DonationResponse.safeParse({
+        ...donation,
+        purpose: { id: "invalid", name: "General support", status: null },
+      }).success,
+    ).toBe(false);
+  });
+});
+
 describe("donation anonymity", () => {
   it.each([
     ["Yes", true, false],
