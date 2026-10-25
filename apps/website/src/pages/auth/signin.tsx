@@ -147,7 +147,23 @@ function LoginChoices({
   return (
     <div className="flex flex-col gap-3">
       {providers.map((provider) => (
-        <div key={provider}>
+        <div
+          key={provider}
+          className={
+            provider === lastLoginProvider
+              ? "-mx-3 rounded-2xl border-2 border-alveus-green-900/40 bg-alveus-green-900/5 p-2.5"
+              : undefined
+          }
+        >
+          {provider === lastLoginProvider && (
+            <p
+              id="last-login-provider"
+              className="mb-2 flex items-center gap-1.5 px-1 text-sm font-semibold text-alveus-green-900"
+            >
+              <IconCheckCircle size={16} aria-hidden="true" />
+              Last used in this browser
+            </p>
+          )}
           <LoginProviderButton
             provider={provider}
             aria-describedby={
@@ -157,15 +173,6 @@ function LoginChoices({
           >
             Continue with {loginProviders[provider]}
           </LoginProviderButton>
-          {provider === lastLoginProvider && (
-            <p
-              id="last-login-provider"
-              className="mt-2 flex items-center justify-center gap-1 text-sm text-alveus-green-900"
-            >
-              <IconCheckCircle size={16} aria-hidden="true" />
-              Last used in this browser
-            </p>
-          )}
         </div>
       ))}
       <p className="text-sm">
