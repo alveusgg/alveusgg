@@ -5,7 +5,7 @@ import type { MuralId } from "@/data/murals";
 import { EditExternalPixels } from "@/components/institute/EditExternalPixels";
 import { EditMyPixels } from "@/components/institute/EditMyPixels";
 import { EditNeonPixels } from "@/components/institute/EditNeonPixels";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 import { RenameStepsLayout } from "./RenameStep";
@@ -43,17 +43,16 @@ export function RenameMethodContent({
           confirm={
             <MessageBox>
               <p className="mb-4">
-                Log in with the Twitch account you donated with to see all
-                pixels unlocked by your Twitch Charity donations.
+                Log in to find pixels connected to your account. For Twitch
+                Charity donations, connect the Twitch account you donated with
+                in account settings.
               </p>
 
-              <LoginWithTwitchButton
-                callbackUrl={getRenameReturnTo(muralId, method)}
-              />
+              <LoginButton callbackUrl={getRenameReturnTo(muralId, method)} />
             </MessageBox>
           }
           rename={null}
-          renamePlaceholder="Log in with Twitch first."
+          renamePlaceholder="Log in first."
         />
       );
     case "website":

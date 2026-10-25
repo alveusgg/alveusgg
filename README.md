@@ -175,6 +175,14 @@ We use Base64-encoded random strings for various secrets. To generate these secr
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
 
+### Additional login providers
+
+Twitch is always available. Google and Discord login are optional: set both `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, or both `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`, to enable that provider. Leave both values unset to keep it disabled.
+
+Create a web OAuth client in the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) or an application in the [Discord Developer Portal](https://discord.com/developers/applications). Register the exact development and production callback URLs ending in `/api/auth/callback/google` or `/api/auth/callback/discord`. Google requests `openid email profile`; Discord requests `identify email`. No YouTube, Discord server, or offline API permissions are requested. A Google login identifies the Google account rather than a YouTube channel.
+
+Existing users should sign in through their original provider and connect additional logins in account settings. Accounts are never merged merely because their emails match. Alveus retains the original account email and display profile; a matching, verified provider email establishes email ownership for donation pixels. Users can change their Alveus display name in account settings. Google and Discord access, refresh, and ID tokens are discarded after authentication; ongoing Twitch API credentials remain managed separately.
+
 ### Connected login accounts
 
 Signed-in users can manage login connections and their display name at `/account/connections`. Account changes require a provider sign-in within the last 15 minutes. A connection request expires after 10 minutes and is tied to the user and provider that started it. Configure `NEXTAUTH_SECRET` when testing account management locally.

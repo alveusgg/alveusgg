@@ -137,7 +137,13 @@ test("website procedures remain available while Twitch procedures require a usab
   const caller = (twitch?: NonNullable<Session["user"]>["twitch"]) =>
     api.createCaller({
       session: {
-        user: { id: "user", roles: [], isSuperUser: false, twitch },
+        user: {
+          id: "user",
+          roles: [],
+          isSuperUser: false,
+          emailVerified: false,
+          twitch,
+        },
         expires: websiteSession.expires,
       },
       req: {} as Context["req"],

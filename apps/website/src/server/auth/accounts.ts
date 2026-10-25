@@ -68,6 +68,29 @@ export function withAccountLinkPolicy(
   };
 }
 
+/** Google/Discord establish identity; we do not use their APIs after login. */
+export function withLoginOnlyAccounts(
+  adapter: ReturnType<typeof PrismaAdapter>,
+): ReturnType<typeof PrismaAdapter> {
+  return {
+    ...adapter,
+    linkAccount: async (account) => {
+      if (!adapter.linkAccount)
+        throw new Error("The adapter cannot link accounts");
+      await adapter.linkAccount(
+        account.provider === "twitch"
+          ? account
+          : {
+              userId: account.userId,
+              type: account.type,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+      );
+    },
+  };
+}
+
 export async function disconnectAccount(
   userId: string,
   accountId: string,

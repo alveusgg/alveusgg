@@ -14,7 +14,7 @@ import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Twitch from "@/components/content/Twitch";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
 
@@ -205,9 +205,9 @@ const PlayBingoPage = () => {
         {session.status !== "authenticated" && (
           <>
             <MessageBox>
-              <p className="mb-4">Log in with Twitch to play Bingo.</p>
+              <p className="mb-4">Log in to play Bingo.</p>
 
-              <LoginWithTwitchButton />
+              <LoginButton />
             </MessageBox>
           </>
         )}

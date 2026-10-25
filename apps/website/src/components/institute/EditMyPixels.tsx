@@ -1,4 +1,5 @@
-import type { User } from "next-auth";
+import type { Session } from "next-auth";
+import Link from "next/link";
 import { useState } from "react";
 
 import type { MuralId } from "@/data/murals";
@@ -14,7 +15,7 @@ export function EditMyPixels({
   user,
   muralId,
 }: {
-  user: User;
+  user: NonNullable<Session["user"]>;
   muralId: MuralId;
 }) {
   const utils = trpc.useUtils();
@@ -28,16 +29,28 @@ export function EditMyPixels({
   return (
     <RenameStepsLayout
       confirm={
-        <p className="flex items-center gap-2">
-          <IconCheck className="size-6 shrink-0" />
-          <span>
-            You are logged in as <strong>{username}</strong> ({email}).
-          </span>
-        </p>
+        <>
+          <p className="flex items-center gap-2">
+            <IconCheck className="size-6 shrink-0" />
+            <span>
+              You are logged in as <strong>{username}</strong> ({email}).
+            </span>
+          </p>
+
+          {(!user.twitch || !user.emailVerified) && (
+            <p className="mb-4">
+              <Link className="underline" href="/account/connections">
+                Manage connected accounts
+              </Link>{" "}
+              to connect Twitch for Twitch Charity donations or confirm your
+              login email for donations made with that address.
+            </p>
+          )}
+        </>
       }
       rename={
         <EditPixelsForm
-          defaultIdentifier={`@${username}`}
+          defaultIdentifier={username}
           pixelsQuery={pixels}
           renameMutation={renameMutation}
           overrideIdentifier={overrideIdentifier}

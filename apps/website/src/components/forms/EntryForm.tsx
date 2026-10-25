@@ -10,7 +10,8 @@ import { trpc } from "@/utils/trpc";
 import Heading from "@/components/content/Heading";
 import Markdown from "@/components/content/Markdown";
 import Section from "@/components/content/Section";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
+import LoginWithExtraScopes from "@/components/shared/LoginWithExtraScopes";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { Button } from "@/components/shared/form/Button";
@@ -85,11 +86,9 @@ export const EntryForm = ({
       {!session?.user?.id && (
         <Section containerClassName="max-w-lg">
           <MessageBox>
-            <p className="mb-4">
-              You need to be logged in with Twitch to enter.
-            </p>
+            <p className="mb-4">You need to be logged in to enter.</p>
 
-            <LoginWithTwitchButton />
+            <LoginButton />
           </MessageBox>
         </Section>
       )}
@@ -189,6 +188,15 @@ export const EntryForm = ({
                 </Heading>
 
                 <GiveawayChecks />
+
+                {(!session.user.twitch || session.user.twitch.error) && (
+                  <div className="my-5">
+                    <p className="mb-3">
+                      Connect Twitch to complete the required follow check.
+                    </p>
+                    <LoginWithExtraScopes scopeGroup="default" />
+                  </div>
+                )}
 
                 <p className="mt-8 text-sm italic opacity-75">
                   Enter your details below to enter once you&apos;ve completed

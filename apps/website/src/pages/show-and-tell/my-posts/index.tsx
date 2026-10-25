@@ -10,7 +10,7 @@ import DateTime from "@/components/content/DateTime";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 import {
   Button,
   LinkButton,
@@ -79,7 +79,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
             <div className="my-4 flex flex-row items-center justify-center">
               <div className="flex-1">
-                <LoginWithTwitchButton />
+                <LoginButton />
               </div>
             </div>
           </div>

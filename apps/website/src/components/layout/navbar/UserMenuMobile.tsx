@@ -30,7 +30,9 @@ const UserMenuMobile = () => {
           <button
             className={`${navLinkClassesSub} w-full text-left`}
             type="button"
-            onClick={() => signIn("twitch")}
+            onClick={() =>
+              signIn(undefined, { callbackUrl: window.location.href })
+            }
           >
             Sign In
           </button>

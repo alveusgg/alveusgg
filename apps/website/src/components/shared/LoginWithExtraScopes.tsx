@@ -37,7 +37,7 @@ const LoginWithExtraScopes = ({
   showMissingScopes = true,
   className,
 }: {
-  scopeGroup: Exclude<ScopeGroup, "default">;
+  scopeGroup: ScopeGroup;
   showCurrentScopes?: boolean;
   showMissingScopes?: boolean;
   className?: string;

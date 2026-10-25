@@ -5,15 +5,18 @@ import type {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 
+import { enabledLoginProviders } from "@/server/auth/providers";
 import { getOAuthClient } from "@/server/oauth/config";
+
+import { type LoginProvider, loginProviders } from "@/data/auth";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { Button } from "@/components/shared/form/Button";
 
 import IconInformationCircle from "@/icons/IconInformationCircle";
 import IconXCircle from "@/icons/IconXCircle";
@@ -60,6 +63,7 @@ function getThirdPartyClient(
 
 function getBannerFromQuery(query: ParsedUrlQuery) {
   const errorType = typeof query.error === "string" ? query.error : undefined;
+  if (!errorType && query.mode !== "oauth") return null;
   const message =
     (errorType && messages[errorType.toLowerCase()]) ?? messages["default"]!;
 
@@ -97,6 +101,7 @@ export const getServerSideProps = async (
           mode: "oauth",
           callbackUrl,
           thirdPartyClient,
+          providers: enabledLoginProviders,
         },
       };
     }
@@ -110,9 +115,35 @@ export const getServerSideProps = async (
       mode: "error",
       banner: getBannerFromQuery(context.query),
       callbackUrl: isOAuthMode ? undefined : callbackUrl,
+      providers: enabledLoginProviders,
     },
   };
 };
+
+function LoginChoices({
+  providers,
+  callbackUrl,
+}: {
+  providers: LoginProvider[];
+  callbackUrl?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {providers.map((provider) => (
+        <Button
+          key={provider}
+          onClick={() => signIn(provider, { callbackUrl })}
+        >
+          Continue with {loginProviders[provider]}
+        </Button>
+      ))}
+      <p className="text-sm">
+        Already have an account? Use your original login, then connect another
+        provider in account settings.
+      </p>
+    </div>
+  );
+}
 
 const SigninPage: NextPage<SigninPageProps> = (props) => {
   if (props.mode === "oauth" && props.thirdPartyClient && props.callbackUrl) {
@@ -151,7 +182,7 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
                   </div>
                   <div className="ml-3 text-sm text-alveus-green-900">
                     <p>
-                      Sign in with Twitch to continue. You will be returned to{" "}
+                      Sign in to continue. You will be returned to{" "}
                       <strong className="font-semibold">
                         {props.thirdPartyClient.name}
                       </strong>{" "}
@@ -162,7 +193,10 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
               </div>
 
               <div className="mt-6 flex flex-col gap-3">
-                <LoginWithTwitchButton callbackUrl={props.callbackUrl} />
+                <LoginChoices
+                  providers={props.providers}
+                  callbackUrl={props.callbackUrl}
+                />
                 <Link
                   href="/"
                   className="text-center text-sm text-alveus-green-900 underline-offset-2 hover:underline"
@@ -211,7 +245,12 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
             </div>
           )}
 
-        <LoginWithTwitchButton callbackUrl={props.callbackUrl} />
+        <div className="max-w-md">
+          <LoginChoices
+            providers={props.providers}
+            callbackUrl={props.callbackUrl}
+          />
+        </div>
       </Section>
     </>
   );
