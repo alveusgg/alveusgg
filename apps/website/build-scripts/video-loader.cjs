@@ -1,15 +1,15 @@
 // @ts-nocheck
-const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
 const { join, dirname } = require("path");
-const { exec: execSync } = require("child_process");
+const { execFile } = require("child_process");
 const {
   readFile,
   mkdir,
   readdir,
   stat,
   unlink,
-  copyFile,
+  rename,
+  writeFile,
 } = require("fs/promises");
 const { interpolateName, getHashDigest } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
@@ -18,18 +18,25 @@ const ffprobe = require("@ffprobe-installer/ffprobe");
 /**
  * @typedef {Object} VideoLoaderOptions
  * @property {string} [quality] Default video quality
- * @property {boolean} isServer Is the loader being run for the server build
  * @property {boolean} isDevelopment Is the loader being run in development mode
- * @property {string} assetPrefix Asset directory prefix
+ */
+
+/**
+ * @typedef {Object} LoaderContext
+ * @property {string} resourcePath Input video path
+ * @property {string} [resourceQuery] Resource query
+ * @property {string} [rootContext] Project root
+ * @property {() => VideoLoaderOptions} getOptions Get loader options
+ * @property {() => (error: Error | null, output?: string) => void} async Get the completion callback
  */
 
 /**
  * @typedef {Object} VideoLoaderContext
- * @property {import("webpack").LoaderContext<VideoLoaderOptions>} context Webpack compilation context
+ * @property {LoaderContext} context Loader context
  * @property {string} format Output filename format
  * @property {Buffer} content Input video content
- * @property {boolean} isServer Is the loader being run for the server build
  * @property {string} cache Directory to cache the resized video in
+ * @property {string} output Directory to serve generated videos from
  */
 
 /**
@@ -45,12 +52,13 @@ const ffprobe = require("@ffprobe-installer/ffprobe");
 /**
  * Run a shell command
  *
- * @param {string} command Command to run
+ * @param {string} file Executable to run
+ * @param {string[]} args Arguments to pass to the executable
  * @return {Promise<{ stdout: string, stderr: string }>}
  */
-const exec = (command) =>
+const exec = (file, args) =>
   new Promise((resolve, reject) => {
-    execSync(command, (error, stdout, stderr) => {
+    execFile(file, args, (error, stdout, stderr) => {
       if (error) reject({ error, stdout, stderr });
       else resolve({ stdout, stderr });
     });
@@ -80,9 +88,17 @@ const cacheDir = "./.next/cache/video-loader";
  */
 const videoRaw = async (ctx) => {
   // Use ffprobe to get the height
-  const { stdout } = await exec(
-    `"${ffprobe.path}" -v error -select_streams v:0 -show_entries stream=height -of json "${ctx.context.resourcePath}"`,
-  );
+  const { stdout } = await exec(ffprobe.path, [
+    "-v",
+    "error",
+    "-select_streams",
+    "v:0",
+    "-show_entries",
+    "stream=height",
+    "-of",
+    "json",
+    ctx.context.resourcePath,
+  ]);
   const { height } = JSON.parse(stdout).streams[0];
 
   // Use file-type to get the mime type
@@ -111,7 +127,7 @@ const videoRaw = async (ctx) => {
  *
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
- * @return {`-filter:v "scale=${string}:${string}"`}
+ * @return {string}
  */
 const scaleFilter = (width = undefined, height = undefined) => {
   if (width === undefined && height === undefined)
@@ -123,7 +139,7 @@ const scaleFilter = (width = undefined, height = undefined) => {
   const heightFilter = height
     ? Math.round(Number(height) / 2) * 2
     : "trunc(ow/a/2)*2";
-  return `-filter:v "scale=w=${widthFilter}:h=${heightFilter}"`;
+  return `scale=w=${widthFilter}:h=${heightFilter}`;
 };
 
 /**
@@ -133,13 +149,19 @@ const scaleFilter = (width = undefined, height = undefined) => {
  * @param {string} [extension] Optional output extension (will default to input extension)
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
+ * @param {number} [fps] Optional output frame rate
  * @param {string[]} [args=[]] Additional arguments to pass to ffmpeg
  * @param {string[]} [iargs=[]] Additional arguments to pass to ffmpeg (before the input file)
  * @return {Promise<VideoLoaderOutput>}
  */
 const videoResized = async (
   ctx,
-  { extension = undefined, width = undefined, height = undefined },
+  {
+    extension = undefined,
+    width = undefined,
+    height = undefined,
+    fps = undefined,
+  },
   args = [],
   iargs = [],
 ) => {
@@ -149,57 +171,57 @@ const videoResized = async (
   });
   const processedExtension = extension || originalExtension;
 
-  // Only process the video if we're on the client
-  // See `videoLoader` for context on why we don't emit files for the server
-  let resized = null;
-  let cached = false;
-  if (!ctx.isServer) {
-    // Determine the cache key
-    const cacheKey = getHashDigest(
-      Buffer.from(
-        [
-          "video-loader",
-          ctx.context.resourcePath,
-          width,
-          height,
-          ...args,
-          ...iargs,
-          getHashDigest(ctx.content, "sha1"),
-        ].join(":"),
-      ),
-      "sha1",
-    );
-    const cacheFile = `${ctx.cache}/${cacheKey}.${processedExtension}`;
-
-    // See if the cache exists
-    const cacheData = await readFile(cacheFile).catch(() => null);
-    if (cacheData) {
-      resized = cacheData;
-      cached = true;
-    } else {
-      // Get a temporary file that we're outputting to
-      const tmpFile = join(
-        tmpdir(),
-        `${randomBytes(16).toString("hex")}.${processedExtension}`,
-      );
-
-      // Determine the scale filter
-      const scale = width || height ? scaleFilter(width, height) : "";
-
-      // Use ffmpeg to change the size to what is requested
-      const command = [
-        `"${ffmpeg.path}"`,
-        ...iargs,
-        "-i",
-        `"${ctx.context.resourcePath}"`,
-        scale,
+  // Determine the cache key
+  const cacheKey = getHashDigest(
+    Buffer.from(
+      [
+        "video-loader",
+        ffmpeg.version,
+        width,
+        height,
+        fps,
         ...args,
-        "-n",
-        `"${tmpFile}"`,
-      ]
-        .filter(Boolean)
-        .join(" ");
-      await exec(command).catch(({ error, stdout, stderr }) => {
+        ...iargs,
+        getHashDigest(ctx.content, "sha1"),
+      ].join(":"),
+    ),
+    "sha1",
+  );
+  const cacheFile = `${ctx.cache}/${cacheKey}.${processedExtension}`;
+
+  // See if the cache exists
+  let resized;
+  let cached = false;
+  const cacheData = await readFile(cacheFile).catch(() => null);
+  if (cacheData) {
+    resized = cacheData;
+    cached = true;
+  } else {
+    // Get a temporary file that we're outputting to
+    await mkdir(dirname(cacheFile), { recursive: true });
+    const tmpFile = join(
+      ctx.cache,
+      `${randomBytes(16).toString("hex")}.${processedExtension}`,
+    );
+
+    // Combine filters so the frame-rate filter doesn't replace scaling
+    const filters = [
+      width || height ? scaleFilter(width, height) : undefined,
+      fps ? `fps=${fps}` : undefined,
+    ].filter(Boolean);
+
+    // Use ffmpeg to change the size to what is requested
+    const command = [
+      ...iargs,
+      "-i",
+      ctx.context.resourcePath,
+      ...(filters.length ? ["-filter:v", filters.join(",")] : []),
+      ...args,
+      "-n",
+      tmpFile,
+    ];
+    try {
+      await exec(ffmpeg.path, command).catch(({ error, stdout, stderr }) => {
         console.error("ffmpeg command failed:", command);
         console.error("stdout:", stdout);
         console.error("stderr:", stderr);
@@ -209,10 +231,10 @@ const videoResized = async (
       // Read in the temporary file
       resized = await readFile(tmpFile);
 
-      // Move the temporary file to the cache
-      await mkdir(dirname(cacheFile), { recursive: true });
-      await copyFile(tmpFile, cacheFile);
-      await unlink(tmpFile);
+      // Move the complete temporary file to the cache atomically
+      await rename(tmpFile, cacheFile);
+    } finally {
+      await unlink(tmpFile).catch(() => {});
     }
   }
 
@@ -222,10 +244,10 @@ const videoResized = async (
   });
 
   // Get the output name
-  // Use the input content hash, so it's consistent between server and client
+  // Include processing settings and the ffmpeg version in the output hash
   const interpolatedName = interpolateName(ctx.context, ctx.format, {
     context: ctx.context.rootContext,
-    content: ctx.content,
+    content: Buffer.from(cacheKey),
   })
     .replace(`${name}.`, `${name}-${width || ""}x${height || ""}.`)
     .replace(`.${originalExtension}`, `.${processedExtension}`);
@@ -234,7 +256,7 @@ const videoResized = async (
     name: interpolatedName,
     content: resized,
     cached,
-    skipped: ctx.isServer,
+    skipped: false,
   };
 };
 
@@ -262,7 +284,8 @@ const defaultTypes = {
       size: 720,
       type: "video/mp4",
       ext: "mp4",
-      args: ["-an", "-vcodec libx264", "-filter:v fps=30", "-b:v 1200k"],
+      fps: 30,
+      args: ["-an", "-vcodec", "libx264", "-b:v", "1200k"],
       iargs: [],
     },
   ],
@@ -272,7 +295,8 @@ const defaultTypes = {
       size: 540,
       type: "video/mp4",
       ext: "mp4",
-      args: ["-an", "-vcodec libx264", "-filter:v fps=24", "-b:v 800k"],
+      fps: 24,
+      args: ["-an", "-vcodec", "libx264", "-b:v", "800k"],
       iargs: [],
     },
   ],
@@ -282,15 +306,15 @@ const defaultTypes = {
       size: 720,
       type: "video/mp4",
       ext: "png",
-      args: ["-an", "-vframes 1"],
+      args: ["-an", "-vframes", "1"],
       iargs: [],
     },
     {
       size: 720,
       type: "video/webm",
       ext: "png",
-      args: ["-an", "-vframes 1"],
-      iargs: ["-vcodec libvpx-vp9"],
+      args: ["-an", "-vframes", "1"],
+      iargs: ["-vcodec", "libvpx-vp9"],
     },
   ],
 };
@@ -304,7 +328,7 @@ const defaultTypes = {
 /**
  * Run the video loader
  *
- * @param {VideoLoaderContext["context"]} context Webpack compilation context
+ * @param {VideoLoaderContext["context"]} context Loader context
  * @param {Buffer} content Input video content
  * @return {Promise<VideoLoaderResult>}
  */
@@ -312,26 +336,25 @@ const videoLoader = async (context, content) => {
   console.log(`Processing video ${context.resourcePath} ...`);
 
   // Get the prefix for the output files
-  // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L25
   const options = context.getOptions();
-  const base = `${options.assetPrefix}/_next`;
+  const base = "/videos";
 
   // Get the quality
   const quality =
     getQuality(options, context.resourceQuery) || Object.keys(defaultTypes)[0];
-  if (!Object.keys(defaultTypes).includes(quality))
+  if (quality === "poster" || !Object.hasOwn(defaultTypes, quality))
     throw new Error(`Invalid quality: ${quality}`);
 
   // Create the context and objects to track the files
   const ctx = {
     context,
-    format: "/static/media/[name].[hash:8].[ext]",
+    format: "[name].[hash:10].[ext]",
     content,
-    isServer: options.isServer,
-    cache: cacheDir,
+    cache: join(context.rootContext || process.cwd(), cacheDir),
+    output: join(context.rootContext || process.cwd(), "public/videos"),
   };
   const files = [];
-  /** @typedef {{ src: string, size: int, type: string }} Source */
+  /** @typedef {{ src: string, size: number, type: string }} Source */
   /** @type {{ poster: string | undefined, sources: Array<Source> }} */
   const obj = { poster: undefined, sources: [] };
 
@@ -348,7 +371,7 @@ const videoLoader = async (context, content) => {
       posterOpts.iargs,
     );
     files.push(poster);
-    obj.poster = `${base}${poster.name}`;
+    obj.poster = `${base}/${encodeURIComponent(poster.name)}`;
   } else {
     console.warn(
       ` ... ${context.resourcePath} no poster options for ${raw.type}`,
@@ -361,16 +384,16 @@ const videoLoader = async (context, content) => {
       ({ type }) => type === raw.type,
     );
     if (resizeOpts.length) {
-      for (const { size, type, ext, args, iargs } of resizeOpts) {
+      for (const { size, type, ext, fps, args, iargs } of resizeOpts) {
         const video = await videoResized(
           ctx,
-          { height: size, extension: ext },
+          { height: size, extension: ext, fps },
           args,
           iargs,
         );
         files.push(video);
         obj.sources.push({
-          src: `${base}${video.name}`,
+          src: `${base}/${encodeURIComponent(video.name)}`,
           size,
           type,
         });
@@ -386,20 +409,28 @@ const videoLoader = async (context, content) => {
   if (!obj.sources.length) {
     files.push(raw);
     obj.sources.push({
-      src: `${base}${raw.name}`,
+      src: `${base}/${encodeURIComponent(raw.name)}`,
       size: raw.height,
       type: raw.type,
     });
   }
 
-  // Emit the files
-  // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L66-L74
-  // We don't emit for the server as videos are considered traceable and this breaks things (see https://github.com/vercel/next.js/pull/41554/files)
-  if (!options.isServer) {
-    files.forEach(
-      ({ name, content }) => content && context.emitFile(name, content),
-    );
-  }
+  // Turbopack cannot emit assets from loaders, so serve them from public/videos.
+  // Publish complete files atomically because server/client loaders can overlap.
+  await Promise.all(
+    files.map(async ({ name, content }) => {
+      const file = join(ctx.output, name);
+      if (!content || (await stat(file).catch(() => null))) return;
+      await mkdir(dirname(file), { recursive: true });
+      const tmpFile = `${file}.${randomBytes(16).toString("hex")}.tmp`;
+      try {
+        await writeFile(tmpFile, content);
+        await rename(tmpFile, file);
+      } finally {
+        await unlink(tmpFile).catch(() => {});
+      }
+    }),
+  );
 
   // Collect stats on cache/skipped files
   const stats = files.reduce(
@@ -436,6 +467,12 @@ const queueProcess = async () => {
     const [context, content, { resolve, reject }] = queue.shift();
     try {
       const res = await videoLoader(context, content);
+      // Prune after queued videos have reused their cached conversions.
+      if (!queue.length) {
+        await cacheCleanup(
+          join(context.rootContext || process.cwd(), cacheDir),
+        );
+      }
       resolve(res);
     } catch (e) {
       reject(e);
@@ -449,7 +486,7 @@ const queueProcess = async () => {
 /**
  * Run the video loader
  *
- * @param {VideoLoaderContext["context"]} context Webpack compilation context
+ * @param {VideoLoaderContext["context"]} context Loader context
  * @param {Buffer} content Input video content
  * @return {Promise<VideoLoaderResult>}
  */
@@ -472,13 +509,14 @@ const queueVideo = async (context, content) => {
 };
 
 /**
- * Webpack hook to clean up old cache files
+ * Clean up old cache files
  *
+ * @param {string} cache Directory containing cached conversions
  * @return {Promise<void>}
  */
-const cacheCleanup = async () => {
+const cacheCleanup = async (cache) => {
   // Get all files in the cache dir
-  const cacheFiles = await readdir(cacheDir, { withFileTypes: true })
+  const cacheFiles = await readdir(cache, { withFileTypes: true })
     .then((file) => file.filter((f) => f.isFile()).map((f) => f.name))
     .catch(() => []);
 
@@ -486,14 +524,16 @@ const cacheCleanup = async () => {
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
   await Promise.all(
     cacheFiles.map(async (file) => {
-      const { atimeMs } = await stat(join(cacheDir, file));
-      if (atimeMs < cutoff) await unlink(join(cacheDir, file));
+      const path = join(cache, file);
+      const info = await stat(path).catch(() => null);
+      if (info && info.atimeMs < cutoff) await unlink(path).catch(() => {});
     }),
   );
 };
 
 /**
- * @type {import("webpack").RawLoaderDefinition<VideoLoaderOptions, {}>}
+ * @this {LoaderContext}
+ * @param {Buffer} content Input video content
  */
 module.exports = function (content) {
   const callback = this.async();
@@ -508,17 +548,6 @@ module.exports = function (content) {
       console.error(` ... ${this.resourcePath} failed`, e);
       callback(e);
     });
-
-  // If our cleanup hook isn't already registered, register it
-  if (
-    this._compiler &&
-    !this._compiler.hooks.afterEmit.taps.some((t) => t.fn === cacheCleanup)
-  ) {
-    this._compiler.hooks.afterEmit.tapPromise(
-      "VideoLoaderCleanup",
-      cacheCleanup,
-    );
-  }
 };
 
 module.exports.raw = true;

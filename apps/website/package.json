@@ -17,14 +17,14 @@
   },
   "types": "dist/trpc.d.ts",
   "scripts": {
-    "build:next": "next build --webpack",
+    "build:next": "next build",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
     "build:maplibre-gl": "tsx ./build-scripts/copy-maplibre-gl.ts",
     "build:push-sw": "tsdown --config sw.tsdown.config.ts",
     "build:trpc-types": "tsdown --config trpc.tsdown.config.ts",
     "build:manifest": "tsx ./build-scripts/create-manifest.ts",
     "build:presets": "tsx ./build-scripts/update-presets.ts",
-    "dev:next": "next dev --webpack",
+    "dev:next": "next dev",
     "dev:push-sw": "tsdown --watch --config sw.tsdown.config.ts",
     "dev:trpc-types": "tsdown --watch --config trpc.tsdown.config.ts",
     "build": "pnpm run --sequential \"/^build:(?!presets$).*$/\"",
@@ -83,6 +83,7 @@
     "next-auth": "^4.24.15",
     "next-sitemap": "^4.2.3",
     "next-superjson": "^1.0.7",
+    "next-superjson-plugin": "0.6.3",
     "oauth": "^0.10.2",
     "partysocket": "^1.3.0",
     "pluralize": "^8.0.0",
@@ -140,8 +141,7 @@
     "tsdown": "^0.23.1",
     "tsx": "^4.23.15",
     "typescript-eslint": "^8.71.2",
-    "vitest": "^5.0.4",
-    "webpack": "^5.111.1"
+    "vitest": "^5.0.4"
   },
   "prettier": {
     "plugins": [
