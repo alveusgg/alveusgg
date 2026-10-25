@@ -39,7 +39,7 @@ const UserMenuDesktop = () => {
       <button
         className={classes(utilityLinkClasses, "mx-1 min-w-8")}
         type="button"
-        onClick={() => signIn("twitch")}
+        onClick={() => signIn(undefined, { callbackUrl: window.location.href })}
         title="Sign in"
       >
         <span className="sr-only">Sign in</span>

@@ -7,7 +7,7 @@ import { getSession } from "next-auth/react";
 
 import LiveCamFeed from "@/components/admin/ptz/LiveCamFeed";
 import Meta from "@/components/content/Meta";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -28,7 +28,7 @@ const LolaPage: NextPage<
       <main className="grow">
         {!isAuthed && (
           <div className="flex flex-row items-center justify-center">
-            <LoginWithTwitchButton />
+            <LoginButton />
           </div>
         )}
 

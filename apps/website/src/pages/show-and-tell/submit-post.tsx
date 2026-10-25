@@ -5,7 +5,7 @@ import { useState } from "react";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 import {
   Button,
   secondaryButtonClasses,
@@ -67,7 +67,7 @@ const ShowAndTellSubmitPage: NextPage = () => {
 
             <div className="my-4 flex flex-row items-center justify-center">
               <div className="flex-1">
-                <LoginWithTwitchButton />
+                <LoginButton />
               </div>
               <div className="px-6 text-center">or</div>
               <div className="flex-1">

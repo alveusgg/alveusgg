@@ -8,7 +8,7 @@ import {
 
 import useTheme from "@/hooks/theme";
 
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { LoginButton } from "@/components/shared/LoginButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 import IconMoon from "@/icons/IconMoon";
@@ -47,7 +47,7 @@ function AdminPopoutLayout({
         <div className="shrink overflow-hidden text-ellipsis">{title}</div>
         <div className="flex w-fit shrink flex-row items-center gap-2 px-2">
           {session.status === "unauthenticated" ? (
-            <LoginWithTwitchButton />
+            <LoginButton />
           ) : (
             <button
               type="button"
@@ -74,9 +74,9 @@ function AdminPopoutLayout({
         )
       ) : (
         <MessageBox className="m-4">
-          <p className="mb-4">You need to be logged in with Twitch.</p>
+          <p className="mb-4">You need to be logged in.</p>
 
-          <LoginWithTwitchButton />
+          <LoginButton />
         </MessageBox>
       )}
     </div>

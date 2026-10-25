@@ -5,18 +5,27 @@ import type {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 
+import { LAST_LOGIN_PROVIDER_COOKIE } from "@/server/auth/actions";
+import { enabledLoginProviders } from "@/server/auth/providers";
 import { getOAuthClient } from "@/server/oauth/config";
+
+import {
+  type LoginProvider,
+  isLoginProvider,
+  loginProviders,
+} from "@/data/auth";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import LoginProviderButton from "@/components/shared/LoginProviderButton";
+import { MessageBox } from "@/components/shared/MessageBox";
 
+import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconInformationCircle from "@/icons/IconInformationCircle";
-import IconXCircle from "@/icons/IconXCircle";
 
 const messages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -60,6 +69,7 @@ function getThirdPartyClient(
 
 function getBannerFromQuery(query: ParsedUrlQuery) {
   const errorType = typeof query.error === "string" ? query.error : undefined;
+  if (!errorType && query.mode !== "oauth") return null;
   const message =
     (errorType && messages[errorType.toLowerCase()]) ?? messages["default"]!;
 
@@ -86,6 +96,13 @@ export const getServerSideProps = async (
     typeof context.query.callbackUrl === "string"
       ? context.query.callbackUrl
       : undefined;
+  const previousProvider = context.req.cookies[LAST_LOGIN_PROVIDER_COOKIE];
+  const lastLoginProvider =
+    previousProvider &&
+    isLoginProvider(previousProvider) &&
+    enabledLoginProviders.includes(previousProvider)
+      ? previousProvider
+      : null;
 
   const isOAuthMode = context.query.mode === "oauth";
   if (isOAuthMode) {
@@ -97,6 +114,8 @@ export const getServerSideProps = async (
           mode: "oauth",
           callbackUrl,
           thirdPartyClient,
+          providers: enabledLoginProviders,
+          lastLoginProvider,
         },
       };
     }
@@ -110,9 +129,59 @@ export const getServerSideProps = async (
       mode: "error",
       banner: getBannerFromQuery(context.query),
       callbackUrl: isOAuthMode ? undefined : callbackUrl,
+      providers: enabledLoginProviders,
+      lastLoginProvider,
     },
   };
 };
+
+function LoginChoices({
+  providers,
+  callbackUrl,
+  lastLoginProvider,
+}: {
+  providers: LoginProvider[];
+  callbackUrl?: string;
+  lastLoginProvider: LoginProvider | null;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {providers.map((provider) => (
+        <div
+          key={provider}
+          className={
+            provider === lastLoginProvider
+              ? "-mx-3 rounded-2xl border-2 border-alveus-green-900/40 bg-alveus-green-900/5 p-2.5"
+              : undefined
+          }
+        >
+          {provider === lastLoginProvider && (
+            <p
+              id="last-login-provider"
+              className="mb-2 flex items-center gap-1.5 px-1 text-sm font-semibold text-alveus-green-900"
+            >
+              <IconCheckCircle size={16} aria-hidden="true" />
+              Last used in this browser
+            </p>
+          )}
+          <LoginProviderButton
+            provider={provider}
+            aria-describedby={
+              provider === lastLoginProvider ? "last-login-provider" : undefined
+            }
+            onClick={() => signIn(provider, { callbackUrl })}
+          >
+            Continue with {loginProviders[provider]}
+          </LoginProviderButton>
+        </div>
+      ))}
+      <p className="text-sm">
+        Already have an account? Use your original login, then connect another
+        provider in account settings.
+      </p>
+    </div>
+  );
+}
 
 const SigninPage: NextPage<SigninPageProps> = (props) => {
   if (props.mode === "oauth" && props.thirdPartyClient && props.callbackUrl) {
@@ -151,7 +220,7 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
                   </div>
                   <div className="ml-3 text-sm text-alveus-green-900">
                     <p>
-                      Sign in with Twitch to continue. You will be returned to{" "}
+                      Sign in to continue. You will be returned to{" "}
                       <strong className="font-semibold">
                         {props.thirdPartyClient.name}
                       </strong>{" "}
@@ -162,7 +231,11 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
               </div>
 
               <div className="mt-6 flex flex-col gap-3">
-                <LoginWithTwitchButton callbackUrl={props.callbackUrl} />
+                <LoginChoices
+                  providers={props.providers}
+                  callbackUrl={props.callbackUrl}
+                  lastLoginProvider={props.lastLoginProvider}
+                />
                 <Link
                   href="/"
                   className="text-center text-sm text-alveus-green-900 underline-offset-2 hover:underline"
@@ -184,34 +257,32 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      {/* Grow the last section to cover the page */}
-      <Section className="grow">
-        <Heading className="my-3 text-3xl">Sign in</Heading>
+      <Section dark>
+        <header>
+          <Heading>Sign in</Heading>
+        </header>
 
+        <p className="text-lg">
+          Choose a login option to continue to your Alveus Sanctuary account.
+        </p>
+      </Section>
+
+      {/* Grow the last section to cover the page */}
+      <Section className="grow" containerClassName="max-w-lg">
         {props.mode === "error" &&
           props.banner &&
           props.banner.type === "error" && (
-            <div className="mb-6 rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="shrink-0">
-                  <IconXCircle
-                    className="size-5 text-red-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Error signing in
-                  </h3>
-                  <div className="mt-2 text-sm text-red-700">
-                    <p>{props.banner.message}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <MessageBox variant="failure" className="mb-6">
+              <p className="font-semibold">Error signing in</p>
+              <p>{props.banner.message}</p>
+            </MessageBox>
           )}
 
-        <LoginWithTwitchButton callbackUrl={props.callbackUrl} />
+        <LoginChoices
+          providers={props.providers}
+          callbackUrl={props.callbackUrl}
+          lastLoginProvider={props.lastLoginProvider}
+        />
       </Section>
     </>
   );

@@ -13,9 +13,7 @@ import {
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
-import { Button } from "@/components/shared/form/Button";
-
-import IconTwitch from "@/icons/IconTwitch";
+import LoginProviderButton from "@/components/shared/LoginProviderButton";
 
 const Scopes = ({ scopes }: { scopes: string[] }) => (
   <ul className="flex flex-wrap gap-2">
@@ -37,7 +35,7 @@ const LoginWithExtraScopes = ({
   showMissingScopes = true,
   className,
 }: {
-  scopeGroup: Exclude<ScopeGroup, "default">;
+  scopeGroup: ScopeGroup;
   showCurrentScopes?: boolean;
   showMissingScopes?: boolean;
   className?: string;
@@ -64,8 +62,8 @@ const LoginWithExtraScopes = ({
   return (
     <div className={classes("flex flex-col gap-4", className)}>
       {(!!missingScopes.length || data?.user?.twitch?.error) && (
-        <Button
-          className="bg-twitch text-white transition-[filter] hover:brightness-110"
+        <LoginProviderButton
+          provider="twitch"
           disabled={beginLink.isPending}
           onClick={async () => {
             setError(undefined);
@@ -88,11 +86,8 @@ const LoginWithExtraScopes = ({
             }
           }}
         >
-          <IconTwitch />
-          <span>
-            {data?.user?.twitch ? "Reconnect Twitch" : "Connect Twitch"}
-          </span>
-        </Button>
+          {data?.user?.twitch ? "Reconnect Twitch" : "Connect Twitch"}
+        </LoginProviderButton>
       )}
 
       {error && (

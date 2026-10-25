@@ -1,4 +1,4 @@
-import type { User } from "next-auth";
+import type { Session } from "next-auth";
 
 import { type Prisma, prisma } from "@alveusgg/database";
 
@@ -306,7 +306,7 @@ export async function getNeonPixels(
 
 export async function getMyPixels(
   muralId: string,
-  user: User,
+  user: NonNullable<Session["user"]>,
   pixelId?: string,
 ) {
   const filters: Prisma.DonationWhereInput[] = [];
@@ -317,7 +317,7 @@ export async function getMyPixels(
   }
 
   const emailAddress = user.email;
-  if (emailAddress) {
+  if (emailAddress && user.emailVerified) {
     filters.push(filterDonationByExternalEmail(emailAddress));
   }
 

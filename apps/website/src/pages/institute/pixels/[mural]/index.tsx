@@ -261,9 +261,9 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
               Want a different name on the mural?
             </Heading>
             <p>
-              You can log in with Twitch, or submit your PayPal or Giving Block
-              donation details, to change your name on any of the pixels you
-              have unlocked on the mural.
+              You can log in, or submit your PayPal or Giving Block donation
+              details, to change your name on any of the pixels you have
+              unlocked on the mural.
             </p>
 
             <div className="flex">

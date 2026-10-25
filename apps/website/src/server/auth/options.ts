@@ -5,6 +5,8 @@ import { env } from "@/env";
 
 import {
   ACCOUNT_LINK_COOKIE,
+  LAST_LOGIN_PROVIDER_COOKIE,
+  LAST_LOGIN_PROVIDER_MAX_AGE,
   RECENT_AUTH_COOKIE,
   RECENT_AUTH_MAX_AGE,
   WEBSITE_SESSION_COOKIE,
@@ -13,7 +15,7 @@ import {
   verifyAuthAction,
 } from "@/server/auth/actions";
 
-import { ACCOUNT_SETTINGS_PATH } from "@/data/auth";
+import { ACCOUNT_SETTINGS_PATH, isLoginProvider } from "@/data/auth";
 
 /** Add request-specific linking policy without changing server-side session reads. */
 export function withAccountManagement(
@@ -74,6 +76,16 @@ export function withAccountManagement(
       ...options.events,
       async signIn(params) {
         await options.events?.signIn?.(params);
+        // This is a browser preference, never proof of identity. Record it only
+        // after NextAuth has completed sign-in, and keep it across sign-out.
+        if (params.account && isLoginProvider(params.account.provider)) {
+          setAuthActionCookie(
+            res,
+            LAST_LOGIN_PROVIDER_COOKIE,
+            params.account.provider,
+            LAST_LOGIN_PROVIDER_MAX_AGE,
+          );
+        }
         if (env.NEXTAUTH_SECRET) {
           setAuthActionCookie(
             res,

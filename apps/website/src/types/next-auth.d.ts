@@ -8,6 +8,7 @@ declare module "next-auth" {
     user?: {
       id: string;
       roles: string[];
+      emailVerified: boolean;
       twitch?: {
         id: string;
         scopes: string[];

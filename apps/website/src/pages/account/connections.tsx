@@ -12,6 +12,7 @@ import { trpc } from "@/utils/trpc";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import LoginProviderButton from "@/components/shared/LoginProviderButton";
 import { Button, dangerButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 
@@ -115,7 +116,8 @@ const AccountConnectionsPage: NextPage = () => {
                       </p>
                       <div className="flex flex-wrap gap-3">
                         {provider && (
-                          <Button
+                          <LoginProviderButton
+                            provider={provider}
                             width="auto"
                             disabled={busy}
                             onClick={async () => {
@@ -133,7 +135,7 @@ const AccountConnectionsPage: NextPage = () => {
                             }}
                           >
                             Confirm with {loginProviders[provider]}
-                          </Button>
+                          </LoginProviderButton>
                         )}
                         <Button
                           width="auto"
@@ -183,8 +185,9 @@ const AccountConnectionsPage: NextPage = () => {
                           ),
                       )
                       .map((provider) => (
-                        <Button
+                        <LoginProviderButton
                           key={provider}
+                          provider={provider}
                           width="auto"
                           disabled={busy || !data.recentlyAuthenticated}
                           onClick={async () => {
@@ -206,7 +209,7 @@ const AccountConnectionsPage: NextPage = () => {
                           }}
                         >
                           Connect {loginProviders[provider]}
-                        </Button>
+                        </LoginProviderButton>
                       ))}
                   </div>
                 </>

@@ -22,8 +22,8 @@ export const renameMethods: Record<RenameMethodId, RenameMethod> = {
     icon: IconTwitch,
     title: "Twitch Charity",
     description:
-      "Donated during a stream on Twitch? Those pixels are linked to the Twitch account you donated with.",
-    action: "Log in with Twitch",
+      "Donated during a stream on Twitch? Connect the Twitch account you donated with to your Alveus account to find those pixels.",
+    action: "Log in to your account",
   },
   website: {
     icon: IconDollar,

@@ -1,14 +1,21 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import TwitchProvider from "next-auth/providers/twitch";
 
 import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { withAccountLinkPolicy } from "@/server/auth/accounts";
+import {
+  withAccountLinkPolicy,
+  withLoginOnlyAccounts,
+} from "@/server/auth/accounts";
 import { withAccountManagement } from "@/server/auth/options";
+import { getVerifiedProviderEmail } from "@/server/auth/profiles";
+import {
+  enabledLoginProviders,
+  loginAuthProviders,
+} from "@/server/auth/providers";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
 import {
@@ -18,19 +25,9 @@ import {
 
 import { scopeGroups } from "@/data/twitch";
 
-import invariant from "@/utils/invariant";
-
-const adapter = withAccountLinkPolicy(PrismaAdapter(prisma));
-
-const twitchProvider = TwitchProvider({
-  clientId: env.TWITCH_CLIENT_ID,
-  clientSecret: env.TWITCH_CLIENT_SECRET,
-  authorization: {
-    params: {
-      scope: scopeGroups.default.join(" "),
-    },
-  },
-});
+const adapter = withLoginOnlyAccounts(
+  withAccountLinkPolicy(PrismaAdapter(prisma)),
+);
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -110,6 +107,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: user.id,
           isSuperUser: checkIsSuperUserId(user.id),
+          emailVerified: !!user.emailVerified,
           roles: await getRolesForUser(user.id),
           twitch,
         },
@@ -117,10 +115,14 @@ export const authOptions: NextAuthOptions = {
     },
     async signIn({ account }) {
       try {
-        invariant(
-          account?.provider === "twitch",
-          "Must be authenticating with Twitch",
-        );
+        if (
+          !account ||
+          !enabledLoginProviders.some(
+            (provider) => provider === account.provider,
+          )
+        )
+          return false;
+        if (account.provider !== "twitch") return true;
 
         // Check if the user has signed in before
         // If they haven't, we don't need to do anything
@@ -161,7 +163,26 @@ export const authOptions: NextAuthOptions = {
     },
   },
   adapter,
-  providers: [twitchProvider],
+  providers: loginAuthProviders,
+  events: {
+    async signIn({ user, account, profile }) {
+      // Linking a provider must not replace the original account email. Only
+      // attest to that address when the provider actually verified the same one.
+      if (
+        account &&
+        profile?.email &&
+        user.email &&
+        profile.email.trim().toLowerCase() === user.email.trim().toLowerCase()
+      ) {
+        await adapter.updateUser?.({
+          id: user.id,
+          emailVerified: getVerifiedProviderEmail(account.provider, profile)
+            ? new Date()
+            : null,
+        });
+      }
+    },
+  },
   pages: {
     signIn: "/auth/signin",
     error: "/auth/signin", // Error code passed in query string as ?error=
