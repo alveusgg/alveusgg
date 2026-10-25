@@ -11,6 +11,8 @@ import {
 } from "@/server/trpc/trpc";
 import { ExpiredAccessTokenError } from "@/server/utils/oauth2";
 
+import { scopeGroups } from "@/data/twitch";
+
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const { findAccount, findRoles, refresh } = vi.hoisted(() => ({
@@ -108,17 +110,24 @@ describe("website sessions and Twitch connections", () => {
       });
     },
   );
-  test("reports missing channel permissions without invalidating the session", async () => {
-    findAccount.mockResolvedValue({
-      ...account(),
-      twitchChannelBroadcaster: [{ channelId: "channel" }],
-    });
-    const result = await session();
-    expect(result.user?.twitch?.requiredScopes).toContain(
-      "channel:manage:schedule",
-    );
-    expect(result.expires).toBe(websiteSession.expires);
-  });
+  test.each(["twitchChannelBroadcaster", "twitchChannelModerator"])(
+    "reports missing channel permissions without invalidating the session (%s)",
+    async (relation) => {
+      findAccount.mockResolvedValue({
+        ...account(),
+        [relation]: [{ channelId: "channel" }],
+      });
+      const result = await session();
+      expect(result.user?.twitch?.requiredScopes).toEqual(
+        scopeGroups.api.filter((scope) => scope !== "user:write:chat"),
+      );
+      expect(result.expires).toBe(websiteSession.expires);
+      expect(result.user).toMatchObject({
+        id: "alveus-user",
+        roles: ["dashboard"],
+      });
+    },
+  );
   test("requires reconnection when there are no usable Twitch credentials", async () => {
     findAccount.mockResolvedValue({ ...account(), access_token: null });
     expect((await session()).user?.twitch).toMatchObject({
