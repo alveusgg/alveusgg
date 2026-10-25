@@ -55,6 +55,9 @@ export const env = createEnv({
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
+    PROTECTED_TWITCH_ACCOUNT_IDS: listOfSchema(z.string()).default([
+      "858050963",
+    ]),
     OAUTH_PRIVATE_KEY_PEM: z.string().optional(),
     OAUTH_KID: z.string().optional(),
     OAUTH_CLIENTS_JSON: z.string().optional(),
@@ -179,6 +182,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
     TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
     TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
+    PROTECTED_TWITCH_ACCOUNT_IDS: process.env.PROTECTED_TWITCH_ACCOUNT_IDS,
     OAUTH_PRIVATE_KEY_PEM: process.env.OAUTH_PRIVATE_KEY_PEM,
     OAUTH_KID: process.env.OAUTH_KID,
     OAUTH_CLIENTS_JSON: process.env.OAUTH_CLIENTS_JSON,

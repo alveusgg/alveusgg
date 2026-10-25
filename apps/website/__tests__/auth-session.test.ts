@@ -30,6 +30,7 @@ vi.mock("@/env", () => ({
     NODE_ENV: "test",
     TWITCH_CLIENT_ID: "client",
     TWITCH_CLIENT_SECRET: "secret",
+    NEXT_PUBLIC_BASE_URL: "http://localhost:3000",
   },
 }));
 vi.mock("@/server/utils/oauth2", () => ({

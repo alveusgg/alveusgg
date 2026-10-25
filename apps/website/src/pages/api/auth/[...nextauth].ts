@@ -1,11 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import TwitchProvider, { type TwitchProfile } from "next-auth/providers/twitch";
+import TwitchProvider from "next-auth/providers/twitch";
 
 import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import { withAccountLinkPolicy } from "@/server/auth/accounts";
+import { withAccountManagement } from "@/server/auth/options";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
 import {
@@ -17,7 +20,7 @@ import { scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
 
-const adapter = PrismaAdapter(prisma);
+const adapter = withAccountLinkPolicy(PrismaAdapter(prisma));
 
 const twitchProvider = TwitchProvider({
   clientId: env.TWITCH_CLIENT_ID,
@@ -28,11 +31,6 @@ const twitchProvider = TwitchProvider({
     },
   },
 });
-
-type ProfileData = {
-  name: string;
-  image?: string | null;
-};
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -117,7 +115,7 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
-    async signIn({ user, account, profile }) {
+    async signIn({ account }) {
       try {
         invariant(
           account?.provider === "twitch",
@@ -126,50 +124,31 @@ export const authOptions: NextAuthOptions = {
 
         // Check if the user has signed in before
         // If they haven't, we don't need to do anything
-        const userFromDatabase = await adapter.getUser?.(user.id);
+        const userFromDatabase = await adapter.getUserByAccount?.({
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+        });
         if (!userFromDatabase) return true;
 
-        // Otherwise, we want to update their profile data
-        // And we'll also store the new tokens
-        const { name, image } = await twitchProvider.profile(
-          profile as TwitchProfile,
-          {},
-        );
-        const profileData: ProfileData | undefined = name
-          ? { name, image }
-          : undefined;
-
-        await Promise.all([
-          // Update tokens
-          prisma.account.update({
-            where: {
-              provider_providerAccountId: {
-                provider: account.provider,
-                providerAccountId: account.providerAccountId,
-              },
+        // Refresh only this provider's credentials. Display names are managed
+        // in account settings, independently of the provider used to sign in.
+        await prisma.account.update({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
             },
-            data: {
-              access_token: account.access_token,
-              expires_at: account.expires_at,
-              verified_at: Math.floor(Date.now() / 1000),
-              id_token: account.id_token,
-              refresh_token: account.refresh_token,
-              session_state: account.session_state,
-              scope: account.scope,
-            },
-          }),
-          // Update username/image if it changed
-          profileData &&
-            (userFromDatabase.name !== profileData.name ||
-              userFromDatabase.image !== profileData.image) &&
-            prisma.user.update({
-              where: { id: userFromDatabase.id },
-              data: {
-                name: profileData.name,
-                image: profileData.image,
-              },
-            }),
-        ]);
+          },
+          data: {
+            access_token: account.access_token,
+            expires_at: account.expires_at,
+            verified_at: Math.floor(Date.now() / 1000),
+            id_token: account.id_token,
+            refresh_token: account.refresh_token,
+            session_state: account.session_state,
+            scope: account.scope,
+          },
+        });
 
         return true;
       } catch (err) {
@@ -202,4 +181,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  return NextAuth(req, res, withAccountManagement(authOptions, req, res));
+}

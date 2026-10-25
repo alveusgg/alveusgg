@@ -3,7 +3,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { expect, it, vi } from "vitest";
 import { z } from "zod";
 
-import { type Context } from "@/server/trpc/context";
+import type { Context } from "@/server/trpc/context";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { getProcedureErrorMessages } from "@/utils/trpc-errors";

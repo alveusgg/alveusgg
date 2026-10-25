@@ -75,7 +75,9 @@ export const getServerSideProps = async (
     return {
       redirect: {
         permanent: false,
-        destination: "/",
+        destination: context.query.error
+          ? "/account/connections?error=auth-failed"
+          : "/",
       },
     };
   }
