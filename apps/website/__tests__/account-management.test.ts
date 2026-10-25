@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   ACCOUNT_LINK_COOKIE,
   ACCOUNT_LINK_MAX_AGE,
+  LAST_LOGIN_PROVIDER_COOKIE,
+  LAST_LOGIN_PROVIDER_MAX_AGE,
   RECENT_AUTH_COOKIE,
   WEBSITE_SESSION_COOKIE,
   createAuthAction,
@@ -108,6 +110,42 @@ function options(cookies: Record<string, string> = {}) {
 }
 
 describe("linking and reauthentication", () => {
+  test.each([true, false])(
+    "does not remember a provider before sign-in completes (accepted: %s)",
+    async (accepted) => {
+      onSignIn.mockResolvedValue(accepted);
+      const request = options();
+      await request.signIn();
+      expect(request.headers.get("Set-Cookie")).toBeUndefined();
+    },
+  );
+  test.each(["twitch", "google", "discord"])(
+    "remembers a successful %s login across sign-out",
+    async (provider) => {
+      const request = options();
+      await request.configured.events!.signIn!({
+        user: { id: "user" },
+        account: { provider, providerAccountId: "provider-id", type: "oauth" },
+        isNewUser: false,
+      });
+      await request.configured.events!.signOut!({
+        session: { expires: "2090-01-01T00:00:00.000Z" },
+        token: {},
+      });
+      const cookies = request.headers.get("Set-Cookie") as string[];
+      const preference = cookies.filter((cookie) =>
+        cookie.startsWith(`${LAST_LOGIN_PROVIDER_COOKIE}=`),
+      );
+      expect(preference).toEqual([
+        `${LAST_LOGIN_PROVIDER_COOKIE}=${provider}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${LAST_LOGIN_PROVIDER_MAX_AGE}; Secure`,
+      ]);
+      expect(cookies).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining(`${RECENT_AUTH_COOKIE}=;`),
+        ]),
+      );
+    },
+  );
   test("allows an ordinary login without an existing session", async () => {
     expect(await options().signIn()).toBe(true);
   });

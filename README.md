@@ -183,6 +183,8 @@ Create a web OAuth client in the [Google Cloud Console](https://console.cloud.go
 
 Existing users should sign in through their original provider and connect additional logins in account settings. Accounts are never merged merely because their emails match. Alveus retains the original account email and display profile; a matching, verified provider email establishes email ownership for donation pixels. Users can change their Alveus display name in account settings. Google and Discord access, refresh, and ID tokens are discarded after authentication; ongoing Twitch API credentials remain managed separately.
 
+The sign-in chooser uses each provider's branding and highlights the last successful login in the current browser. This provider-only preference lasts up to one year, survives sign-out, and can be reset by clearing website cookies. Failed or cancelled logins do not update it; disabled providers are never shown.
+
 ### Connected login accounts
 
 Signed-in users can manage login connections and their display name at `/account/connections`. Account changes require a provider sign-in within the last 15 minutes. A connection request expires after 10 minutes and is tied to the user and provider that started it. Configure `NEXTAUTH_SECRET` when testing account management locally.

@@ -81,6 +81,8 @@ Personal Data is collected for the following purposes and using the following se
 
   Google and Discord access, refresh, and ID tokens are discarded after authentication. Twitch credentials may be retained for enabled Twitch features. The Website uses a session cookie to keep users signed in and short-lived security cookies to confirm account-management actions.
 
+  After a successful sign-in, a separate cookie remembers only the login provider used in that browser for up to one year. It highlights that provider on future sign-in visits and remains after signing out. Clearing this Website's cookies removes the preference.
+
 - ### Displaying content from external platforms
 
   This type of service allows you to view content hosted on external platforms directly from the pages of this Website and interact with them.

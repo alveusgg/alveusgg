@@ -8,16 +8,22 @@ import type {
 import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 
+import { LAST_LOGIN_PROVIDER_COOKIE } from "@/server/auth/actions";
 import { enabledLoginProviders } from "@/server/auth/providers";
 import { getOAuthClient } from "@/server/oauth/config";
 
-import { type LoginProvider, loginProviders } from "@/data/auth";
+import {
+  type LoginProvider,
+  isLoginProvider,
+  loginProviders,
+} from "@/data/auth";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { Button } from "@/components/shared/form/Button";
+import LoginProviderButton from "@/components/shared/LoginProviderButton";
 
+import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconInformationCircle from "@/icons/IconInformationCircle";
 import IconXCircle from "@/icons/IconXCircle";
 
@@ -90,6 +96,13 @@ export const getServerSideProps = async (
     typeof context.query.callbackUrl === "string"
       ? context.query.callbackUrl
       : undefined;
+  const previousProvider = context.req.cookies[LAST_LOGIN_PROVIDER_COOKIE];
+  const lastLoginProvider =
+    previousProvider &&
+    isLoginProvider(previousProvider) &&
+    enabledLoginProviders.includes(previousProvider)
+      ? previousProvider
+      : null;
 
   const isOAuthMode = context.query.mode === "oauth";
   if (isOAuthMode) {
@@ -102,6 +115,7 @@ export const getServerSideProps = async (
           callbackUrl,
           thirdPartyClient,
           providers: enabledLoginProviders,
+          lastLoginProvider,
         },
       };
     }
@@ -116,6 +130,7 @@ export const getServerSideProps = async (
       banner: getBannerFromQuery(context.query),
       callbackUrl: isOAuthMode ? undefined : callbackUrl,
       providers: enabledLoginProviders,
+      lastLoginProvider,
     },
   };
 };
@@ -123,19 +138,35 @@ export const getServerSideProps = async (
 function LoginChoices({
   providers,
   callbackUrl,
+  lastLoginProvider,
 }: {
   providers: LoginProvider[];
   callbackUrl?: string;
+  lastLoginProvider: LoginProvider | null;
 }) {
   return (
     <div className="flex flex-col gap-3">
       {providers.map((provider) => (
-        <Button
-          key={provider}
-          onClick={() => signIn(provider, { callbackUrl })}
-        >
-          Continue with {loginProviders[provider]}
-        </Button>
+        <div key={provider}>
+          <LoginProviderButton
+            provider={provider}
+            aria-describedby={
+              provider === lastLoginProvider ? "last-login-provider" : undefined
+            }
+            onClick={() => signIn(provider, { callbackUrl })}
+          >
+            Continue with {loginProviders[provider]}
+          </LoginProviderButton>
+          {provider === lastLoginProvider && (
+            <p
+              id="last-login-provider"
+              className="mt-2 flex items-center justify-center gap-1 text-sm text-alveus-green-900"
+            >
+              <IconCheckCircle size={16} aria-hidden="true" />
+              Last used in this browser
+            </p>
+          )}
+        </div>
       ))}
       <p className="text-sm">
         Already have an account? Use your original login, then connect another
@@ -196,6 +227,7 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
                 <LoginChoices
                   providers={props.providers}
                   callbackUrl={props.callbackUrl}
+                  lastLoginProvider={props.lastLoginProvider}
                 />
                 <Link
                   href="/"
@@ -249,6 +281,7 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
           <LoginChoices
             providers={props.providers}
             callbackUrl={props.callbackUrl}
+            lastLoginProvider={props.lastLoginProvider}
           />
         </div>
       </Section>
