@@ -41,7 +41,7 @@ import {
   NEON_DONOR_SESSION_COOKIE,
   getNeonDonorSession,
 } from "@/server/utils/neon-donor-session";
-import { limit } from "@/server/utils/rate-limit";
+import { getClientIp, limit } from "@/server/utils/rate-limit";
 
 import murals, { type MuralId, isMuralId } from "@/data/murals";
 import { permissions } from "@/data/permissions";
@@ -89,8 +89,8 @@ function mapDonationPixels(pixels: PixelWithDonation[]) {
 }
 
 async function guardExternalSearchMutation(req: NextApiRequest) {
-  const clientIp = req.headers["x-forwarded-for"];
-  if (typeof clientIp === "string") {
+  const clientIp = getClientIp(req);
+  if (clientIp) {
     const isAllowed = await limit(
       `donations-pixels-external-search-${clientIp}`,
       5,
@@ -98,7 +98,7 @@ async function guardExternalSearchMutation(req: NextApiRequest) {
     );
     if (!isAllowed) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
+        code: "TOO_MANY_REQUESTS",
         message: "Too many attempts. Please wait until you try again.",
       });
     }
