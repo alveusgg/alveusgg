@@ -51,6 +51,10 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
 
+    if (!env.SHARED_KEY) {
+      throw new Error("SHARED_KEY must be defined in environment variables");
+    }
+
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()

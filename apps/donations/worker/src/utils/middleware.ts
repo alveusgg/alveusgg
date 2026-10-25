@@ -1,11 +1,13 @@
 import * as Sentry from "@sentry/cloudflare";
 import { createMiddleware } from "hono/factory";
 
+import timingSafeCompareString from "./timing-safe-compare-string";
+
 export const createSharedKeyMiddleware = (sharedKey: string) =>
   createMiddleware(async (ctx, next) => {
     const header = ctx.req.header("authorization");
     const [type, key] = header?.split(" ") ?? [];
-    if (type !== "ApiKey" || key !== sharedKey) {
+    if (type !== "ApiKey" || !key || !timingSafeCompareString(key, sharedKey)) {
       return ctx.json({ error: "Unauthorized" }, 401);
     }
     await next();

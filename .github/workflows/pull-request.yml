@@ -38,6 +38,7 @@ jobs:
 
     env:
       SKIP_ENV_VALIDATION: true
+      NODE_OPTIONS: --max-old-space-size=4096
 
     steps:
       - name: Checkout
