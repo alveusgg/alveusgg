@@ -269,7 +269,8 @@ model ShortLinks {
 }
 
 // Written directly by trackShortLinkClick in apps/website/src/server/db/short-links.ts.
-// Keep that query's SQL identifiers and explicit timestamps aligned with this model.
+// That query uses Prisma names; revisit its SQL identifiers if adding @map/@@map.
+// Keep its explicit timestamps aligned with this model.
 model ShortLinksTracking {
   id     String @id @default(cuid())
   clicks Int

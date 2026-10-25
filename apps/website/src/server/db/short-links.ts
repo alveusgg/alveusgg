@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@alveusgg/database";
+import { Prisma, prisma } from "@alveusgg/database";
 
 import { SLUG_REGEX } from "@/utils/slugs";
 
@@ -61,13 +61,23 @@ export async function editShortLink(
  * counter queue up behind each other.
  */
 export async function trackShortLinkClick(id: string) {
-  // Keep these SQL identifiers aligned with ShortLinksTracking in the Prisma schema.
+  // Field references make schema renames visible to TypeScript, but expose Prisma
+  // names rather than database names. Revisit this query if @map/@@map is added.
+  const fields = prisma.shortLinksTracking.fields;
+  const quoteIdentifier = (name: string) =>
+    Prisma.raw(`\`${name.replaceAll("`", "``")}\``);
+  const table = quoteIdentifier(fields.clicks.modelName);
+  const idColumn = quoteIdentifier(fields.id.name);
+  const clicksColumn = quoteIdentifier(fields.clicks.name);
+  const createdAtColumn = quoteIdentifier(fields.createdAt.name);
+  const updatedAtColumn = quoteIdentifier(fields.updatedAt.name);
+
   // `updatedAt` has no database default (Prisma sets it in the client), so pass
   // the timestamps explicitly, as Prisma would.
   const now = new Date();
   await prisma.$executeRaw`
-    INSERT INTO ShortLinksTracking (id, clicks, createdAt, updatedAt)
+    INSERT INTO ${table} (${idColumn}, ${clicksColumn}, ${createdAtColumn}, ${updatedAtColumn})
     VALUES (${id}, 1, ${now}, ${now})
-    ON DUPLICATE KEY UPDATE clicks = clicks + 1, updatedAt = ${now}
+    ON DUPLICATE KEY UPDATE ${clicksColumn} = ${clicksColumn} + 1, ${updatedAtColumn} = ${now}
   `;
 }
