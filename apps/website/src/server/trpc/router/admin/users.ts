@@ -15,8 +15,10 @@ export const adminUsersRouter = router({
           name: { contains: input },
         },
         take: 10,
-        include: {
-          roles: true,
+        orderBy: [{ name: "asc" }, { id: "asc" }],
+        select: {
+          id: true,
+          name: true,
         },
       }),
     ),
@@ -24,16 +26,16 @@ export const adminUsersRouter = router({
   assignRole: superUserProcedure
     .input(
       z.object({
-        userName: z.string(),
+        userId: z.cuid(),
         role: z
           .string()
           .refine((role) => isValidUserRole(role), "Invalid role"),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findFirst({
+      const user = await ctx.prisma.user.findUnique({
         where: {
-          name: input.userName,
+          id: input.userId,
         },
       });
 
