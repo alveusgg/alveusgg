@@ -14,6 +14,7 @@ import { ConsentProvider } from "@/hooks/consent";
 
 import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
+import TwitchScopeChecker from "@/components/shared/TwitchScopeChecker";
 
 import "@/styles/tailwind.css";
 
@@ -109,6 +110,7 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
+      <TwitchScopeChecker />
       <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>
     </SessionProvider>
   );
