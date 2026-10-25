@@ -61,10 +61,9 @@ export async function editShortLink(
  * counter queue up behind each other.
  */
 export async function trackShortLinkClick(id: string) {
-  // Keep these SQL identifiers aligned with ShortLinksTracking; see the database
-  // schema guide's raw SQL notes.
+  // Keep these SQL identifiers aligned with ShortLinksTracking in the Prisma schema.
   // `updatedAt` has no database default (Prisma sets it in the client), so pass
-  // the timestamps explicitly, as Prisma would
+  // the timestamps explicitly, as Prisma would.
   const now = new Date();
   await prisma.$executeRaw`
     INSERT INTO ShortLinksTracking (id, clicks, createdAt, updatedAt)

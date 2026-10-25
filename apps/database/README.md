@@ -15,12 +15,6 @@ All commands below are run with `pnpm` from `apps/database` unless noted.
 
 Finally, run `pnpm types` and `pnpm lint` in `apps/database`, and `pnpm types` in `apps/website` and `apps/chatbot` to confirm the changes type-check downstream.
 
-### Raw SQL consumers
-
-Generated Prisma types do not check table or column names inside `$queryRaw` and `$executeRaw`. When renaming or changing schema fields, also review those queries in the consuming apps.
-
-In particular, `trackShortLinkClick` in [`apps/website/src/server/db/short-links.ts`](../website/src/server/db/short-links.ts) writes `ShortLinksTracking` directly. Keep its column names, counter behavior and explicit timestamps aligned with the model. Verify concurrent first clicks against a development database when changing this query or table.
-
 ## Deploying schema changes to production (PlanetScale)
 
 Production uses [PlanetScale](https://planetscale.com/), and schema changes reach the production database through PlanetScale deploy requests. `pnpm prisma db push` is for development databases: your local MySQL, PlanetScale development branches, or a database that doesn't use deploy requests.
