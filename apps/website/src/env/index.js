@@ -175,10 +175,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     DATA_ENCRYPTION_PASSPHRASE: process.env.DATA_ENCRYPTION_PASSPHRASE,
     NODE_ENV: process.env.NODE_ENV || "production",
-    NEXTAUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXTAUTH_SECRET
-        : undefined,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
     TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
     TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
