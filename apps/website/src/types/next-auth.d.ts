@@ -8,9 +8,13 @@ declare module "next-auth" {
     user?: {
       id: string;
       roles: string[];
-      scopes: string[];
+      twitch?: {
+        id: string;
+        scopes: string[];
+        error?: "expired" | "unavailable";
+        requiredScopes?: string[];
+      };
       isSuperUser: boolean;
     } & DefaultSession["user"];
-    error?: string;
   }
 }
