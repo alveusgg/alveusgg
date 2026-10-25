@@ -22,10 +22,10 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import LoginProviderButton from "@/components/shared/LoginProviderButton";
+import { MessageBox } from "@/components/shared/MessageBox";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconInformationCircle from "@/icons/IconInformationCircle";
-import IconXCircle from "@/icons/IconXCircle";
 
 const messages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -257,40 +257,32 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      {/* Grow the last section to cover the page */}
-      <Section className="grow">
-        <Heading className="my-3 text-3xl">Sign in</Heading>
+      <Section dark>
+        <header>
+          <Heading>Sign in</Heading>
+        </header>
 
+        <p className="text-lg">
+          Choose a login option to continue to your Alveus Sanctuary account.
+        </p>
+      </Section>
+
+      {/* Grow the last section to cover the page */}
+      <Section className="grow" containerClassName="max-w-lg">
         {props.mode === "error" &&
           props.banner &&
           props.banner.type === "error" && (
-            <div className="mb-6 rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="shrink-0">
-                  <IconXCircle
-                    className="size-5 text-red-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Error signing in
-                  </h3>
-                  <div className="mt-2 text-sm text-red-700">
-                    <p>{props.banner.message}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <MessageBox variant="failure" className="mb-6">
+              <p className="font-semibold">Error signing in</p>
+              <p>{props.banner.message}</p>
+            </MessageBox>
           )}
 
-        <div className="max-w-md">
-          <LoginChoices
-            providers={props.providers}
-            callbackUrl={props.callbackUrl}
-            lastLoginProvider={props.lastLoginProvider}
-          />
-        </div>
+        <LoginChoices
+          providers={props.providers}
+          callbackUrl={props.callbackUrl}
+          lastLoginProvider={props.lastLoginProvider}
+        />
       </Section>
     </>
   );

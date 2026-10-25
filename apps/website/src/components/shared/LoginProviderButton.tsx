@@ -19,15 +19,12 @@ const googleSans = Google_Sans({
   adjustFontFallback: false,
 });
 
-// https://developers.google.com/identity/branding-guidelines
+// https://developers.google.com/identity/branding-guidelines (neutral theme)
 // https://discord.com/branding
 const providerClasses = {
-  twitch:
-    "border-transparent bg-[#9146ff] text-white enabled:hover:bg-[#772ce8]",
-  google:
-    "border-[#747775] bg-white text-sm text-[#1f1f1f] enabled:hover:bg-[#f8faff]",
-  discord:
-    "border-transparent bg-[#5865f2] text-white enabled:hover:bg-[#4752c4]",
+  twitch: "bg-[#9146ff] text-white enabled:hover:bg-[#772ce8]",
+  google: "bg-[#f2f2f2] text-sm text-[#1f1f1f] enabled:hover:bg-[#dfe1e3]",
+  discord: "bg-[#5865f2] text-white enabled:hover:bg-[#4752c4]",
 } satisfies Record<LoginProvider, string>;
 
 type Props = ComponentProps<typeof Button> & { provider: LoginProvider };
@@ -43,7 +40,7 @@ export default function LoginProviderButton({
     <Button
       {...props}
       className={classes(
-        "min-h-12 border transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-900",
+        "min-h-12 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-900",
         providerClasses[provider],
         className,
       )}
