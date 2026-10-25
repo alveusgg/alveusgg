@@ -52,3 +52,23 @@ export async function editShortLink(
     data,
   });
 }
+
+/**
+ * Count a click on a short link, creating the counter on the first click.
+ *
+ * This is a single native upsert: Prisma emulates `upsert` on MySQL with a
+ * SELECT, UPDATE, SELECT and COMMIT, which makes concurrent clicks on the same
+ * counter queue up behind each other.
+ */
+export async function trackShortLinkClick(id: string) {
+  // Keep these SQL identifiers aligned with ShortLinksTracking; see the database
+  // schema guide's raw SQL notes.
+  // `updatedAt` has no database default (Prisma sets it in the client), so pass
+  // the timestamps explicitly, as Prisma would
+  const now = new Date();
+  await prisma.$executeRaw`
+    INSERT INTO ShortLinksTracking (id, clicks, createdAt, updatedAt)
+    VALUES (${id}, 1, ${now}, ${now})
+    ON DUPLICATE KEY UPDATE clicks = clicks + 1, updatedAt = ${now}
+  `;
+}
