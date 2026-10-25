@@ -244,7 +244,7 @@ export const DonationResponse = z
     id: RecordId,
     accountId: RecordId,
     amount: z.number(),
-    purpose: z.string().nullable().optional(),
+    purpose: DonationIdNamePair.optional(),
     campaign: DonationIdNamePair,
     fund: DonationIdNamePair,
     origin: DonationOrigin,

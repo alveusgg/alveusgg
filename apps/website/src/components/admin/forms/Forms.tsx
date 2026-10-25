@@ -1,5 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import type { inferRouterOutputs } from "@trpc/server";
+import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
@@ -36,6 +37,10 @@ type FormProps = {
 };
 
 function Form({ form, onError, onUpdate }: FormProps) {
+  // Entries include personal data, so the export API is limited to super users
+  const { data: session } = useSession();
+  const canExport = session?.user?.isSuperUser === true;
+
   const deleteMutation = trpc.adminForms.deleteForm.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
@@ -135,15 +140,17 @@ function Form({ form, onError, onUpdate }: FormProps) {
             <IconPencil className="size-4" />
             Edit
           </LinkButton>
-          <LinkButton
-            size="small"
-            width="auto"
-            className={secondaryButtonClasses}
-            href={`/api/admin/forms/${form.id}/export-entries`}
-          >
-            <IconDownload className="size-4" />
-            CSV
-          </LinkButton>
+          {canExport && (
+            <LinkButton
+              size="small"
+              width="auto"
+              className={secondaryButtonClasses}
+              href={`/api/admin/forms/${form.id}/export-entries`}
+            >
+              <IconDownload className="size-4" />
+              CSV
+            </LinkButton>
+          )}
 
           <Menu as="div" className="relative inline-block text-left">
             <MenuButton as={Button}>
