@@ -1,5 +1,6 @@
 import { type Duration, Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import type { NextApiRequest } from "next";
 
 import { env } from "@/env";
 
@@ -21,4 +22,16 @@ export async function limit(
   });
 
   return (await ratelimit.limit(identifier)).success;
+}
+
+/**
+ * The client's IP address to rate limit by: the first entry of
+ * x-forwarded-for (set by Vercel), or the socket address without a proxy.
+ */
+export function getClientIp(req: NextApiRequest) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  const first = (
+    Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor
+  )?.split(",")[0];
+  return first?.trim() || req.socket.remoteAddress;
 }

@@ -48,7 +48,7 @@ function makeProvider(name: string) {
   };
 }
 
-function makeManager() {
+function makeManager(envOverrides: Partial<Env> = {}) {
   const background: Promise<unknown>[] = [];
   const setAlarm = vi.fn(async () => {});
   const ctx = {
@@ -58,6 +58,7 @@ function makeManager() {
   const env = {
     SELF_URL: "https://example.com",
     SHARED_KEY: "shared-key",
+    ...envOverrides,
   } as Env;
   const manager = new DonationsManagerDurableObject(ctx, env);
   return {
@@ -100,6 +101,17 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
+});
+
+describe("donation manager authentication", () => {
+  it.each([undefined, ""])(
+    "refuses to start with SHARED_KEY=%j",
+    (sharedKey) => {
+      expect(() => makeManager({ SHARED_KEY: sharedKey })).toThrow(
+        "SHARED_KEY must be defined in environment variables",
+      );
+    },
+  );
 });
 
 describe("donation provider isolation", () => {

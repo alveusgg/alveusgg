@@ -28,15 +28,19 @@
     "@prisma/client": "^7.10.0"
   },
   "devDependencies": {
-    "@types/node": "^24.19.1",
-    "dotenv": "^18.0.6",
+    "@types/node": "^24.19.2",
+    "dotenv": "^18.0.7",
     "prisma": "^7.10.0",
-    "tsdown": "^0.23.0"
+    "tsdown": "^0.23.1"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./encryption": {
+      "types": "./dist/encryption.d.ts",
+      "import": "./dist/encryption.js"
     }
   }
 }

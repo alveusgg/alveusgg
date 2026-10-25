@@ -368,6 +368,21 @@ const config: NextConfig = {
       destination: "/about/events/donor-trees",
       permanent: false,
     },
+    {
+      source: "/land-acknowledgment",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
+    {
+      source: "/land-acknowledgement",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
+    {
+      source: "/about/land-acknowledgement",
+      destination: "/about/land-acknowledgment",
+      permanent: false,
+    },
     // External redirects
     {
       source: "/merch",
@@ -553,18 +568,28 @@ const config: NextConfig = {
         permanent: true,
       })),
   ],
-  headers: async () => [
-    {
-      source: "/:path*",
+  headers: async () =>
+    [
+      {
+        source: "/:path((?!stream(?:/|$)).*)",
+        allowFraming: false,
+      },
+      {
+        // Stream pages are embedded as players and overlays in other applications.
+        source: "/stream/:path*",
+        allowFraming: true,
+      },
+    ].map(({ source, allowFraming }) => ({
+      source,
       headers: [
-        {
-          key: "X-Frame-Options",
-          value: "GOFORIT",
-        },
+        ...(allowFraming
+          ? []
+          : [{ key: "X-Frame-Options", value: "SAMEORIGIN" }]),
         {
           key: "Content-Security-Policy",
           value:
             [
+              !allowFraming && "frame-ancestors 'self';",
               "frame-src 'self'",
               // Allow vercel preview helper (if not in production):
               process.env.VERCEL_ENV &&
@@ -598,8 +623,7 @@ const config: NextConfig = {
               .join(" ") + ";",
         },
       ],
-    },
-  ],
+    })),
   webpack: (config, options) => {
     // Add a custom loader for videos
     config.module.rules.push({

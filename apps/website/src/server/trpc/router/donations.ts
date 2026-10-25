@@ -41,7 +41,7 @@ import {
   NEON_DONOR_SESSION_COOKIE,
   getNeonDonorSession,
 } from "@/server/utils/neon-donor-session";
-import { limit } from "@/server/utils/rate-limit";
+import { getClientIp, limit } from "@/server/utils/rate-limit";
 
 import murals, { type MuralId, isMuralId } from "@/data/murals";
 import { permissions } from "@/data/permissions";
@@ -89,8 +89,8 @@ function mapDonationPixels(pixels: PixelWithDonation[]) {
 }
 
 async function guardExternalSearchMutation(req: NextApiRequest) {
-  const clientIp = req.headers["x-forwarded-for"];
-  if (typeof clientIp === "string") {
+  const clientIp = getClientIp(req);
+  if (clientIp) {
     const isAllowed = await limit(
       `donations-pixels-external-search-${clientIp}`,
       5,
@@ -98,7 +98,7 @@ async function guardExternalSearchMutation(req: NextApiRequest) {
     );
     if (!isAllowed) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
+        code: "TOO_MANY_REQUESTS",
         message: "Too many attempts. Please wait until you try again.",
       });
     }
@@ -406,20 +406,33 @@ async function renamePixels(
     ),
   );
 
-  if (env.NEXT_PUBLIC_DONATIONS_MANAGER_URL) {
+  // The donations worker only knows one key, the first one in the list
+  const [sharedKey] = env.TRPC_API_SHARED_KEY;
+  if (env.NEXT_PUBLIC_DONATIONS_MANAGER_URL && sharedKey) {
     const doesAffectLiveMural = affectedMurals
       .values()
       .some((muralId) => murals[muralId].type === "live");
 
     if (doesAffectLiveMural) {
-      // Trigger a rebuild of the dynamic mural cache
-      fetch(`${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/resync`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `ApiKey ${env.TRPC_API_SHARED_KEY}`,
-        },
-      }).catch((_err) => {});
+      // Trigger a rebuild of the dynamic mural cache, without delaying the
+      // response but making sure the request isn't cut off after it
+      waitUntil(
+        fetch(`${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/resync`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `ApiKey ${sharedKey}`,
+          },
+        })
+          .then((res) => {
+            if (!res.ok) {
+              console.error(
+                `[pixels] mural resync responded with ${res.status}`,
+              );
+            }
+          })
+          .catch((err) => console.error("[pixels] mural resync failed", err)),
+      );
     }
   }
 
