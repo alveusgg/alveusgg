@@ -13,11 +13,13 @@ export async function inspectImage(data: Uint8Array) {
   try {
     const image = sharp(data, {
       failOn: "error",
+      animated: true,
       // Browser uploads are resized to at most 2048px per side. Limit decoded
-      // work too, since a small compressed file can contain many more pixels.
+      // work across all frames, since compressed files can hide many pixels.
       limitInputPixels: 2048 * 2048,
     });
-    const { format, compression, autoOrient } = await image.metadata();
+    const { format, compression, width, height, pageHeight, orientation } =
+      await image.metadata();
 
     const mimeType =
       format === "heif"
@@ -31,7 +33,14 @@ export async function inspectImage(data: Uint8Array) {
     // truncated/corrupt are rejected
     await image.stats();
 
-    return { mimeType, width: autoOrient.width, height: autoOrient.height };
+    // Sharp stacks animation frames vertically; store the size of one frame.
+    const frameHeight = pageHeight ?? height;
+    const isRotated = (orientation ?? 0) > 4;
+    return {
+      mimeType,
+      width: isRotated ? frameHeight : width,
+      height: isRotated ? width : frameHeight,
+    };
   } catch (_) {
     return false;
   }
