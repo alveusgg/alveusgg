@@ -9,6 +9,10 @@ export const imageMimeTypes = [
   "image/heif",
 ] as const satisfies Array<`image/${string}`>;
 
+// Images are resized in the browser before uploading (at most 2048px), which
+// keeps them far below this, even as PNG
+export const maxImageUploadSize = 20 * 1024 * 1024;
+
 export const isImageMimeType = (type: string): type is ImageMimeType =>
   imageMimeTypes.includes(type as ImageMimeType);
 

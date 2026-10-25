@@ -1,6 +1,7 @@
 type FileSignature<AllowedFileType extends string = string> = {
   fileName: string;
   fileType: AllowedFileType;
+  fileSize: number;
 };
 type SignedUploadInfo = {
   fileStorageObjectId: string;
@@ -32,6 +33,7 @@ const useFileUpload = <AllowedFileType extends string = string>(
         await createFileUpload({
           fileName: file.name,
           fileType,
+          fileSize: file.size,
         });
 
       const res = await fetch(uploadUrl, {

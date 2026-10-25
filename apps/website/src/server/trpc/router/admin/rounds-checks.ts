@@ -19,11 +19,10 @@ import {
   createFileStorageUpload,
   deleteFileStorageObject,
   getViewUrlForFileStorageObjectKey,
+  imageUploadInputSchema,
 } from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
-
-import { imageMimeTypes } from "@/utils/files";
 
 const uploadPrefix = "rounds-checks/";
 
@@ -98,17 +97,13 @@ export const adminRoundsChecksRouter = router({
   ),
 
   createFileUpload: permittedProcedure
-    .input(
-      z.object({
-        fileName: z.string(),
-        fileType: z.literal(imageMimeTypes),
-      }),
-    )
+    .input(imageUploadInputSchema)
     .mutation(async ({ input }) => {
       const { uploadUrl, viewUrl, fileStorageObject } =
         await createFileStorageUpload({
           fileName: input.fileName,
           fileType: input.fileType,
+          fileSize: input.fileSize,
           prefix: uploadPrefix,
         });
 

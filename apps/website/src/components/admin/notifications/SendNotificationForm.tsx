@@ -9,7 +9,11 @@ import {
   notificationLinkSuggestions,
 } from "@/data/notifications";
 
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import {
+  type ImageMimeType,
+  imageMimeTypes,
+  maxImageUploadSize,
+} from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
@@ -174,6 +178,7 @@ export function SendNotificationForm() {
             maxNumber={1}
             upload={upload}
             allowedFileTypes={imageMimeTypes}
+            maxFileSize={maxImageUploadSize}
             resizeImageOptions={resizeImageOptions}
             renderAttachment={(props) => (
               <ImageUploadAttachment {...props}>

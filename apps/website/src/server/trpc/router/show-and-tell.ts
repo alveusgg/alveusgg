@@ -24,10 +24,10 @@ import {
 import {
   createFileStorageUpload,
   deleteFileStorageObject,
+  imageUploadInputSchema,
 } from "@/server/utils/file-storage";
 import { getClientIp, limit } from "@/server/utils/rate-limit";
 
-import { imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { extractInfoFromMapFeatures } from "@/utils/locations";
 
@@ -116,13 +116,7 @@ export const showAndTellRouter = router({
     }),
 
   createFileUpload: publicProcedure
-    .input(
-      z.object({
-        // Becomes part of the storage key, which S3 limits to 1024 bytes
-        fileName: z.string().max(255),
-        fileType: z.literal(imageMimeTypes),
-      }),
-    )
+    .input(imageUploadInputSchema)
     .mutation(async ({ ctx, input }) => {
       // Anyone can submit a post, so limit how many upload URLs one client
       // can create (a post has at most MAX_IMAGES images)
@@ -141,6 +135,7 @@ export const showAndTellRouter = router({
         await createFileStorageUpload({
           fileName: input.fileName,
           fileType: input.fileType,
+          fileSize: input.fileSize,
           prefix: uploadPrefix,
         });
 
