@@ -17,21 +17,6 @@ import { scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
 
-const requireScopes = (account: { scope: string | null }, scopes: string[]) => {
-  const accountScopes = new Set(account.scope?.split(" "));
-  const missingScopes = scopes.filter((scope) => !accountScopes.has(scope));
-
-  if (missingScopes.length > 0) {
-    const allScopes = [...accountScopes, ...missingScopes].join(" ");
-    return {
-      expires: new Date(0).toISOString(),
-      error: `Additional scopes required: ${allScopes}`,
-    };
-  }
-
-  return null;
-};
-
 const adapter = PrismaAdapter(prisma);
 
 const twitchProvider = TwitchProvider({
@@ -52,36 +37,36 @@ type ProfileData = {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async function ({ session, user }) {
-      // Find the full account for the user
+      // Twitch is an optional connection. Its authorization status must not
+      // invalidate the website session or the user's Alveus roles.
       const account = await prisma.account.findFirst({
         where: { userId: user.id, provider: "twitch" },
         select: {
           id: true,
+          providerAccountId: true,
           access_token: true,
           refresh_token: true,
           expires_at: true,
           verified_at: true,
           scope: true,
-          twitchChannelBroadcaster: {
-            select: { channelId: true },
-          },
-          twitchChannelModerator: {
-            select: { channelId: true },
-          },
+          twitchChannelBroadcaster: { select: { channelId: true } },
+          twitchChannelModerator: { select: { channelId: true } },
         },
       });
-      if (!account) {
-        return {
-          expires: new Date(0).toISOString(),
-          error: "Account not found",
+      let twitch: NonNullable<typeof session.user>["twitch"];
+      if (account) {
+        twitch = {
+          id: account.providerAccountId,
+          scopes: account.scope?.split(" ").filter(Boolean) ?? [],
         };
-      }
-
-      // If we're over an hour since we last verified the Twitch token, check it
-      if (account.access_token && account.refresh_token) {
-        if (
-          !account.verified_at ||
-          account.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
+        if (!account.access_token) {
+          twitch.error = "expired";
+        } else if (
+          account.refresh_token &&
+          (!account.verified_at ||
+            account.verified_at < Date.now() / 1000 - 60 * 60 ||
+            (account.expires_at &&
+              account.expires_at < Date.now() / 1000 + 60 * 60))
         ) {
           try {
             await refreshAccessToken(
@@ -91,30 +76,33 @@ export const authOptions: NextAuthOptions = {
               account.id,
               account.access_token,
               account.refresh_token,
-              // Force the refresh if we're within 1hr of expiry
               !!(
                 account.expires_at &&
                 account.expires_at - Date.now() / 1000 < 60 * 60
               ),
             );
           } catch (err) {
-            if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
-            return {
-              expires: new Date(0).toISOString(),
-              error: "Twitch auth expired",
-            };
+            twitch.error =
+              err instanceof ExpiredAccessTokenError
+                ? "expired"
+                : "unavailable";
           }
+        } else if (
+          account.expires_at &&
+          account.expires_at < Date.now() / 1000
+        ) {
+          twitch.error = "expired";
         }
-      }
-
-      // Check if we need to ask the client to re-authenticate with additional scopes
-      // Accounts tied to channels in the DB need more scopes for API access
-      if (
-        account.twitchChannelBroadcaster.length ||
-        account.twitchChannelModerator.length
-      ) {
-        const err = requireScopes(account, scopeGroups.api);
-        if (err) return err;
+        if (twitch.error) twitch.scopes = [];
+        if (
+          account.twitchChannelBroadcaster.length ||
+          account.twitchChannelModerator.length
+        ) {
+          const grantedScopes = twitch.scopes;
+          twitch.requiredScopes = scopeGroups.api.filter(
+            (scope) => !grantedScopes.includes(scope),
+          );
+        }
       }
 
       // Include user.id on session
@@ -125,7 +113,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           isSuperUser: checkIsSuperUserId(user.id),
           roles: await getRolesForUser(user.id),
-          scopes: account.scope?.split(" ") ?? [],
+          twitch,
         },
       };
     },

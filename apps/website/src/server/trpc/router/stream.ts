@@ -17,6 +17,7 @@ import {
   protectedProcedure,
   publicProcedure,
   router,
+  twitchProcedure,
 } from "@/server/trpc/trpc";
 import { getUserTwitchAccount } from "@/server/utils/auth";
 import { getViewUrlForFileStorageObjectKey } from "@/server/utils/file-storage";
@@ -81,7 +82,7 @@ export const streamRouter = router({
       ),
   ),
 
-  getSubscription: protectedProcedure.query(async ({ ctx }) => {
+  getSubscription: twitchProcedure.query(async ({ ctx }) => {
     const twitchAccount = await getUserTwitchAccount(ctx.session.user.id, true);
     return getUserSubscribedToBroadcaster(
       twitchAccount.token,
@@ -90,7 +91,7 @@ export const streamRouter = router({
     );
   }),
 
-  runCommand: protectedProcedure
+  runCommand: twitchProcedure
     .input(runCommandSchema)
     .mutation(async ({ ctx, input }) => {
       const twitchAccount = await getUserTwitchAccount(
