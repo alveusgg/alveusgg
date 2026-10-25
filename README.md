@@ -185,6 +185,8 @@ Existing users should sign in through their original provider and connect additi
 
 The sign-in chooser uses each provider's branding and highlights the last successful login in the current browser. This provider-only preference lasts up to one year, survives sign-out, and can be reset by clearing website cookies. Failed or cancelled logins do not update it; disabled providers are never shown.
 
+The Google sign-in logo is third-party brand artwork. Its source and usage restrictions are documented in [Login-provider artwork](apps/website/src/assets/auth/README.md).
+
 ### Connected login accounts
 
 Signed-in users can manage login connections and their display name at `/account/connections`. Account changes require a provider sign-in within the last 15 minutes. A connection request expires after 10 minutes and is tied to the user and provider that started it. Configure `NEXTAUTH_SECRET` when testing account management locally.

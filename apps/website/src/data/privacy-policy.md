@@ -83,6 +83,8 @@ Personal Data is collected for the following purposes and using the following se
 
   After a successful sign-in, a separate cookie remembers only the login provider used in that browser for up to one year. It highlights that provider on future sign-in visits and remains after signing out. Clearing this Website's cookies removes the preference.
 
+  Google and the Google logo are trademarks of Google LLC.
+
 - ### Displaying content from external platforms
 
   This type of service allows you to view content hosted on external platforms directly from the pages of this Website and interact with them.
