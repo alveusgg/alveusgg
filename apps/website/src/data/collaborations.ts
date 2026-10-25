@@ -51,6 +51,7 @@ import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
 import jynxzi from "@/assets/collaborations/jynxzi.png";
 import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
+import kkatamina from "@/assets/collaborations/kkatamina.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lindsayNikole from "@/assets/collaborations/lindsay-nikole.png";
@@ -66,6 +67,7 @@ import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
+import ryanHiga from "@/assets/collaborations/ryan-higa.png";
 import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sidemen from "@/assets/collaborations/sidemen.png";
@@ -106,6 +108,24 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Kkatamina & Ryan Higa",
+      link: "https://www.twitch.tv/kkatamina",
+      date: new Date("2026-10-22"),
+      videoId: "tsFE9Sp2V20",
+      creators: [
+        {
+          name: "Kkatamina",
+          image: kkatamina,
+          popularity: 671_000, // Twitch followers, 2026-10-25
+        },
+        {
+          name: "Ryan Higa",
+          image: ryanHiga,
+          popularity: 20_700_000, // YouTube subscribers, 2026-10-25
+        },
+      ],
+    },
     {
       name: "Jynxzi",
       link: "https://www.twitch.tv/jynxzi",
