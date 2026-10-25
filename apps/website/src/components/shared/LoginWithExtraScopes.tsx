@@ -1,5 +1,8 @@
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useState } from "react";
 
+import { ACCOUNT_SETTINGS_PATH } from "@/data/auth";
 import {
   type ScopeGroup,
   isScope,
@@ -8,6 +11,7 @@ import {
 } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
 
 import { Button } from "@/components/shared/form/Button";
 
@@ -39,12 +43,17 @@ const LoginWithExtraScopes = ({
   className?: string;
 }) => {
   const { data, status } = useSession();
+  const beginLink = trpc.auth.beginAccountLink.useMutation();
+  const [error, setError] = useState<string>();
 
   const currentScopes = data?.user?.twitch?.scopes ?? [];
   const requiredScopes = [
-    ...(data?.user?.twitch?.scopes ?? []),
-    ...scopeGroups.default,
-    ...scopeGroups[scopeGroup],
+    ...new Set([
+      ...(data?.user?.twitch?.scopes ?? []),
+      ...scopeGroups.default,
+      ...scopeGroups[scopeGroup],
+      ...(data?.user?.twitch?.requiredScopes ?? []),
+    ]),
   ];
   const missingScopes = requiredScopes.filter(
     (scope) => !currentScopes.includes(scope),
@@ -57,15 +66,27 @@ const LoginWithExtraScopes = ({
       {(!!missingScopes.length || data?.user?.twitch?.error) && (
         <Button
           className="bg-twitch text-white transition-[filter] hover:brightness-110"
-          onClick={() =>
-            signIn(
-              "twitch",
-              { callbackUrl: window.location.href },
-              {
-                scope: requiredScopes.join(" "),
-              },
-            )
-          }
+          disabled={beginLink.isPending}
+          onClick={async () => {
+            setError(undefined);
+            try {
+              if (data?.user && !data.user.twitch)
+                await beginLink.mutateAsync({ provider: "twitch" });
+              await signIn(
+                "twitch",
+                { callbackUrl: window.location.href },
+                {
+                  scope: requiredScopes.join(" "),
+                },
+              );
+            } catch (error) {
+              setError(
+                error instanceof Error
+                  ? error.message
+                  : "Unable to connect Twitch.",
+              );
+            }
+          }}
         >
           <IconTwitch />
           <span>
@@ -74,6 +95,14 @@ const LoginWithExtraScopes = ({
         </Button>
       )}
 
+      {error && (
+        <p role="alert">
+          {error}{" "}
+          <Link className="underline" href={ACCOUNT_SETTINGS_PATH}>
+            Open account settings
+          </Link>
+        </p>
+      )}
       {showCurrentScopes && (
         <>
           {status === "loading" && (

@@ -75,6 +75,10 @@ const UserMenuDesktop = () => {
           <div className="border-t opacity-30"></div>
         </MenuItem>
 
+        <MenuItem>
+          <NavLinkSub href="/account/connections">Account settings</NavLinkSub>
+        </MenuItem>
+
         {showAdminLink && (
           <MenuItem>
             <NavLinkSub href="/admin/dashboard">Admin</NavLinkSub>

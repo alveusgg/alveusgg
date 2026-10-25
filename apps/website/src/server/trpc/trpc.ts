@@ -4,7 +4,7 @@ import { ZodError } from "zod";
 
 import { env } from "@/env";
 
-import { type Context } from "@/server/trpc/context";
+import type { Context } from "@/server/trpc/context";
 import {
   checkIsSuperUserSession,
   checkPermissions,

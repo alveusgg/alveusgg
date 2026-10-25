@@ -47,6 +47,11 @@ const UserMenuMobile = () => {
 
   return (
     <>
+      <li>
+        <DisclosureButton as={NavLinkSub} href="/account/connections">
+          Account settings
+        </DisclosureButton>
+      </li>
       {showAdminLink && (
         <li>
           <div className="my-3 w-full border-t opacity-30"></div>
