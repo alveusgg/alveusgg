@@ -183,7 +183,7 @@ We use Base64-encoded random strings for various secrets. To generate these secr
 To rotate a key:
 
 1. Add the new key at the end of the list everywhere the keys are set, e.g. `k1:<old>,k2:<new>`, and deploy. This way everything that's running can decrypt `k2` values before the first one is written.
-2. Move the new key to the front, e.g. `k2:<new>,k1:<old>`, and deploy. New values are now encrypted with `k2`.
+2. Move the new key to the front, e.g. `k2:<new>,k1:<old>`, and deploy. New values are now encrypted with `k2`. Services that haven't yet deployed with this change are already able to decrypt `k2` values from the previous step.
 3. Re-encrypt the existing values, then remove the old key.
 
 `DATA_BLIND_INDEX_KEY` is used for keyed hashes that let us look up encrypted values (e.g. email addresses) without decrypting them. Changing it means recomputing every stored hash, so it is not rotated with the encryption keys.
