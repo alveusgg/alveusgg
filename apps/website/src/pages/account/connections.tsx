@@ -5,15 +5,26 @@ import { useState } from "react";
 
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 
-import { ACCOUNT_SETTINGS_PATH, loginProviders } from "@/data/auth";
+import {
+  ACCOUNT_SETTINGS_PATH,
+  type LoginProvider,
+  loginProviders,
+} from "@/data/auth";
 
 import { trpc } from "@/utils/trpc";
 
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import { MessageBox } from "@/components/shared/MessageBox";
 import { Button, dangerButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
+
+import type { IconProps } from "@/icons/BaseIcon";
+import IconCheck from "@/icons/IconCheck";
+import IconLoading from "@/icons/IconLoading";
+import IconTwitch from "@/icons/IconTwitch";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerAuthSession(context);
@@ -34,6 +45,21 @@ const linkErrors: Record<string, string> = {
     "That login belongs to another Alveus account. Sign in to the original account to manage it.",
   "link-required":
     "The connection request expired or could not be verified. Confirm your identity and try again.",
+};
+
+// Same branding as the sign-in buttons
+const providerButtonClasses = {
+  twitch: "bg-twitch text-white",
+} satisfies Record<LoginProvider, string>;
+
+const ProviderIcon = ({
+  provider,
+  ...props
+}: IconProps & { provider: LoginProvider }) => {
+  switch (provider) {
+    case "twitch":
+      return <IconTwitch {...props} />;
+  }
 };
 
 const AccountConnectionsPage: NextPage = () => {
@@ -60,164 +86,246 @@ const AccountConnectionsPage: NextPage = () => {
   const error =
     connectionError ??
     disconnect.error?.message ??
-    updateName.error?.message ??
     (typeof query.error === "string" ? linkErrors[query.error] : undefined);
+  const unconnectedProviders =
+    data?.providers.filter(
+      (provider) =>
+        !data.accounts.some((account) => account.provider === provider),
+    ) ?? [];
 
   return (
     <>
       <Meta
-        title="Connected accounts"
-        description="Manage the accounts you use to sign in to Alveus Sanctuary."
+        title="Account settings"
+        description="Manage the logins connected to your Alveus Sanctuary account and the name shown for it."
       />
+
+      {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
-      <Section className="grow">
-        <div className="mx-auto w-full max-w-2xl">
-          <Heading level={1}>Your account</Heading>
-          <p className="mb-6">
-            Connected logins share your Alveus account, posts, entries, and
-            permissions.
-          </p>
-          {error && (
-            <p role="alert" className="my-4">
-              {error}
-            </p>
-          )}
-          {connections.isPending && <p>Loading connected accounts...</p>}
-          {connections.error && <p role="alert">{connections.error.message}</p>}
-          {data && (
-            <>
-              {!data.recentlyAuthenticated && (
-                <p className="my-4">
-                  Confirm your identity with a connected login below before
+
+      <Section dark>
+        <header>
+          <Heading>Account settings</Heading>
+        </header>
+
+        <p className="text-lg">
+          Manage the logins connected to your Alveus Sanctuary account and the
+          name shown for it. Connected logins share your posts, entries, and
+          permissions.
+        </p>
+      </Section>
+
+      {/* Grow the last section to cover the page */}
+      <Section className="grow" containerClassName="max-w-2xl">
+        {error && (
+          <MessageBox variant="failure" className="mb-6">
+            <p role="alert">{error}</p>
+          </MessageBox>
+        )}
+
+        {connections.isPending && (
+          <MessageBox className="flex flex-row items-center gap-4">
+            <IconLoading />
+            Loading connected accounts…
+          </MessageBox>
+        )}
+
+        {connections.error && (
+          <MessageBox variant="failure">
+            <p role="alert">{connections.error.message}</p>
+          </MessageBox>
+        )}
+
+        {data && (
+          <>
+            <Heading level={2} className="mt-0 mb-4">
+              Connected accounts
+            </Heading>
+
+            {data.recentlyAuthenticated ? (
+              <p className="mb-4 flex items-center gap-2">
+                <IconCheck className="size-6 shrink-0" />
+                <span>
+                  Your identity has been confirmed. You can change your account
+                  for a short while.
+                </span>
+              </p>
+            ) : (
+              <MessageBox className="mb-4">
+                <p className="font-semibold">Confirm your identity first</p>
+                <p>
+                  Sign in again with one of your connected logins below before
                   making account changes.
                 </p>
-              )}
-              <Heading level={2}>Connected accounts</Heading>
-              <ul className="divide-y divide-alveus-green/20">
-                {data.accounts.map((account) => {
-                  const provider = data.providers.find(
-                    (provider) => provider === account.provider,
-                  );
-                  const lastLogin = !data.accounts.some(
-                    (other) =>
-                      other.id !== account.id &&
-                      data.providers.some(
-                        (provider) => provider === other.provider,
-                      ),
-                  );
-                  return (
-                    <li key={account.id} className="py-5">
-                      <p className="font-semibold">
-                        {provider ? loginProviders[provider] : account.provider}
-                      </p>
-                      <p className="my-2 text-sm wrap-anywhere">
-                        Account ID: {account.providerAccountId}
-                      </p>
-                      <div className="flex flex-wrap gap-3">
-                        {provider && (
+              </MessageBox>
+            )}
+
+            <ul className="flex flex-col gap-4">
+              {data.accounts.map((account) => {
+                const provider = data.providers.find(
+                  (provider) => provider === account.provider,
+                );
+                const lastLogin = !data.accounts.some(
+                  (other) =>
+                    other.id !== account.id &&
+                    data.providers.some(
+                      (provider) => provider === other.provider,
+                    ),
+                );
+                const hint = account.protected
+                  ? "This account is used by an integration. Ask an administrator to disconnect it."
+                  : lastLogin
+                    ? "Connect another login method before disconnecting this one."
+                    : undefined;
+
+                return (
+                  <li key={account.id}>
+                    <Box className="bg-white p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          {provider && (
+                            <ProviderIcon
+                              provider={provider}
+                              className="size-6 shrink-0"
+                              aria-hidden="true"
+                            />
+                          )}
+                          <div>
+                            <strong className="text-lg">
+                              {provider
+                                ? loginProviders[provider]
+                                : account.provider}
+                            </strong>
+                            <p className="text-sm wrap-anywhere">
+                              Account ID: {account.providerAccountId}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                          {provider && (
+                            <Button
+                              width="auto"
+                              size="small"
+                              className={providerButtonClasses[provider]}
+                              disabled={busy}
+                              onClick={async () => {
+                                setRedirecting(true);
+                                try {
+                                  await signIn(provider, {
+                                    callbackUrl: ACCOUNT_SETTINGS_PATH,
+                                  });
+                                } catch {
+                                  setConnectionError(
+                                    "Unable to start sign-in. Please try again.",
+                                  );
+                                  setRedirecting(false);
+                                }
+                              }}
+                            >
+                              <ProviderIcon
+                                provider={provider}
+                                size={20}
+                                aria-hidden="true"
+                              />
+                              <span>
+                                Confirm with {loginProviders[provider]}
+                              </span>
+                            </Button>
+                          )}
+
                           <Button
                             width="auto"
-                            disabled={busy}
-                            onClick={async () => {
-                              setRedirecting(true);
-                              try {
-                                await signIn(provider, {
-                                  callbackUrl: ACCOUNT_SETTINGS_PATH,
-                                });
-                              } catch {
-                                setConnectionError(
-                                  "Unable to start sign-in. Please try again.",
-                                );
-                                setRedirecting(false);
-                              }
-                            }}
-                          >
-                            Confirm with {loginProviders[provider]}
-                          </Button>
-                        )}
-                        <Button
-                          width="auto"
-                          className={dangerButtonClasses}
-                          disabled={
-                            busy ||
-                            account.protected ||
-                            lastLogin ||
-                            !data.recentlyAuthenticated
-                          }
-                          confirmationMessage="Disconnect this login and sign out your other website sessions?"
-                          onClick={() => disconnect.mutate(account.id)}
-                        >
-                          Disconnect
-                        </Button>
-                      </div>
-                      {account.protected && (
-                        <p className="mt-2 text-sm">
-                          This account is used by an integration. Ask an
-                          administrator to disconnect it.
-                        </p>
-                      )}
-                      {lastLogin && (
-                        <p className="mt-2 text-sm">
-                          Connect another login method before disconnecting this
-                          one.
-                        </p>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-              {data.providers.some(
-                (provider) =>
-                  !data.accounts.some(
-                    (account) => account.provider === provider,
-                  ),
-              ) && (
-                <>
-                  <Heading level={2}>Connect another login</Heading>
-                  <div className="my-4 flex flex-wrap gap-3">
-                    {data.providers
-                      .filter(
-                        (provider) =>
-                          !data.accounts.some(
-                            (account) => account.provider === provider,
-                          ),
-                      )
-                      .map((provider) => (
-                        <Button
-                          key={provider}
-                          width="auto"
-                          disabled={busy || !data.recentlyAuthenticated}
-                          onClick={async () => {
-                            setConnectionError(undefined);
-                            try {
-                              await beginLink.mutateAsync({ provider });
-                              setRedirecting(true);
-                              await signIn(provider, {
-                                callbackUrl: ACCOUNT_SETTINGS_PATH,
-                              });
-                            } catch (error) {
-                              setConnectionError(
-                                error instanceof Error
-                                  ? error.message
-                                  : "Unable to connect this account.",
-                              );
-                              setRedirecting(false);
+                            size="small"
+                            className={dangerButtonClasses}
+                            disabled={
+                              busy ||
+                              account.protected ||
+                              lastLogin ||
+                              !data.recentlyAuthenticated
                             }
-                          }}
-                        >
-                          Connect {loginProviders[provider]}
-                        </Button>
-                      ))}
-                  </div>
-                </>
-              )}
-              <Heading level={2}>Display name</Heading>
-              <p className="my-3">
-                Choose the name shown for your Alveus account. Signing in
-                through another provider will keep this name.
-              </p>
+                            confirmationMessage="Disconnect this login and sign out your other website sessions?"
+                            onClick={() => disconnect.mutate(account.id)}
+                          >
+                            Disconnect
+                          </Button>
+                        </div>
+                      </div>
+
+                      {hint && <p className="mt-3 text-sm">{hint}</p>}
+                    </Box>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {unconnectedProviders.length > 0 && (
+              <>
+                <Heading level={2} className="mt-8 mb-4">
+                  Connect another login
+                </Heading>
+
+                <div className="flex flex-wrap gap-3">
+                  {unconnectedProviders.map((provider) => (
+                    <Button
+                      key={provider}
+                      width="auto"
+                      className={providerButtonClasses[provider]}
+                      disabled={busy || !data.recentlyAuthenticated}
+                      onClick={async () => {
+                        setConnectionError(undefined);
+                        try {
+                          await beginLink.mutateAsync({ provider });
+                          setRedirecting(true);
+                          await signIn(provider, {
+                            callbackUrl: ACCOUNT_SETTINGS_PATH,
+                          });
+                        } catch (error) {
+                          setConnectionError(
+                            error instanceof Error
+                              ? error.message
+                              : "Unable to connect this account.",
+                          );
+                          setRedirecting(false);
+                        }
+                      }}
+                    >
+                      <ProviderIcon
+                        provider={provider}
+                        size={20}
+                        aria-hidden="true"
+                      />
+                      <span>Connect {loginProviders[provider]}</span>
+                    </Button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <Heading level={2} className="mt-8 mb-4">
+              Display name
+            </Heading>
+
+            <p className="mb-4">
+              Choose the name shown for your Alveus account. Signing in through
+              another provider will keep this name.
+            </p>
+
+            {updateName.error && (
+              <MessageBox variant="failure" className="mb-4">
+                <p role="alert">{updateName.error.message}</p>
+              </MessageBox>
+            )}
+
+            {updateName.isSuccess && (
+              <MessageBox variant="success" className="mb-4">
+                <p role="status">Display name saved.</p>
+              </MessageBox>
+            )}
+
+            <Box className="bg-white p-4">
               <form
-                className="my-4 flex flex-col items-start gap-3"
+                className="flex flex-col items-start gap-4"
                 onSubmit={(event) => {
                   event.preventDefault();
                   updateName.mutate(name);
@@ -228,7 +336,9 @@ const AccountConnectionsPage: NextPage = () => {
                   value={name}
                   onChange={setName}
                   maxLength={100}
+                  isDisabled={!data.recentlyAuthenticated}
                 />
+
                 <Button
                   width="auto"
                   type="submit"
@@ -238,15 +348,19 @@ const AccountConnectionsPage: NextPage = () => {
                     updateName.isPending
                   }
                 >
-                  Save display name
+                  {updateName.isPending ? (
+                    <>
+                      <IconLoading />
+                      Saving…
+                    </>
+                  ) : (
+                    "Save display name"
+                  )}
                 </Button>
-                {updateName.isSuccess && (
-                  <p role="status">Display name saved.</p>
-                )}
               </form>
-            </>
-          )}
-        </div>
+            </Box>
+          </>
+        )}
       </Section>
     </>
   );
