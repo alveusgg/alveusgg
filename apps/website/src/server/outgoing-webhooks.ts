@@ -106,51 +106,6 @@ export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
   return success;
 }
 
-export async function retryOutgoingWebhooks({
-  maxAttempts = 5,
-  retryDelay = 10,
-  limit = 100,
-  type,
-}: {
-  maxAttempts?: number;
-  retryDelay?: number;
-  limit?: number;
-  type?: string;
-}) {
-  const now = new Date();
-
-  const retryConditions = Array(maxAttempts)
-    .fill(0)
-    .map((_, i) => retryDelay * Math.pow(2, i + 1))
-    .map((delay, attempts) => ({
-      attempts: attempts,
-      failedAt: { lte: new Date(now.getTime() - delay) },
-    }));
-
-  const pendingOutgoingWebhooks = await prisma.outgoingWebhook.findMany({
-    where: {
-      deliveredAt: null,
-      AND: [
-        {
-          OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
-        },
-        {
-          OR: retryConditions,
-        },
-      ],
-      retry: true,
-      type,
-    },
-    take: limit,
-  });
-
-  const tasks = pendingOutgoingWebhooks.map((outgoingWebhook) =>
-    retryOutgoingWebhook(outgoingWebhook),
-  );
-
-  await Promise.all(tasks);
-}
-
 export const OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL = "discordChannel";
 
 type DiscordWebhookNotificationBody = {
