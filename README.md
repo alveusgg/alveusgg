@@ -175,6 +175,12 @@ We use Base64-encoded random strings for various secrets. To generate these secr
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
 
+### Connected login accounts
+
+Signed-in users can manage login connections and their display name at `/account/connections`. Account changes require a provider sign-in within the last 15 minutes. A connection request expires after 10 minutes and is tied to the user and provider that started it. Configure `NEXTAUTH_SECRET` when testing account management locally.
+
+Each Alveus user can connect one account per provider. Disconnecting a login preserves the current website session and signs out other website sessions. The last enabled login method cannot be removed. Twitch accounts connected to a channel are protected; add any bot or other service account IDs to the space-separated `PROTECTED_TWITCH_ACCOUNT_IDS` setting (the default includes the AlveusGG bot).
+
 ### Weather API
 
 Alveus operates a weather station on-site that uploads data to wunderground.com. Wunderground provide an API via api.weather.com that we use to display the weather for the stream overlay (and in the API for the Twitch chat bot). Accessing the API required an API key, which is only granted to users that have a weather station on wunderground.com.
