@@ -34,7 +34,11 @@ import {
 import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import {
+  type ImageMimeType,
+  imageMimeTypes,
+  maxImageUploadSize,
+} from "@/utils/files";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
 import { trpc } from "@/utils/trpc";
@@ -726,6 +730,7 @@ export function ShowAndTellEntryForm({
               upload={upload}
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
+              maxFileSize={maxImageUploadSize}
               resizeImageOptions={resizeImageOptions}
               disabled={isMutationPending}
             />
