@@ -33,7 +33,7 @@ jobs:
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm ci
 
       - name: Update presets data
         working-directory: ./apps/website
