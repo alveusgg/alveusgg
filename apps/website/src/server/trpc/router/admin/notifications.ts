@@ -23,12 +23,12 @@ import {
 import {
   checkAndFixUploadedImageFileStorageObject,
   createFileStorageUpload,
+  imageUploadInputSchema,
 } from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
 
 import { inputValueDatetimeLocalToUtc } from "@/utils/datetime-local";
-import { imageMimeTypes } from "@/utils/files";
 
 const uploadPrefix = "notifications/";
 
@@ -125,17 +125,13 @@ export const adminNotificationsRouter = router({
     }),
 
   createFileUpload: permittedProcedure
-    .input(
-      z.object({
-        fileName: z.string(),
-        fileType: z.literal(imageMimeTypes),
-      }),
-    )
+    .input(imageUploadInputSchema)
     .mutation(async ({ input }) => {
       const { uploadUrl, viewUrl, fileStorageObject } =
         await createFileStorageUpload({
           fileName: input.fileName,
           fileType: input.fileType,
+          fileSize: input.fileSize,
           prefix: uploadPrefix,
         });
 
