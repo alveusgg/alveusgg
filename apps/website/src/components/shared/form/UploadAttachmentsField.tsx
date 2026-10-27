@@ -253,11 +253,6 @@ export const UploadAttachmentsField = ({
         return;
       }
 
-      if (maxFileSize && fileToUpload.size > maxFileSize) {
-        setError(`File size too large (${fileToUpload.size} > ${maxFileSize})`);
-        return;
-      }
-
       newFiles.push(
         (async () => {
           let dataURL = await fileToBase64(fileToUpload);
@@ -293,8 +288,17 @@ export const UploadAttachmentsField = ({
       setError(null);
     }
 
-    const pendingFiles = await Promise.all(newFiles);
-    if (!newFiles.length) return;
+    // Check the size after resizing, as that's what gets uploaded
+    const pendingFiles = (await Promise.all(newFiles)).filter((file) => {
+      if (maxFileSize && file.file.size > maxFileSize) {
+        setError(
+          `File too large (${file.file.name}, max. ${Math.floor(maxFileSize / 1024 / 1024)} MB)`,
+        );
+        return false;
+      }
+      return true;
+    });
+    if (!pendingFiles.length) return;
 
     dispatch({ type: "add", files: pendingFiles });
     pendingFiles.map(async (file) => {
