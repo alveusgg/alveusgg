@@ -61,6 +61,20 @@ export const env = createEnv({
     // Database
     DATABASE_URL: z.url(),
 
+    // Encryption of the Twitch OAuth tokens in the database, must match the website
+    DATA_ENCRYPTION_KEYS: z
+      .string()
+      .regex(
+        /^[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=(,[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=)*$/,
+        "Must be a comma-separated list of <key id>:<base64 32-byte key>",
+      ),
+
+    // Enable only after every website deployment can read encrypted tokens.
+    OAUTH_TOKEN_ENCRYPTION_ENABLED: z
+      .enum(["false", "true"])
+      .default("false")
+      .transform((value) => value === "true"),
+
     // Twitch OAuth
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),

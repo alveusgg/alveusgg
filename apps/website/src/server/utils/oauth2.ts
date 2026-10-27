@@ -2,6 +2,12 @@ import { OAuth2 } from "oauth";
 
 import { prisma } from "@alveusgg/database";
 
+import {
+  decryptClientAccessTokens,
+  encryptAccountTokens,
+  encryptClientAccessTokens,
+} from "@/server/db/account-tokens";
+
 export class ExpiredAccessTokenError extends Error {}
 
 type OAuth2Service = "twitch";
@@ -118,8 +124,10 @@ export async function refreshAccessToken(
   await prisma.account.update({
     where: { id: accountId, provider: service },
     data: {
-      access_token: res.access_token,
-      refresh_token: res.refresh_token,
+      ...(await encryptAccountTokens({
+        access_token: res.access_token,
+        refresh_token: res.refresh_token,
+      })),
       expires_at: res.expires_at,
       verified_at: Math.floor(Date.now() / 1000),
       scope: res.scope,
@@ -148,7 +156,7 @@ export async function getClientCredentialsAccessToken(
 
   let accessToken;
   if (existing && (!existing.expiresAt || existing.expiresAt > new Date())) {
-    accessToken = existing.access_token;
+    accessToken = (await decryptClientAccessTokens(existing)).access_token;
 
     try {
       await validateAccessToken(service, clientId, accessToken);
@@ -183,8 +191,12 @@ export async function getClientCredentialsAccessToken(
 
       await prisma.clientAccessToken.upsert({
         where: { service_client_id: { service, client_id: clientId } },
-        create: { service, client_id: clientId, access_token: accessToken },
-        update: { access_token: accessToken },
+        create: {
+          service,
+          client_id: clientId,
+          ...(await encryptClientAccessTokens({ access_token: accessToken })),
+        },
+        update: await encryptClientAccessTokens({ access_token: accessToken }),
       });
     }
   }

@@ -2,6 +2,7 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import { decryptAccountTokens } from "@/server/db/account-tokens";
 import { refreshAccessToken } from "@/server/utils/oauth2";
 
 export async function getTwitchChannels() {
@@ -65,9 +66,12 @@ export async function refreshTwitchChannels() {
       moderatorAccount: true,
     },
   });
-  const accounts = channels
-    .map((channel) => [channel.broadcasterAccount, channel.moderatorAccount])
-    .flat();
+  const accounts = await Promise.all(
+    channels
+      .map((channel) => [channel.broadcasterAccount, channel.moderatorAccount])
+      .flat()
+      .map((account) => account && decryptAccountTokens(account)),
+  );
 
   const seen = new Set<string>();
   for (const account of accounts) {

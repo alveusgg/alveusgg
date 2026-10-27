@@ -5,6 +5,8 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import { decryptAccountTokens } from "@/server/db/account-tokens";
+
 import type { PermissionConfig } from "@/data/permissions";
 
 export function getSuperUserIds() {
@@ -49,17 +51,19 @@ export function checkPermissions(
 }
 
 export const getUserTwitchAccount = async (userId: string, trpc = true) => {
-  const { access_token: token, providerAccountId: id } =
-    (await prisma.account.findFirst({
-      where: {
-        userId,
-        provider: "twitch",
-      },
-      select: {
-        providerAccountId: true,
-        access_token: true,
-      },
-    })) ?? {};
+  const account = await prisma.account.findFirst({
+    where: {
+      userId,
+      provider: "twitch",
+    },
+    select: {
+      providerAccountId: true,
+      access_token: true,
+    },
+  });
+  const { access_token: token, providerAccountId: id } = account
+    ? await decryptAccountTokens(account)
+    : {};
   if (!token || !id) {
     if (trpc) {
       throw new TRPCError({
