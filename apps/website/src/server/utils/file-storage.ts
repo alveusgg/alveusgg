@@ -14,7 +14,7 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { inspectImage } from "@/server/utils/inspect-image";
+import { probeImageMeta } from "@/server/utils/probe-image-meta";
 
 import { imageMimeTypes, maxImageUploadSize } from "@/utils/files";
 
@@ -182,7 +182,7 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
     data.key,
     maxImageUploadSize,
   );
-  const image = content && (await inspectImage(content));
+  const image = content && probeImageMeta(content);
 
   if (!image || image.mimeType !== data.type) {
     await deleteFileStorageObject(data.id);
