@@ -59,6 +59,10 @@ export async function editShortLink(
  * This is a single native upsert: Prisma emulates `upsert` on MySQL with a
  * SELECT, UPDATE, SELECT and COMMIT, which makes concurrent clicks on the same
  * counter queue up behind each other.
+ *
+ * TODO: Switch back to `prisma.shortLinksTracking.upsert` once Prisma uses
+ * `ON DUPLICATE KEY UPDATE` for MySQL upserts:
+ * https://github.com/prisma/orm/issues/16876#issuecomment-6405736103
  */
 export async function trackShortLinkClick(id: string) {
   // Field references make schema renames visible to TypeScript, but expose Prisma
