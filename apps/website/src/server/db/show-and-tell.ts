@@ -14,6 +14,7 @@ import {
   prisma,
 } from "@alveusgg/database";
 
+import { decryptUser } from "@/server/db/user-email";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
@@ -452,7 +453,7 @@ export async function getAdminPosts({
 }
 
 export async function getAdminPost(id: string, authorUserId?: string) {
-  return prisma.showAndTellEntry.findFirst({
+  const post = await prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
       user: true,
@@ -462,6 +463,12 @@ export async function getAdminPost(id: string, authorUserId?: string) {
       id,
     },
   });
+  if (!post?.user) return post;
+
+  return {
+    ...post,
+    user: await decryptUser(post.user),
+  };
 }
 
 export async function updatePost(
