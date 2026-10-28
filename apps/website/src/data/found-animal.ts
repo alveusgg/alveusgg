@@ -216,7 +216,7 @@ const data: FoundAnimalFlow = {
       flow: {
         prompt: [
           "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
-          "For example, if the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
+          "For example, the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
         ],
         options: [
           {
