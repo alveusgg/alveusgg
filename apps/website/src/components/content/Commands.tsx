@@ -66,6 +66,12 @@ const Commands = ({
           <CopyToClipboardButton text={signature(command, true)} />
           <p className="text-sm text-alveus-green-400 italic">
             {command.description}
+            {command.aliases?.length ? (
+              <code className="not-italic">
+                {" ("}
+                {command.aliases.map((alias) => `!${alias}`).join(", ")})
+              </code>
+            ) : null}
           </p>
         </dd>
       </div>
