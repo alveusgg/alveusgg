@@ -7,10 +7,11 @@ import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 // API for chat bot
 export async function GET() {
   try {
-    // Get the three most recent stream notifications that have a VoD URL
+    // Get the three most recent (not canceled) stream notifications that have a VoD URL
     const recent = await prisma.notification.findMany({
       where: {
         tag: "stream",
+        canceledAt: null,
         vodUrl: {
           not: null,
         },
