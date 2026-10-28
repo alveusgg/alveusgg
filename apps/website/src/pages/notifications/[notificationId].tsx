@@ -34,8 +34,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     props: {
       notification,
     },
-    // Pick up cancellations, which turn the page into a 404
-    revalidate: 60,
   };
 }
 
