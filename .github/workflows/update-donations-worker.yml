@@ -60,7 +60,7 @@ jobs:
         run: pnpm exec wrangler deploy --env=$ALVEUS_ENVIRONMENT --outdir dist --var SENTRY_DSN:$SENTRY_DSN --var SENTRY_RELEASE:${{ github.sha }} --var SENTRY_ENVIRONMENT:$ALVEUS_ENVIRONMENT --keep-vars true
 
       - name: Create Sentry Release
-        uses: getsentry/action-release@6fb9aeade7061441cf3864e34fbe11a1457ad7dc # v3.7.1
+        uses: getsentry/action-release@e6703d0b00208e0b3687ba660d18ab5af7892821 # v3.7.2
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: alveus-sanctuary
