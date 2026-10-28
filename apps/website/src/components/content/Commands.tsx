@@ -67,11 +67,10 @@ const Commands = ({
           <p className="text-sm text-alveus-green-400 italic">
             {command.description}
             {command.aliases?.length ? (
-              <span className="not-italic">
-                {" "}
-                (Aliases:{" "}
+              <code className="not-italic">
+                {" ("}
                 {command.aliases.map((alias) => `!${alias}`).join(", ")})
-              </span>
+              </code>
             ) : null}
           </p>
         </dd>

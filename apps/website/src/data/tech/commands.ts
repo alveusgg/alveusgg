@@ -861,7 +861,7 @@ const commands = {
    * Scenes
    */
   customcams: {
-    aliases: ["ccams", "ccam"],
+    aliases: ["cc", "ccams", "ccam", "customcam"],
     description: "Set cameras to show in layout",
     category: "Scenes",
     args: [
@@ -874,7 +874,14 @@ const commands = {
     ],
   },
   customcamsbig: {
-    aliases: ["ccamsbig", "ccamb"],
+    aliases: [
+      "ccb",
+      "ccamsb",
+      "ccamb",
+      "customcambig",
+      "customcamb",
+      "customcamsb",
+    ],
     description: "Set cameras to show in layout, with the first being larger",
     category: "Scenes",
     args: [
@@ -1014,8 +1021,7 @@ const commands = {
     ],
   },
   piptl: {
-    aliases: ["customcamstl", "pipul"],
-    // TODO: Add the remaining variations of the aliases above
+    aliases: ["customcamstl", "customcamtl", "customcamtopleft", "pipul"],
     description:
       "Show two cameras, with the second picture-in-picture top-left",
     category: "Scenes",
@@ -1035,6 +1041,7 @@ const commands = {
     ],
   },
   piptr: {
+    aliases: ["customcamstr", "customcamtr", "customcamtopright", "pipur"],
     description:
       "Show two cameras, with the second picture-in-picture top-right",
     category: "Scenes",
@@ -1054,6 +1061,7 @@ const commands = {
     ],
   },
   pipbl: {
+    aliases: ["customcamsbl", "customcambl", "customcambottomleft", "pipll"],
     description:
       "Show two cameras, with the second picture-in-picture bottom-left",
     category: "Scenes",
@@ -1073,6 +1081,7 @@ const commands = {
     ],
   },
   pipbr: {
+    aliases: ["customcamsbr", "customcambr", "customcambottomright", "piplr"],
     description:
       "Show two cameras, with the second picture-in-picture bottom-right",
     category: "Scenes",
