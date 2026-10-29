@@ -1,12 +1,105 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getPdfSpread } from "@/components/content/PdfBook";
+import { getPdfPageTurn, getPdfSpread } from "@/components/content/PdfBook";
 
 vi.mock("react-pdf", () => ({
   pdfjs: { GlobalWorkerOptions: {}, version: "test" },
   Document: () => null,
   Page: () => null,
 }));
+
+describe("getPdfPageTurn", () => {
+  const turning = {
+    direction: 1,
+    active: true,
+    ready: true,
+    opening: false,
+    canFold: true,
+    folded: false,
+    reducedMotion: false,
+  };
+
+  it.each([
+    { direction: 1, outgoingIndex: 1, incomingIndex: 0 },
+    { direction: -1, outgoingIndex: 0, incomingIndex: 1 },
+  ])(
+    "keeps both halves of a $direction turn hinged at the spine",
+    ({ direction, outgoingIndex, incomingIndex }) => {
+      const turn = { ...turning, direction };
+      expect(getPdfPageTurn(turn, true, outgoingIndex, 2)).toEqual({
+        turning: true,
+        rotateY: -direction * 90,
+        hidden: false,
+        hingeRight: direction < 0,
+        startFolded: false,
+      });
+      expect(getPdfPageTurn(turn, false, incomingIndex, 2)).toEqual({
+        turning: true,
+        rotateY: direction * 90,
+        hidden: true,
+        hingeRight: direction > 0,
+        startFolded: true,
+      });
+    },
+  );
+
+  it("holds incoming pages hidden until rendering completes", () => {
+    const loading = { ...turning, ready: false, canFold: false };
+    for (const index of [0, 1]) {
+      expect(getPdfPageTurn(loading, false, index, 2).hidden).toBe(true);
+      expect(getPdfPageTurn(loading, true, index, 2).hidden).toBe(false);
+    }
+    expect(getPdfPageTurn(loading, true, 1, 2).rotateY).toBe(0);
+  });
+
+  it("waits for alignment before revealing an opening spread or folding", () => {
+    const aligning = { ...turning, opening: true, canFold: false };
+    expect(getPdfPageTurn(aligning, true, 0, 1).rotateY).toBe(0);
+    expect(getPdfPageTurn(aligning, false, 0, 2).hidden).toBe(true);
+    expect(getPdfPageTurn(aligning, false, 1, 2).hidden).toBe(true);
+  });
+
+  it("hides only the outgoing turning face at the midpoint", () => {
+    const folded = { ...turning, folded: true };
+    expect(getPdfPageTurn(folded, true, 1, 2).hidden).toBe(true);
+    expect(getPdfPageTurn(folded, true, 0, 2).hidden).toBe(false);
+    expect(getPdfPageTurn(folded, false, 0, 2)).toMatchObject({
+      rotateY: 0,
+      hidden: false,
+    });
+  });
+
+  it.each([1, -1])("turns standalone covers in direction %s", (direction) => {
+    const turn = { ...turning, direction };
+    expect(getPdfPageTurn(turn, true, 0, 1).turning).toBe(true);
+    expect(getPdfPageTurn(turn, false, 0, 1).turning).toBe(true);
+  });
+
+  it("does not rotate either face for reduced motion", () => {
+    const reduced = { ...turning, reducedMotion: true };
+    for (const outgoing of [false, true]) {
+      for (const index of [0, 1]) {
+        expect(getPdfPageTurn(reduced, outgoing, index, 2)).toMatchObject({
+          rotateY: 0,
+          hidden: false,
+          startFolded: false,
+        });
+      }
+    }
+  });
+
+  it("does not fold pages on initial load", () => {
+    const initial = { ...turning, direction: 0, active: false };
+    for (const index of [0, 1]) {
+      expect(getPdfPageTurn(initial, false, index, 2)).toMatchObject({
+        turning: false,
+        rotateY: 0,
+        hidden: false,
+        startFolded: false,
+      });
+    }
+  });
+});
 
 describe("getPdfSpread", () => {
   it("shows a standalone cover", () => {
