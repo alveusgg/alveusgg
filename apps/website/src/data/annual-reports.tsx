@@ -8,18 +8,30 @@ import filing2021Pdf from "@/assets/filings/990-2021.pdf";
 import filing2022Pdf from "@/assets/filings/990-2022.pdf";
 import filing2023Pdf from "@/assets/filings/990-2023.pdf";
 import filing2024Pdf from "@/assets/filings/990-2024.pdf";
+import filing2025Pdf from "@/assets/filings/990-2025.pdf";
 import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";
 import report2024Image from "@/assets/reports/2024.svg";
+import report2025Pdf from "@/assets/reports/2025.pdf";
+
+type ReportImage = {
+  image: ImageProps["src"];
+  alt: ReactNode;
+  pdf?: never;
+};
+
+type ReportPDF = {
+  image?: never;
+  alt?: never;
+  pdf: string;
+};
 
 export type Report = {
   year: number;
-  image: ImageProps["src"];
-  alt: ReactNode;
   filing: string;
   summary: string;
-};
+} & (ReportImage | ReportPDF);
 
 const tableClasses =
   "w-full table-auto [&_tbody]:rounded [&_tbody]:overflow-clip [&_td]:p-1 [&_tr]:odd:bg-alveus-tan/10";
@@ -1042,6 +1054,13 @@ const reports = [
     filing: filing2024Pdf,
     summary:
       "Alveus reached over 100 million people across platforms, while the community spent 9,000+ hours connecting with the outdoors through volunteering and exploring.",
+  },
+  {
+    year: 2025,
+    pdf: report2025Pdf,
+    filing: filing2025Pdf,
+    summary:
+      "Alveus announced the Alveus Research and Recovery Institute and raised $1 million toward its development in just three days, while its online content reached over 250 million people.",
   },
 ] as const satisfies Report[];
 

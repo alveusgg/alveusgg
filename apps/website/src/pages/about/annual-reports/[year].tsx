@@ -71,32 +71,34 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         <div>
           <Heading>{report.year} Annual Report</Heading>
 
-          <Field className="-mx-4 mt-4 flex items-center text-sm leading-none">
-            <button
-              className="px-4 py-1"
-              type="button"
-              onClick={() => setGraphic(false)}
-            >
-              Text
-            </button>
+          {report.image && (
+            <Field className="-mx-4 mt-4 flex items-center text-sm leading-none">
+              <button
+                className="px-4 py-1"
+                type="button"
+                onClick={() => setGraphic(false)}
+              >
+                Text
+              </button>
 
-            <Label className="sr-only">Show report graphic</Label>
-            <Switch
-              checked={graphic}
-              onChange={setGraphic}
-              className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-tan"
-            >
-              <span className="size-4 translate-x-1 rounded-full bg-alveus-green transition-transform group-data-checked:translate-x-6" />
-            </Switch>
+              <Label className="sr-only">Show report graphic</Label>
+              <Switch
+                checked={graphic}
+                onChange={setGraphic}
+                className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-tan"
+              >
+                <span className="size-4 translate-x-1 rounded-full bg-alveus-green transition-transform group-data-checked:translate-x-6" />
+              </Switch>
 
-            <button
-              className="px-4 py-1"
-              type="button"
-              onClick={() => setGraphic(true)}
-            >
-              Graphic
-            </button>
-          </Field>
+              <button
+                className="px-4 py-1"
+                type="button"
+                onClick={() => setGraphic(true)}
+              >
+                Graphic
+              </button>
+            </Field>
+          )}
         </div>
 
         <Button href="/about/annual-reports" dark>
@@ -109,26 +111,35 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         className="grow"
         containerClassName="flex flex-col gap-16 items-center"
       >
-        {graphic && (
-          <Box
-            dark
-            className="w-full max-w-3xl p-0"
-            ringClassName="ring-black/15"
-          >
-            <IconLoading className="absolute top-1/2 left-1/2 -z-10 -translate-1/2" />
-            <Image
-              src={report.image}
-              quality={100}
-              className="h-auto w-full"
-              alt="Report graphic"
-              aria-describedby="report"
-            />
-          </Box>
-        )}
+        {report.image ? (
+          <>
+            {graphic && (
+              <Box
+                dark
+                className="w-full max-w-3xl p-0"
+                ringClassName="ring-black/15"
+              >
+                <IconLoading className="absolute top-1/2 left-1/2 -z-10 -translate-1/2" />
+                <Image
+                  src={report.image}
+                  quality={100}
+                  className="h-auto w-full"
+                  alt="Report graphic"
+                  aria-describedby="report"
+                />
+              </Box>
+            )}
 
-        <div className={classes("space-y-8", graphic && "sr-only")} id="report">
-          {report.alt}
-        </div>
+            <div
+              className={classes("space-y-8", graphic && "sr-only")}
+              id="report"
+            >
+              {report.alt}
+            </div>
+          </>
+        ) : (
+          <>{/* TODO: Render PDF */}</>
+        )}
 
         <div className="scroll-mt-8 text-center" id="990">
           <Button
