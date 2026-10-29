@@ -3,6 +3,7 @@ import {
   type ComponentProps,
   type ReactNode,
   useEffect,
+  useReducer,
   useRef,
   useState,
 } from "react";
@@ -29,7 +30,52 @@ const options = {
 const PAGE_GAP = 16;
 const ALIGN_DURATION = 0.55;
 const FOLD_DURATION = 0.3;
+const CORNER_SIZE = 72;
+const CORNER_DURATION = 0.18;
 const ALIGN_EASE = [0.22, 1, 0.36, 1] as const;
+
+type PdfCorner = "left" | "right";
+type PdfPages = [number] | [number, number];
+type PdfTurnPhase = "idle" | "aligning" | "folding" | "landing";
+
+// PdfBook waits for incoming canvases; PdfSpread advances the turn through
+// animation callbacks. PdfPage handles the dog-ear independently of the turn.
+// Desktop turns align at the spine, fold the old face, then land the new face.
+type PdfTurnState = {
+  outgoingPages: PdfPages | [];
+  direction: number;
+  phase: PdfTurnPhase;
+};
+
+type PdfTurnAction =
+  | { type: "start"; pages: PdfPages; direction: number }
+  | { type: "aligned" | "folded" | "landed" };
+
+export function pdfTurnReducer(
+  state: PdfTurnState,
+  action: PdfTurnAction,
+): PdfTurnState {
+  if (action.type === "start") {
+    return {
+      outgoingPages: action.pages,
+      direction: action.direction,
+      phase: "aligning",
+    };
+  }
+  if (state.phase === "idle") return state;
+
+  // Multiple faces can finish animating; late callbacks must not rewind the turn.
+  switch (action.type) {
+    case "aligned":
+      return state.phase === "aligning"
+        ? { ...state, phase: "folding" }
+        : state;
+    case "folded":
+      return state.phase !== "landing" ? { ...state, phase: "landing" } : state;
+    case "landed":
+      return { ...state, outgoingPages: [], phase: "idle" };
+  }
+}
 
 export function getPdfSpread(
   page: number,
@@ -38,9 +84,10 @@ export function getPdfSpread(
 ) {
   const first = twoPages && page > 1 ? page - (page % 2) : page;
   const last = twoPages && first > 1 ? Math.min(first + 1, pageCount) : first;
+  const pages: PdfPages = first === last ? [first] : [first, last];
 
   return {
-    pages: first === last ? [first] : [first, last],
+    pages,
     previous: first > 1 ? Math.max(1, first - (twoPages ? 2 : 1)) : null,
     next: last < pageCount ? last + 1 : null,
   };
@@ -48,11 +95,8 @@ export function getPdfSpread(
 
 type PageTurn = {
   direction: number;
-  active: boolean;
+  phase: PdfTurnPhase;
   ready: boolean;
-  opening: boolean;
-  canFold: boolean;
-  folded: boolean;
   reducedMotion: boolean;
 };
 
@@ -66,19 +110,21 @@ export function getPdfPageTurn(
   const turningIndex = outgoing ? (forward ? 1 : 0) : forward ? 0 : 1;
   const turning =
     turn.direction !== 0 && (pageCount === 1 || index === turningIndex);
-  const waitingForPages = !turn.ready && turn.active;
-  const waitingForAlignment = turn.opening && !turn.canFold;
-  const waitingForOutgoingFold = !turn.folded && turn.active;
+  const active = turn.phase !== "idle";
+  const canFold = turn.ready && turn.phase !== "aligning";
+  const waitingForPages = !turn.ready && active;
+  const waitingForAlignment = turn.phase === "aligning";
+  const waitingForOutgoingFold = active && turn.phase !== "landing";
 
   let rotateY = 0;
   if (!turn.reducedMotion && turning) {
-    if (outgoing && turn.canFold) rotateY = -turn.direction * 90;
+    if (outgoing && canFold) rotateY = -turn.direction * 90;
     if (!outgoing && (!turn.ready || waitingForOutgoingFold))
       rotateY = turn.direction * 90;
   }
 
   const hidden = outgoing
-    ? turning && turn.folded
+    ? turning && turn.phase === "landing"
     : waitingForPages ||
       waitingForAlignment ||
       (turning && waitingForOutgoingFold && !turn.reducedMotion);
@@ -95,6 +141,9 @@ export function getPdfPageTurn(
 type PdfPageProps = {
   pageNumber: number;
   width: number;
+  corner: PdfCorner | undefined;
+  previews: PdfCorner[];
+  reducedMotion: boolean;
   onLoad: ComponentProps<typeof Page>["onLoadSuccess"];
   onRender: () => void;
   onError: (error: unknown) => void;
@@ -103,33 +152,67 @@ type PdfPageProps = {
 const PdfPage = ({
   pageNumber,
   width,
+  corner,
+  previews,
+  reducedMotion,
   onLoad,
   onRender,
   onError,
-}: PdfPageProps) => (
-  <Page
-    pageNumber={pageNumber}
-    width={width}
-    suspense={false}
-    renderTextLayer
-    renderAnnotationLayer
-    onLoadSuccess={onLoad}
-    onRenderSuccess={onRender}
-    loading={
-      <p role="status" className="p-8 text-center">
-        Loading page {pageNumber}...
-      </p>
-    }
-    onLoadError={onError}
-    onRenderError={onError}
-    onGetTextError={onError}
-    onRenderTextLayerError={onError}
-    onGetAnnotationsError={onError}
-    onRenderAnnotationLayerError={onError}
-  />
-);
+}: PdfPageProps) => {
+  const leftCorner = corner === "left" ? CORNER_SIZE : 0;
+  const rightCorner = corner === "right" ? CORNER_SIZE : 0;
+
+  return (
+    <div className="relative">
+      <motion.div
+        className="overflow-hidden rounded-sm"
+        initial={false}
+        animate={{
+          // Keep the same polygon vertices so Motion can interpolate both corners.
+          clipPath: `polygon(0 0, 100% 0, 100% calc(100% - ${rightCorner}px), calc(100% - ${rightCorner}px) 100%, ${leftCorner}px 100%, 0 calc(100% - ${leftCorner}px))`,
+        }}
+        transition={{ duration: reducedMotion ? 0 : CORNER_DURATION }}
+      >
+        <Page
+          pageNumber={pageNumber}
+          width={width}
+          suspense={false}
+          renderTextLayer
+          renderAnnotationLayer
+          onLoadSuccess={onLoad}
+          onRenderSuccess={onRender}
+          loading={
+            <p role="status" className="p-8 text-center">
+              Loading page {pageNumber}...
+            </p>
+          }
+          onLoadError={onError}
+          onRenderError={onError}
+          onGetTextError={onError}
+          onRenderTextLayerError={onError}
+          onGetAnnotationsError={onError}
+          onRenderAnnotationLayerError={onError}
+        />
+      </motion.div>
+      {/* Keep previews on the page so they close while the page itself turns. */}
+      {previews.map((side) => (
+        <PdfCornerPreview
+          key={side}
+          pageNumber={pageNumber + (side === "left" ? -1 : 1)}
+          pageWidth={width}
+          left={side === "left"}
+          visible={corner === side}
+          reducedMotion={reducedMotion}
+          onError={onError}
+        />
+      ))}
+    </div>
+  );
+};
 
 type PdfSpreadProps = {
+  pageCount: number;
+  corner: PdfCorner | undefined;
   pages: number[];
   outgoing: boolean;
   turn: PageTurn;
@@ -146,6 +229,8 @@ type PdfSpreadProps = {
 };
 
 const PdfSpread = ({
+  pageCount,
+  corner,
   pages,
   outgoing,
   turn,
@@ -161,7 +246,8 @@ const PdfSpread = ({
   onError,
 }: PdfSpreadProps) => {
   const spreadWidth = pages.length * pageWidth + (pages.length - 1) * PAGE_GAP;
-  const atSpine = twoPages && turn.active && (!outgoing || turn.ready);
+  const active = turn.phase !== "idle";
+  const atSpine = twoPages && active && (!outgoing || turn.ready);
   const singlePageOnRight =
     pages.length === 1 && (outgoing ? turn.direction > 0 : turn.direction < 0);
   const offset = atSpine
@@ -169,10 +255,9 @@ const PdfSpread = ({
       (singlePageOnRight ? pageWidth + PAGE_GAP : 0)
     : (width - spreadWidth) / 2;
   const incomingHidden =
-    !outgoing &&
-    ((!turn.ready && turn.active) || (turn.opening && !turn.canFold));
-  const inaccessible = outgoing || (!turn.ready && turn.active);
-  const sliding = !twoPages && turn.active && !turn.reducedMotion;
+    !outgoing && ((!turn.ready && active) || turn.phase === "aligning");
+  const inaccessible = outgoing || (!turn.ready && active);
+  const sliding = !twoPages && active && !turn.reducedMotion;
   const slideOffset = outgoing
     ? turn.ready
       ? -turn.direction * width
@@ -201,20 +286,26 @@ const PdfSpread = ({
       aria-hidden={inaccessible}
       inert={inaccessible}
       style={{
-        zIndex: outgoing !== turn.folded ? 20 : 10,
+        width: spreadWidth,
+        // Swap stacking at the spine, but retain the stationary outgoing page until landing.
+        zIndex: outgoing !== (turn.phase === "landing") ? 20 : 10,
         perspective: 1600,
         visibility: incomingHidden ? "hidden" : undefined,
       }}
     >
       {pages.map((pageNumber, index) => {
         const face = getPdfPageTurn(turn, outgoing, index, pages.length);
+        const previews: PdfCorner[] = [];
+        if (index === 0 && pageNumber > 1) previews.push("left");
+        if (index === pages.length - 1 && pageNumber < pageCount)
+          previews.push("right");
 
         return (
           <motion.div
             key={pageNumber}
             role="group"
             aria-label={`Page ${pageNumber}`}
-            className="shrink-0 overflow-hidden rounded-sm shadow-lg"
+            className="shrink-0 drop-shadow-lg"
             initial={
               twoPages && face.startFolded
                 ? { rotateY: turn.direction * 90 }
@@ -231,11 +322,12 @@ const PdfSpread = ({
             onAnimationComplete={() => {
               if (!twoPages) return;
               if (!face.turning) return;
-              if (outgoing && turn.canFold) onFolded();
+              if (outgoing && turn.ready && turn.phase !== "aligning")
+                onFolded();
               if (
                 !outgoing &&
                 turn.ready &&
-                (turn.folded || turn.reducedMotion)
+                (turn.phase === "landing" || turn.reducedMotion)
               )
                 onLanded();
             }}
@@ -247,9 +339,17 @@ const PdfSpread = ({
               minHeight: aspectRatio ? pageWidth / aspectRatio : undefined,
             }}
           >
+            {/* Shadow stays outside the clipped surface so it follows the dog-ear. */}
             <PdfPage
               pageNumber={pageNumber}
               width={pageWidth}
+              corner={
+                !active && !outgoing && corner && previews.includes(corner)
+                  ? corner
+                  : undefined
+              }
+              previews={previews}
+              reducedMotion={turn.reducedMotion}
               onLoad={onPageLoad}
               onRender={() => {
                 if (!outgoing) onPageRender(pageNumber);
@@ -263,10 +363,136 @@ const PdfSpread = ({
   );
 };
 
-type PdfPaginationProps = ReturnType<typeof getPdfSpread> & {
-  pageCount: number;
+type PdfNavigationProps = ReturnType<typeof getPdfSpread> & {
   disabled: boolean;
   onNavigate: (page: number) => void;
+};
+
+const PdfCornerPreview = ({
+  pageNumber,
+  pageWidth,
+  left,
+  visible,
+  reducedMotion,
+  onError,
+}: {
+  pageNumber: number;
+  pageWidth: number;
+  left: boolean;
+  visible: boolean;
+  reducedMotion: boolean;
+  onError: (error: unknown) => void;
+}) => (
+  <motion.span
+    aria-hidden
+    className="pointer-events-none absolute bottom-0"
+    style={{
+      width: CORNER_SIZE,
+      height: CORNER_SIZE,
+      left: left ? 0 : undefined,
+      right: left ? undefined : 0,
+      transformOrigin: left ? "bottom left" : "bottom right",
+      filter: `drop-shadow(${left ? 3 : -3}px -3px 4px rgb(0 0 0 / 30%))`,
+    }}
+    initial={false}
+    animate={{ scale: visible ? 1 : 0 }}
+    transition={{ duration: reducedMotion ? 0 : CORNER_DURATION }}
+  >
+    {/* Clip inside the shadow wrapper so the folded triangle casts onto the page. */}
+    <span
+      className={`absolute inset-0 overflow-hidden bg-white ${left ? "rounded-tr-sm" : "rounded-tl-sm"}`}
+      style={{
+        clipPath: left
+          ? "polygon(0 0, 100% 0, 100% 100%)"
+          : "polygon(0 0, 100% 0, 0 100%)",
+      }}
+    >
+      {/* Reflect the reverse page's bottom corner across the diagonal crease. */}
+      <span
+        className="absolute inset-0"
+        style={{
+          transform: left
+            ? "matrix(0, 1, 1, 0, 0, 0)"
+            : `matrix(0, -1, -1, 0, ${CORNER_SIZE}, ${CORNER_SIZE})`,
+          transformOrigin: "0 0",
+        }}
+      >
+        <span
+          className="absolute bottom-0"
+          style={{
+            width: pageWidth,
+            left: left ? undefined : 0,
+            right: left ? 0 : undefined,
+          }}
+        >
+          <Page
+            pageNumber={pageNumber}
+            width={pageWidth}
+            suspense={false}
+            renderTextLayer={false}
+            // Decorative copies must not replace real pages as PDF link destinations.
+            _enableRegisterUnregisterPage={false}
+            renderAnnotationLayer={false}
+            loading={null}
+            onLoadError={onError}
+            onRenderError={onError}
+          />
+        </span>
+      </span>
+      <span
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(${left ? 135 : 225}deg, transparent 35%, rgb(0 0 0 / 25%) 100%)`,
+        }}
+      />
+    </span>
+  </motion.span>
+);
+
+const PdfEdgeNavigation = ({
+  previous,
+  next,
+  disabled,
+  onNavigate,
+  onCornerChange,
+}: Omit<PdfNavigationProps, "pages"> & {
+  onCornerChange: (corner: PdfCorner | undefined) => void;
+}) => {
+  return (
+    <>
+      {[
+        {
+          page: previous,
+          label: "Previous page",
+          side: "left-0 rounded-l-sm",
+          left: true,
+        },
+        {
+          page: next,
+          label: "Next page",
+          side: "right-0 rounded-r-sm",
+          left: false,
+        },
+      ].map(({ page, label, side, left }) =>
+        page === null ? null : (
+          <button
+            key={label}
+            type="button"
+            aria-label={label}
+            title={label}
+            disabled={disabled}
+            onMouseEnter={() => onCornerChange(left ? "left" : "right")}
+            onMouseLeave={() => onCornerChange(undefined)}
+            onFocus={() => onCornerChange(left ? "left" : "right")}
+            onBlur={() => onCornerChange(undefined)}
+            onClick={() => onNavigate(page)}
+            style={{ width: CORNER_SIZE }}
+            className={`pointer-events-auto absolute inset-y-0 ${side} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green disabled:pointer-events-none`}
+          />
+        ),
+      )}
+    </>
+  );
 };
 
 const PdfPagination = ({
@@ -276,7 +502,7 @@ const PdfPagination = ({
   pageCount,
   disabled,
   onNavigate,
-}: PdfPaginationProps) => (
+}: PdfNavigationProps & { pageCount: number }) => (
   <nav
     aria-label="Report pages"
     className="col-start-2 flex w-fit items-center gap-2 rounded-full bg-alveus-green p-1 text-alveus-tan shadow-lg"
@@ -342,11 +568,13 @@ const PdfBook = ({
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
   const [aspectRatio, setAspectRatio] = useState<number>();
+  const [activeCorner, setActiveCorner] = useState<PdfCorner>();
   const [failed, setFailed] = useState(false);
-  const [direction, setDirection] = useState(0);
-  const [outgoingPages, setOutgoingPages] = useState<number[]>([]);
-  const [folded, setFolded] = useState(false);
-  const [aligned, setAligned] = useState(false);
+  const [{ outgoingPages, direction, phase }, dispatchTurn] = useReducer(
+    pdfTurnReducer,
+    { outgoingPages: [], direction: 0, phase: "idle" },
+  );
+  const active = phase !== "idle";
   const [renderedPages, setRenderedPages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -363,33 +591,40 @@ const PdfBook = ({
   const twoPages = width >= 768;
   const pageWidth = twoPages ? Math.floor((width - PAGE_GAP) / 2) : width;
   const spread = getPdfSpread(page, pageCount, twoPages);
+  const spreadWidth =
+    spread.pages.length * pageWidth + (spread.pages.length - 1) * PAGE_GAP;
+  // A page is ready only after its canvas has rendered at the current width.
   const ready = spread.pages.every((number) =>
     renderedPages.includes(`${number}-${pageWidth}`),
   );
+
   useEffect(() => {
-    if (prefersReducedMotion && ready && outgoingPages.length > 0) {
-      setOutgoingPages([]);
+    if (prefersReducedMotion && ready && active) {
+      dispatchTurn({ type: "landed" });
     }
-  }, [prefersReducedMotion, ready, outgoingPages.length]);
+  }, [prefersReducedMotion, ready, active]);
+
   const opening =
     twoPages && outgoingPages.length === 1 && spread.pages.length === 2;
-  // Opening translates first, then folds the outgoing face, then lands the incoming face.
+  // Only opening a single cover needs alignment before folding.
   const turn: PageTurn = {
     direction,
-    active: outgoingPages.length > 0,
+    phase:
+      phase === "aligning" && (!opening || prefersReducedMotion)
+        ? "folding"
+        : phase,
     ready,
-    opening,
-    canFold: ready && (!opening || aligned || prefersReducedMotion),
-    folded,
     reducedMotion: prefersReducedMotion,
   };
 
   const goToPage = (nextPage: number) => {
     if (spread.pages.includes(nextPage)) return;
-    setOutgoingPages(spread.pages);
-    setFolded(false);
-    setAligned(false);
-    setDirection(nextPage > page ? 1 : -1);
+    setActiveCorner(undefined);
+    dispatchTurn({
+      type: "start",
+      pages: spread.pages,
+      direction: nextPage > page ? 1 : -1,
+    });
     setPage(nextPage);
     setRenderedPages([]);
   };
@@ -411,7 +646,8 @@ const PdfBook = ({
     );
   };
 
-  const spreads = turn.active ? [outgoingPages, spread.pages] : [spread.pages];
+  const spreads = active ? [outgoingPages, spread.pages] : [spread.pages];
+  const navigationDisabled = !ready || active;
 
   return (
     <div ref={containerRef} className="w-full max-w-6xl">
@@ -442,6 +678,9 @@ const PdfBook = ({
                 <div className="relative">
                   {spreads.map((pages) => (
                     <PdfSpread
+                      pageCount={pageCount}
+                      corner={activeCorner}
+                      // Retain existing canvases as the outgoing spread instead of remounting.
                       key={pages[0]}
                       pages={pages}
                       outgoing={pages === outgoingPages}
@@ -450,14 +689,29 @@ const PdfBook = ({
                       pageWidth={pageWidth}
                       twoPages={twoPages}
                       aspectRatio={aspectRatio}
-                      onAligned={() => setAligned(true)}
-                      onFolded={() => setFolded(true)}
-                      onLanded={() => setOutgoingPages([])}
+                      onAligned={() => dispatchTurn({ type: "aligned" })}
+                      onFolded={() => dispatchTurn({ type: "folded" })}
+                      onLanded={() => dispatchTurn({ type: "landed" })}
                       onPageLoad={onPageLoad}
                       onPageRender={onPageRender}
                       onError={onError}
                     />
                   ))}
+                  <div
+                    className="pointer-events-none absolute inset-y-0 z-30"
+                    style={{
+                      visibility: navigationDisabled ? "hidden" : undefined,
+                      left: (width - spreadWidth) / 2,
+                      width: spreadWidth,
+                    }}
+                  >
+                    <PdfEdgeNavigation
+                      onCornerChange={setActiveCorner}
+                      {...spread}
+                      disabled={navigationDisabled}
+                      onNavigate={goToPage}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -469,7 +723,7 @@ const PdfBook = ({
           <PdfPagination
             {...spread}
             pageCount={pageCount}
-            disabled={!ready || turn.active}
+            disabled={navigationDisabled}
             onNavigate={goToPage}
           />
         )}
