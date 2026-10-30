@@ -152,9 +152,12 @@ export async function createNotificationCommands() {
 
   const notificationCommand: CommandHandler = async (
     params,
-    { broadcasterId, broadcasterName, userName, reply },
+    { broadcasterId, broadcasterName, userId, userName, reply },
   ) => {
-    const isMod = await checkUserIsAllowedToSendNotifications(userName);
+    const isMod = await checkUserIsAllowedToSendNotifications({
+      twitchUserId: userId,
+      userName,
+    });
     if (!isMod) {
       reply("mayaHalt you are not allowed to send notifications");
       return;
