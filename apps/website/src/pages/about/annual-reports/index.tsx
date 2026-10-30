@@ -41,7 +41,8 @@ const AnnualReportsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow">
-        <div className="rounded-2xl border border-alveus-green-200 bg-alveus-tan-50">
+        {/* overflow-hidden clips the header background to the rounded corners */}
+        <div className="overflow-hidden rounded-2xl border border-alveus-green-200 bg-alveus-tan-50">
           {/* Explicit roles keep the table semantics when rows stack on phones
               (display: block otherwise drops them in some browsers) */}
           <table role="table" className="block w-full text-left md:table">
@@ -53,11 +54,7 @@ const AnnualReportsPage: NextPage = () => {
               role="rowgroup"
               className="sr-only bg-alveus-green-100 text-sm text-alveus-green-800 md:not-sr-only md:table-header-group"
             >
-              {/* Outer corners follow the container's radius, minus its border */}
-              <tr
-                role="row"
-                className="[&>th:first-child]:rounded-tl-[calc(var(--radius-2xl)-1px)] [&>th:last-child]:rounded-tr-[calc(var(--radius-2xl)-1px)]"
-              >
+              <tr role="row">
                 <th role="columnheader" scope="col" className="px-4 py-3">
                   Year
                 </th>
@@ -92,10 +89,7 @@ const AnnualReportsPage: NextPage = () => {
                       {idx === 0 && <LatestBadge />}
                     </span>
                   </th>
-                  <td
-                    role="cell"
-                    className="empty:hidden md:max-w-md md:p-4 md:align-top md:empty:table-cell"
-                  >
+                  <td role="cell" className="md:max-w-md md:p-4 md:align-top">
                     {report.summary}
                   </td>
                   <td
