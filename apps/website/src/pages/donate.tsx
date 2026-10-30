@@ -11,6 +11,7 @@ import Link from "@/components/content/Link";
 import Markdown from "@/components/content/Markdown";
 import Meta from "@/components/content/Meta";
 import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
+import NonprofitStatus from "@/components/content/NonprofitStatus";
 import Section from "@/components/content/Section";
 
 import IconArrowRight from "@/icons/IconArrowRight";
@@ -28,13 +29,21 @@ const DonatePage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark className="py-8">
-        <Heading>Donate</Heading>
-        <p className="text-lg">
-          Help Alveus carry on its mission to inspire online audiences to engage
-          in conservation efforts while providing high-quality animal care to
-          our ambassadors.
-        </p>
+      <Section
+        dark
+        className="py-8"
+        containerClassName="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-12"
+      >
+        <div className="flex flex-col gap-4 pt-4 pb-8 lg:max-w-4xl lg:py-8 xl:max-w-5xl">
+          <Heading className="my-0">Donate</Heading>
+          <p className="text-lg">
+            Help Alveus carry on its mission to inspire online audiences to
+            engage in conservation efforts while providing high-quality animal
+            care to our ambassadors.
+          </p>
+        </div>
+
+        <NonprofitStatus />
       </Section>
 
       {donationEvent && (
