@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import type { ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
@@ -20,6 +21,7 @@ import Link from "@/components/content/Link";
 import Markdown from "@/components/content/Markdown";
 import { MayaQuote } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
+import Modal from "@/components/content/Modal";
 import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import NonprofitStatus from "@/components/content/NonprofitStatus";
 import Section from "@/components/content/Section";
@@ -53,6 +55,7 @@ const supportItems = [
 
 const DonatePage: NextPage = () => {
   const { consent } = useConsent();
+  const [eventModalOpen, setEventModalOpen] = useState(Boolean(donationEvent));
 
   return (
     <>
@@ -82,32 +85,37 @@ const DonatePage: NextPage = () => {
       </Section>
 
       {donationEvent && (
-        <Section
-          dark
-          className="bg-carnival"
-          containerClassName="flex flex-col md:flex-row gap-8 items-start md:items-end"
+        <Modal
+          open={eventModalOpen}
+          onClose={() => setEventModalOpen(false)}
+          title={donationEvent.title}
         >
-          <div className="grow">
-            <Heading level={2} id="event" link>
-              {donationEvent.title}
-            </Heading>
-            {donationEvent.description && (
-              <div className="text-lg text-balance">
-                <Markdown content={donationEvent.description} dark />
-              </div>
-            )}
-          </div>
+          {donationEvent.description && (
+            <div className="text-lg text-balance">
+              <Markdown content={donationEvent.description} />
+            </div>
+          )}
 
-          <Link
-            href={donationEvent.link}
-            external={donationEvent.external}
-            custom
-            className="rounded-full border-2 border-white px-4 py-2 text-lg whitespace-nowrap text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl"
-          >
-            {donationEvent.cta}
-            <IconArrowRight className="ml-3 inline-block size-6" />
-          </Link>
-        </Section>
+          <div className="mt-4 flex flex-wrap gap-2 sm:flex-nowrap">
+            <Link
+              href={donationEvent.link}
+              external={donationEvent.external}
+              custom
+              className="flex basis-full items-center justify-center gap-3 rounded-lg bg-carnival px-4 py-3 text-center font-bold text-alveus-tan transition-colors hover:bg-carnival/90 lg:py-4"
+              onClick={() => setEventModalOpen(false)}
+            >
+              {donationEvent.cta}
+              <IconArrowRight className="size-6 shrink-0" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setEventModalOpen(false)}
+              className="basis-full rounded-lg bg-alveus-green px-4 py-3 font-bold text-alveus-tan transition-colors hover:bg-alveus-green/90 lg:py-4"
+            >
+              Donate directly to Alveus
+            </button>
+          </div>
+        </Modal>
       )}
 
       {/* Grow the last section to cover the page */}

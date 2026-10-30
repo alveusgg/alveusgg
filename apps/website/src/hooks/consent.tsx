@@ -1,12 +1,4 @@
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Field,
-  Label,
-  Switch,
-} from "@headlessui/react";
+import { Description, Field, Label, Switch } from "@headlessui/react";
 import { useRouter } from "next/router";
 import {
   type ReactNode,
@@ -23,10 +15,8 @@ import {
 import { classes } from "@/utils/classes";
 import { safeJSONParse, typeSafeObjectEntries } from "@/utils/helpers";
 
-import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
-
-import IconX from "@/icons/IconX";
+import Modal from "@/components/content/Modal";
 
 import useCrawler from "./crawler";
 
@@ -201,103 +191,80 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
 
   return (
     <>
-      <Dialog
+      <Modal
         open={open}
         onClose={close}
         initialFocus={allowAllRef}
-        className="relative z-50"
+        title={
+          <>
+            {!hasInteracted && (
+              <small className="block text-lg/snug text-alveus-green">
+                Welcome to Alveus
+              </small>
+            )}
+            Consent Management
+          </>
+        }
       >
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <Description>
+          We embed some third-party content on our website, and need your
+          consent to do so. These third parties {consentExplainer}. Please
+          select which third-party content you would like to allow on our
+          website:
+        </Description>
 
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
-            <DialogTitle
-              as={Heading}
-              level={2}
-              className="flex items-start gap-2"
-            >
-              <div className="my-2 grow">
-                {!hasInteracted && (
-                  <small className="block text-lg/snug text-alveus-green">
-                    Welcome to Alveus
-                  </small>
-                )}
-                Consent Management
-              </div>
-              <button
-                type="button"
-                onClick={close}
-                className="-mr-2 shrink-0 p-2 transition-colors hover:text-alveus-green"
-                title="Close"
+        <div className="mt-4 flex flex-col gap-y-2">
+          {typeSafeObjectEntries(consentData).map(([key, data]) => (
+            <Field key={key} className="flex items-center">
+              <Label className="grow">
+                <p>{data.name}</p>
+                <p className="text-sm text-alveus-green">
+                  {data.description}
+                  {" — "}
+                  <Link href={data.privacy} external>
+                    Privacy Policy
+                  </Link>
+                </p>
+              </Label>
+
+              <Switch
+                checked={consent[key]}
+                onChange={(val) => update({ [key]: val })}
+                className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
               >
-                <IconX />
-              </button>
-            </DialogTitle>
-
-            <Description>
-              We embed some third-party content on our website, and need your
-              consent to do so. These third parties {consentExplainer}. Please
-              select which third-party content you would like to allow on our
-              website:
-            </Description>
-
-            <div className="mt-4 flex flex-col gap-y-2">
-              {typeSafeObjectEntries(consentData).map(([key, data]) => (
-                <Field key={key} className="flex items-center">
-                  <Label className="grow">
-                    <p>{data.name}</p>
-                    <p className="text-sm text-alveus-green">
-                      {data.description}
-                      {" — "}
-                      <Link href={data.privacy} external>
-                        Privacy Policy
-                      </Link>
-                    </p>
-                  </Label>
-
-                  <Switch
-                    checked={consent[key]}
-                    onChange={(val) => update({ [key]: val })}
-                    className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                  >
-                    <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                  </Switch>
-                </Field>
-              ))}
-            </div>
-
-            <p className="mt-6">
-              You can find out more about how we, and third parties, use your
-              data in our{" "}
-              <Link href="/privacy-policy" onClick={close} prefetch={false}>
-                Privacy Policy
-              </Link>
-              .
-            </p>
-
-            <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
-              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-linear-to-b from-alveus-tan/0 to-alveus-tan" />
-
-              <div className="flex flex-wrap gap-2 sm:flex-nowrap">
-                {hasInteracted && (
-                  <ConsentButton onClick={reset} disabled={!interacted}>
-                    Reset consent
-                  </ConsentButton>
-                )}
-                <ConsentButton onClick={() => updateAll(false)}>
-                  Deny all
-                </ConsentButton>
-                <ConsentButton
-                  onClick={() => updateAll(true)}
-                  ref={allowAllRef}
-                >
-                  Allow all
-                </ConsentButton>
-              </div>
-            </div>
-          </DialogPanel>
+                <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+              </Switch>
+            </Field>
+          ))}
         </div>
-      </Dialog>
+
+        <p className="mt-6">
+          You can find out more about how we, and third parties, use your data
+          in our{" "}
+          <Link href="/privacy-policy" onClick={close} prefetch={false}>
+            Privacy Policy
+          </Link>
+          .
+        </p>
+
+        <div className="sticky bottom-0 z-0 -mx-8 mt-6 -mb-8 bg-alveus-tan px-8 pb-8">
+          <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-linear-to-b from-alveus-tan/0 to-alveus-tan" />
+
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+            {hasInteracted && (
+              <ConsentButton onClick={reset} disabled={!interacted}>
+                Reset consent
+              </ConsentButton>
+            )}
+            <ConsentButton onClick={() => updateAll(false)}>
+              Deny all
+            </ConsentButton>
+            <ConsentButton onClick={() => updateAll(true)} ref={allowAllRef}>
+              Allow all
+            </ConsentButton>
+          </div>
+        </div>
+      </Modal>
 
       <button
         type="button"
