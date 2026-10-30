@@ -39,6 +39,7 @@
     "@alveusgg/data": "0.79.1",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@alveusgg/neon-crm-api": "workspace:*",
     "@auth/prisma-adapter": "^2.11.3",
     "@aws-sdk/client-s3": "^3.1154.0",
     "@aws-sdk/s3-request-presigner": "^3.1154.0",

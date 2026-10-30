@@ -242,6 +242,45 @@ function filterDonationByNeonAccountId<T extends string>(accountId: T) {
   } as const satisfies Prisma.DonationWhereInput;
 }
 
+export function getNeonDonationsForSync(
+  organizationId: string,
+  accountId: string,
+  providerUniqueIds: string[],
+) {
+  return prisma.donation.findMany({
+    where: {
+      provider: "neon",
+      providerUniqueId: { startsWith: `${organizationId}-` },
+      OR: [
+        filterDonationByNeonAccountId(accountId),
+        { providerUniqueId: { in: providerUniqueIds } },
+      ],
+    },
+    select: { id: true, providerUniqueId: true, providerMetadata: true },
+  });
+}
+
+export async function updateNeonDonationAccounts(
+  changes: { id: string; accountId: string | null }[],
+) {
+  // Change only the ownership key, preserving metadata written by other syncs.
+  await prisma.$transaction(
+    changes.map(({ id, accountId }) =>
+      accountId === null
+        ? prisma.$executeRaw`
+            UPDATE Donation
+            SET providerMetadata = JSON_REMOVE(providerMetadata, '$.neonAccountId')
+            WHERE id = ${id} AND provider = 'neon'
+          `
+        : prisma.$executeRaw`
+            UPDATE Donation
+            SET providerMetadata = JSON_SET(providerMetadata, '$.neonAccountId', ${accountId})
+            WHERE id = ${id} AND provider = 'neon'
+          `,
+    ),
+  );
+}
+
 async function getFilteredPixelsByDonation(
   muralId: string,
   filters: Prisma.DonationWhereInput[],

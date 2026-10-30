@@ -677,7 +677,7 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
-  transpilePackages: ["@alveusgg/donations-core"],
+  transpilePackages: ["@alveusgg/donations-core", "@alveusgg/neon-crm-api"],
 };
 
 export default withSuperjson()(config);
