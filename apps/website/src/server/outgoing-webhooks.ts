@@ -2,6 +2,13 @@ import { type OutgoingWebhook, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import {
+  REDACTED_TYPES,
+  getRedactUndeliveredBefore,
+  getRedactedOutgoingWebhookBody,
+  isRedactedOutgoingWebhookBody,
+} from "@/server/outgoing-webhook-redaction";
+
 import { getLinkDisplayText } from "@/utils/link-display";
 
 export type OutgoingWebhookType = "form-entry" | "unknown";
@@ -81,6 +88,8 @@ export async function triggerOutgoingWebhook({
     data: {
       ...data,
       user: userId === undefined ? undefined : { connect: { id: userId } },
+      // Don't keep personal data around once the webhook was delivered
+      body: success ? (getRedactedOutgoingWebhookBody(type) ?? body) : body,
       deliveredAt: success ? new Date() : undefined,
       failedAt: success ? undefined : new Date(),
       attempts: 1,
@@ -89,6 +98,13 @@ export async function triggerOutgoingWebhook({
 }
 
 export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
+  // The personal data was removed, retrying would only send the placeholder
+  if (
+    isRedactedOutgoingWebhookBody(outgoingWebhook.type, outgoingWebhook.body)
+  ) {
+    return false;
+  }
+
   let success = false;
   try {
     success = await tryToCallOutgoingWebhook(outgoingWebhook);
@@ -98,12 +114,40 @@ export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
     where: { id: outgoingWebhook.id },
     data: {
       attempts: { increment: 1 },
+      // Don't keep personal data around once the webhook was delivered
+      body: success
+        ? getRedactedOutgoingWebhookBody(outgoingWebhook.type)
+        : undefined,
       deliveredAt: success ? new Date() : undefined,
       failedAt: success ? undefined : new Date(),
     },
   });
 
   return success;
+}
+
+/**
+ * Redact the bodies of webhooks with personal data that were delivered, or that are older
+ * than the retention period (so undelivered ones don't keep the data forever)
+ */
+export async function redactOutgoingWebhooks(now = new Date(), db = prisma) {
+  let count = 0;
+  for (const type of REDACTED_TYPES) {
+    const body = getRedactedOutgoingWebhookBody(type)!;
+    const result = await db.outgoingWebhook.updateMany({
+      where: {
+        type,
+        body: { not: body },
+        OR: [
+          { deliveredAt: { not: null } },
+          { createdAt: { lt: getRedactUndeliveredBefore(now) } },
+        ],
+      },
+      data: { body },
+    });
+    count += result.count;
+  }
+  return count;
 }
 
 export const OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL = "discordChannel";
