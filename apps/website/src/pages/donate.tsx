@@ -221,12 +221,21 @@ const DonatePage: NextPage = () => {
             </div>
           </Box>
 
-          {types.map(
-            (key) =>
-              key !== "direct" && (
-                <Donate key={key} type={key} highlight={key === "twitch"} />
-              ),
-          )}
+          <div className="flex flex-col gap-4">
+            <Heading
+              level={2}
+              className="my-0 font-sans text-sm tracking-widest text-alveus-green-600 uppercase"
+            >
+              Other ways to support us
+            </Heading>
+
+            {types.map(
+              (key) =>
+                key !== "direct" && (
+                  <Donate key={key} type={key} highlight={key === "twitch"} />
+                ),
+            )}
+          </div>
         </div>
 
         <div className="w-full text-sm text-alveus-green">
