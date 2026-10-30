@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -14,6 +14,7 @@ import { ConsentProvider } from "@/hooks/consent";
 
 import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
+import TwitchScopeChecker from "@/components/shared/TwitchScopeChecker";
 
 import "@/styles/tailwind.css";
 
@@ -22,33 +23,6 @@ import { ThemeScript } from "@/hooks/theme";
 unregisterServiceWorker();
 
 const queryClient = new QueryClient();
-
-const SessionChecker = ({ children }: { children: React.ReactNode }) => {
-  const { data } = useSession();
-
-  // If we have an invalid session (such as a deleted Twitch account), sign out
-  useEffect(() => {
-    if (!data?.error) return;
-
-    // Some accounts require additional auth scopes
-    const additional = data.error.match(/^Additional scopes required: (.+)$/);
-    if (additional?.[1]) {
-      signIn(
-        "twitch",
-        { callbackUrl: window.location.href },
-        {
-          scope: additional[1],
-        },
-      );
-      return;
-    }
-
-    // Otherwise, just sign out
-    signOut();
-  }, [data?.error]);
-
-  return children;
-};
 
 const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -136,11 +110,8 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <SessionChecker>
-        <QueryClientProvider client={queryClient}>
-          {content}
-        </QueryClientProvider>
-      </SessionChecker>
+      <TwitchScopeChecker />
+      <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>
     </SessionProvider>
   );
 };
