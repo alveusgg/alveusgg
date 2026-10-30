@@ -9,6 +9,7 @@ import { prisma } from "@alveusgg/database";
 import { env } from "@/env";
 
 import { type Clip, getClips } from "@/server/apis/twitch";
+import { decryptAccountTokens } from "@/server/db/account-tokens";
 
 import { channels } from "@/data/twitch";
 
@@ -77,6 +78,12 @@ export const getStaticProps: GetStaticProps<{
     if (!twitchChannel?.broadcasterAccount?.access_token) {
       throw new Error("No Twitch account found");
     }
+    const { access_token } = await decryptAccountTokens(
+      twitchChannel.broadcasterAccount,
+    );
+    if (!access_token) {
+      throw new Error("No Twitch account found");
+    }
 
     // Get clips within the last year, older than a week, with at least 100 views
     // And get clips beyond a year that have at least 2000 views
@@ -85,14 +92,14 @@ export const getStaticProps: GetStaticProps<{
     const end = new Date();
     end.setDate(end.getDate() - 7);
     const recentClips = await getTwitchClips(
-      twitchChannel.broadcasterAccount.access_token,
+      access_token,
       channels.alveus.id,
       start,
       end,
       100,
     );
     const olderClips = await getTwitchClips(
-      twitchChannel.broadcasterAccount.access_token,
+      access_token,
       channels.alveus.id,
       new Date(0),
       start,
