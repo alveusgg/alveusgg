@@ -1,6 +1,14 @@
 import { type NextPage } from "next";
+import Image from "next/image";
+
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import type { ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import donationEvent from "@/data/env/donation-event";
+
+import { classes } from "@/utils/classes";
+import { camelToKebab } from "@/utils/string-case";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -16,7 +24,31 @@ import NonprofitStatus from "@/components/content/NonprofitStatus";
 import Section from "@/components/content/Section";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconDocument from "@/icons/IconDocument";
+import IconEnvelope from "@/icons/IconEnvelope";
 import IconLock from "@/icons/IconLock";
+import IconMapPin from "@/icons/IconMapPin";
+import IconPaw from "@/icons/IconPaw";
+
+import { ambassadorImageHover } from "./ambassadors";
+
+const ambassador: ActiveAmbassadorKey = "winnieTheMoo";
+const ambassadorImage = getAmbassadorImages(ambassador)[0];
+
+const supportItems = [
+  {
+    icon: IconPaw,
+    text: "Rescue and home non-releasable animal ambassadors and protect their wild counterparts",
+  },
+  {
+    icon: IconDocument,
+    text: "Create impactful conservation education programs",
+  },
+  {
+    icon: IconMapPin,
+    text: "Develop high quality animal enclosures and staff facilities",
+  },
+];
 
 const DonatePage: NextPage = () => {
   const { consent } = useConsent();
@@ -80,9 +112,9 @@ const DonatePage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section
         className="grow"
-        containerClassName="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        containerClassName="flex flex-wrap gap-8 lg:gap-x-16"
       >
-        <div className="flex flex-col gap-8">
+        <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-1">
           {!consent.neon && <Donate type="direct" />}
 
           <Consent item="donation widget" consent="neon">
@@ -118,7 +150,72 @@ const DonatePage: NextPage = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-1 xl:w-lg xl:flex-none">
+          <Box className="mx-auto w-full max-w-lg p-0 lg:mx-0">
+            <div className="p-6 sm:p-8">
+              <Heading level={2} className="m-0">
+                Your support helps us:
+              </Heading>
+
+              <ul className="mt-4 flex flex-col gap-4 border-t border-alveus-green/20 pt-4">
+                {supportItems.map(({ icon: Icon, text }) => (
+                  <li key={text} className="flex items-center gap-4">
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-alveus-green text-alveus-green">
+                      <Icon className="size-6" aria-hidden="true" />
+                    </span>
+                    <p className="py-2 font-semibold text-alveus-green-800">
+                      {text}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <Link
+              href={`/ambassadors/${camelToKebab(ambassador)}`}
+              custom
+              className="group relative block overflow-clip"
+            >
+              <Image
+                src={ambassadorImage.src}
+                alt={ambassadorImage.alt}
+                placeholder="blur"
+                width={512}
+                className={classes(
+                  "aspect-square h-auto w-full object-cover",
+                  ambassadorImageHover,
+                )}
+                style={{ objectPosition: ambassadorImage.position }}
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent to-40%" />
+              <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-baseline justify-between gap-2 p-6 text-white sm:p-8">
+                <span className="font-semibold tracking-widest uppercase group-hover:underline">
+                  Meet {ambassadors[ambassador].name}
+                </span>
+                <span className="text-sm">Alveus ambassador</span>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-4 p-6 sm:p-8">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-alveus-green text-alveus-green">
+                <IconEnvelope className="size-6" aria-hidden="true" />
+              </span>
+
+              <div>
+                <p className="font-semibold text-alveus-green-800">
+                  Questions about giving?
+                </p>
+                <Link
+                  href="/contact-us"
+                  className="inline-flex items-center gap-1"
+                >
+                  We&apos;re here to help
+                  <IconArrowRight className="size-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </Box>
+
           {types.map(
             (key) =>
               key !== "direct" && (
@@ -127,7 +224,7 @@ const DonatePage: NextPage = () => {
           )}
         </div>
 
-        <div className="col-span-full text-sm text-alveus-green">
+        <div className="w-full text-sm text-alveus-green">
           <p>
             Alveus Sanctuary will honor any of the giving preferences of donors
             for any pre-approved program, or project where possible. In the
