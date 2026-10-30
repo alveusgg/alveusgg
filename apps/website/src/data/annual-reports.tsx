@@ -18,6 +18,8 @@ export type Report = {
   image: ImageProps["src"];
   alt: ReactNode;
   filing: string;
+  // Short sentence from the report text, shown on the overview page
+  summary?: string;
 };
 
 const tableClasses =
@@ -197,6 +199,8 @@ const reports = [
       </>
     ),
     filing: filing2021Pdf,
+    summary:
+      "In 2021, the majority (67.30%) of funds were dedicated to development of the facility.",
   },
   {
     year: 2022,
@@ -785,6 +789,8 @@ const reports = [
       </>
     ),
     filing: filing2023Pdf,
+    summary:
+      "We also hosted 20 content collaborations with creators from across the United States.",
   },
   {
     year: 2024,
@@ -1033,6 +1039,8 @@ const reports = [
       </>
     ),
     filing: filing2024Pdf,
+    summary:
+      "Alveus hosted over 30 content creators for collaborations that reached millions of people around the world.",
   },
 ] as const satisfies Report[];
 
