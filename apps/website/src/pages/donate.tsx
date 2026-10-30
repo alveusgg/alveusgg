@@ -18,6 +18,7 @@ import Donate, { types } from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Markdown from "@/components/content/Markdown";
+import { MayaQuote } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
 import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import NonprofitStatus from "@/components/content/NonprofitStatus";
@@ -195,6 +196,10 @@ const DonatePage: NextPage = () => {
                 <span className="text-sm">Alveus ambassador</span>
               </div>
             </Link>
+
+            <div className="bg-alveus-green p-6 sm:p-8">
+              <MayaQuote short />
+            </div>
 
             <div className="flex items-center gap-4 p-6 sm:p-8">
               <span className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-alveus-green text-alveus-green">
