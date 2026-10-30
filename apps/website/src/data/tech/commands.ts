@@ -42,6 +42,7 @@ export const isOverloadedArguments = (
 
 export interface Command {
   description: string;
+  aliases?: string[];
   category: CommandCategoryId;
   args: [] | Arguments | OverloadedArguments;
 }
@@ -860,7 +861,7 @@ const commands = {
    * Scenes
    */
   customcams: {
-    // TODO: Aliases of ccams, ccam
+    aliases: ["cc", "ccams", "ccam", "customcam"],
     description: "Set cameras to show in layout",
     category: "Scenes",
     args: [
@@ -873,7 +874,14 @@ const commands = {
     ],
   },
   customcamsbig: {
-    // TODO: Aliases of ccamsbig, ccamb
+    aliases: [
+      "ccb",
+      "ccamsb",
+      "ccamb",
+      "customcambig",
+      "customcamb",
+      "customcamsb",
+    ],
     description: "Set cameras to show in layout, with the first being larger",
     category: "Scenes",
     args: [
@@ -1013,7 +1021,7 @@ const commands = {
     ],
   },
   piptl: {
-    // TODO: Aliases of customcamstl, pipul, and variations thereof
+    aliases: ["customcamstl", "customcamtl", "customcamtopleft", "pipul"],
     description:
       "Show two cameras, with the second picture-in-picture top-left",
     category: "Scenes",
@@ -1033,6 +1041,7 @@ const commands = {
     ],
   },
   piptr: {
+    aliases: ["customcamstr", "customcamtr", "customcamtopright", "pipur"],
     description:
       "Show two cameras, with the second picture-in-picture top-right",
     category: "Scenes",
@@ -1052,6 +1061,7 @@ const commands = {
     ],
   },
   pipbl: {
+    aliases: ["customcamsbl", "customcambl", "customcambottomleft", "pipll"],
     description:
       "Show two cameras, with the second picture-in-picture bottom-left",
     category: "Scenes",
@@ -1071,6 +1081,7 @@ const commands = {
     ],
   },
   pipbr: {
+    aliases: ["customcamsbr", "customcambr", "customcambottomright", "piplr"],
     description:
       "Show two cameras, with the second picture-in-picture bottom-right",
     category: "Scenes",
