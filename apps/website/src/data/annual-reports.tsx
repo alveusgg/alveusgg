@@ -18,6 +18,7 @@ export type Report = {
   image: ImageProps["src"];
   alt: ReactNode;
   filing: string;
+  summary: string;
 };
 
 const tableClasses =
@@ -197,6 +198,8 @@ const reports = [
       </>
     ),
     filing: filing2021Pdf,
+    summary:
+      "In 2021, Alveus reached 68,600 Twitch followers, sharing conservation education with a primarily U.S. audience and expanding around the world.",
   },
   {
     year: 2022,
@@ -563,6 +566,8 @@ const reports = [
       </>
     ),
     filing: filing2022Pdf,
+    summary:
+      "Across Twitch, Alveus streams drew 2.65 million live views and a peak audience of 18,689, with 50.3 million minutes watched in total.",
   },
   {
     year: 2023,
@@ -785,6 +790,8 @@ const reports = [
       </>
     ),
     filing: filing2023Pdf,
+    summary:
+      "Through 20 creator collaborations and educational programming, Alveus brought conservation messaging to audiences around the globe.",
   },
   {
     year: 2024,
@@ -1033,6 +1040,8 @@ const reports = [
       </>
     ),
     filing: filing2024Pdf,
+    summary:
+      "Alveus reached over 100 million people across platforms, while the community spent 9,000+ hours connecting with the outdoors through volunteering and exploring.",
   },
 ] as const satisfies Report[];
 
