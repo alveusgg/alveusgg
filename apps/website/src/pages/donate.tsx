@@ -28,7 +28,7 @@ const DonatePage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark>
+      <Section dark className="py-8">
         <Heading>Donate</Heading>
         <p className="text-lg">
           Help Alveus carry on its mission to inspire online audiences to engage
