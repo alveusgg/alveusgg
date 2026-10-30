@@ -72,15 +72,6 @@ const DonatePage: NextPage = () => {
         containerClassName="grid grid-cols-1 lg:grid-cols-2 gap-8"
       >
         <div className="flex flex-col gap-8">
-          {types.map(
-            (key) =>
-              key !== "direct" && (
-                <Donate key={key} type={key} highlight={key === "twitch"} />
-              ),
-          )}
-        </div>
-
-        <div className="order-first flex flex-col gap-8 lg:order-0">
           {!consent.neon && <Donate type="direct" />}
 
           <Consent item="donation widget" consent="neon">
@@ -90,12 +81,21 @@ const DonatePage: NextPage = () => {
             />
           </Consent>
 
-          <Link href="/donate/manage" external className="mt-auto text-right">
+          <Link href="/donate/manage" external className="mt-auto">
             Manage your recurring donations and view donation history
           </Link>
         </div>
 
-        <div className="col-span-full mt-6 text-sm text-alveus-green">
+        <div className="flex flex-col gap-8">
+          {types.map(
+            (key) =>
+              key !== "direct" && (
+                <Donate key={key} type={key} highlight={key === "twitch"} />
+              ),
+          )}
+        </div>
+
+        <div className="col-span-full text-sm text-alveus-green">
           <p>
             Alveus Sanctuary will honor any of the giving preferences of donors
             for any pre-approved program, or project where possible. In the
