@@ -5,6 +5,7 @@ import donationEvent from "@/data/env/donation-event";
 import { useConsent } from "@/hooks/consent";
 
 import Consent from "@/components/Consent";
+import Box from "@/components/content/Box";
 import Donate, { types } from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -15,6 +16,7 @@ import NonprofitStatus from "@/components/content/NonprofitStatus";
 import Section from "@/components/content/Section";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconLock from "@/icons/IconLock";
 
 const DonatePage: NextPage = () => {
   const { consent } = useConsent();
@@ -84,10 +86,31 @@ const DonatePage: NextPage = () => {
           {!consent.neon && <Donate type="direct" />}
 
           <Consent item="donation widget" consent="neon">
-            <NeonDonateEmbed
-              form="general"
-              className="contents *:w-full *:[&_iframe]:rounded-xl *:[&_iframe]:bg-alveus-tan/50 *:[&_iframe]:backdrop-blur-md *:[&_iframe]:outline-none"
-            />
+            <Box
+              dark
+              className="-mt-24 w-full overflow-visible bg-alveus-green-900 shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:-scale-y-100 before:rounded-xl before:shadow-2xl"
+            >
+              <div className="mb-8 flex flex-wrap items-baseline-last justify-between gap-2">
+                <div>
+                  <p className="text-sm font-semibold tracking-widest text-alveus-tan/75 uppercase">
+                    Support Alveus Sanctuary
+                  </p>
+                  <Heading level={2} className="my-0 text-4xl">
+                    Make your donation
+                  </Heading>
+                </div>
+
+                <div className="flex items-center gap-2 text-alveus-tan/75">
+                  <IconLock className="size-4" aria-hidden="true" />
+                  <p className="text-xs font-semibold">Secure donation</p>
+                </div>
+              </div>
+
+              <NeonDonateEmbed
+                form="general"
+                className="-mx-8 -mb-8 *:w-full *:[&_iframe]:rounded-b-xl *:[&_iframe]:bg-white *:[&_iframe]:outline-none"
+              />
+            </Box>
           </Consent>
 
           <Link href="/donate/manage" external className="mt-auto">
