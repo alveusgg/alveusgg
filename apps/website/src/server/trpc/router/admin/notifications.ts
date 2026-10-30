@@ -110,7 +110,10 @@ export const adminNotificationsRouter = router({
 
   cancelNotification: permittedProcedure
     .input(z.cuid())
-    .mutation(async ({ input }) => cancelNotification(input)),
+    .mutation(async ({ ctx, input }) => {
+      await cancelNotification(input);
+      await ctx.res.revalidate(`/notifications/${input}`);
+    }),
 
   resendNotification: permittedProcedure
     .input(z.cuid())

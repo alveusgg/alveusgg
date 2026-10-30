@@ -216,7 +216,7 @@ const data: FoundAnimalFlow = {
       flow: {
         prompt: [
           "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
-          "For example, is the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
+          "For example, the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
         ],
         options: [
           {
@@ -343,7 +343,7 @@ const data: FoundAnimalFlow = {
                       "Monitor the baby from a distance to make sure the mother is still caring for it. Do not attempt to feed or otherwise care for the baby, as this may lead to it becoming dependent on humans.",
                       ...macros.general.rehab(
                         "the baby raccoon",
-                        "If the mother does return after 24 hours",
+                        "If the mother does not return after 24 hours",
                       ),
                     ],
                   },
@@ -386,7 +386,7 @@ const data: FoundAnimalFlow = {
                       "If you are still concerned you can monitor them from a distance over a period of 24 hours, keep pets and children away from the area, avoid touching the babies.",
                       ...macros.general.rehab(
                         "the baby rabbit",
-                        "If the mother does return after 24 hours",
+                        "If the mother does not return after 24 hours",
                       ),
                     ],
                   },
@@ -490,7 +490,7 @@ const data: FoundAnimalFlow = {
     {
       name: "Opossum",
       flow: {
-        prompt: ["Does the opposum appear to be sick or injured?"],
+        prompt: ["Does the opossum appear to be sick or injured?"],
         options: [
           {
             name: "Yes",
