@@ -1,3 +1,6 @@
+// PDF.js text extraction needs stream async iteration, missing in Safari 26.
+import "@sec-ant/readable-stream/polyfill/asyncIterator";
+
 import { motion } from "motion/react";
 import {
   type ComponentProps,

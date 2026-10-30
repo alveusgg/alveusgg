@@ -382,6 +382,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
+      '@sec-ant/readable-stream':
+        specifier: ^0.7.1
+        version: 0.7.1
       '@sentry/nextjs':
         specifier: ^11.9.0
         version: 11.9.0(next@16.4.3)(react@19.3.1)(vite@7.3.7)(webpack@5.112.2)(wrangler@4.154.0)
@@ -2457,6 +2460,9 @@ packages:
     resolution: {integrity: sha512-BfzEnDJOt9T8M989/lA37EcJgat01wLRnoi5dQf3QzOH7jzpqTAzdDbVfRljVr5r+jzKqpbHeyOfAaXxAd0PAA==}
     cpu: [x64]
     os: [win32]
+
+  '@sec-ant/readable-stream@0.7.1':
+    resolution: {integrity: sha512-6TKdF2lufN3VGu7krX6wNGPsfJYzuVZCekPfcXEQxhH68IAjsP9WBJ9BUr7L+4Ijh248/Od/guUIeE9Z7elE4w==}
 
   '@sentry/browser-utils@11.9.0':
     resolution: {integrity: sha512-HwEa+BYxNJ+9msyzKSL2w5+eQwWRGk13StZoMinRmkq+tK34pmIOeDRq/ARlofyYzffvY6R9Xggh9peLjYn2Rg==}
@@ -7974,6 +7980,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.62.2':
     optional: true
+
+  '@sec-ant/readable-stream@0.7.1': {}
 
   '@sentry/browser-utils@11.9.0':
     dependencies:
