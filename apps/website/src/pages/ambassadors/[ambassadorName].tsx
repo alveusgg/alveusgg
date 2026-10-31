@@ -8,6 +8,7 @@ import ambassadors, {
   type AmbassadorKey,
   isAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import {
   type AmbassadorImage,
   type AmbassadorImages,
@@ -28,12 +29,13 @@ import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { classes } from "@/utils/classes";
 import { formatPartialDateString } from "@/utils/datetime-partial";
-import { typeSafeObjectKeys } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
@@ -225,6 +227,21 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   const sounds = useMemo(
     () => getAmbassadorSounds(ambassadorKey),
     [ambassadorKey],
+  );
+
+  const enclosure = enclosures[ambassador.enclosure];
+  const others = useMemo(
+    () =>
+      ambassador.retired
+        ? []
+        : typeSafeObjectEntries(ambassadors)
+            .filter(isActiveAmbassadorEntry)
+            .filter(
+              ([key, other]) =>
+                key !== ambassadorKey &&
+                other.enclosure === ambassador.enclosure,
+            ),
+    [ambassador, ambassadorKey],
   );
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
@@ -566,6 +583,45 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             onClose={() => setClipsLightboxOpen(undefined)}
             items={clipsLightboxItems}
           />
+        </Section>
+      )}
+
+      {/* Hidden when the ambassador lives alone or is retired */}
+      {others.length > 0 && (
+        <Section className="bg-alveus-green-100 py-8">
+          <Heading level={2} className="mt-0 mb-4 text-2xl">
+            Meet others in the {enclosure.name}
+          </Heading>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              {others.map(([key, other]) => {
+                const image = getAmbassadorImages(key)[0];
+                return (
+                  <li key={key}>
+                    <Link
+                      href={`/ambassadors/${camelToKebab(key)}`}
+                      custom
+                      className="group flex items-center gap-2 rounded-full pr-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
+                    >
+                      <Image
+                        src={image.src}
+                        alt=""
+                        width={96}
+                        className="size-12 shrink-0 rounded-full object-cover"
+                        style={{ objectPosition: image.position }}
+                      />
+                      <span className="font-serif text-lg font-bold transition-colors group-hover:text-alveus-green-700 motion-reduce:transition-none">
+                        {other.name}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <Button href="/ambassadors#enclosures" className="text-base">
+              View all ambassadors by enclosure
+            </Button>
+          </div>
         </Section>
       )}
     </>
