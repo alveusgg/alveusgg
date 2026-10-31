@@ -2,9 +2,14 @@ import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import { type ReactNode, useMemo, useState } from "react";
 
-import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import ambassadors, {
+  type AmbassadorKey,
+} from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
+import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import animalQuestEpisodes from "@alveusgg/data/build/animal-quest";
+import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
@@ -18,7 +23,6 @@ import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
-import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
@@ -32,6 +36,7 @@ import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
+import IconArrowRight from "@/icons/IconArrowRight";
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
 
@@ -47,8 +52,6 @@ import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
 import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
 import instituteWolvesHeroImage from "@/assets/institute/hero/wolves.png";
-
-import { ambassadorImageHover } from "@/pages/ambassadors";
 
 const slides = [
   {
@@ -80,37 +83,45 @@ const slides = [
   },
 ];
 
-const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
-  .filter(([, { homepage }]) => !!homepage)
-  .reduce((obj, [key, { homepage }]) => {
-    const images = getAmbassadorImages(key);
-    return {
-      ...obj,
-      [key]: (
-        <Link
-          href={`/ambassadors/${camelToKebab(key)}`}
-          draggable={false}
-          custom
-          className="group hover:text-alveus-green"
-        >
-          <Image
-            src={images[0].src}
-            alt={images[0].alt}
-            draggable={false}
-            width={200}
-            className={`mx-auto aspect-square h-auto w-full max-w-40 rounded-xl object-cover ${ambassadorImageHover}`}
-            style={{ objectPosition: images[0].position }}
-          />
-          <Heading level={3} className="text-center text-xl transition-colors">
-            {homepage?.title}
-          </Heading>
-          <p className="text-center transition-colors">
-            {homepage?.description}
-          </p>
-        </Link>
-      ),
-    };
-  }, {});
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+const AmbassadorCard = ({
+  ambassadorKey,
+}: {
+  ambassadorKey: AmbassadorKey;
+}) => {
+  const ambassador = ambassadors[ambassadorKey];
+  const species = getSpecies(ambassador.species);
+  const image = getAmbassadorImages(ambassadorKey)[0];
+
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <Image
+        src={image.src}
+        alt={image.alt}
+        width={400}
+        className="aspect-square h-auto w-full rounded-xl object-cover"
+        style={{ objectPosition: image.position }}
+      />
+      <p className="text-sm text-alveus-green-700">
+        {species.name} &middot; IUCN: {getIUCNStatus(species.iucn.status)}
+      </p>
+      <Heading level={3} className="my-0 text-2xl">
+        {ambassador.name}
+      </Heading>
+      <p>{ambassador.mission}</p>
+      <Link
+        href={`/ambassadors/${camelToKebab(ambassadorKey)}`}
+        className="mt-auto inline-flex items-center gap-1"
+      >
+        Meet {ambassador.name}
+        <IconArrowRight className="size-4" aria-hidden="true" />
+      </Link>
+    </div>
+  );
+};
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -148,9 +159,21 @@ export const getStaticProps = async () => {
       .slice(0, 4),
   );
 
+  // Feature four ambassadors picked at random from all active ambassadors,
+  // refreshed whenever the page revalidates
+  const randomAmbassadors = activeAmbassadors.map(([key]) => key);
+  for (let i = randomAmbassadors.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomAmbassadors[i], randomAmbassadors[j]] = [
+      randomAmbassadors[j]!,
+      randomAmbassadors[i]!,
+    ];
+  }
+
   return {
     props: {
       videos: latestVideos,
+      randomAmbassadors: randomAmbassadors.slice(0, 4),
     },
     revalidate: 1800, // revalidate after 30 minutes
   };
@@ -158,6 +181,7 @@ export const getStaticProps = async () => {
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
+  randomAmbassadors,
 }) => {
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
 
@@ -347,39 +371,35 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <Section>
-        <div className="flex flex-wrap items-center gap-y-8">
-          <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2 xl:max-w-2/3 xl:basis-2/3">
-            <div className="flex flex-wrap items-center justify-between">
-              <Heading level={2} id="ambassadors" link>
-                Ambassadors:
-              </Heading>
-              <Link
-                href="/ambassadors"
-                custom
-                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
-              >
-                See All
-                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
-              </Link>
-            </div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <Heading level={2} id="ambassadors" link className="my-0">
+            Ambassadors:
+          </Heading>
+          <Link href="/ambassadors" className="text-lg">
+            See All ({activeAmbassadors.length})
+          </Link>
+        </div>
 
-            <Carousel
-              items={featuredAmbassadors}
-              auto={10000}
-              className="mt-4"
-              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
-            />
-          </div>
+        <div className="grid grid-cols-2 items-start gap-6 lg:grid-cols-4">
+          {randomAmbassadors.map((key) => (
+            <AmbassadorCard key={key} ambassadorKey={key} />
+          ))}
+        </div>
 
-          <div className="basis-full md:basis-1/2 md:px-16 xl:basis-1/3">
-            <Heading level={3}>Do you want to support these animals?</Heading>
-            <p className="my-4">
+        <div className="mt-10 flex flex-col gap-4 rounded-xl bg-alveus-green p-6 text-alveus-tan md:flex-row md:items-center md:justify-between">
+          <div>
+            <Heading level={3} className="my-0">
+              Do you want to support these animals?
+            </Heading>
+            <p className="mt-2 max-w-2xl">
               Donations help Alveus carry on its mission to inspire online
               audiences to engage in conservation efforts while providing
               high-quality animal care to these ambassadors.
             </p>
-            <Button href="/donate">Donate Now</Button>
           </div>
+          <Button href="/donate" dark filled className="shrink-0">
+            Donate Now
+          </Button>
         </div>
       </Section>
 
