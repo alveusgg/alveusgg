@@ -8,6 +8,7 @@ import ambassadors, {
   type AmbassadorKey,
   isAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import {
   type AmbassadorImage,
   type AmbassadorImages,
@@ -28,7 +29,7 @@ import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { classes } from "@/utils/classes";
 import { formatPartialDateString } from "@/utils/datetime-partial";
-import { typeSafeObjectKeys } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
@@ -40,6 +41,9 @@ import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import PartialDateDiff from "@/components/content/PartialDateDiff";
+import PrevNextNav, {
+  type PrevNextItem,
+} from "@/components/content/PrevNextNav";
 import Section from "@/components/content/Section";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
@@ -209,6 +213,45 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   };
 };
 
+// Previous/next in the same order as the /ambassadors grid, wrapping around.
+// Retired ambassadors aren't in the grid, so their pages have no prev/next.
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+const prevNextItem = ([
+  key,
+  ambassador,
+]: (typeof activeAmbassadors)[number]): PrevNextItem => {
+  const image = getAmbassadorImages(key)[0];
+  return {
+    label: ambassador.name,
+    href: `/ambassadors/${camelToKebab(key)}`,
+    image: (
+      <Image
+        src={image.src}
+        alt=""
+        width={96}
+        className="size-10 shrink-0 rounded-lg object-cover"
+        style={{ objectPosition: image.position }}
+      />
+    ),
+  };
+};
+
+const getPrevNext = (ambassadorKey: AmbassadorKey) => {
+  const idx = activeAmbassadors.findIndex(([key]) => key === ambassadorKey);
+  if (idx === -1) return undefined;
+
+  const count = activeAmbassadors.length;
+  const previous = activeAmbassadors[(idx - 1 + count) % count];
+  const next = activeAmbassadors[(idx + 1) % count];
+  return {
+    previous: previous && prevNextItem(previous),
+    next: next && prevNextItem(next),
+  };
+};
+
 const stringifyLifespan = (value: number | { min: number; max: number }) => {
   return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
 };
@@ -226,6 +269,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     () => getAmbassadorSounds(ambassadorKey),
     [ambassadorKey],
   );
+
+  const prevNext = useMemo(() => getPrevNext(ambassadorKey), [ambassadorKey]);
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
 
@@ -354,6 +399,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           <div className="basis-full lg:basis-1/2" />
 
           <div className="flex basis-full flex-col py-4 lg:max-w-1/2 lg:basis-1/2 lg:px-8 lg:pt-8">
+            <PrevNextNav
+              label="Ambassadors"
+              previous={prevNext?.previous}
+              next={prevNext?.next}
+              className="mb-4"
+            />
+
             <Heading className="text-5xl">{ambassador.name}</Heading>
             {!!ambassador.alternate.length && (
               <p className="-mt-1 mb-2 text-lg text-alveus-green-700 italic">
