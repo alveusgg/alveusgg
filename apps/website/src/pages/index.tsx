@@ -15,7 +15,9 @@ import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 import { channels as youTubeChannels } from "@/data/youtube";
 
+import { classes } from "@/utils/classes";
 import { formatDateTime } from "@/utils/datetime";
+import { formatPartialDateString } from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
@@ -87,28 +89,84 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry,
 );
 
+// Today's date at Alveus in Texas, as YYYY-MM-DD
+const getTodayAtAlveus = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+// Active ambassadors with a full date of birth (YYYY-MM-DD) whose birthday is
+// on the given day. February 29 birthdays are celebrated on February 28 in
+// years that aren't leap years.
+const getBirthdayAmbassadors = (today: string) => {
+  const [year = 0, month = 0, day = 0] = today.split("-").map(Number);
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+
+  return activeAmbassadors.flatMap(([key, ambassador]) => {
+    const birth = ambassador.birth?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!birth) return [];
+
+    const [, birthYear = 0, birthMonth = 0, birthDay = 0] = birth.map(Number);
+    const celebrated =
+      birthMonth === 2 && birthDay === 29 && !isLeapYear ? 28 : birthDay;
+
+    return birthMonth === month && celebrated === day
+      ? [{ key, age: year - birthYear }]
+      : [];
+  });
+};
+
 const AmbassadorCard = ({
   ambassadorKey,
+  size = "default",
+  badge,
 }: {
   ambassadorKey: AmbassadorKey;
+  size?: "default" | "wide";
+  badge?: ReactNode;
 }) => {
   const ambassador = ambassadors[ambassadorKey];
   const species = getSpecies(ambassador.species);
   const image = getAmbassadorImages(ambassadorKey)[0];
 
   return (
-    <div className="flex min-w-0 flex-col gap-2">
-      <Image
-        src={image.src}
-        alt={image.alt}
-        width={400}
-        className="aspect-square h-auto w-full rounded-xl object-cover"
-        style={{ objectPosition: image.position }}
-      />
+    <div
+      className={classes(
+        "flex min-w-0 flex-col gap-2",
+        size === "wide" && "col-span-2",
+      )}
+    >
+      <div className="relative">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          width={size === "default" ? 400 : 800}
+          className={classes(
+            "h-auto w-full rounded-xl object-cover",
+            size === "default" && "aspect-square",
+            size === "wide" && "aspect-[2.08/1]",
+          )}
+          style={{ objectPosition: image.position }}
+        />
+        {badge && (
+          <span className="absolute top-3 left-3 rounded-md bg-alveus-tan px-2 py-1 text-sm font-semibold text-alveus-green-900">
+            {badge}
+          </span>
+        )}
+      </div>
       <p className="text-sm text-alveus-green-700">
         {species.name} &middot; IUCN: {getIUCNStatus(species.iucn.status)}
       </p>
-      <Heading level={3} className="my-0 text-2xl">
+      <Heading
+        level={3}
+        className={classes(
+          "my-0",
+          size === "default" ? "text-2xl" : "text-3xl",
+        )}
+      >
         {ambassador.name}
       </Heading>
       <p>{ambassador.mission}</p>
@@ -122,6 +180,28 @@ const AmbassadorCard = ({
     </div>
   );
 };
+
+const Banner = ({
+  tag,
+  title,
+  children,
+}: {
+  tag: string;
+  title: ReactNode;
+  children?: ReactNode;
+}) => (
+  <div className="mb-6 flex flex-col gap-3 rounded-xl border border-alveus-green-200 bg-alveus-green-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p className="text-sm font-semibold tracking-wide text-alveus-green-700 uppercase">
+        {tag}
+      </p>
+      <p className="font-serif text-2xl font-bold">{title}</p>
+    </div>
+    {children}
+  </div>
+);
+
+const listFormat = new Intl.ListFormat("en-US", { type: "conjunction" });
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -159,9 +239,21 @@ export const getStaticProps = async () => {
       .slice(0, 4),
   );
 
-  // Feature four ambassadors picked at random from all active ambassadors,
-  // refreshed whenever the page revalidates
-  const randomAmbassadors = activeAmbassadors.map(([key]) => key);
+  // Ambassadors with a birthday today (in Texas) are featured first, at most
+  // four. The grid has four card spaces: with one or two birthdays, each
+  // birthday card is wide and takes two spaces.
+  const birthdayAmbassadors = getBirthdayAmbassadors(getTodayAtAlveus()).slice(
+    0,
+    4,
+  );
+  const birthdaySpaces =
+    birthdayAmbassadors.length * (birthdayAmbassadors.length <= 2 ? 2 : 1);
+
+  // Fill the remaining spaces with ambassadors picked at random from all
+  // active ambassadors, refreshed whenever the page revalidates
+  const randomAmbassadors = activeAmbassadors
+    .map(([key]) => key)
+    .filter((key) => !birthdayAmbassadors.some((b) => b.key === key));
   for (let i = randomAmbassadors.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [randomAmbassadors[i], randomAmbassadors[j]] = [
@@ -173,7 +265,11 @@ export const getStaticProps = async () => {
   return {
     props: {
       videos: latestVideos,
-      randomAmbassadors: randomAmbassadors.slice(0, 4),
+      birthdayAmbassadors,
+      randomAmbassadors: randomAmbassadors.slice(
+        0,
+        Math.max(4 - birthdaySpaces, 0),
+      ),
     },
     revalidate: 1800, // revalidate after 30 minutes
   };
@@ -181,6 +277,7 @@ export const getStaticProps = async () => {
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
+  birthdayAmbassadors,
   randomAmbassadors,
 }) => {
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
@@ -380,7 +477,37 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </Link>
         </div>
 
+        {birthdayAmbassadors.length > 0 && (
+          <Banner
+            tag="Happy birthday"
+            title={listFormat.format(
+              birthdayAmbassadors.map(
+                ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
+              ),
+            )}
+          >
+            <p className="text-alveus-green-700">
+              Born{" "}
+              {listFormat.format([
+                ...new Set(
+                  birthdayAmbassadors.map(({ key }) =>
+                    formatPartialDateString(ambassadors[key].birth),
+                  ),
+                ),
+              ])}
+            </p>
+          </Banner>
+        )}
+
         <div className="grid grid-cols-2 items-start gap-6 lg:grid-cols-4">
+          {birthdayAmbassadors.map(({ key }) => (
+            <AmbassadorCard
+              key={key}
+              ambassadorKey={key}
+              size={birthdayAmbassadors.length <= 2 ? "wide" : "default"}
+              badge="Birthday today"
+            />
+          ))}
           {randomAmbassadors.map((key) => (
             <AmbassadorCard key={key} ambassadorKey={key} />
           ))}
