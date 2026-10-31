@@ -20,6 +20,7 @@ import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
+import HowToHelpCards from "@/components/content/HowToHelpCards";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
@@ -30,10 +31,6 @@ import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
-
-import IconAmazon from "@/icons/IconAmazon";
-import IconBox from "@/icons/IconBox";
-import IconDollar from "@/icons/IconDollar";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -116,26 +113,27 @@ const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
 )[0];
 
-const help = {
-  donate: {
-    icon: IconDollar,
+// The donate page's cards, with the homepage's own titles and links
+const help = [
+  {
+    type: "direct",
     title: "Donate to Alveus directly",
     link: "/donate",
     external: false,
   },
-  amazon: {
-    icon: IconAmazon,
+  {
+    type: "wishlist",
     title: "Gift via our Amazon Wishlist",
     link: "/wishlist",
     external: true,
   },
-  contact: {
-    icon: IconBox,
+  {
+    type: "poBox",
     title: "Send items to our PO Box",
     link: "/po-box",
     external: false,
   },
-};
+] as const;
 
 export const getStaticProps = async () => {
   const channels = [youTubeChannels.alveus.id, youTubeChannels.highlights.id];
@@ -554,24 +552,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             How to Help
           </Heading>
 
-          <div className="mt-8 flex flex-wrap items-center justify-evenly gap-8">
-            {Object.entries(help).map(([key, value]) => (
-              <Link
-                key={key}
-                href={value.link}
-                external={value.external}
-                custom
-                className="group flex items-center gap-4"
-              >
-                <div className="rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
-                  <value.icon size={24} />
-                </div>
-                <p className="font-serif text-2xl font-bold text-alveus-tan transition-colors group-hover:text-alveus-green-500">
-                  {value.title}
-                </p>
-              </Link>
-            ))}
-          </div>
+          <HowToHelpCards items={help} className="mt-8" />
         </Section>
       </div>
     </>
