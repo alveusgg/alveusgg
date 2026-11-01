@@ -88,7 +88,7 @@ const Donate = ({
     <Box
       dark
       className={classes(
-        "group p-0 transition hover:scale-102 hover:shadow-2xl",
+        "group flex flex-col p-0 transition hover:scale-102 hover:shadow-2xl motion-reduce:transition-none motion-reduce:hover:scale-100",
         highlight && "bg-carnival",
       )}
     >
@@ -96,7 +96,7 @@ const Donate = ({
         href={link.link}
         external={link.external}
         custom
-        className="block p-4"
+        className="block grow rounded-xl p-4 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-alveus-tan"
       >
         <div className="mb-2 flex items-center gap-4">
           <div

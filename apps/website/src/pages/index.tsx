@@ -19,8 +19,8 @@ import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
+import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
-import HowToHelpCards from "@/components/content/HowToHelpCards";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
@@ -552,7 +552,11 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             How to Help
           </Heading>
 
-          <HowToHelpCards items={help} className="mt-8" />
+          <div className="mt-8 grid gap-8 md:grid-cols-3">
+            {help.map((item) => (
+              <Donate key={item.type} {...item} />
+            ))}
+          </div>
         </Section>
       </div>
     </>
