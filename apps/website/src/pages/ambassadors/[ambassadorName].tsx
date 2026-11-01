@@ -233,7 +233,7 @@ const prevNextItem = ([
         src={image.src}
         alt=""
         width={96}
-        className="size-10 shrink-0 rounded-lg object-cover"
+        className="size-10 shrink-0 rounded-full object-cover"
         style={{ objectPosition: image.position }}
       />
     ),
@@ -415,13 +415,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           <div className="basis-full lg:basis-1/2" />
 
           <div className="flex basis-full flex-col py-4 lg:max-w-1/2 lg:basis-1/2 lg:px-8 lg:pt-8">
-            <PrevNextNav
-              label="Ambassadors"
-              previous={prevNext?.previous}
-              next={prevNext?.next}
-              className="mb-4"
-            />
-
             <Heading className="text-5xl">{ambassador.name}</Heading>
             {!!ambassador.alternate.length && (
               <p className="-mt-1 mb-2 text-lg text-alveus-green-700 italic">
@@ -657,6 +650,23 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
           }
         />
+      )}
+
+      {/* Last section before the footer. Tan after the dark highlights, light
+          green when it follows the tan main section */}
+      {prevNext && (
+        <Section
+          className={classes(
+            "py-8",
+            ambassador.clips.length === 0 && "bg-alveus-green-100",
+          )}
+        >
+          <PrevNextNav
+            label="Ambassadors"
+            previous={prevNext.previous}
+            next={prevNext.next}
+          />
+        </Section>
       )}
     </>
   );

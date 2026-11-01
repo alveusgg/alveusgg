@@ -2,10 +2,10 @@ import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
+import Button from "@/components/content/Button";
+
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
-
-import Link from "./Link";
 
 export type PrevNextItem = {
   label: string;
@@ -19,39 +19,44 @@ type PrevNextNavProps = {
   next?: PrevNextItem;
   // Accessible name for the nav landmark, e.g. "Ambassadors"
   label: string;
+  // Use on a dark (green) section, matching the Button variants
+  dark?: boolean;
   className?: string;
 };
 
 const PrevNextLink = ({
   item,
   direction,
+  dark,
 }: {
   item: PrevNextItem;
   direction: "previous" | "next";
+  dark: boolean;
 }) => {
   const isNext = direction === "next";
   const Icon = isNext ? IconChevronRight : IconChevronLeft;
 
   return (
-    <Link
+    <Button
       href={item.href}
-      custom
+      dark={dark}
       className={classes(
-        "flex min-w-0 items-center gap-3 rounded-xl border border-alveus-green-200 bg-alveus-tan-50 p-2 transition-colors hover:border-alveus-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700 motion-reduce:transition-none",
-        isNext && "ml-auto flex-row-reverse text-right",
+        "flex min-w-0 items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-1/2",
+        dark
+          ? "focus-visible:outline-alveus-tan"
+          : "focus-visible:outline-alveus-green-700",
+        isNext && "flex-row-reverse text-right sm:ml-auto",
       )}
     >
-      <Icon className="size-5 shrink-0" aria-hidden="true" />
+      <Icon aria-hidden="true" className="size-5 shrink-0" />
       {item.image}
       <span className="min-w-0">
-        <span className="block text-sm text-alveus-green-700">
-          {isNext ? "Next" : "Previous"}
-        </span>
-        <span className="block truncate font-serif text-lg font-bold">
+        <span className="block text-sm">{isNext ? "Next" : "Previous"}</span>
+        <span className="block truncate font-serif font-bold">
           {item.label}
         </span>
       </span>
-    </Link>
+    </Button>
   );
 };
 
@@ -60,6 +65,7 @@ const PrevNextNav = ({
   previous,
   next,
   label,
+  dark = false,
   className,
 }: PrevNextNavProps) => {
   if (!previous && !next) return null;
@@ -67,10 +73,15 @@ const PrevNextNav = ({
   return (
     <nav
       aria-label={label}
-      className={classes("flex items-stretch justify-between gap-4", className)}
+      className={classes(
+        "flex flex-col gap-4 sm:flex-row sm:items-stretch sm:justify-between",
+        className,
+      )}
     >
-      {previous && <PrevNextLink item={previous} direction="previous" />}
-      {next && <PrevNextLink item={next} direction="next" />}
+      {previous && (
+        <PrevNextLink item={previous} direction="previous" dark={dark} />
+      )}
+      {next && <PrevNextLink item={next} direction="next" dark={dark} />}
     </nav>
   );
 };
