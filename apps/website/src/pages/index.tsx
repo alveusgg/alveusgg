@@ -1,3 +1,4 @@
+import { type DateTime } from "luxon";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import { type ReactNode, useMemo, useState } from "react";
@@ -15,8 +16,9 @@ import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 import { channels as youTubeChannels } from "@/data/youtube";
 
+import { shuffle } from "@/utils/array";
 import { classes } from "@/utils/classes";
-import { formatDateTime } from "@/utils/datetime";
+import { formatDateTime, getToday } from "@/utils/datetime";
 import { formatPartialDateString } from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
@@ -29,6 +31,7 @@ import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
@@ -87,35 +90,24 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry,
 );
 
-// Today's date at Alveus in Texas, as YYYY-MM-DD
-const getTodayAtAlveus = () =>
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-
 // Active ambassadors with a full date of birth (YYYY-MM-DD) whose birthday is
 // on the given day. February 29 birthdays are celebrated on February 28 in
 // years that aren't leap years.
-const getBirthdayAmbassadors = (today: string) => {
-  const [year = 0, month = 0, day = 0] = today.split("-").map(Number);
-  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-
-  return activeAmbassadors.flatMap(([key, ambassador]) => {
+const getBirthdayAmbassadors = (today: DateTime) =>
+  activeAmbassadors.flatMap(([key, ambassador]) => {
     const birth = ambassador.birth?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!birth) return [];
 
     const [, birthYear = 0, birthMonth = 0, birthDay = 0] = birth.map(Number);
     const celebrated =
-      birthMonth === 2 && birthDay === 29 && !isLeapYear ? 28 : birthDay;
+      birthMonth === 2 && birthDay === 29 && !today.isInLeapYear
+        ? 28
+        : birthDay;
 
-    return birthMonth === month && celebrated === day
-      ? [{ key, age: year - birthYear }]
+    return birthMonth === today.month && celebrated === today.day
+      ? [{ key, age: today.year - birthYear }]
       : [];
   });
-};
 
 const AmbassadorCard = ({
   ambassadorKey,
@@ -130,10 +122,13 @@ const AmbassadorCard = ({
   const species = getSpecies(ambassador.species);
   const image = getAmbassadorImages(ambassadorKey)[0];
 
+  // The whole card is one link to the ambassador, as in the previous carousel
   return (
-    <div
+    <Link
+      href={`/ambassadors/${camelToKebab(ambassadorKey)}`}
+      custom
       className={classes(
-        "flex min-w-0 flex-col gap-2",
+        "group flex min-w-0 flex-col gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700",
         size === "wide" && "col-span-2",
       )}
     >
@@ -161,21 +156,18 @@ const AmbassadorCard = ({
       <Heading
         level={3}
         className={classes(
-          "my-0",
+          "my-0 transition-colors group-hover:text-alveus-green motion-reduce:transition-none",
           size === "default" ? "text-2xl" : "text-3xl",
         )}
       >
         {ambassador.name}
       </Heading>
       <p>{ambassador.mission}</p>
-      <Link
-        href={`/ambassadors/${camelToKebab(ambassadorKey)}`}
-        className="mt-auto inline-flex items-center gap-1"
-      >
+      <span className="mt-auto inline-flex items-center gap-1 text-red-600 underline transition-colors group-hover:text-blue-600 motion-reduce:transition-none">
         Meet {ambassador.name}
         <IconArrowRight className="size-4" aria-hidden="true" />
-      </Link>
-    </div>
+      </span>
+    </Link>
   );
 };
 
@@ -198,8 +190,6 @@ const Banner = ({
     {children}
   </div>
 );
-
-const listFormat = new Intl.ListFormat("en-US", { type: "conjunction" });
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -241,25 +231,17 @@ export const getStaticProps = async () => {
   // Ambassadors with a birthday today (in Texas) are featured first, at most
   // four. The grid has four card spaces: with one or two birthdays, each
   // birthday card is wide and takes two spaces.
-  const birthdayAmbassadors = getBirthdayAmbassadors(getTodayAtAlveus()).slice(
-    0,
-    4,
-  );
+  const birthdayAmbassadors = getBirthdayAmbassadors(getToday()).slice(0, 4);
   const birthdaySpaces =
     birthdayAmbassadors.length * (birthdayAmbassadors.length <= 2 ? 2 : 1);
 
   // Fill the remaining spaces with ambassadors picked at random from all
   // active ambassadors, refreshed whenever the page revalidates
-  const randomAmbassadors = activeAmbassadors
-    .map(([key]) => key)
-    .filter((key) => !birthdayAmbassadors.some((b) => b.key === key));
-  for (let i = randomAmbassadors.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [randomAmbassadors[i], randomAmbassadors[j]] = [
-      randomAmbassadors[j]!,
-      randomAmbassadors[i]!,
-    ];
-  }
+  const randomAmbassadors = shuffle(
+    activeAmbassadors
+      .map(([key]) => key)
+      .filter((key) => !birthdayAmbassadors.some((b) => b.key === key)),
+  );
 
   return {
     props: {
@@ -469,7 +451,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Section>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <Heading level={2} id="ambassadors" link className="my-0">
-            Ambassadors:
+            Ambassadors
           </Heading>
           <Link href="/ambassadors" className="text-lg">
             See All ({activeAmbassadors.length})
@@ -479,21 +461,25 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         {birthdayAmbassadors.length > 0 && (
           <Banner
             tag="Happy birthday"
-            title={listFormat.format(
-              birthdayAmbassadors.map(
-                ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
-              ),
-            )}
+            title={
+              <List
+                items={birthdayAmbassadors.map(
+                  ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
+                )}
+              />
+            }
           >
             <p className="text-alveus-green-700">
               Born{" "}
-              {listFormat.format([
-                ...new Set(
-                  birthdayAmbassadors.map(({ key }) =>
-                    formatPartialDateString(ambassadors[key].birth),
+              <List
+                items={[
+                  ...new Set(
+                    birthdayAmbassadors.map(({ key }) =>
+                      formatPartialDateString(ambassadors[key].birth),
+                    ),
                   ),
-                ),
-              ])}
+                ]}
+              />
             </p>
           </Banner>
         )}
