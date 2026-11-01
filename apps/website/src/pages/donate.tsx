@@ -124,35 +124,44 @@ const DonatePage: NextPage = () => {
         containerClassName="flex flex-wrap gap-8 lg:gap-x-16"
       >
         <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-1">
-          {!consent.neon && <Donate type="direct" />}
-
-          <Consent item="donation widget" consent="neon">
-            <Box
-              dark
-              className="-mt-24 w-full overflow-visible bg-alveus-green-900 shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:-scale-y-100 before:rounded-xl before:shadow-2xl"
-            >
-              <div className="mb-8 flex flex-wrap items-baseline-last justify-between gap-2">
-                <div>
-                  <p className="text-sm font-semibold tracking-widest text-alveus-tan/75 uppercase">
-                    Support Alveus Sanctuary
-                  </p>
-                  <Heading level={2} className="my-0 text-4xl">
-                    Make your donation
-                  </Heading>
-                </div>
-
-                <div className="flex items-center gap-2 text-alveus-tan/75">
-                  <IconLock className="size-4" aria-hidden="true" />
-                  <p className="text-xs font-semibold">Secure donation</p>
-                </div>
+          <Box
+            dark
+            className="-mt-24 w-full overflow-visible bg-alveus-green-900 shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:-scale-y-100 before:rounded-xl before:shadow-2xl"
+          >
+            <div className="mb-8 flex flex-wrap items-baseline-last justify-between gap-2">
+              <div>
+                <p className="text-sm font-semibold tracking-widest text-alveus-tan/75 uppercase">
+                  Support Alveus Sanctuary
+                </p>
+                <Heading level={2} className="my-0 text-4xl">
+                  Make your donation
+                </Heading>
               </div>
 
-              <NeonDonateEmbed
-                form="general"
-                className="-mx-8 -mb-8 *:w-full *:[&_iframe]:rounded-b-xl *:[&_iframe]:bg-white *:[&_iframe]:outline-none"
-              />
-            </Box>
-          </Consent>
+              <div className="flex items-center gap-2 text-alveus-tan/75">
+                <IconLock className="size-4" aria-hidden="true" />
+                <p className="text-xs font-semibold">Secure donation</p>
+              </div>
+            </div>
+
+            <div className="-mx-8 -mb-8 overflow-hidden rounded-b-xl bg-white text-alveus-green-900">
+              <Consent item="donation form" consent="neon">
+                <NeonDonateEmbed
+                  form="general"
+                  className="w-full *:w-full *:[&_iframe]:bg-white *:[&_iframe]:outline-none"
+                />
+              </Consent>
+
+              {!consent.neon && (
+                <p className="mx-8 mb-8 text-center text-sm opacity-75">
+                  Prefer not to load embedded content?{" "}
+                  <Link href="/donate/direct" external>
+                    Open the donation form in a new tab
+                  </Link>
+                </p>
+              )}
+            </div>
+          </Box>
 
           <Link href="/donate/manage" external className="mt-auto">
             Manage your recurring donations and view donation history
