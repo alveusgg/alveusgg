@@ -13,7 +13,7 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "types": "dist/trpc.d.ts",
   "scripts": {
@@ -117,7 +117,7 @@
     "@types/linkify-it": "^5.0.0",
     "@types/lodash": "^4.17.26",
     "@types/luxon": "^3.7.6",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "@types/oauth": "^0.9.6",
     "@types/pluralize": "^0.0.33",
     "@types/probe-image-size": "^7.2.5",
