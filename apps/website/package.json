@@ -13,7 +13,7 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "types": "dist/trpc.d.ts",
   "scripts": {
