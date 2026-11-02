@@ -4,15 +4,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { useRouter } from "next/router";
-import {
-  Fragment,
-  type MouseEvent,
-  type RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -28,10 +20,6 @@ type SubNavProps = {
   className?: string;
   label?: string;
 };
-
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Phone menu: vertical list of links shown when the hamburger is open
 const SubNavInner = ({
@@ -72,43 +60,39 @@ const SubNavInner = ({
 };
 
 // Desktop bar: links separated by thin dividers, with the current section underlined
-const SubNavBar = ({
-  links,
-  navRef,
-}: {
-  links: SubNavLink[];
-  navRef: RefObject<HTMLElement | null>;
-}) => {
+const SubNavBar = ({ links }: { links: SubNavLink[] }) => {
   const router = useRouter();
   const listRef = useRef<HTMLUListElement>(null);
-  const lockRef = useRef(0);
   const [active, setActive] = useState<string>();
 
-  // Work out which section is currently at the top of the viewport
+  // The current section is the last one whose heading has reached the spot a
+  // link jump would scroll it to (its CSS scroll-margin-top, below the bar)
   const update = useCallback(() => {
-    if (Date.now() < lockRef.current) return;
+    const sections = links
+      .filter(({ href }) => href.startsWith("#"))
+      .map(({ href }) => ({
+        href,
+        elm: document.getElementById(href.slice(1)),
+      }))
+      .filter(({ elm }) => elm && elm.offsetParent !== null);
 
-    const offset = (navRef.current?.offsetHeight ?? 0) + 32;
-    const visible = links.filter(({ href }) => {
-      if (!href.startsWith("#")) return false;
-      const elm = document.getElementById(href.slice(1));
-      return elm && elm.offsetParent !== null;
-    });
-
-    let current = visible[0]?.href;
-    for (const { href } of visible) {
-      const elm = document.getElementById(href.slice(1));
-      if (elm && elm.getBoundingClientRect().top - offset <= 0) current = href;
+    let current = sections[0]?.href;
+    for (const { href, elm } of sections) {
+      const { top } = elm!.getBoundingClientRect();
+      const margin = parseFloat(getComputedStyle(elm!).scrollMarginTop);
+      // Scrolling stops on whole pixels, so ignore any fraction left over
+      if (Math.floor(top - margin) <= 0) current = href;
     }
 
-    // At the very bottom of the page, the last section is the current one
+    // Short final sections can never reach the top, so at the very bottom of
+    // the page the last section is the current one
     const atBottom =
-      window.innerHeight + window.scrollY >=
-      document.documentElement.scrollHeight - 2;
-    if (atBottom && visible.length) current = visible[visible.length - 1]!.href;
+      Math.ceil(window.scrollY + window.innerHeight) >=
+      document.documentElement.scrollHeight;
+    if (atBottom && sections.length) current = sections.at(-1)!.href;
 
     setActive(current);
-  }, [links, navRef]);
+  }, [links]);
 
   useEffect(() => {
     let frame = 0;
@@ -127,50 +111,19 @@ const SubNavBar = ({
     };
   }, [update]);
 
-  // Keep the current link visible if the bar scrolls sideways
+  // If the links don't fit on one row, slide the bar so the current link is
+  // in view. This sets the bar's own scrollLeft, as scrollIntoView can also
+  // stop the page's smooth scroll in Firefox and Safari
   useEffect(() => {
     const list = listRef.current;
-    const link = [...(list?.querySelectorAll("a") ?? [])].find(
-      (a) => a.getAttribute("href") === active,
-    );
+    const link = list?.querySelector("[aria-current]");
     if (!list || !link) return;
 
-    const start = link.offsetLeft - list.offsetLeft;
-    const end = start + link.offsetWidth;
-    if (start < list.scrollLeft || end > list.scrollLeft + list.clientWidth) {
-      list.scrollTo({
-        left: start - 16,
-        behavior: prefersReducedMotion() ? "auto" : "smooth",
-      });
-    }
+    const bar = list.getBoundingClientRect();
+    const { left, right } = link.getBoundingClientRect();
+    if (left < bar.left) list.scrollLeft += left - bar.left;
+    else if (right > bar.right) list.scrollLeft += right - bar.right;
   }, [active]);
-
-  const jump = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>, href: string) => {
-      const elm = document.getElementById(href.slice(1));
-      if (!elm) return;
-      e.preventDefault();
-
-      const offset = (navRef.current?.offsetHeight ?? 0) + 16;
-      const reduce = prefersReducedMotion();
-      lockRef.current = Date.now() + (reduce ? 0 : 900);
-      setActive(href);
-
-      window.scrollTo({
-        top: elm.getBoundingClientRect().top + window.scrollY - offset,
-        behavior: reduce ? "auto" : "smooth",
-      });
-
-      // Update the URL without going through the router, as a router update
-      // makes Next.js jump to the hash and cut the smooth scroll short
-      window.history.replaceState(null, "", href);
-
-      // Move focus to the section for keyboard and screen reader users
-      if (!elm.hasAttribute("tabindex")) elm.setAttribute("tabindex", "-1");
-      elm.focus({ preventScroll: true });
-    },
-    [navRef],
-  );
 
   return (
     <ul
@@ -195,7 +148,6 @@ const SubNavBar = ({
               <Link
                 href={href}
                 custom
-                onClick={isAnchorLink ? (e) => jump(e, href) : undefined}
                 aria-current={
                   isActive ? (isAnchorLink ? "location" : "page") : undefined
                 }
@@ -217,11 +169,8 @@ const SubNavBar = ({
 };
 
 const SubNav = ({ links, className, label = "On this page" }: SubNavProps) => {
-  const navRef = useRef<HTMLElement>(null);
-
   return (
     <nav
-      ref={navRef}
       aria-label={label}
       className={classes(
         "sticky inset-x-0 top-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl lg:border-b lg:border-alveus-green-200 lg:shadow-none",
@@ -229,7 +178,7 @@ const SubNav = ({ links, className, label = "On this page" }: SubNavProps) => {
       )}
     >
       <div className="container mx-auto px-2 py-1 lg:px-4 lg:py-0">
-        <SubNavBar links={links} navRef={navRef} />
+        <SubNavBar links={links} />
 
         <Disclosure as="div" className="flex flex-row items-start lg:hidden">
           <DisclosurePanel as={Fragment}>
