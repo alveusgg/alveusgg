@@ -588,23 +588,25 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
       {/* Hidden when the ambassador lives alone or is retired. Tan after the
           dark highlights, light green when it follows the tan main section */}
-      <AmbassadorStrip
-        heading={<>Meet others in the {enclosure.name}</>}
-        headingId="enclosure"
-        items={others.map(([key, other]) => ({
-          key,
-          name: other.name,
-          href: `/ambassadors/${camelToKebab(key)}`,
-          image: getAmbassadorImages(key)[0],
-        }))}
-        action={{
-          label: "View all ambassadors by enclosure",
-          href: "/ambassadors#enclosures",
-        }}
-        className={
-          ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
-        }
-      />
+      {others.length > 0 && (
+        <AmbassadorStrip
+          heading={<>Meet others in the {enclosure.name}</>}
+          headingId="enclosure"
+          items={others.map(([key, other]) => ({
+            key,
+            name: other.name,
+            href: `/ambassadors/${camelToKebab(key)}`,
+            image: getAmbassadorImages(key)[0],
+          }))}
+          action={{
+            label: "View all ambassadors by enclosure",
+            href: "/ambassadors#enclosures",
+          }}
+          className={
+            ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
+          }
+        />
+      )}
     </>
   );
 };

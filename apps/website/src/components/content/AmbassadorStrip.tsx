@@ -11,6 +11,8 @@ import Section from "@/components/content/Section";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
+import { ambassadorImageHover } from "@/pages/ambassadors";
+
 export type AmbassadorStripItem = {
   key: string;
   name: string;
@@ -29,11 +31,6 @@ type AmbassadorStripProps = {
   className?: string;
 };
 
-// Image hover from the /ambassadors grid cards, without the shadow, and also on
-// keyboard focus
-const imageHover =
-  "transition group-hover:scale-102 group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110 group-focus-visible:scale-102 group-focus-visible:brightness-105 group-focus-visible:contrast-115 group-focus-visible:saturate-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-focus-visible:scale-100";
-
 // Row of ambassador photo cards with a heading and an optional link, e.g. the
 // other ambassadors in the same enclosure
 const AmbassadorStrip = ({
@@ -43,8 +40,6 @@ const AmbassadorStrip = ({
   action,
   className,
 }: AmbassadorStripProps) => {
-  if (!items.length) return null;
-
   return (
     <Section className={classes("py-8", className)}>
       <div className="mb-5 flex flex-col gap-x-6 gap-y-2 sm:flex-row sm:items-baseline sm:justify-between">
@@ -78,7 +73,7 @@ const AmbassadorStrip = ({
                   width={400}
                   className={classes(
                     "aspect-4/3 h-auto w-full object-cover",
-                    imageHover,
+                    ambassadorImageHover,
                   )}
                   style={{ objectPosition: item.image.position }}
                 />
