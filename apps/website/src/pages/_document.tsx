@@ -4,7 +4,10 @@ const Document = () => {
   return (
     <Html
       lang="en"
-      className="bg-linear-to-b from-alveus-green-900 from-45% to-alveus-green to-55% bg-fixed"
+      // Smooth scrolling for in-page links, unless reduced motion is preferred
+      // data-scroll-behavior tells Next.js to skip it when changing pages
+      data-scroll-behavior="smooth"
+      className="bg-linear-to-b from-alveus-green-900 from-45% to-alveus-green to-55% bg-fixed motion-safe:scroll-smooth"
     >
       <Head />
       <body>
