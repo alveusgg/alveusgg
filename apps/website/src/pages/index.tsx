@@ -122,13 +122,16 @@ const AmbassadorCard = ({
   const species = getSpecies(ambassador.species);
   const image = getAmbassadorImages(ambassadorKey)[0];
 
-  // The whole card is one link to the ambassador, as in the previous carousel
+  // The whole card is one link to the ambassador, as in the previous carousel.
+  // It spans five rows of the grid (image, species, name, mission, link) and
+  // shares them with the other cards via subgrid, so each part lines up
+  // across a row even when some text wraps onto more lines.
   return (
     <Link
       href={`/ambassadors/${camelToKebab(ambassadorKey)}`}
       custom
       className={classes(
-        "group flex min-w-0 flex-col gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700",
+        "group row-span-5 grid min-w-0 grid-rows-subgrid gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700",
         size === "wide" && "col-span-2",
       )}
     >
@@ -163,7 +166,7 @@ const AmbassadorCard = ({
         {ambassador.name}
       </Heading>
       <p>{ambassador.mission}</p>
-      <span className="mt-auto inline-flex items-center gap-1 text-red-600 underline transition-colors group-hover:text-blue-600 motion-reduce:transition-none">
+      <span className="inline-flex items-center gap-1 text-red-600 underline transition-colors group-hover:text-blue-600 motion-reduce:transition-none">
         Meet {ambassador.name}
         <IconArrowRight className="size-4" aria-hidden="true" />
       </span>
@@ -484,7 +487,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </Banner>
         )}
 
-        <div className="grid grid-cols-2 items-start gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {birthdayAmbassadors.map(({ key }) => (
             <AmbassadorCard
               key={key}
