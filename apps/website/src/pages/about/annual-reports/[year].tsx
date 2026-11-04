@@ -72,7 +72,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
     <>
       <Meta
         title={`${report.year} | Annual Reports`}
-        description={`Read through the ${report.year} Annual Report published by Alveus Sanctuary.`}
+        description={`${report.summary} Read through the ${report.year} annual report published by Alveus Sanctuary.`}
       />
 
       {/* Nav background */}
