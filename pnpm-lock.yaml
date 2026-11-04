@@ -377,14 +377,14 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4(maplibre-gl@6.15.0)
       '@next/env':
-        specifier: ^16.4.2
-        version: 16.4.2
+        specifier: ^16.4.3
+        version: 16.4.3
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
       '@sentry/nextjs':
         specifier: ^11.8.0
-        version: 11.8.0(@babel/core@7.29.7)(next@16.4.2)(react@19.3.1)(vite@7.3.7)(webpack@5.112.2)(wrangler@4.154.0)
+        version: 11.8.0(@babel/core@7.29.7)(next@16.4.3)(react@19.3.1)(vite@7.3.7)(webpack@5.112.2)(wrangler@4.154.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.11
         version: 0.13.11(typescript@6.0.3)(valibot@1.4.2)(zod@4.6.7)
@@ -399,7 +399,7 @@ importers:
         version: 11.18.0(@trpc/server@11.18.0)(typescript@6.0.3)
       '@trpc/next':
         specifier: ^11.18.0
-        version: 11.18.0(@tanstack/react-query@5.104.5)(@trpc/client@11.18.0)(@trpc/react-query@11.18.0)(@trpc/server@11.18.0)(next@16.4.2)(react-dom@19.3.1)(react@19.3.1)(typescript@6.0.3)
+        version: 11.18.0(@tanstack/react-query@5.104.5)(@trpc/client@11.18.0)(@trpc/react-query@11.18.0)(@trpc/server@11.18.0)(next@16.4.3)(react-dom@19.3.1)(react@19.3.1)(typescript@6.0.3)
       '@trpc/react-query':
         specifier: ^11.18.0
         version: 11.18.0(@tanstack/react-query@5.104.5)(@trpc/client@11.18.0)(@trpc/server@11.18.0)(react@19.3.1)(typescript@6.0.3)
@@ -417,10 +417,10 @@ importers:
         version: 1.39.0
       '@vercel/analytics':
         specifier: ^2.0.1
-        version: 2.0.1(next@16.4.2)(react@19.3.1)
+        version: 2.0.1(next@16.4.3)(react@19.3.1)
       '@vercel/functions':
-        specifier: ^3.10.2
-        version: 3.10.2(@aws-sdk/credential-provider-web-identity@3.972.81)(ws@8.21.0)
+        specifier: ^3.10.4
+        version: 3.10.4(@aws-sdk/credential-provider-web-identity@3.972.81)(ws@8.21.0)
       '@xyflow/react':
         specifier: ^12.12.0
         version: 12.12.0(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -464,17 +464,17 @@ importers:
         specifier: ^14.4.0
         version: 14.4.0(react-dom@19.3.1)(react@19.3.1)
       next:
-        specifier: ^16.4.2
-        version: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+        specifier: ^16.4.3
+        version: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       next-auth:
         specifier: ^4.24.15
-        version: 4.24.15(next@16.4.2)(react-dom@19.3.1)(react@19.3.1)
+        version: 4.24.15(next@16.4.3)(react-dom@19.3.1)(react@19.3.1)
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@16.4.2)
+        version: 4.2.3(next@16.4.3)
       next-superjson:
         specifier: ^1.0.7
-        version: 1.0.7(@swc/helpers@0.5.23)(next@16.4.2)(superjson@2.2.6)
+        version: 1.0.7(@swc/helpers@0.5.23)(next@16.4.3)(superjson@2.2.6)
       oauth:
         specifier: ^0.10.2
         version: 0.10.2
@@ -552,8 +552,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       '@next/eslint-plugin-next':
-        specifier: ^16.4.2
-        version: 16.4.2(eslint@10.13.0)
+        specifier: ^16.4.3
+        version: 16.4.3(eslint@10.13.0)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^6.0.2
         version: 6.0.2(prettier@3.9.10)(supports-color@10.2.2)
@@ -1742,60 +1742,60 @@ packages:
   '@next/env@13.5.11':
     resolution: {integrity: sha512-fbb2C7HChgM7CemdCY+y3N1n8pcTKdqtQLbC7/EQtPdLvlMUT9JX/dBYl8MMZAtYG4uVMyPFHXckb68q/NRwqg==}
 
-  '@next/env@16.4.2':
-    resolution: {integrity: sha512-nTUTFH7G5/J/fmpkjVLegOkqyKOP0CEsJcMsyO4UCYeN1su+YMW/MfaSErnJskL7XM+UDK6aTvslxsRCyya/sA==}
+  '@next/env@16.4.3':
+    resolution: {integrity: sha512-a7tz1QCcWWkwC/rPJcPMJk/UNRu9CFhDd3OHYE5hddbJrs8BqRTalxI6GlKCWEGzRLHN+S/B7a4PAHCtm25aBQ==}
 
-  '@next/eslint-plugin-next@16.4.2':
-    resolution: {integrity: sha512-gCTWlw0e+Y6kajpFyKKgA195jUJCRhlzJE0lV7ufe8a+ghIsANWZ0/FiJwg6DuOG1+OvRbcZDcFBoRh3mNJx0g==}
+  '@next/eslint-plugin-next@16.4.3':
+    resolution: {integrity: sha512-oxuC06wt/71h6ACYCV9GbKOfnf5a7VlRe/p80YHTut15TNgDEmynDnaq8t/xhy5rlvk7dhItIPs6H3rvIM4kyw==}
 
-  '@next/swc-darwin-arm64@16.4.2':
-    resolution: {integrity: sha512-ONkhFvZNFWlsEHOM/81AtxdyuJP2KRYKYR0JxPwvcu1AuPMMMgcL+wW2luldJvMtZwKtUxoSkCychW5wIeoYSw==}
+  '@next/swc-darwin-arm64@16.4.3':
+    resolution: {integrity: sha512-4yq5EXBt+VDtAZwTyfijaFp5D2C5oz3Ikw5a2kiX2K9nw72vrZX2q5UuAlkPtUMO1tQz6JTKpaKWjS7OOefTDQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@16.4.2':
-    resolution: {integrity: sha512-luPCMbOsCoaF+kXJEUjmjmOZg1lC3BflhmUu+ZmW4tBu2vW/4AXak8JBFvePizGkxVmNiAw/r9ra+6UviCWtWQ==}
+  '@next/swc-darwin-x64@16.4.3':
+    resolution: {integrity: sha512-1Rvkn/LUhnEF8WxnRkOrqGhbwXui1bkWFxONKIbN+r7C+9KHDSZ+iUoj4CzymVMWUyZIyx9szcb9+kbKhD500A==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@16.4.2':
-    resolution: {integrity: sha512-xhwFTAncJyaCNy5KqKKuKaIIdCy1/1ZV1s5S1G0hhT7wGMkDTlfJ6aQbfRFnIG/s3/kDrxQ8aycVe+c5QnP8ow==}
+  '@next/swc-linux-arm64-gnu@16.4.3':
+    resolution: {integrity: sha512-dCKpXErGg3abUM6t5JTJV/ottVBTStJB5lRJTbgdUdQaQ+jNHiK56Hsc0YAEg/rinSh42hYG3HWiYmEMdilnxg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-arm64-musl@16.4.2':
-    resolution: {integrity: sha512-T1PNmfbPcxr5ndtWUL/3wQtLXsz808lq6sc2GrNT5k2oquF7UyqZddHSuAewHVsWsGXe6nsl9HoN1YNriVjuSg==}
+  '@next/swc-linux-arm64-musl@16.4.3':
+    resolution: {integrity: sha512-WwYbhWkhYBvBtib1K4W0kL8MW2snBD2A5b3SN4vPpqalZbZs5+bQ1yzAdepVoOqrFfEW3dmREy4Zs1MrWcrFbw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-linux-x64-gnu@16.4.2':
-    resolution: {integrity: sha512-N9cDUOCGtkJG5PNKDFZUF3xXndrJJcpLp121uAGjIGvO/U2p9tfdNOM9htj7+5f72l0m8rMw/cvYacUJBQoudg==}
+  '@next/swc-linux-x64-gnu@16.4.3':
+    resolution: {integrity: sha512-QymWvfUwDEC5/lpJOsxX5VAbyoR2D13+2Jsjz4be7gT4LPqEgdpkeLIR/HFfCLgKzoMhpJbp6I/JnogyNZHcaA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-x64-musl@16.4.2':
-    resolution: {integrity: sha512-yY2uh1YhX6ufuYy2FCbw1dqblbhI57GLYAJfCkqD9auTv6pLrH67Uccjc3QMKBeCYAG6lkgu08ExmX1bbjejjQ==}
+  '@next/swc-linux-x64-musl@16.4.3':
+    resolution: {integrity: sha512-Vmjd9D7DpA4Vv3cUlr82QWgJD/BQZmns801vtC5VWHg6jCIA4a5vMKpQnfrM2pyCrp2eV0ENdUg4PlN3bAc2Yw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-win32-arm64-msvc@16.4.2':
-    resolution: {integrity: sha512-j/ArWRIHpMMB6wYLMhr2puTguBt70lNU/Cmjl9p6dTDE8DGknYJMP9PdwPk2dqpCNL/KIX9yfngDvIesxJPmsg==}
+  '@next/swc-win32-arm64-msvc@16.4.3':
+    resolution: {integrity: sha512-lG1pPdPLk7gTyGb00n5JIMLdBJgjb+UEhSdZvFbhUMg0DyC6z4B7RnpSKF9VCd4imkLObVbXOFA0kFCpw7yFow==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@16.4.2':
-    resolution: {integrity: sha512-AA4edyWHDko3NCSo0x6GomsdgFb0oR1J3MXU1b5xt6FRFg4AucrMPW3S0hCe/9onU0O1BbpGQBsqo1r0Gneu1g==}
+  '@next/swc-win32-x64-msvc@16.4.3':
+    resolution: {integrity: sha512-NmQC9RkJdnPXRaMxtkCzobB3teVjqF33oSOnwDfi+XYGWWYpt+xlGK3mtktSKLbdjwaWbJu2OkkMiRFGUUncKg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -3213,15 +3213,15 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/cli-config@0.3.2':
-    resolution: {integrity: sha512-m/CtROcNRVouwZNEcx7/W0T6zYMjZNzLqVB68xIVPEYI4PSPvdpBlxPqvsk+LpJlXcjN0DXG+jXd2T/ZbigifQ==}
+  '@vercel/cli-config@0.3.4':
+    resolution: {integrity: sha512-lkAn8NEC2I1EKN/Ni0M8b/VwWVMzZEcaF7lzT/B5NF51+5vPUx8bEkZGYqWmMUCVO2HFUyWCcX2pZlRDPrUsKQ==}
 
   '@vercel/cli-exec@1.0.1':
     resolution: {integrity: sha512-g9XerViJ/paZujufXYcu5XYI2vU2rtB4sgdpjUHde5RnOkdmpu0ngH46LCFGHoPXO/C+qDPSczIHIRN+8Q2YKQ==}
     engines: {node: '>= 18'}
 
-  '@vercel/functions@3.10.2':
-    resolution: {integrity: sha512-d+kr0tPjwGYtJ4i6UApcZ6DEILV4e3PQdOJidlocQtI6HJeM0VYqeZbT4uj9nVt7yKKa18EZBWtPt1x8QQyBGA==}
+  '@vercel/functions@3.10.4':
+    resolution: {integrity: sha512-4L74Vs/EYrEfLUKeAmKnlDFTvqqxb2KKKB15zIbc947DdFkq0j+wHxz3I5dHvlrhqfe2/n6U5A93ZTDNbmNVUA==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -3232,8 +3232,8 @@ packages:
       ws:
         optional: true
 
-  '@vercel/oidc@4.0.2':
-    resolution: {integrity: sha512-S/5IX4cY+UD9X3A9TTBejkd1JOXv/rDKjaAB8GaPglKav/D5BHsOlVGfiriNZ/UCMZznPe3THNL1HNgpA3ZFbA==}
+  '@vercel/oidc@4.0.4':
+    resolution: {integrity: sha512-cWw+jlAXo7vFHU338hbmPdKOsU0SZflRr1+yfPkar8COC9VEm1qyBWxmfxpbuyhAytp0P2OIa5qUzeWGQ4PvkA==}
     engines: {node: '>= 20'}
 
   '@visx/curve@4.0.1-alpha.0':
@@ -4976,8 +4976,8 @@ packages:
     peerDependencies:
       next: '>=10'
 
-  next@16.4.2:
-    resolution: {integrity: sha512-r+oBJojfefUjOiWkBhXgLS+igxX/7BWyK59uHnyOyplMSLtBZ+QLP3okrdYTbrfrbrmNTVWLBPaHDX9KRaIt3w==}
+  next@16.4.3:
+    resolution: {integrity: sha512-OqxKTGi9u80FydydsMNYNjnuje9Au+kvHlt2GZ//ftdpDHm1dxKqAaENoOOTX5wKzn+9vaKUNIfZeyZUuLhCnA==}
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
@@ -7374,37 +7374,37 @@ snapshots:
 
   '@next/env@13.5.11': {}
 
-  '@next/env@16.4.2': {}
+  '@next/env@16.4.3': {}
 
-  '@next/eslint-plugin-next@16.4.2(eslint@10.13.0)':
+  '@next/eslint-plugin-next@16.4.3(eslint@10.13.0)':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.13.0)
       fast-glob: 3.3.1
     transitivePeerDependencies:
       - eslint
 
-  '@next/swc-darwin-arm64@16.4.2':
+  '@next/swc-darwin-arm64@16.4.3':
     optional: true
 
-  '@next/swc-darwin-x64@16.4.2':
+  '@next/swc-darwin-x64@16.4.3':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@16.4.2':
+  '@next/swc-linux-arm64-gnu@16.4.3':
     optional: true
 
-  '@next/swc-linux-arm64-musl@16.4.2':
+  '@next/swc-linux-arm64-musl@16.4.3':
     optional: true
 
-  '@next/swc-linux-x64-gnu@16.4.2':
+  '@next/swc-linux-x64-gnu@16.4.3':
     optional: true
 
-  '@next/swc-linux-x64-musl@16.4.2':
+  '@next/swc-linux-x64-musl@16.4.3':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@16.4.2':
+  '@next/swc-win32-arm64-msvc@16.4.3':
     optional: true
 
-  '@next/swc-win32-x64-msvc@16.4.2':
+  '@next/swc-win32-x64-msvc@16.4.3':
     optional: true
 
   '@noble/hashes@2.0.1': {}
@@ -7880,7 +7880,7 @@ snapshots:
     dependencies:
       '@sentry/core': 11.8.0
 
-  '@sentry/nextjs@11.8.0(@babel/core@7.29.7)(next@16.4.2)(react@19.3.1)(vite@7.3.7)(webpack@5.112.2)(wrangler@4.154.0)':
+  '@sentry/nextjs@11.8.0(@babel/core@7.29.7)(next@16.4.3)(react@19.3.1)(vite@7.3.7)(webpack@5.112.2)(wrangler@4.154.0)':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@rollup/plugin-commonjs': 28.0.1(rollup@4.62.2)
@@ -7895,7 +7895,7 @@ snapshots:
       '@sentry/server-runtime-injection': 11.8.0
       '@sentry/server-utils': 11.8.0
       '@sentry/vercel-edge': 11.8.0
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       rollup: 4.62.2
       stacktrace-parser: 0.1.11
     transitivePeerDependencies:
@@ -8185,11 +8185,11 @@ snapshots:
       '@trpc/server': 11.18.0(typescript@6.0.3)
       typescript: 6.0.3
 
-  '@trpc/next@11.18.0(@tanstack/react-query@5.104.5)(@trpc/client@11.18.0)(@trpc/react-query@11.18.0)(@trpc/server@11.18.0)(next@16.4.2)(react-dom@19.3.1)(react@19.3.1)(typescript@6.0.3)':
+  '@trpc/next@11.18.0(@tanstack/react-query@5.104.5)(@trpc/client@11.18.0)(@trpc/react-query@11.18.0)(@trpc/server@11.18.0)(next@16.4.3)(react-dom@19.3.1)(react@19.3.1)(typescript@6.0.3)':
     dependencies:
       '@trpc/client': 11.18.0(@trpc/server@11.18.0)(typescript@6.0.3)
       '@trpc/server': 11.18.0(typescript@6.0.3)
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       typescript: 6.0.3
@@ -8614,12 +8614,12 @@ snapshots:
     dependencies:
       valibot: 1.4.2(typescript@6.0.3)
 
-  '@vercel/analytics@2.0.1(next@16.4.2)(react@19.3.1)':
+  '@vercel/analytics@2.0.1(next@16.4.3)(react@19.3.1)':
     optionalDependencies:
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       react: 19.3.1
 
-  '@vercel/cli-config@0.3.2':
+  '@vercel/cli-config@0.3.4':
     dependencies:
       xdg-app-paths: 5.5.1
       zod: 4.1.11
@@ -8628,16 +8628,16 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/functions@3.10.2(@aws-sdk/credential-provider-web-identity@3.972.81)(ws@8.21.0)':
+  '@vercel/functions@3.10.4(@aws-sdk/credential-provider-web-identity@3.972.81)(ws@8.21.0)':
     dependencies:
-      '@vercel/oidc': 4.0.2
+      '@vercel/oidc': 4.0.4
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.972.81
       ws: 8.21.0
 
-  '@vercel/oidc@4.0.2':
+  '@vercel/oidc@4.0.4':
     dependencies:
-      '@vercel/cli-config': 0.3.2
+      '@vercel/cli-config': 0.3.4
       '@vercel/cli-exec': 1.0.1
       jose: 5.10.0
 
@@ -10470,13 +10470,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  next-auth@4.24.15(next@16.4.2)(react-dom@19.3.1)(react@19.3.1):
+  next-auth@4.24.15(next@16.4.3)(react-dom@19.3.1)(react@19.3.1):
     dependencies:
       '@babel/runtime': 7.29.7
       '@panva/hkdf': 1.2.1
       cookie: 0.7.2
       jose: 4.15.9
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       oauth: 0.9.15
       openid-client: 5.7.1
       preact: 10.29.7(preact-render-to-string@5.2.6)
@@ -10485,33 +10485,33 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       uuid: 11.1.1
 
-  next-sitemap@4.2.3(next@16.4.2):
+  next-sitemap@4.2.3(next@16.4.3):
     dependencies:
       '@corex/deepmerge': 4.0.43
       '@next/env': 13.5.11
       fast-glob: 3.3.3
       minimist: 1.2.8
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
 
-  next-superjson-plugin@0.6.3(next@16.4.2)(superjson@2.2.6):
+  next-superjson-plugin@0.6.3(next@16.4.3)(superjson@2.2.6):
     dependencies:
       hoist-non-react-statics: 3.3.2
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
       superjson: 2.2.6
 
-  next-superjson@1.0.7(@swc/helpers@0.5.23)(next@16.4.2)(superjson@2.2.6):
+  next-superjson@1.0.7(@swc/helpers@0.5.23)(next@16.4.3)(superjson@2.2.6):
     dependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.23)
       '@swc/types': 0.1.12
-      next: 16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
-      next-superjson-plugin: 0.6.3(next@16.4.2)(superjson@2.2.6)
+      next: 16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1)
+      next-superjson-plugin: 0.6.3(next@16.4.3)(superjson@2.2.6)
     transitivePeerDependencies:
       - '@swc/helpers'
       - superjson
 
-  next@16.4.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1):
+  next@16.4.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(react-dom@19.3.1)(react@19.3.1):
     dependencies:
-      '@next/env': 16.4.2
+      '@next/env': 16.4.3
       '@swc/helpers': 0.5.23
       baseline-browser-mapping: 2.11.15
       caniuse-lite: 1.0.30001809
@@ -10520,14 +10520,14 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       styled-jsx: 5.1.6(@babel/core@7.29.7)(react@19.3.1)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 16.4.2
-      '@next/swc-darwin-x64': 16.4.2
-      '@next/swc-linux-arm64-gnu': 16.4.2
-      '@next/swc-linux-arm64-musl': 16.4.2
-      '@next/swc-linux-x64-gnu': 16.4.2
-      '@next/swc-linux-x64-musl': 16.4.2
-      '@next/swc-win32-arm64-msvc': 16.4.2
-      '@next/swc-win32-x64-msvc': 16.4.2
+      '@next/swc-darwin-arm64': 16.4.3
+      '@next/swc-darwin-x64': 16.4.3
+      '@next/swc-linux-arm64-gnu': 16.4.3
+      '@next/swc-linux-arm64-musl': 16.4.3
+      '@next/swc-linux-x64-gnu': 16.4.3
+      '@next/swc-linux-x64-musl': 16.4.3
+      '@next/swc-win32-arm64-msvc': 16.4.3
+      '@next/swc-win32-x64-msvc': 16.4.3
       '@opentelemetry/api': 1.9.1
       sharp: 0.35.5(@types/node@24.19.2)
     transitivePeerDependencies:
