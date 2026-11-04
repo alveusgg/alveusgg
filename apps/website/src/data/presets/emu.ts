@@ -1,11 +1,11 @@
 import fargate from "@/assets/presets/emu/fargate.png";
-import feeder from "@/assets/presets/emu/feeder.png";
 import food from "@/assets/presets/emu/food.png";
 import home from "@/assets/presets/emu/home.png";
 import left from "@/assets/presets/emu/left.png";
 import leftcorner from "@/assets/presets/emu/leftcorner.png";
 import leftgate from "@/assets/presets/emu/leftgate.png";
 import maingate from "@/assets/presets/emu/maingate.png";
+import pedro from "@/assets/presets/emu/pedro.png";
 import pond from "@/assets/presets/emu/pond.png";
 import pondleft from "@/assets/presets/emu/pondleft.png";
 import right from "@/assets/presets/emu/right.png";
@@ -27,17 +27,11 @@ const emuPresets: Record<string, Preset> = {
     position: { pan: -96.34, tilt: -1.68, zoom: 813 },
     // modified: 2026-06-01T22:21:14.756Z
   },
-  feeder: {
-    description: "feeder",
-    image: feeder,
-    position: { pan: -55.32, tilt: -3.47, zoom: 1545 },
-    // modified: 2026-08-03T16:52:20.559Z
-  },
   food: {
     description: "food",
     image: food,
-    position: { pan: -50.91, tilt: -3.84, zoom: 1545 },
-    // modified: 2026-06-01T22:25:50.180Z
+    position: { pan: -55.31, tilt: -3.46, zoom: 1545 },
+    // modified: 2026-09-25T14:34:40.912Z
   },
   left: {
     description: "left",
@@ -63,6 +57,12 @@ const emuPresets: Record<string, Preset> = {
     position: { pan: -22.76, tilt: -6.83, zoom: 813 },
     // modified: 2026-06-01T22:27:44.214Z
   },
+  pedro: {
+    description: "pedro",
+    image: pedro,
+    position: { pan: -55.5, tilt: -4.33, zoom: 2559 },
+    // modified: 2026-08-10T07:34:52.403Z
+  },
   pond: {
     description: "pond",
     image: pond,
@@ -84,14 +84,14 @@ const emuPresets: Record<string, Preset> = {
   rightcorner: {
     description: "rightcorner",
     image: rightcorner,
-    position: { pan: -26.16, tilt: -5.17, zoom: 1422 },
-    // modified: 2026-06-01T22:28:21.434Z
+    position: { pan: -31.8, tilt: -5.37, zoom: 1422 },
+    // modified: 2026-09-14T21:38:20.611Z
   },
   shelter: {
     description: "shelter",
     image: shelter,
-    position: { pan: -114.96, tilt: -1.84, zoom: 813 },
-    // modified: 2026-06-01T22:22:00.044Z
+    position: { pan: -120.64, tilt: -0.66, zoom: 813 },
+    // modified: 2026-09-25T14:28:32.809Z
   },
 };
 

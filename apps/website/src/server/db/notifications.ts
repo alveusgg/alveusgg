@@ -134,7 +134,8 @@ export async function cleanupExpiredNotificationPushes() {
       OR: [
         { subscription: { deletedAt: { not: null } } },
         { expiresAt: { lte: now } },
-        { attempts: { gt: env.PUSH_MAX_ATTEMPTS } },
+        // Pushes at the attempt limit are never retried again
+        { attempts: { gte: env.PUSH_MAX_ATTEMPTS } },
       ],
     },
   });

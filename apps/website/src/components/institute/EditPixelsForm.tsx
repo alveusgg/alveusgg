@@ -24,7 +24,8 @@ export type SharedEditPixelProps = {
   overrideIdentifier: string | null;
   renameMutation:
     | ReturnType<(typeof trpc.donations.renameMyPixels)["useMutation"]>
-    | ReturnType<(typeof trpc.donations.renameExternalPixels)["useMutation"]>;
+    | ReturnType<(typeof trpc.donations.renameExternalPixels)["useMutation"]>
+    | ReturnType<(typeof trpc.donations.renameNeonPixels)["useMutation"]>;
   onRename: (newIdentifier: string, pixelId?: string) => unknown;
 };
 

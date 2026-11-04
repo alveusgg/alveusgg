@@ -124,123 +124,117 @@ const AnimalQuestItems = ({
       ref={ref}
       className={classes("flex flex-wrap", !group && "justify-center")}
     >
-      {items.map((episode) => (
-        <div
-          key={episode.episode}
-          className="flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
-        >
-          <Link
-            href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-            className="group relative order-last shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
-            custom
+      {items.map((episode) => {
+        const featured = episode.ambassadors.featured;
+        const primaryImg =
+          featured.length > 0 &&
+          getAmbassadorImages(featured[0] as AmbassadorKey)[0];
+        const secondaryImg =
+          featured.length > 1 &&
+          getAmbassadorImages(
+            featured[featured.length > 2 ? 2 : 1] as AmbassadorKey,
+          )[0];
+        const tertiaryImg =
+          featured.length > 2 &&
+          getAmbassadorImages(featured[1] as AmbassadorKey)[0];
+
+        return (
+          <div
+            key={episode.episode}
+            className="flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
           >
-            {(() => {
-              const img =
-                episode.ambassadors.featured.length > 0 &&
-                getAmbassadorImages(
-                  episode.ambassadors.featured[0] as AmbassadorKey,
-                )[0];
-              return (
-                <Image
-                  src={img ? img.src : animalQuestFull}
-                  alt={img ? img.alt : "Animal Quest"}
-                  className={classes(
-                    !img && "opacity-10",
-                    "hidden size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:size-32",
-                  )}
-                  width={256}
-                  style={{ objectPosition: img ? img.position : undefined }}
-                />
-              );
-            })()}
-
-            {episode.ambassadors.featured.length > 1 &&
-              (() => {
-                const img = getAmbassadorImages(
-                  episode.ambassadors.featured[
-                    episode.ambassadors.featured.length > 2 ? 2 : 1
-                  ] as AmbassadorKey,
-                )[0];
-                return (
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    className="absolute -right-2 -bottom-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
-                    width={256}
-                    style={{ objectPosition: img.position }}
-                  />
-                );
-              })()}
-
-            {episode.ambassadors.featured.length > 2 &&
-              (() => {
-                const img = getAmbassadorImages(
-                  episode.ambassadors.featured[1] as AmbassadorKey,
-                )[0];
-                return (
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    className="absolute -bottom-2 -left-2 hidden size-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
-                    width={256}
-                    style={{ objectPosition: img.position }}
-                  />
-                );
-              })()}
-          </Link>
-
-          <div className="grow">
             <Link
               href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-              className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+              className="group relative order-last shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
               custom
             >
-              <Heading
-                level={group ? 3 : 2}
-                className="my-0 mb-1.5 scroll-mt-4"
-                id={sentenceToKebab(episode.edition).replace(/-edition$/, "")}
-              >
-                <span className="flex items-center gap-2 text-lg">
-                  <IconYouTube size={24} className="lg:hidden" />
-                  Episode {episode.episode}:{" "}
-                </span>
-                <span className="block group-hover:underline">
-                  {episode.edition}
-                </span>
-              </Heading>
-
-              <IconYouTube
-                size={48}
-                className="mt-6 hidden shrink-0 lg:block"
+              <Image
+                src={primaryImg ? primaryImg.src : animalQuestFull}
+                alt={primaryImg ? primaryImg.alt : "Animal Quest"}
+                className={classes(
+                  !primaryImg && "opacity-10",
+                  "hidden size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:size-32",
+                )}
+                width={256}
+                style={{
+                  objectPosition: primaryImg ? primaryImg.position : undefined,
+                }}
               />
-            </Link>
-            <p className="text-lg">
-              <span className="text-base opacity-80">Broadcast: </span>
-              {formatDateTime(episode.broadcast, { style: "long" })}
-            </p>
-            {episode.ambassadors.featured.length > 0 && (
-              <p className="text-lg">
-                <span className="text-base opacity-80">Featuring: </span>
-                <List
-                  items={episode.ambassadors.featured.map((ambassador) =>
-                    // Retired ambassadors don't have pages
-                    isActiveAmbassadorKey(ambassador) ? (
-                      <Link
-                        key={ambassador}
-                        href={`/ambassadors/${camelToKebab(ambassador)}`}
-                      >
-                        {ambassadors[ambassador].name}
-                      </Link>
-                    ) : (
-                      ambassadors[ambassador].name
-                    ),
-                  )}
+
+              {secondaryImg && (
+                <Image
+                  src={secondaryImg.src}
+                  alt={secondaryImg.alt}
+                  className="absolute -right-2 -bottom-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
+                  width={256}
+                  style={{ objectPosition: secondaryImg.position }}
                 />
+              )}
+
+              {tertiaryImg && (
+                <Image
+                  src={tertiaryImg.src}
+                  alt={tertiaryImg.alt}
+                  className="absolute -bottom-2 -left-2 hidden size-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
+                  width={256}
+                  style={{ objectPosition: tertiaryImg.position }}
+                />
+              )}
+            </Link>
+
+            <div className="grow">
+              <Link
+                href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
+                className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+                custom
+              >
+                <Heading
+                  level={group ? 3 : 2}
+                  className="my-0 mb-1.5 scroll-mt-4"
+                  id={sentenceToKebab(episode.edition).replace(/-edition$/, "")}
+                >
+                  <span className="flex items-center gap-2 text-lg">
+                    <IconYouTube size={24} className="lg:hidden" />
+                    Episode {episode.episode}:{" "}
+                  </span>
+                  <span className="block group-hover:underline">
+                    {episode.edition}
+                  </span>
+                </Heading>
+
+                <IconYouTube
+                  size={48}
+                  className="mt-6 hidden shrink-0 lg:block"
+                />
+              </Link>
+              <p className="text-lg">
+                <span className="text-base opacity-80">Broadcast: </span>
+                {formatDateTime(episode.broadcast, { style: "long" })}
               </p>
-            )}
+              {episode.ambassadors.featured.length > 0 && (
+                <p className="text-lg">
+                  <span className="text-base opacity-80">Featuring: </span>
+                  <List
+                    items={episode.ambassadors.featured.map((ambassador) =>
+                      // Retired ambassadors don't have pages
+                      isActiveAmbassadorKey(ambassador) ? (
+                        <Link
+                          key={ambassador}
+                          href={`/ambassadors/${camelToKebab(ambassador)}`}
+                        >
+                          {ambassadors[ambassador].name}
+                        </Link>
+                      ) : (
+                        ambassadors[ambassador].name
+                      ),
+                    )}
+                  />
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   </>
 );

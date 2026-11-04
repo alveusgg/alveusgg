@@ -13,7 +13,11 @@ import useCrawler from "@/hooks/crawler";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
+import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+
+import IconArrowRight from "@/icons/IconArrowRight";
+import IconLock from "@/icons/IconLock";
 
 type ConsentProps = {
   item: string;
@@ -75,21 +79,45 @@ const Consent = ({
               </div>
             )}
 
-            <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
+            <Box className="m-6 flex max-w-3xl flex-col gap-4">
+              <div className="flex items-start gap-8">
+                <div className="min-w-0 grow">
+                  <p className="text-sm font-bold tracking-widest text-alveus-green uppercase">
+                    Third-party content
+                  </p>
+                  <Heading level={2} className="my-0">
+                    Consent required to load the {item}
+                  </Heading>
+                </div>
 
-            <Box className="m-6 mt-3 flex max-w-2xl flex-col gap-4 p-6 py-4 text-alveus-green">
-              <p>
-                This content is from a third party and we need your consent to
-                show it. It {consentExplainer}.
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-alveus-green text-alveus-green">
+                  <IconLock className="size-6" aria-hidden="true" />
+                </span>
+              </div>
+
+              <p className="text-lg/relaxed text-alveus-green-800">
+                This content is provided by {consentData[key].name}. Loading it{" "}
+                {consentExplainer}.
               </p>
 
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <Button as="button" type="button" onClick={clicked}>
-                  Consent to loading {consentData[key].name}
+              <div className="flex flex-wrap items-center gap-6">
+                <Button
+                  as="button"
+                  type="button"
+                  filled
+                  onClick={clicked}
+                  className="inline-flex items-center gap-3"
+                >
+                  Allow {consentData[key].name} content
+                  <IconArrowRight className="size-5" aria-hidden="true" />
                 </Button>
 
-                <Link href={consentData[key].privacy} external>
-                  Privacy Policy
+                <Link
+                  href={consentData[key].privacy}
+                  external
+                  className="ml-auto"
+                >
+                  Privacy policy
                 </Link>
               </div>
             </Box>

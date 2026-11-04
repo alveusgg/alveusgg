@@ -19,7 +19,6 @@ import foxindoor from "../presets/foxindoor";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
-import hank from "../presets/hank";
 import littles from "../presets/littles";
 import littlesmulti from "../presets/littlesmulti";
 import macaws from "../presets/macaws";
@@ -39,6 +38,7 @@ import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
 import roaches from "../presets/roaches";
 import serval from "../presets/serval";
+import servalindoor from "../presets/servalindoor";
 import tarantula from "../presets/tarantula";
 import tarantulaptz from "../presets/tarantulaptz";
 import toast from "../presets/toast";
@@ -78,7 +78,6 @@ const cameras = {
   garden,
   georgie,
   georgiewater,
-  hank,
   marmin,
   marmout,
   marmmulti,
@@ -98,6 +97,7 @@ const cameras = {
   pushpopindoor,
   roaches,
   serval,
+  servalindoor,
   tarantula,
   tarantulaptz,
   toast,

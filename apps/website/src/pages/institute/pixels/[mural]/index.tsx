@@ -10,16 +10,15 @@ import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 import { PixelProvider } from "@/hooks/pixels";
 
-import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import NeonDonateEmbed from "@/components/content/NeonDonateEmbed";
 import Section from "@/components/content/Section";
 import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import PixelsDescription from "@/components/institute/PixelsDescription";
+import PixelsDonate from "@/components/institute/PixelsDonate";
 import PixelsDownload from "@/components/institute/PixelsDownload";
 import PixelsSearch from "@/components/institute/PixelsSearch";
 import Wolves from "@/components/institute/Wolves";
@@ -238,20 +237,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
         </div>
 
         <div className="flex flex-col gap-8">
-          {mural.type === "live" && (
-            <Consent item="donation widget" consent="neon">
-              <Box dark className="w-full">
-                <Heading level={2} className="text-center text-xl">
-                  Unlock a Pixel on the Mural
-                </Heading>
-
-                <NeonDonateEmbed
-                  form="arri"
-                  className="-mx-8 -mb-8 *:w-full *:[&_iframe]:outline-none"
-                />
-              </Box>
-            </Consent>
-          )}
+          {mural.type === "live" && <PixelsDonate className="w-full" />}
 
           <Box dark className="w-full">
             <PixelsDescription className="text-center text-2xl" />

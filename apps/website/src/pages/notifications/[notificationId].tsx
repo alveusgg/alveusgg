@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-location-assign-relative-destination -- notification links are almost always external */
 import { DateTime } from "luxon";
 import type {
   GetStaticPropsContext,
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { getNotificationById } from "@/server/db/notifications";
 
@@ -47,6 +48,16 @@ const NotificationPage: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ notification }) => {
   const link = getNotificationVod(notification) || notification.linkUrl;
+
+  // The page HTML is cached, so the relative time is worked out in the browser
+  const [relativeTime, setRelativeTime] = useState<string | null>(null);
+  useEffect(() => {
+    setRelativeTime(
+      DateTime.fromJSDate(notification.createdAt).toRelative({
+        locale: "en-US",
+      }),
+    );
+  }, [notification.createdAt]);
 
   useEffect(() => {
     if (link) {
@@ -112,9 +123,7 @@ const NotificationPage: NextPage<
             dateTime={notification.createdAt.toISOString()}
             title={formatDateTime(notification.createdAt)}
           >
-            {DateTime.fromJSDate(notification.createdAt).toRelative({
-              locale: "en-US",
-            })}
+            {relativeTime ?? formatDateTime(notification.createdAt)}
           </time>
         </div>
       </Section>

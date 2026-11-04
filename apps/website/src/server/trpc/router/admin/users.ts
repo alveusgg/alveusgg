@@ -16,7 +16,6 @@ export const adminUsersRouter = router({
         },
         take: 10,
         include: {
-          accounts: true,
           roles: true,
         },
       }),
@@ -89,7 +88,6 @@ export const adminUsersRouter = router({
         ],
       },
       include: {
-        accounts: true,
         roles: true,
       },
     });
@@ -106,7 +104,6 @@ export const adminUsersRouter = router({
         id: { in: getSuperUserIds() },
       },
       include: {
-        accounts: true,
         roles: true,
       },
     }),

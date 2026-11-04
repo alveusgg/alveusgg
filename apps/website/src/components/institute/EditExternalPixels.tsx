@@ -8,6 +8,7 @@ import type { MuralId } from "@/data/murals";
 import { trpc } from "@/utils/trpc";
 
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
+import { RenameStepsLayout } from "@/components/institute/rename/RenameStep";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button as FormButton } from "@/components/shared/form/Button";
 import { Fieldset } from "@/components/shared/form/Fieldset";
@@ -79,9 +80,14 @@ export function EditExternalPixels({ muralId }: { muralId: MuralId }) {
   const renameMutation = trpc.donations.renameExternalPixels.useMutation();
 
   return (
-    <>
-      <form onSubmit={submit}>
-        <div className="mb-4 space-y-4">
+    <RenameStepsLayout
+      confirm={
+        <form onSubmit={submit} className="space-y-4">
+          <p>
+            Enter the details exactly as they appear on the receipt you received
+            by email, including spaces and capitalization.
+          </p>
+
           <div className="max-w-xl space-y-4">
             <Fieldset legend="Your donation info">
               <TextField
@@ -132,36 +138,38 @@ export function EditExternalPixels({ muralId }: { muralId: MuralId }) {
               email.
             </MessageBox>
           ) : null}
-        </div>
-      </form>
+        </form>
+      }
+      rename={
+        persistedPixelsData?.length ? (
+          <EditPixelsForm
+            defaultIdentifier={defaultIdentifier}
+            pixelsQuery={pixelsQuery}
+            renameMutation={renameMutation}
+            overrideIdentifier={overrideIdentifier}
+            setOverrideIdentifier={setOverrideIdentifier}
+            onRename={(newIdentifier, pixelId?: string) => {
+              const verification = verificationRef.current;
+              if (!verification) {
+                return;
+              }
 
-      {persistedPixelsData?.length ? (
-        <EditPixelsForm
-          defaultIdentifier={defaultIdentifier}
-          pixelsQuery={pixelsQuery}
-          renameMutation={renameMutation}
-          overrideIdentifier={overrideIdentifier}
-          setOverrideIdentifier={setOverrideIdentifier}
-          onRename={(newIdentifier, pixelId?: string) => {
-            const verification = verificationRef.current;
-            if (!verification) {
-              return;
-            }
-
-            renameMutation.mutate(
-              { muralId, newIdentifier, pixelId, verification },
-              {
-                onSuccess: () => {
-                  getExternalPixels.mutate({
-                    muralId,
-                    verification,
-                  });
+              renameMutation.mutate(
+                { muralId, newIdentifier, pixelId, verification },
+                {
+                  onSuccess: () => {
+                    getExternalPixels.mutate({
+                      muralId,
+                      verification,
+                    });
+                  },
                 },
-              },
-            );
-          }}
-        />
-      ) : null}
-    </>
+              );
+            }}
+          />
+        ) : null
+      }
+      renamePlaceholder="Search for your donation first."
+    />
   );
 }

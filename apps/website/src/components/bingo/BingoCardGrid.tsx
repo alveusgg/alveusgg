@@ -53,6 +53,7 @@ export function BingoCardGrid({
 
         return (
           <div
+            // eslint-disable-next-line @eslint-react/no-array-index-key -- Cells have fixed row and column positions on the board.
             key={`${cellIndex}`}
             className="flex aspect-square items-stretch"
           >

@@ -24,9 +24,10 @@ import {
 import {
   createFileStorageUpload,
   deleteFileStorageObject,
+  imageUploadInputSchema,
 } from "@/server/utils/file-storage";
+import { getClientIp, limit } from "@/server/utils/rate-limit";
 
-import { imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { extractInfoFromMapFeatures } from "@/utils/locations";
 
@@ -115,17 +116,26 @@ export const showAndTellRouter = router({
     }),
 
   createFileUpload: publicProcedure
-    .input(
-      z.object({
-        fileName: z.string(),
-        fileType: z.literal(imageMimeTypes),
-      }),
-    )
-    .mutation(async ({ input }) => {
+    .input(imageUploadInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Anyone can submit a post, so limit how many upload URLs one client
+      // can create (a post has at most MAX_IMAGES images)
+      const clientIp = getClientIp(ctx.req);
+      if (
+        clientIp &&
+        !(await limit(`show-and-tell-upload-${clientIp}`, 50, "10 m"))
+      ) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many uploads. Please wait a few minutes and try again.",
+        });
+      }
+
       const { uploadUrl, viewUrl, fileStorageObject } =
         await createFileStorageUpload({
           fileName: input.fileName,
           fileType: input.fileType,
+          fileSize: input.fileSize,
           prefix: uploadPrefix,
         });
 

@@ -32,6 +32,7 @@ import roundsNightBackground from "@/assets/stream/rounds-night.webm";
 type DatabaseCheck = RouterOutputs["stream"]["getRoundsChecks"][number];
 
 interface Check {
+  id: string;
   name: string;
   description?: string;
   icon: { src: string | StaticImageData; position?: string };
@@ -56,6 +57,7 @@ const transformChecks = (
       }
 
       return {
+        id: check.id,
         name: check.name,
         icon,
         status: statuses[check.command] ?? false,
@@ -277,6 +279,7 @@ const RoundsOverlayContent = ({
 
       <div className="absolute inset-y-0 left-0 flex h-full origin-center animate-wiggle-slow flex-col items-start justify-center px-16">
         <style
+          // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml -- CSS is generated from React IDs and numeric animation settings.
           dangerouslySetInnerHTML={{
             __html: [
               `@keyframes checks-${id}-item { ${animation.keyframes} }`,
@@ -287,7 +290,7 @@ const RoundsOverlayContent = ({
         />
         {checks.map((check, idx) => (
           <Check
-            key={`${check.name}-${idx}`}
+            key={check.id}
             check={check}
             className={classes(
               // eslint-disable-next-line better-tailwindcss/no-concatenated-classes -- dynamic class name generated alongside the inline @keyframes above

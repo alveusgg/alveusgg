@@ -39,6 +39,7 @@ const UPS = ({ size = 1, title }: { size?: 1 | 2; title?: string }) => (
             <div className="my-auto flex grow flex-wrap items-center p-[0.15cqw] pt-0">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
+                  // eslint-disable-next-line @eslint-react/no-array-index-key -- These diagram elements have fixed physical positions.
                   key={i}
                   className="m-[0.15cqw] aspect-square grow rounded-sm bg-gray-800"
                 />

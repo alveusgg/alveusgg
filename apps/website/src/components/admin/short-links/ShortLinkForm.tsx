@@ -11,6 +11,7 @@ import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { TextField } from "@/components/shared/form/TextField";
@@ -75,7 +76,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkFormProps) {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       {submit.error && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <ProcedureErrorMessage error={submit.error} />
         </MessageBox>
       )}
       {submit.isSuccess && (

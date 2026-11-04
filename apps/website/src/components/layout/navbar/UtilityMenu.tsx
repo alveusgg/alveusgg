@@ -42,7 +42,6 @@ const Section = ({ items }: { items: UtilityNavItem[] }) => (
   <>
     {items.map((item) => (
       <li key={item.key}>
-        {/* eslint-disable-next-line react/jsx-no-target-blank */}
         <a
           className={utilityLinkClasses}
           target="_blank"

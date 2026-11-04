@@ -19,6 +19,7 @@ import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import {
   Button,
   dangerButtonClasses,
@@ -116,12 +117,12 @@ export function CalendarEventForm({
     >
       {submitMutation.error && (
         <MessageBox variant="failure">
-          <pre>{submitMutation.error.message}</pre>
+          <ProcedureErrorMessage error={submitMutation.error} />
         </MessageBox>
       )}
       {deleteMutation.error && (
         <MessageBox variant="failure">
-          <pre>{deleteMutation.error.message}</pre>
+          <ProcedureErrorMessage error={deleteMutation.error} />
         </MessageBox>
       )}
       {submitMutation.isSuccess && (

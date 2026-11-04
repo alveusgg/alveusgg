@@ -25,6 +25,7 @@ import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
@@ -144,7 +145,7 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       {(submit.error || error) && (
         <MessageBox variant="failure">
-          {submit.error?.message && <pre>{submit.error.message}</pre>}
+          {submit.error && <ProcedureErrorMessage error={submit.error} />}
           {error && <pre>{error}</pre>}
         </MessageBox>
       )}

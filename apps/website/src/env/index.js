@@ -39,6 +39,15 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
     DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
+    DATA_ENCRYPTION_KEYS: z
+      .string()
+      .regex(
+        /^[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=(,[a-z0-9]{1,16}:[A-Za-z0-9+/]{43}=)*$/,
+        "Must be a comma-separated list of <key id>:<base64 32-byte key>",
+      ),
+    DATA_BLIND_INDEX_KEY: z
+      .string()
+      .regex(/^[A-Za-z0-9+/]{43}=$/, "Must be a base64 32-byte key"),
     NODE_ENV: z
       .literal(["development", "test", "production"])
       .default("production"),
@@ -113,6 +122,13 @@ export const env = createEnv({
     CF_STREAM_HOST: z.string().optional(),
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
+    SENTRY_DSN: z.url().optional(),
+    NEON_CRM_ORG_ID: z
+      .string()
+      .regex(/^[a-z0-9-]+$/i)
+      .default("alveussanctuary"),
+    NEON_OAUTH_CLIENT_ID: z.string().optional(),
+    NEON_OAUTH_CLIENT_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -130,6 +146,7 @@ export const env = createEnv({
       .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
@@ -163,6 +180,8 @@ export const env = createEnv({
     // Server:
     DATABASE_URL: process.env.DATABASE_URL,
     DATA_ENCRYPTION_PASSPHRASE: process.env.DATA_ENCRYPTION_PASSPHRASE,
+    DATA_ENCRYPTION_KEYS: process.env.DATA_ENCRYPTION_KEYS,
+    DATA_BLIND_INDEX_KEY: process.env.DATA_BLIND_INDEX_KEY,
     NODE_ENV: process.env.NODE_ENV || "production",
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
@@ -221,6 +240,10 @@ export const env = createEnv({
     TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
     PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    NEON_CRM_ORG_ID: process.env.NEON_CRM_ORG_ID || undefined,
+    NEON_OAUTH_CLIENT_ID: process.env.NEON_OAUTH_CLIENT_ID,
+    NEON_OAUTH_CLIENT_SECRET: process.env.NEON_OAUTH_CLIENT_SECRET,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
@@ -232,6 +255,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_STREAM_OVERLAY_THEME:
+      process.env.NEXT_PUBLIC_STREAM_OVERLAY_THEME,
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
       process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:

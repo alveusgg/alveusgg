@@ -250,6 +250,7 @@ const AdminEditBingoPage: NextPage<
 
                   return (
                     <div
+                      // eslint-disable-next-line @eslint-react/no-array-index-key -- Cards have fixed positions in the game's generated configuration.
                       key={index}
                       className={classes(
                         "flex flex-col gap-1",

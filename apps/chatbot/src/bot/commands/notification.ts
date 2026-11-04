@@ -1,6 +1,9 @@
+import * as Sentry from "@sentry/node";
+
 import { checkUserIsAllowedToSendNotifications } from "@/users";
 import { getChannelInfoById } from "@/twitch/api";
 import { safeParsePartialURL } from "@/utils/safeParsePartialURL";
+import { ApiError } from "@/website-api";
 import { createNotification } from "@/website-api/notifications";
 
 import {
@@ -18,22 +21,14 @@ type PendingNotification = {
   imageUrl?: string;
   vodUrl?: string;
   title: string;
-  expiresAt: number;
+  timeout?: ReturnType<typeof setTimeout>;
   isPush: boolean;
   isDiscord: boolean;
+  reply: (message: string) => void;
 };
 
 // These URLs are likely not meant to be used as notification links without a path
 const partialUrlFilterList = ["https://twitch.tv/", "https://youtube.com/"];
-
-function createPendingNotification(
-  data: Omit<PendingNotification, "expiresAt">,
-): PendingNotification {
-  return {
-    ...data,
-    expiresAt: Date.now() + 60_000,
-  };
-}
 
 const options = createOptions({
   help: {
@@ -93,8 +88,67 @@ function renderPendingNotification(notification: PendingNotification) {
     .join(" | ");
 }
 
+function sendPendingNotification(
+  notification: PendingNotification,
+  channel: string,
+  reply: (message: string) => void,
+) {
+  const startedAt = Date.now();
+  createNotification({
+    tag: notification.tag,
+    text: notification.text,
+    linkUrl: notification.linkUrl,
+    title: notification.title,
+    isDiscord: notification.isDiscord,
+    isPush: notification.isPush,
+    imageUrl: notification.imageUrl,
+    vodUrl: notification.vodUrl,
+  })
+    .then(() => {
+      reply("poggSpin sent notification");
+    })
+    .catch((e) => {
+      const elapsed = Date.now() - startedAt;
+      console.error(`Failed to send notification after ${elapsed}ms`, e);
+      Sentry.captureException(e, {
+        tags: { command: "notification", channel },
+        contexts: {
+          notification: {
+            tag: notification.tag,
+            isPush: notification.isPush,
+            isDiscord: notification.isDiscord,
+          },
+        },
+      });
+      reply(
+        e instanceof ApiError
+          ? `MADGIES failed to send notification (${e.summary})`
+          : "MADGIES failed to send notification",
+      );
+    });
+}
+
 export async function createNotificationCommands() {
   const pendingNotifications = new Map<string, PendingNotification>();
+
+  function clearPendingNotification(
+    broadcasterId: string,
+    notifyPreviousCommand = false,
+  ) {
+    const pendingNotification = pendingNotifications.get(broadcasterId);
+    if (!pendingNotification) return false;
+
+    if (pendingNotification.timeout) {
+      clearTimeout(pendingNotification.timeout);
+    }
+    pendingNotifications.delete(broadcasterId);
+
+    if (notifyPreviousCommand) {
+      pendingNotification.reply("poggSpin cancelled notification");
+    }
+
+    return true;
+  }
 
   const notificationCommand: CommandHandler = async (
     params,
@@ -115,6 +169,8 @@ export async function createNotificationCommands() {
     if (optionValues.help) {
       reply(
         `Usage: !notify [link] [title] [|text] | ` +
+          `Cancel: !notify cancel | ` +
+          `Notifications are sent automatically after 1 minute | ` +
           `Arguments: link = URL | ` +
           `Options: ${options.renderHelp()}`,
       );
@@ -126,84 +182,84 @@ export async function createNotificationCommands() {
       return;
     }
 
+    if (
+      paramsWithoutOptions.length === 1 &&
+      paramsWithoutOptions[0]?.toLowerCase() === "cancel"
+    ) {
+      if (clearPendingNotification(broadcasterId)) {
+        reply("poggSpin cancelled notification");
+      } else {
+        reply("mojjcheck no pending notification");
+      }
+      return;
+    }
+
     const { linkUrl, restParams } = parseOptionalLinkUrl(
       broadcasterName,
       paramsWithoutOptions,
     );
-    let { title, text } = parseTitleAndText(restParams);
+    const { title, text } = parseTitleAndText(restParams);
 
-    if (!title) {
-      const channelInfo = await getChannelInfoById(broadcasterId);
-      if (channelInfo) {
-        title = channelInfo.title.split("|")[0];
-        text = channelInfo.gameName;
-      }
-    }
-
-    title = title || defaultNotificationTitle;
-
-    const pendingNotification = createPendingNotification({
+    const pendingNotification: PendingNotification = {
       tag: "stream",
       linkUrl,
-      title,
+      title: title || defaultNotificationTitle,
       text,
       isPush: !optionValues["no-push"],
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
       vodUrl: optionValues.vod,
-    });
+      reply,
+    };
+
+    clearPendingNotification(broadcasterId, true);
     pendingNotifications.set(broadcasterId, pendingNotification);
 
+    if (!title) {
+      try {
+        const channelInfo = await getChannelInfoById(broadcasterId);
+        if (channelInfo) {
+          pendingNotification.title =
+            channelInfo.title.split("|")[0]?.trim() || defaultNotificationTitle;
+          pendingNotification.text = channelInfo.gameName;
+        }
+      } catch (error) {
+        if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+          return;
+        }
+
+        pendingNotifications.delete(broadcasterId);
+        console.error(error);
+        Sentry.captureException(error, {
+          tags: { command: "notification", channel: broadcasterName },
+        });
+        reply("MADGIES failed to fetch stream information");
+        return;
+      }
+    }
+
+    if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+      return;
+    }
+
+    pendingNotification.timeout = setTimeout(() => {
+      if (pendingNotifications.get(broadcasterId) !== pendingNotification) {
+        return;
+      }
+
+      pendingNotifications.delete(broadcasterId);
+      sendPendingNotification(pendingNotification, broadcasterName, reply);
+    }, 60_000);
+
     reply(
-      `PauseChamp please !confirm: ${renderPendingNotification(
+      `PauseChamp queued notification: ${renderPendingNotification(
         pendingNotification,
-      )}`,
+      )} | will send in 1 minute; use !notify cancel to cancel`,
     );
-  };
-
-  const confirmCommand: CommandHandler = async (
-    params,
-    { broadcasterId, userName, reply },
-  ) => {
-    const isMod = await checkUserIsAllowedToSendNotifications(userName);
-    if (!isMod) {
-      reply("mayaHalt you are not allowed to confirm notifications");
-      return;
-    }
-
-    const pendingNotification = pendingNotifications.get(broadcasterId);
-
-    if (!pendingNotification || pendingNotification.expiresAt < Date.now()) {
-      if (pendingNotification) pendingNotifications.delete(broadcasterId);
-
-      reply("mojjcheck no pending notification");
-      return;
-    }
-
-    createNotification({
-      tag: pendingNotification.tag,
-      text: pendingNotification.text,
-      linkUrl: pendingNotification.linkUrl,
-      title: pendingNotification.title,
-      isDiscord: pendingNotification.isDiscord,
-      isPush: pendingNotification.isPush,
-      imageUrl: pendingNotification.imageUrl,
-      vodUrl: pendingNotification.vodUrl,
-    })
-      .then(() => {
-        reply("poggSpin sent notification");
-      })
-      .catch((e) => {
-        console.error(e);
-        reply("MADGIES failed to send notification");
-      });
-
-    pendingNotifications.delete(broadcasterId);
   };
 
   return [
     createBotCommand("notify", notificationCommand),
     createBotCommand("notification", notificationCommand),
-    createBotCommand("confirm", confirmCommand),
   ];
 }

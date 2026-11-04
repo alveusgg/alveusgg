@@ -10,6 +10,8 @@ import {
 } from "@/server/oauth/config";
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
 
+import Meta from "@/components/content/Meta";
+
 type AuthorizePageProps = {
   error?: string;
 };
@@ -111,5 +113,11 @@ export const getServerSideProps: GetServerSideProps<
 export default function AuthorizePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
-  return <main>{props.error ?? "Redirecting..."}</main>;
+  return (
+    <>
+      <Meta title="Authorize | OAuth" noindex />
+
+      <main>{props.error ?? "Redirecting..."}</main>
+    </>
+  );
 }

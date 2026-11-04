@@ -50,6 +50,7 @@ export const TwitchChat = ({
       src={src}
       title={`twitch.tv/${channel} live chat embed`}
       referrerPolicy="no-referrer"
+      // eslint-disable-next-line @eslint-react/dom-no-unsafe-iframe-sandbox -- The Twitch embed runs on a separate origin and requires scripts and its own origin.
       sandbox="allow-same-origin allow-scripts"
       className={classes("size-full", className)}
     ></iframe>
@@ -117,6 +118,7 @@ const Twitch = ({
       title={`twitch.tv/${channel} live stream embed`}
       referrerPolicy="no-referrer"
       allow="autoplay; encrypted-media"
+      // eslint-disable-next-line @eslint-react/dom-no-unsafe-iframe-sandbox -- The Twitch embed runs on a separate origin and requires scripts and its own origin.
       sandbox="allow-same-origin allow-scripts"
       className={classes("aspect-video h-auto w-full", className)}
     ></iframe>

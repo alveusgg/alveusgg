@@ -6,7 +6,11 @@ import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
 import { TwitchEventHubMessageTypeHeader } from "./const";
 import { verifySignature } from "./crypto";
-import { TwitchChallengePayload, TwitchNotificationPayload } from "./schema";
+import {
+  TwitchChallengePayload,
+  TwitchNotificationPayload,
+  TwitchRevocationPayload,
+} from "./schema";
 
 interface TwitchDonationProviderConfig {
   secret: string;
@@ -33,45 +37,40 @@ export class TwitchDonationProvider implements DonationProvider {
       sandbox: env.SANDBOX === "true",
       allowedCharityName: env.TWITCH_CHARITY_NAME!,
     };
-    const config =
+    let config =
       await service.config.get<TwitchDonationProviderConfig>("twitch");
     if (!config) {
-      const headers: Record<string, string> = {};
-      if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
-        headers["x-vercel-protection-bypass"] =
-          env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
-      }
-
-      if (!env.SHARED_KEY) {
-        throw new Error("SHARED_KEY must be defined in environment variables");
-      }
-
       if (!env.TWITCH_SUBSCRIPTION_SECRET) {
         throw new Error(
           "TWITCH_SUBSCRIPTION_SECRET must be defined in environment variables",
         );
       }
-
-      await setupTwitchSubscription(
-        env.SITE_URL!,
-        env.SELF_URL!,
-        env.SHARED_KEY,
-        env.TWITCH_SUBSCRIPTION_SECRET,
-        headers,
-      );
-
-      const config = {
-        secret: env.TWITCH_SUBSCRIPTION_SECRET,
-      } as const satisfies TwitchDonationProviderConfig;
+      config = { secret: env.TWITCH_SUBSCRIPTION_SECRET };
+      // Save the secret and make the handler ready before asking Twitch to send
+      // a verification challenge. Existing subscriptions keep their secret.
       await service.config.set("twitch", config);
-
-      return new TwitchDonationProvider(config, options, service);
     }
     return new TwitchDonationProvider(config, options, service);
   }
 
-  async clear() {
-    await this.service.config.set("twitch", undefined);
+  async registerWebhook(env: Env) {
+    if (!env.SHARED_KEY || !env.SITE_URL || !env.SELF_URL) {
+      throw new Error(
+        "Twitch webhook registration requires SHARED_KEY, SITE_URL and SELF_URL",
+      );
+    }
+    const headers: Record<string, string> = {};
+    if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
+      headers["x-vercel-protection-bypass"] =
+        env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
+    }
+    await setupTwitchSubscription(
+      env.SITE_URL,
+      env.SELF_URL,
+      env.SHARED_KEY,
+      this.config.secret,
+      headers,
+    );
   }
 
   async handle(request: Request): Promise<Response> {
@@ -106,7 +105,18 @@ export class TwitchDonationProvider implements DonationProvider {
     }
 
     if (type === "revocation") {
-      await this.clear();
+      const payload = TwitchRevocationPayload.safeParse(body);
+      if (!payload.success) {
+        return new Response("Invalid Twitch revocation payload", {
+          status: 400,
+        });
+      }
+      // A single channel's revocation must not rotate the shared secret used by
+      // healthy channels. Periodic reconciliation repairs the remote state.
+      console.info("Twitch subscription revoked", {
+        id: payload.data.subscription.id,
+        status: payload.data.subscription.status,
+      });
       return new Response(null, { status: 201 });
     }
 
@@ -176,6 +186,8 @@ async function setupTwitchSubscription(
       httpLink({
         url: `${url}/api/trpc`,
         transformer: superjson,
+        fetch: (input, init) =>
+          fetch(input, { ...init, signal: AbortSignal.timeout(25_000) }),
         headers: {
           Authorization: `ApiKey ${token}`,
           ...headers,

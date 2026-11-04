@@ -7,12 +7,15 @@ import { refreshAccessToken } from "@/server/utils/oauth2";
 export async function getTwitchChannels() {
   return prisma.twitchChannel.findMany({
     include: {
+      // This is sent to the admin UI, so leave out the tokens
       broadcasterAccount: {
+        omit: { access_token: true, refresh_token: true, id_token: true },
         include: {
           user: true,
         },
       },
       moderatorAccount: {
+        omit: { access_token: true, refresh_token: true, id_token: true },
         include: {
           user: true,
         },
@@ -56,7 +59,12 @@ export async function deleteTwitchChannel(channelId: string) {
 }
 
 export async function refreshTwitchChannels() {
-  const channels = await getTwitchChannels();
+  const channels = await prisma.twitchChannel.findMany({
+    include: {
+      broadcasterAccount: true,
+      moderatorAccount: true,
+    },
+  });
   const accounts = channels
     .map((channel) => [channel.broadcasterAccount, channel.moderatorAccount])
     .flat();

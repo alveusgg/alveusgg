@@ -8,6 +8,7 @@ import { env } from "@/env";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
+import { captureException } from "@/server/utils/sentry";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
@@ -99,6 +100,16 @@ export default createTokenProtectedApiHandler(
       return true;
     } catch (e) {
       console.error("Failed to create notification", e);
+      captureException(e, {
+        contexts: {
+          notification: {
+            notificationIds: [
+              ...new Set(options.pushes.map((push) => push.notificationId)),
+            ],
+            pushCount: options.pushes.length,
+          },
+        },
+      });
       return false;
     }
   },

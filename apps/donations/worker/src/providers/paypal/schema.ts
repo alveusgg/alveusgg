@@ -14,8 +14,9 @@ const Tags = z.string().transform((val) => {
 });
 
 export const PaypalDonationSchema = z.object({
-  mc_gross: z.string(),
-  mc_fee: z.string(),
+  // USD amounts always have two decimals, e.g. "10.00"
+  mc_gross: z.string().regex(/^-?\d+\.\d{2}$/),
+  mc_fee: z.string().optional(),
   payment_status: z.string(),
   charset: z.literal("UTF-8"),
 

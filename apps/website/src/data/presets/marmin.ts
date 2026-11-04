@@ -1,3 +1,4 @@
+import abovedoor from "@/assets/presets/marmin/abovedoor.png";
 import behind from "@/assets/presets/marmin/behind.png";
 import domel from "@/assets/presets/marmin/domel.png";
 import domell from "@/assets/presets/marmin/domell.png";
@@ -22,6 +23,7 @@ import leftcornert from "@/assets/presets/marmin/leftcornert.png";
 import nearrightshelf from "@/assets/presets/marmin/nearrightshelf.png";
 import right from "@/assets/presets/marmin/right.png";
 import table from "@/assets/presets/marmin/table.png";
+import tablel from "@/assets/presets/marmin/tablel.png";
 import win1 from "@/assets/presets/marmin/win1.png";
 import win2 from "@/assets/presets/marmin/win2.png";
 import win3 from "@/assets/presets/marmin/win3.png";
@@ -35,6 +37,12 @@ const marminPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 107.61, tilt: -22.9, zoom: 1 },
     // modified: 2025-11-07T22:27:17.457Z
+  },
+  abovedoor: {
+    description: "abovedoor",
+    image: abovedoor,
+    position: { pan: -158.55, tilt: -38.38, zoom: 1 },
+    // modified: 2026-08-10T21:06:57.870Z
   },
   behind: {
     description: "Behind",
@@ -173,6 +181,12 @@ const marminPresets: Record<string, Preset> = {
     image: table,
     position: { pan: 115.86, tilt: -31.87, zoom: 689 },
     // modified: 2025-10-09T11:10:29.916Z
+  },
+  tablel: {
+    description: "tablel",
+    image: tablel,
+    position: { pan: 71.25, tilt: -62.19, zoom: 1 },
+    // modified: 2026-09-15T14:52:53.445Z
   },
   win1: {
     description: "Window 1",

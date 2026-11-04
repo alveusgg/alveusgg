@@ -19,18 +19,34 @@ const Socials = ({
       <Cycle
         items={useMemo(
           () => [
-            <Image
-              key="logo"
-              src={logoImage}
-              alt=""
-              height={64}
-              className="object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
-            />,
-            <QRCode
-              key="qr"
-              className="rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
-              value={`${getShortBaseUrl()}/socials`}
-            />,
+            {
+              key: "logo",
+              render: ({ className, ref }) => (
+                <Image
+                  src={logoImage}
+                  alt=""
+                  height={64}
+                  className={classes(
+                    "object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale",
+                    className,
+                  )}
+                  ref={ref}
+                />
+              ),
+            },
+            {
+              key: "qr",
+              render: ({ className, ref }) => (
+                <QRCode
+                  className={classes(
+                    "rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm",
+                    className,
+                  )}
+                  value={`${getShortBaseUrl()}/socials`}
+                  ref={ref}
+                />
+              ),
+            },
           ],
           [],
         )}

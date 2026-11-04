@@ -30,7 +30,7 @@ RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
 		--mount=type=cache,id=pnpm,target=/pnpm/store \
     set -eu; \
 		printf "//npm.pkg.github.com/:_authToken=%s\\n" "$(cat /tmp/github_token)" > "$HOME/.npmrc"; \
-    pnpm install --frozen-lockfile --filter "{.}..."; \
+    pnpm ci --filter "{.}..."; \
     rm -f "$HOME/.npmrc"
 
 ## Copy code

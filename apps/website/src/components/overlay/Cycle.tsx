@@ -1,9 +1,7 @@
 import { Transition } from "@headlessui/react";
 import {
-  Children,
-  type ReactElement,
-  type Ref,
-  cloneElement,
+  type ReactNode,
+  type RefCallback,
   useCallback,
   useEffect,
   useMemo,
@@ -11,18 +9,27 @@ import {
   useState,
 } from "react";
 
-import { classes } from "@/utils/classes";
+export type CycleItemProps = {
+  className?: string;
+  // Must be attached to the item's root element, so we know if it rendered anything
+  ref: RefCallback<Element>;
+};
+
+export type CycleItem = {
+  key: string;
+  render: (props: CycleItemProps) => ReactNode;
+};
 
 const Cycle = ({
   items,
   className,
   interval = 60,
 }: {
-  items: ReactElement<{ className: string; ref: Ref<HTMLElement> }>[];
+  items: CycleItem[];
   className?: string;
   interval?: number;
 }) => {
-  const refs = useRef<(HTMLElement | null)[]>([]);
+  const refs = useRef<(Element | null)[]>([]);
 
   const [index, setIndex] = useState(0);
   const next = useCallback(
@@ -64,35 +71,34 @@ const Cycle = ({
     return () => clearTimeout(timeout);
   }, [index, next, interval]);
 
-  const cloned = useMemo(
+  const entries = useMemo(
     () =>
-      // eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down
-      items.map((item, idx) =>
-        cloneElement(item, {
-          className: classes(item.props.className, className),
-          // Whenever an item is (un)mounted, update the ref and check if we need to advance
-          ref: (el) => {
-            const previous = refs.current[idx];
-            refs.current[idx] = el;
+      items.map(({ key, render }, idx) => ({
+        key,
+        render,
+        // Whenever an item is (un)mounted, update the ref and check if we need to advance
+        ref: (el: Element | null) => {
+          const previous = refs.current[idx];
+          refs.current[idx] = el;
 
-            if (previous !== el && !!previous !== !!el) {
-              next(true);
-            }
-          },
-        }),
-      ),
-    [items, className, next],
+          if (previous !== el && !!previous !== !!el) {
+            next(true);
+          }
+        },
+      })),
+    [items, next],
   );
 
-  return Children.map(cloned, (item, idx) => (
+  return entries.map(({ key, render, ref }, idx) => (
     <Transition
+      key={key}
       unmount={false}
       show={idx === index}
       appear={idx !== 0}
       as="div"
       className="contents *:z-0 *:transition-opacity data-closed:*:opacity-0 data-enter:*:z-10 data-enter:*:duration-700 data-leave:*:duration-300"
     >
-      {item}
+      {render({ className, ref })}
     </Transition>
   ));
 };

@@ -2,6 +2,7 @@ import parse, {
   type DOMNode,
   Element,
   type HTMLReactParserOptions,
+  Text,
   domToReact,
 } from "html-react-parser";
 import Image from "next/image";
@@ -45,8 +46,7 @@ const getTextContentRecursive = (node: DOMNode): string => {
       .join("");
   }
 
-  // FIXME: Switch back to `instanceof Text` once https://github.com/remarkablemark/html-react-parser/issues/2256 resolved
-  if (node.type === "text") {
+  if (node instanceof Text) {
     return node.data || "";
   }
 
@@ -105,11 +105,11 @@ const Header = ({
             [entry.seenOnStream, "Seen on stream"],
           ] satisfies [boolean, string][]
         ).map(
-          ([cond, text], i) =>
+          ([cond, text]) =>
             cond && (
               <Badge
                 dark={isPresentationView}
-                key={i}
+                key={text}
                 pulse={isPresentationView}
               >
                 {text}

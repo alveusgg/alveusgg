@@ -100,6 +100,7 @@ const Slideshow = ({
   return (
     <div className="relative z-0 size-full">
       <style
+        // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml -- CSS is generated from React IDs and numeric animation settings.
         dangerouslySetInnerHTML={{
           __html: [
             `@keyframes slideshow-${id}-container { ${animation.keyframes.container} }`,

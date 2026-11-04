@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "apps/donations/*"
+  - "apps/cams/*"
 
 optimisticRepeatInstall: true
 strictPeerDependencies: true

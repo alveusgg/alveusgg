@@ -40,7 +40,14 @@ const unitsSchema = z
     precipRate: z.number().nullable(),
     precipTotal: z.number().nullable(),
     pressure: z.number().nullable(),
-    temp: z.number().nullable(),
+    temp: z
+      .number()
+      .refine(
+        // something between the weather station and the service is sometimes reporting -40, consider temps -40 and below to be invalid
+        (t) => t > -39.99,
+        { error: "temperature value not sane" },
+      )
+      .nullable(),
     windChill: z.number().nullable(),
     windGust: z.number().nullable(),
     windSpeed: z.number().nullable(),
@@ -113,15 +120,15 @@ export async function getCurrentObservation<T extends boolean>(
 
     // Attempt to acquire a lock from Redis if there isn't already a lock
     try {
-      lock = crypto.randomUUID();
-      await redis.set(`${cache}:lock`, lock, { overwrite: false, expiry });
+      const token = crypto.randomUUID();
+      await redis.set(`${cache}:lock`, token, { overwrite: false, expiry });
+      lock = token;
     } catch (err) {
       if (!(err instanceof RedisValueAlreadyExistsError)) {
         throw err;
       }
 
       // If there is already lock in Redis, wait up to the timeout for cached data
-      lock = undefined;
       for (let attempt = 0; attempt < timeout * 10; attempt += 1) {
         await new Promise((resolve) => setTimeout(resolve, 1000 / 10));
         const data = await cached();
@@ -129,6 +136,7 @@ export async function getCurrentObservation<T extends boolean>(
       }
       throw new Error(
         "Failed to get weather data from cache after waiting for lock",
+        { cause: err },
       );
     }
   }

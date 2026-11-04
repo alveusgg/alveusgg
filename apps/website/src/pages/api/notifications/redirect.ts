@@ -1,3 +1,4 @@
+import { waitUntil } from "@vercel/functions";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "@alveusgg/database";
@@ -28,12 +29,18 @@ export default async function handler(
   res.redirect(303, `/notifications/${encodeURIComponent(notificationId)}`);
   res.end();
 
-  // Track click if possible
+  // Track click if possible, after the response has been sent
   const subscriptionId = params.get("subscription_id");
   if (subscriptionId) {
-    await prisma.notificationPush.updateMany({
-      where: { notificationId, subscriptionId, clickedAt: null },
-      data: { clickedAt: new Date() },
-    });
+    waitUntil(
+      prisma.notificationPush
+        .updateMany({
+          where: { notificationId, subscriptionId, clickedAt: null },
+          data: { clickedAt: new Date() },
+        })
+        .catch((err) => {
+          console.error("Failed to track notification click", err);
+        }),
+    );
   }
 }

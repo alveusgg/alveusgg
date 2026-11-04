@@ -34,7 +34,11 @@ import {
 import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import {
+  type ImageMimeType,
+  imageMimeTypes,
+  maxImageUploadSize,
+} from "@/utils/files";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
 import { trpc } from "@/utils/trpc";
@@ -53,6 +57,7 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import Link from "../content/Link";
 import { MessageBox } from "../shared/MessageBox";
 import { ModalDialog } from "../shared/ModalDialog";
+import { ProcedureErrorMessage } from "../shared/ProcedureErrorMessage";
 import { VideoPlatformIcon } from "../shared/VideoPlatformIcon";
 import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
@@ -563,8 +568,7 @@ export function ShowAndTellEntryForm({
             router.push("/show-and-tell/my-posts/");
           }
         },
-        onError: (err) => {
-          setError(err.message);
+        onError: () => {
           onUpdate?.();
         },
       });
@@ -580,9 +584,8 @@ export function ShowAndTellEntryForm({
               setAttachments(mapSavedAttachments(updatedEntry.attachments));
             }
           },
-          onError: (err) => {
+          onError: () => {
             setSuccessMessage(null);
-            setError(err.message);
             onUpdate?.();
           },
         },
@@ -604,9 +607,8 @@ export function ShowAndTellEntryForm({
               setAttachments(mapSavedAttachments(updatedEntry.attachments));
             }
           },
-          onError: (err) => {
+          onError: () => {
             setSuccessMessage(null);
-            setError(err.message);
             onUpdate?.();
           },
         },
@@ -628,6 +630,7 @@ export function ShowAndTellEntryForm({
     );
   }
 
+  const mutationError = { create, update, review }[action].error;
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
   const isMutationPending = update.isPending || review.isPending;
@@ -650,6 +653,11 @@ export function ShowAndTellEntryForm({
         </MessageBox>
       )}
       {error && <MessageBox variant="failure">{error}</MessageBox>}
+      {mutationError && (
+        <MessageBox variant="failure">
+          <ProcedureErrorMessage error={mutationError} />
+        </MessageBox>
+      )}
       {successMessage && (
         <MessageBox variant="success">{successMessage}</MessageBox>
       )}
@@ -722,6 +730,7 @@ export function ShowAndTellEntryForm({
               upload={upload}
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
+              maxFileSize={maxImageUploadSize}
               resizeImageOptions={resizeImageOptions}
               disabled={isMutationPending}
             />
@@ -877,6 +886,11 @@ export function ShowAndTellEntryForm({
         )}
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
+        {mutationError && (
+          <MessageBox variant="failure">
+            <ProcedureErrorMessage error={mutationError} />
+          </MessageBox>
+        )}
         {successMessage && (
           <MessageBox variant="success">{successMessage}</MessageBox>
         )}

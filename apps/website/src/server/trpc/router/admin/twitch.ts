@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import {
   getUserByName,
-  setupWebhookSubscriptionForBroadcaster,
+  setupWebhookSubscriptionsForBroadcasters,
 } from "@/server/apis/twitch";
 import {
   createTwitchChannel,
@@ -174,20 +174,14 @@ export const adminTwitchRouter = router({
         channels.alveus.id,
       ];
 
-      for (const channel of supportedChannels) {
-        try {
-          await setupWebhookSubscriptionForBroadcaster(
-            channel,
-            input.event.type,
-            input.event.version,
-            input.url,
-            input.secret,
-          );
-        } catch {
-          console.error(
-            `Failed to setup webhook subscription for channel ${channel}`,
-          );
-        }
-      }
+      // Reconcile all channels, but propagate failures so the worker retries and
+      // reports them rather than caching a false success.
+      return setupWebhookSubscriptionsForBroadcasters(
+        supportedChannels,
+        input.event.type,
+        input.event.version,
+        input.url,
+        input.secret,
+      );
     }),
 });

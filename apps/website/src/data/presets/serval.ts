@@ -17,6 +17,7 @@ import middleplatform from "@/assets/presets/serval/middleplatform.png";
 import middleplatformbz from "@/assets/presets/serval/middleplatformbz.png";
 import middleplatformt from "@/assets/presets/serval/middleplatformt.png";
 import middleplatformtl from "@/assets/presets/serval/middleplatformtl.png";
+import middleplatformtlz from "@/assets/presets/serval/middleplatformtlz.png";
 import middleplatformtr from "@/assets/presets/serval/middleplatformtr.png";
 import rightplatform from "@/assets/presets/serval/rightplatform.png";
 import rightplatformb from "@/assets/presets/serval/rightplatformb.png";
@@ -80,8 +81,8 @@ const servalPresets: Record<string, Preset> = {
   insidecrate: {
     description: "insidecrate",
     image: insidecrate,
-    position: { pan: -63.96, tilt: -57.51, zoom: 3174 },
-    // modified: 2026-05-12T19:48:50.588Z
+    position: { pan: -64.19, tilt: -56.42, zoom: 2457 },
+    // modified: 2026-08-19T13:37:50.294Z
   },
   left: {
     description: "left",
@@ -148,6 +149,12 @@ const servalPresets: Record<string, Preset> = {
     image: middleplatformtl,
     position: { pan: -103.13, tilt: -7.61, zoom: 395 },
     // modified: 2026-04-08T14:51:46.501Z
+  },
+  middleplatformtlz: {
+    description: "middleplatformtlz",
+    image: middleplatformtlz,
+    position: { pan: -97.42, tilt: -8.96, zoom: 3032 },
+    // modified: 2026-08-10T21:27:54.916Z
   },
   middleplatformtr: {
     description: "middleplatformtr",

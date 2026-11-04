@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { classes } from "@/utils/classes";
 import { formatDateTimeParts } from "@/utils/datetime";
@@ -17,7 +17,6 @@ const Datetime = ({
     time: string;
     date: string;
   }>();
-  const interval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const update = () => {
       const date = new Date();
@@ -56,8 +55,8 @@ const Datetime = ({
     };
 
     update();
-    interval.current = setInterval(update, 250);
-    return () => clearInterval(interval.current ?? undefined);
+    const interval = setInterval(update, 250);
+    return () => clearInterval(interval);
   }, []);
 
   return (

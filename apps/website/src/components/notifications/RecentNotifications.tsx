@@ -92,6 +92,7 @@ function RecentNotificationsList({
         {recentNotifications.isPending
           ? Array.from({ length: 10 }).map((_, i) => (
               <li
+                // eslint-disable-next-line @eslint-react/no-array-index-key -- These ten skeleton placeholders have fixed positions.
                 key={i}
                 className={classes(notificationClasses, "animate-pulse")}
               >

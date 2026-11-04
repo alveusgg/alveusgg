@@ -18,8 +18,16 @@ const config = {
     "/admin/*",
     "/forms",
     "/forms/*",
-    "/show-and-tell/*",
+    "/show-and-tell/my-posts",
+    "/show-and-tell/my-posts/*",
+    "/show-and-tell/submit-post",
     "/bingo/play/*",
+    // Pages that aren't meant to be found via search (OBS sources, OAuth
+    // endpoints, sign-in gated pages)
+    "/stream/*",
+    "/oauth/*",
+    "/unauthorized",
+    "/institute/pixels/*/rename",
   ],
   // TODO: Transform to apply proper priority to pages
   // Create a robots txt file, and disallow indexing of some routes

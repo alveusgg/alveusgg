@@ -26,7 +26,7 @@ const Wolves = ({
             <span className="opacity-10 select-none" aria-hidden="true">
               0
             </span>
-            26
+            21
           </span>{" "}
           Red wolves exist in the wild today.{" "}
           <Link
@@ -64,15 +64,15 @@ const Wolves = ({
           href="https://www.fws.gov/project/red-wolf-recovery-program"
           dark
         >
-          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update -
-          February 2026
+          U.S. Fish & Wildlife Service Red Wolf Recovery Program Update - August
+          2026
         </Link>
       </li>
       <li className="mb-1">
         [2]{" "}
         <Link
           external
-          href="https://read.dgf.nm.gov/mexican-wolf-population-survey-reveals-a-minimum-of-319-mexican-wolves-distributed-across-arizona-and-new-mexico"
+          href="https://www.azgfd.com/2026/02/25/mexican-wolf-population-count-complete/"
           dark
         >
           New Mexico Department of Wildlife and Arizona Game & Fish Department -

@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 const List = ({
   items,
@@ -9,13 +9,11 @@ const List = ({
   conjunction?: string;
   oxfordComma?: boolean;
 }) =>
-  items.map((item, index) => (
-    <Fragment key={index}>
-      {item}
-      {index < items.length - 2 && ", "}
-      {index === items.length - 2 && items.length > 2 && oxfordComma && ","}
-      {index === items.length - 2 && ` ${conjunction} `}
-    </Fragment>
-  ));
+  items.flatMap((item, index) => [
+    item,
+    index < items.length - 2 && ", ",
+    index === items.length - 2 && items.length > 2 && oxfordComma && ",",
+    index === items.length - 2 && ` ${conjunction} `,
+  ]);
 
 export default List;

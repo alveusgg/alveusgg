@@ -1,9 +1,10 @@
 import { track } from "@vercel/analytics/server";
 import { z } from "zod";
 
-import { prisma } from "@alveusgg/database";
-
+import { trackShortLinkClick } from "@/server/db/short-links";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
+
+import { getAnalyticsHeaders } from "@/utils/analytics-headers";
 
 const trackClickSchema = z.object({
   id: z.cuid(),
@@ -18,12 +19,12 @@ export default createTokenProtectedApiHandler(
   trackClickSchema,
   async ({ id, slug, link, headers }) => {
     try {
-      await prisma.shortLinksTracking.upsert({
-        where: { id },
-        create: { id, clicks: 1 },
-        update: { clicks: { increment: 1 } },
-      });
-      await track("Short link clicked", { slug, link }, { headers });
+      await trackShortLinkClick(id);
+      await track(
+        "Short link clicked",
+        { slug, link },
+        { headers: getAnalyticsHeaders(headers) },
+      );
       return true;
     } catch (e) {
       console.error("Failed to track click", e);

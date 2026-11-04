@@ -33,7 +33,8 @@ export async function decryptRecord<
       const decrypted = await decrypt(encryptedValue, key);
       result[fieldName] = decrypted as (typeof result)[typeof fieldName];
     } catch (_) {
-      throw new Error("Could not decrypt record"); // Re-throw with a more generic error message to avoid leaking information
+      // eslint-disable-next-line preserve-caught-error -- Re-throw with a more generic error message to avoid leaking information
+      throw new Error("Could not decrypt record");
     }
   }
 

@@ -35,9 +35,9 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
+import NonprofitStatus from "@/components/content/NonprofitStatus";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
-import Transparency from "@/components/content/Transparency";
 import { YouTubePreview } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
@@ -50,7 +50,6 @@ import emuEnclosureImage from "@/assets/grants/emu-enclosure.jpg";
 import studioHero from "@/assets/hero/studio.jpg";
 
 const grantContactEmail = "grants@alveussanctuary.org";
-const grantEin = "86-1772907";
 const emuEnclosureInstagramUrl = "https://www.instagram.com/p/DZGNTYwD8Ba/";
 
 const ambassadorsItems = Object.fromEntries(
@@ -632,21 +631,7 @@ const GrantsPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="hidden gap-4 text-sm lg:grid lg:pt-8">
-          <div className="rounded-lg border border-white/20 px-4 py-3">
-            <p className="font-semibold tracking-wide uppercase opacity-75">
-              Tax-exempt status
-            </p>
-            <p className="mt-1 text-lg font-bold">501(c)(3) nonprofit</p>
-          </div>
-
-          <div className="rounded-lg border border-white/20 px-4 py-3">
-            <p className="font-semibold tracking-wide uppercase opacity-75">
-              EIN
-            </p>
-            <p className="mt-1 text-lg font-bold">{grantEin}</p>
-          </div>
-        </div>
+        <NonprofitStatus />
       </Section>
 
       <SubNav links={grantSectionLinks} className="z-20" />
@@ -669,48 +654,42 @@ const GrantsPage: NextPage = () => {
         <GrantPrioritySection key={priority.id} {...priority} />
       ))}
 
-      <div className="relative flex grow flex-col">
-        <Section
-          className="relative z-0 bg-alveus-green-100 py-16 text-center text-alveus-green-900"
-          containerClassName="max-w-3xl"
-        >
-          <Heading id="contact" level={2} link className="scroll-mt-32">
-            Reach Out
-          </Heading>
+      {/* Grow the last section to cover the page */}
+      <Section
+        className="relative z-0 grow bg-alveus-green-100 py-16 text-center text-alveus-green-900"
+        containerClassName="max-w-3xl"
+      >
+        <Heading id="contact" level={2} link className="scroll-mt-32">
+          Reach Out
+        </Heading>
 
-          <p className="mx-auto mt-4 max-w-2xl text-lg/relaxed text-balance">
-            To learn more about these and other programs and projects, <br />
-            please contact us at{" "}
-            <Link href={`mailto:${grantContactEmail}`}>
-              {grantContactEmail}
-            </Link>
-            .
-          </p>
+        <p className="mx-auto mt-4 max-w-2xl text-lg/relaxed text-balance">
+          To learn more about these and other programs and projects, <br />
+          please contact us at{" "}
+          <Link href={`mailto:${grantContactEmail}`}>{grantContactEmail}</Link>.
+        </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Button
-              href={`mailto:${grantContactEmail}`}
-              filled
-              className="inline-flex items-center gap-2 px-6"
-            >
-              <IconEnvelope className="size-5" />
-              {grantContactEmail}
-            </Button>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Button
+            href={`mailto:${grantContactEmail}`}
+            filled
+            className="inline-flex items-center gap-2 px-6"
+          >
+            <IconEnvelope className="size-5" />
+            {grantContactEmail}
+          </Button>
 
-            <Button
-              href="/about/annual-reports"
-              className="inline-flex items-center gap-2 px-6"
-            >
-              <IconDocument className="size-5" />
-              Annual Reports
-            </Button>
-          </div>
+          <Button
+            href="/about/annual-reports"
+            className="inline-flex items-center gap-2 px-6"
+          >
+            <IconDocument className="size-5" />
+            Annual Reports
+          </Button>
+        </div>
 
-          <p className="mt-8 text-sm text-alveus-green-700">EIN: {grantEin}</p>
-        </Section>
-
-        <Transparency className="grow" />
-      </div>
+        <p className="mt-8 text-sm text-alveus-green-700">EIN: 86-1772907</p>
+      </Section>
     </>
   );
 };

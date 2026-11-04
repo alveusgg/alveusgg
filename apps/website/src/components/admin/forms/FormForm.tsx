@@ -22,6 +22,7 @@ import { trpc } from "@/utils/trpc";
 
 import Markdown from "@/components/content/Markdown";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
@@ -112,7 +113,7 @@ export function FormForm({ action, form }: FormFormProps) {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       {submit.error && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <ProcedureErrorMessage error={submit.error} />
         </MessageBox>
       )}
       {submit.isSuccess && (

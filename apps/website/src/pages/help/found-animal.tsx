@@ -143,6 +143,7 @@ const FoundAnimalPage: NextPage = () => {
 
               {log.map((log, index) => (
                 <p
+                  // eslint-disable-next-line @eslint-react/no-array-index-key -- Messages are appended to the log or the whole log is reset.
                   key={index}
                   className={classes(
                     log.type === "prompt"
@@ -163,8 +164,8 @@ const FoundAnimalPage: NextPage = () => {
 
               <ul className="mt-2 flex flex-wrap items-center justify-end gap-4">
                 {flow.options &&
-                  flow.options.map((option, index) => (
-                    <li key={index}>
+                  flow.options.map((option) => (
+                    <li key={option.name}>
                       <button
                         className="rounded-2xl border border-alveus-green bg-alveus-green px-4 py-1 text-lg text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green disabled:cursor-not-allowed disabled:opacity-50"
                         onClick={() => click(option)}

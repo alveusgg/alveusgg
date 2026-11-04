@@ -124,6 +124,7 @@ export async function decrypt(
     return decoder.decode(decryptedBuffer);
   } catch (e) {
     console.error(e);
-    throw new Error("Could not decrypt"); // Re-throw with a more generic error message to avoid leaking information
+    // eslint-disable-next-line preserve-caught-error -- Re-throw with a more generic error message to avoid leaking information
+    throw new Error("Could not decrypt");
   }
 }

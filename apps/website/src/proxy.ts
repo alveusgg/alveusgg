@@ -11,6 +11,8 @@ import { env } from "@/env";
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { callEndpoint } from "@/server/utils/queue";
 
+import { getAnalyticsHeaders } from "@/utils/analytics-headers";
+
 import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
 
 const api = createTRPCProxyClient<AppRouter>({
@@ -21,22 +23,6 @@ const api = createTRPCProxyClient<AppRouter>({
     }),
   ],
 });
-
-const headersToObject = (headers: Headers) =>
-  [...headers.entries()].reduce<Record<string, string | string[]>>(
-    (acc, [key, value]) => {
-      const existing = acc[key];
-      if (existing === undefined) return { ...acc, [key]: value };
-
-      return {
-        ...acc,
-        [key]: Array.isArray(existing)
-          ? [...existing, value]
-          : [existing, value],
-      };
-    },
-    {},
-  );
 
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
   const shortLink = await api.shortLinks.getShortLink
@@ -50,7 +36,7 @@ export async function proxy(req: NextRequest, event: NextFetchEvent) {
         id: shortLink.id,
         slug: shortLink.slug,
         link: shortLink.link,
-        headers: headersToObject(req.headers),
+        headers: getAnalyticsHeaders(req.headers),
       }),
     );
     return NextResponse.redirect(shortLink.link);

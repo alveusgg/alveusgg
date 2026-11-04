@@ -38,7 +38,7 @@ export const env = createEnv({
     MODERATOR_USER_NAMES: namesSchema.default(
       [
         // Channels
-        "alveussantuary",
+        "alveussanctuary",
         "AlveusGG",
         // Staff
         "Maya",
@@ -64,6 +64,11 @@ export const env = createEnv({
     // Twitch OAuth
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
+
+    // Sentry
+    SENTRY_DSN: z.url().optional(),
+    SENTRY_RELEASE: z.string().optional(),
+    SENTRY_ENVIRONMENT: z.string().optional(),
   },
   runtimeEnv: process.env, // Assuming we run in Node.js otherwise you would pass a record of environment variables
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

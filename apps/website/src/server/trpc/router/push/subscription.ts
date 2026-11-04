@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { publicProcedure, router } from "@/server/trpc/trpc";
@@ -85,7 +86,10 @@ export const pushSubscriptionRouter = router({
       });
 
       if (!subscription) {
-        throw Error("Subscription does not exist!");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Subscription does not exist!",
+        });
       }
 
       await ctx.prisma.pushSubscriptionTag.deleteMany({
