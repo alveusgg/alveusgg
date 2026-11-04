@@ -30,10 +30,10 @@
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@alveusgg/neon-crm-api": "workspace:*",
-    "@sentry/cloudflare": "^11.8.0",
+    "@sentry/cloudflare": "^11.9.0",
     "@trpc/client": "^11.18.0",
     "@trpc/server": "^11.18.0",
-    "hono": "^4.13.13",
+    "hono": "^4.13.14",
     "superjson": "^2.2.6",
     "zod": "^4.6.7"
   }
