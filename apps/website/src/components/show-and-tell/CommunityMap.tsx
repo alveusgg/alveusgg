@@ -16,7 +16,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { getDefaultMarker } from "@/utils/geolocation";
 
-setWorkerUrl("/maplibre-gl/maplibre-gl-worker.mjs");
+setWorkerUrl("/_deps/maplibre-gl/maplibre-gl-worker.mjs");
 
 const MAX_ZOOM = 8;
 const TOOLTIP_MIN_ZOOM = 3;

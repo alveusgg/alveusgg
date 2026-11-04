@@ -30,7 +30,7 @@ import { CheckboxField } from "./CheckboxField";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
-setWorkerUrl("/maplibre-gl/maplibre-gl-worker.mjs");
+setWorkerUrl("/_deps/maplibre-gl/maplibre-gl-worker.mjs");
 
 /**
  * @param name Unique name of the element
