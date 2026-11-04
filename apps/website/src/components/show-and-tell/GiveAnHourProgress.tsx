@@ -27,7 +27,7 @@ const useLocaleDays = (hours: number) => {
   return `${hours % 24 === 0 ? "" : "~"}${localeDays} day${Math.floor(hours / 24) !== 1 ? "s" : ""}`;
 };
 
-const useLocaleHours = (hours: number, showDays: boolean) => {
+export const useLocaleHours = (hours: number, showDays: boolean) => {
   const localeHours = useLocaleString(hours);
   const localeDays = useLocaleDays(hours);
 

@@ -17,6 +17,10 @@ import {
   GiveAnHourProgress,
   parseDateString,
 } from "@/components/show-and-tell/GiveAnHourProgress";
+import {
+  GiveAnHourStats,
+  useGiveAnHourStats,
+} from "@/components/show-and-tell/GiveAnHourStats";
 
 import IconPlus from "@/icons/IconPlus";
 
@@ -146,6 +150,7 @@ const GiveAnHourPage: NextPage<
 > = ({ wwfStart }) => {
   const { locale } = useLocale();
   const wwf = useWWfGiveAnHourCampaign(wwfStart);
+  const giveAnHourStatsQuery = useGiveAnHourStats(wwfGiveAnHourCampaigns);
 
   // Sync the targets of all the campaigns to the max target for them
   const [wwfMaxTarget, setWwfMaxTarget] = useState(0);
@@ -451,11 +456,17 @@ const GiveAnHourPage: NextPage<
             </p>
 
             {wwf?.cta && <p className="mt-2 text-lg">{wwf.cta(false)}</p>}
+
+            <GiveAnHourStats statsQuery={giveAnHourStatsQuery} />
           </div>
 
           <div className="flex w-full flex-col divide-y divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
             {wwfGiveAnHourCampaigns.map(({ start, end }) => {
               const year = start.split("-")[0]!;
+              const firstTimeParticipants =
+                giveAnHourStatsQuery.data?.campaigns.find(
+                  ({ year: campaignYear }) => campaignYear === Number(year),
+                )?.firstTimeParticipants;
               return (
                 <div key={year} className="pt-4 pb-6">
                   <div className="flex flex-wrap items-baseline justify-between">
@@ -484,6 +495,18 @@ const GiveAnHourPage: NextPage<
                     end={end}
                     target={wwfGiveAnHourSyncTarget}
                   />
+                  {giveAnHourStatsQuery.isPending ? (
+                    <p className="px-2 text-sm opacity-75">
+                      Loading first-time participants&hellip;
+                    </p>
+                  ) : firstTimeParticipants !== undefined ? (
+                    <p className="px-2 text-sm opacity-75">
+                      {firstTimeParticipants.toLocaleString(locale)} first-time{" "}
+                      {firstTimeParticipants === 1
+                        ? "participant"
+                        : "participants"}
+                    </p>
+                  ) : null}
                 </div>
               );
             })}
