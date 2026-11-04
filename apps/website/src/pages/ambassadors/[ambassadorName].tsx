@@ -652,12 +652,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         />
       )}
 
-      {/* Last section before the footer. Tan after the dark highlights, light
-          green when it follows the tan main section */}
+      {/* Last section before the footer, same background as the strip. When
+          the strip is shown, this continues it below a divider, so the two
+          read as one section */}
       {prevNext && (
         <Section
           className={classes(
-            "py-8",
+            others.length > 0 ? "pt-2 pb-8" : "py-8",
             ambassador.clips.length === 0 && "bg-alveus-green-100",
           )}
         >
@@ -665,6 +666,11 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             label="Ambassadors"
             previous={prevNext.previous}
             next={prevNext.next}
+            className={
+              others.length > 0
+                ? "border-t border-alveus-green-200 pt-8"
+                : undefined
+            }
           />
         </Section>
       )}
