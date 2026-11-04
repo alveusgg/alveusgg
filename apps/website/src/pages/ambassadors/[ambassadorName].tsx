@@ -409,6 +409,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     [ambassador.playlist],
   );
 
+  // Retired ambassadors and plants are never on stream
+  const canWatchLive =
+    !ambassador.retired && getSpecies(ambassador.species).class !== "plantae";
+
   const [clipsLightboxOpen, setClipsLightboxOpen] = useState<string>();
 
   const clipsLightboxItems = useMemo(
@@ -718,7 +722,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             ))}
           </ul>
 
-          {(ambassador.playlist || !ambassador.retired) && (
+          {(ambassador.playlist || canWatchLive) && (
             // Equal-height rows when stacked on phones, side by side from sm up
             <div className="mt-10 grid auto-rows-fr gap-4 sm:flex sm:flex-row sm:items-stretch sm:justify-center">
               {ambassador.playlist && (
@@ -743,7 +747,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <span className="sr-only"> (opens in a new tab)</span>
                 </Button>
               )}
-              {!ambassador.retired && (
+              {canWatchLive && (
                 <Button
                   dark
                   href={socials.twitch.link}
