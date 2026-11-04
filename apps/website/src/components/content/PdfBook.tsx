@@ -367,7 +367,7 @@ const PdfSpread = ({
 };
 
 type PdfNavigationProps = ReturnType<typeof getPdfSpread> & {
-  disabled: boolean;
+  busy: boolean;
   onNavigate: (page: number) => void;
 };
 
@@ -455,7 +455,7 @@ const PdfCornerPreview = ({
 const PdfEdgeNavigation = ({
   previous,
   next,
-  disabled,
+  busy,
   onNavigate,
   onCornerChange,
 }: Omit<PdfNavigationProps, "pages"> & {
@@ -483,14 +483,20 @@ const PdfEdgeNavigation = ({
             type="button"
             aria-label={label}
             title={label}
-            disabled={disabled}
-            onMouseEnter={() => onCornerChange(left ? "left" : "right")}
+            aria-disabled={busy}
+            onMouseEnter={() => {
+              if (!busy) onCornerChange(left ? "left" : "right");
+            }}
             onMouseLeave={() => onCornerChange(undefined)}
-            onFocus={() => onCornerChange(left ? "left" : "right")}
+            onFocus={() => {
+              if (!busy) onCornerChange(left ? "left" : "right");
+            }}
             onBlur={() => onCornerChange(undefined)}
-            onClick={() => onNavigate(page)}
+            onClick={() => {
+              if (!busy) onNavigate(page);
+            }}
             style={{ width: CORNER_SIZE }}
-            className={`pointer-events-auto absolute inset-y-0 ${side} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green disabled:pointer-events-none`}
+            className={`pointer-events-auto absolute inset-y-0 ${side} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green aria-disabled:pointer-events-none`}
           />
         ),
       )}
@@ -503,12 +509,12 @@ const PdfPagination = ({
   previous,
   next,
   pageCount,
-  disabled,
+  busy,
   onNavigate,
 }: PdfNavigationProps & { pageCount: number }) => (
   <nav
     aria-label="Report pages"
-    className="col-start-2 flex w-fit items-center gap-2 rounded-full bg-alveus-green p-1 text-alveus-tan shadow-lg"
+    className="flex w-fit items-center gap-2 rounded-full bg-alveus-green p-1 text-alveus-tan shadow-lg md:col-start-2"
   >
     <Button
       as="button"
@@ -517,9 +523,10 @@ const PdfPagination = ({
       aria-label="Previous"
       title="Previous"
       className="border-transparent p-3"
-      disabled={previous === null || disabled}
+      disabled={previous === null}
+      aria-disabled={busy}
       onClick={() => {
-        if (previous !== null) onNavigate(previous);
+        if (!busy && previous !== null) onNavigate(previous);
       }}
     >
       <IconChevronLeft size={24} aria-hidden />
@@ -546,9 +553,10 @@ const PdfPagination = ({
       aria-label="Next"
       title="Next"
       className="border-transparent p-3"
-      disabled={next === null || disabled}
+      disabled={next === null}
+      aria-disabled={busy}
       onClick={() => {
-        if (next !== null) onNavigate(next);
+        if (!busy && next !== null) onNavigate(next);
       }}
     >
       <IconChevronRight size={24} aria-hidden />
@@ -621,7 +629,7 @@ const PdfBook = ({
   };
 
   const goToPage = (nextPage: number) => {
-    if (spread.pages.includes(nextPage)) return;
+    if (!ready || active || spread.pages.includes(nextPage)) return;
     setActiveCorner(undefined);
     dispatchTurn({
       type: "start",
@@ -650,7 +658,7 @@ const PdfBook = ({
   };
 
   const spreads = active ? [outgoingPages, spread.pages] : [spread.pages];
-  const navigationDisabled = !ready || active;
+  const navigationBusy = !ready || active;
 
   return (
     <div ref={containerRef} className="w-full max-w-6xl">
@@ -659,7 +667,11 @@ const PdfBook = ({
           Unable to display the report. Please use the download menu below.
         </p>
       ) : (
-        <div role="group" aria-label={`${title} PDF viewer`}>
+        <div
+          role="group"
+          aria-label={`${title} PDF viewer`}
+          aria-busy={navigationBusy}
+        >
           <Document
             file={file}
             options={options}
@@ -684,7 +696,7 @@ const PdfBook = ({
                       pageCount={pageCount}
                       corner={activeCorner}
                       // Retain existing canvases as the outgoing spread instead of remounting.
-                      key={pages[0]}
+                      key={pages.join("-")}
                       pages={pages}
                       outgoing={pages === outgoingPages}
                       turn={turn}
@@ -703,7 +715,6 @@ const PdfBook = ({
                   <div
                     className="pointer-events-none absolute inset-y-0 z-30"
                     style={{
-                      visibility: navigationDisabled ? "hidden" : undefined,
                       left: (width - spreadWidth) / 2,
                       width: spreadWidth,
                     }}
@@ -711,7 +722,7 @@ const PdfBook = ({
                     <PdfEdgeNavigation
                       onCornerChange={setActiveCorner}
                       {...spread}
-                      disabled={navigationDisabled}
+                      busy={navigationBusy}
                       onNavigate={goToPage}
                     />
                   </div>
@@ -721,16 +732,16 @@ const PdfBook = ({
           </Document>
         </div>
       )}
-      <div className="mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 md:grid md:grid-cols-[1fr_auto_1fr]">
         {!failed && pageCount > 0 && (
           <PdfPagination
             {...spread}
             pageCount={pageCount}
-            disabled={navigationDisabled}
+            busy={navigationBusy}
             onNavigate={goToPage}
           />
         )}
-        <div className="col-start-3 justify-self-end">{downloads}</div>
+        <div className="md:col-start-3 md:justify-self-end">{downloads}</div>
       </div>
     </div>
   );

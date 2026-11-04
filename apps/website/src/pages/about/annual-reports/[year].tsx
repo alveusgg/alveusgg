@@ -152,55 +152,53 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
             </div>
           </>
         ) : (
-          <>
-            <PdfBook
-              key={report.pdf}
-              file={report.pdf}
-              title={`${report.year} Annual Report`}
-              downloads={
-                <Menu as="div" id="990" className="scroll-mt-8">
-                  <MenuButton
-                    type="button"
-                    aria-label="Download report or 990 filing"
-                    title="Downloads"
-                    className="rounded-full border-2 border-alveus-green p-3 transition-colors hover:bg-alveus-green hover:text-alveus-tan data-open:bg-alveus-green data-open:text-alveus-tan"
-                  >
-                    <IconDownload size={24} aria-hidden />
-                  </MenuButton>
-                  <MenuItems
-                    anchor="bottom end"
-                    modal={false}
-                    className="z-20 mt-2 rounded-xl bg-alveus-tan p-1 text-alveus-green shadow-lg outline-1 outline-black/20"
-                  >
-                    {[
-                      {
-                        label: "Annual report",
-                        href: report.pdf,
-                        filename: `alveus-sanctuary-annual-report-${report.year}.pdf`,
-                      },
-                      {
-                        label: "990 filing",
-                        href: report.filing,
-                        filename: `alveus-sanctuary-990-${report.year}.pdf`,
-                      },
-                    ].map(({ label, href, filename }) => (
-                      <MenuItem key={href}>
-                        <a
-                          href={href}
-                          download={filename}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block rounded-lg px-4 py-2 data-focus:bg-alveus-green data-focus:text-alveus-tan"
-                        >
-                          {label}
-                        </a>
-                      </MenuItem>
-                    ))}
-                  </MenuItems>
-                </Menu>
-              }
-            />
-          </>
+          <PdfBook
+            key={report.pdf}
+            file={report.pdf}
+            title={`${report.year} Annual Report`}
+            downloads={
+              <Menu as="div" id="990" className="scroll-mt-8">
+                <MenuButton
+                  type="button"
+                  aria-label="Download report or 990 filing"
+                  title="Downloads"
+                  className="rounded-full border-2 border-alveus-green p-3 transition-colors hover:bg-alveus-green hover:text-alveus-tan data-open:bg-alveus-green data-open:text-alveus-tan"
+                >
+                  <IconDownload size={24} aria-hidden />
+                </MenuButton>
+                <MenuItems
+                  anchor="bottom end"
+                  modal={false}
+                  className="z-20 mt-2 rounded-xl bg-alveus-tan p-1 text-alveus-green shadow-lg outline-1 outline-black/20"
+                >
+                  {[
+                    {
+                      label: "Annual report",
+                      href: report.pdf,
+                      filename: `alveus-sanctuary-annual-report-${report.year}.pdf`,
+                    },
+                    {
+                      label: "990 filing",
+                      href: report.filing,
+                      filename: `alveus-sanctuary-990-${report.year}.pdf`,
+                    },
+                  ].map(({ label, href, filename }) => (
+                    <MenuItem key={href}>
+                      <a
+                        href={href}
+                        download={filename}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block rounded-lg px-4 py-2 data-focus:bg-alveus-green data-focus:text-alveus-tan"
+                      >
+                        {label}
+                      </a>
+                    </MenuItem>
+                  ))}
+                </MenuItems>
+              </Menu>
+            }
+          />
         )}
 
         {report.image !== undefined && (
