@@ -8,6 +8,7 @@ import ambassadors, {
   type AmbassadorKey,
   isAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import {
   type AmbassadorImage,
   type AmbassadorImages,
@@ -28,10 +29,11 @@ import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { classes } from "@/utils/classes";
 import { formatPartialDateString } from "@/utils/datetime-partial";
-import { typeSafeObjectKeys } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
+import AmbassadorStrip from "@/components/content/AmbassadorStrip";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
 import Carousel from "@/components/content/Carousel";
@@ -225,6 +227,21 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   const sounds = useMemo(
     () => getAmbassadorSounds(ambassadorKey),
     [ambassadorKey],
+  );
+
+  const enclosure = enclosures[ambassador.enclosure];
+  const others = useMemo(
+    () =>
+      ambassador.retired
+        ? []
+        : typeSafeObjectEntries(ambassadors)
+            .filter(isActiveAmbassadorEntry)
+            .filter(
+              ([key, other]) =>
+                key !== ambassadorKey &&
+                other.enclosure === ambassador.enclosure,
+            ),
+    [ambassador, ambassadorKey],
   );
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
@@ -567,6 +584,28 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             items={clipsLightboxItems}
           />
         </Section>
+      )}
+
+      {/* Hidden when the ambassador lives alone or is retired. Tan after the
+          dark highlights, light green when it follows the tan main section */}
+      {others.length > 0 && (
+        <AmbassadorStrip
+          heading={<>Meet others in the {enclosure.name}</>}
+          headingId="enclosure"
+          items={others.map(([key, other]) => ({
+            key,
+            name: other.name,
+            href: `/ambassadors/${camelToKebab(key)}`,
+            image: getAmbassadorImages(key)[0],
+          }))}
+          action={{
+            label: "View all ambassadors by enclosure",
+            href: "/ambassadors#enclosures",
+          }}
+          className={
+            ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
+          }
+        />
       )}
     </>
   );
