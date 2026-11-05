@@ -43,6 +43,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import cnn from "@/assets/in-the-news/cnn.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
+import npr from "@/assets/in-the-news/npr.svg";
 import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
 import youtube from "@/assets/in-the-news/youtube.svg";
@@ -194,6 +195,12 @@ const news: Record<string, News> = {
     quote:
       "'Gen Z's Jane Goodall' has an online-only wildlife sanctuary in Texas",
     logo: radioNewZealand,
+  },
+  npr: {
+    title: "NPR",
+    href: "https://www.npr.org/2026/10/30/nx-s1-5954066/the-future-of-conservation-is-live-streamed",
+    quote: "The future of conservation is live-streamed",
+    logo: npr,
   },
   amazon: {
     title: "Amazon Ads",
