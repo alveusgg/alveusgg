@@ -109,6 +109,19 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Pokimane",
+      link: "https://www.twitch.tv/pokimane",
+      date: new Date("2026-11-03"),
+      videoId: "IQjftlIVgXQ",
+      creators: [
+        {
+          name: "Pokimane",
+          image: pokimane,
+          popularity: 9_400_000, // Twitch followers, 2026-10-05
+        },
+      ],
+    },
+    {
       name: "Kkatamina & Ryan Higa",
       link: "https://www.twitch.tv/kkatamina",
       date: new Date("2026-10-22"),
@@ -826,11 +839,7 @@ const collaborations: Collaboration[] = (
       videoId: "jKovWYZJ-H8",
       vodId: "G45SqJPsrOI",
       creators: [
-        {
-          name: "Pokimane",
-          image: pokimane,
-          popularity: 9_300_000, // Twitch followers, 2024-10-4
-        },
+        // Pokimane has a more recent collaboration
         {
           name: "AriaSaki",
           image: ariaSaki,
