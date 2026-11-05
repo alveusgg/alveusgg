@@ -44,6 +44,7 @@ import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import cnn from "@/assets/in-the-news/cnn.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
 import npr from "@/assets/in-the-news/npr.svg";
+import optimistDaily from "@/assets/in-the-news/optimist-daily.svg";
 import radioNewZealand from "@/assets/in-the-news/radio-new-zealand.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
 import youtube from "@/assets/in-the-news/youtube.svg";
@@ -215,6 +216,13 @@ const news: Record<string, News> = {
     quote:
       "Twitch isn't just for gamers anymore, as evidenced by a cow named Winnie who has become a viral sensation on the livestreaming platform",
     logo: yahooEntertainment,
+  },
+  optimistDaily: {
+    title: "The Optimist Daily",
+    href: "https://www.optimistdaily.com/2026/11/maya-higa-built-a-wildlife-sanctuary-on-twitch-funded-by-the-people-who-watch-it/",
+    quote:
+      "A teaching platform built around the creator-viewer relationship works differently from a broadcast. Viewers are compelled to come back.",
+    logo: optimistDaily,
   },
   powderBlue: {
     title: "Powder Blue",
