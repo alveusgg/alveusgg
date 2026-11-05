@@ -126,6 +126,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/kkatamina",
       date: new Date("2026-10-22"),
       videoId: "tsFE9Sp2V20",
+      vodId: "-VBgeqkOd5g",
       creators: [
         {
           name: "Kkatamina",
@@ -144,6 +145,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/jynxzi",
       date: new Date("2026-09-17"),
       videoId: "HDe20xr-RJ4",
+      vodId: "T7zk7SVE_lI",
       creators: [
         {
           name: "Jynxzi",
@@ -184,6 +186,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/christinaandamber",
       date: new Date("2026-08-11"),
       videoId: "MLalNcDbE80",
+      vodId: "-cVi2mmeDbg",
       creators: [
         {
           name: "Christina & Amber",
