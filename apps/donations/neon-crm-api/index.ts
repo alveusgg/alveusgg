@@ -4,6 +4,7 @@ import {
   type DonationSearchResponse as DonationSearch,
   type RecordId,
   type UpdateCustomFieldInput,
+  AccountDonationsResponse,
   AccountResponse,
   CreateWebhookResponse,
   CustomFieldResponse,
@@ -11,8 +12,8 @@ import {
   DonationSearchResponse,
   WebhookResponse,
   WebhooksResponse,
-} from "./schema.js";
-import { fetchOk, fetchWithSchema, type Options, url } from "./api.js";
+} from "./schema";
+import { fetchOk, fetchWithSchema, type Options, url } from "./api";
 import { fixTimestampsTimezone } from "./utils";
 
 export { formatDateInTimezone } from "./utils";
@@ -27,7 +28,7 @@ export {
   DonationSearchResponse,
   WebhookResponse,
   WebhooksResponse,
-} from "./schema.js";
+} from "./schema";
 
 export type DonationSearchInput = {
   searchFields: Array<{
@@ -93,6 +94,17 @@ export const getDonation = async (options: Options, id: RecordId) => {
 
   return donation;
 };
+
+export const getAccountDonations = (
+  options: Options,
+  id: RecordId,
+  currentPage = 0,
+) =>
+  fetchWithSchema(
+    options,
+    `${url`accounts/${id}/donations`}?currentPage=${currentPage}`,
+    AccountDonationsResponse,
+  );
 
 export const searchDonations = (
   options: Options,

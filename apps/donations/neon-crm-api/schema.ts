@@ -283,6 +283,11 @@ const Pagination = z.object({
   sortDirection: z.string().nullable().optional(),
 });
 
+export const AccountDonationsResponse = z.object({
+  donations: z.array(z.object({ id: RecordId, accountId: RecordId })),
+  pagination: Pagination,
+});
+
 export type DonationSearchResponse = z.output<typeof DonationSearchResponse>;
 export const DonationSearchResponse = z.object({
   pagination: Pagination,
