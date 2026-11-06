@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
-import { useCallback, useId, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -62,18 +62,18 @@ const AdminUsersPage: NextPage<
     },
   });
 
-  const suggestListId = useId();
   const [userNameSearchTerm, setUserNameSearchTerm] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
   const userNameSuggestions = trpc.adminUsersRouter.searchUsernames.useQuery(
     userNameSearchTerm,
     { enabled: userNameSearchTerm.length > 1 },
   );
 
   const handleAssign = useCallback(() => {
-    if (userNameSearchTerm && role) {
-      assignRole.mutate({ userName: userNameSearchTerm, role });
+    if (selectedUserId && role) {
+      assignRole.mutate({ userId: selectedUserId, role });
     }
-  }, [assignRole, role, userNameSearchTerm]);
+  }, [assignRole, role, selectedUserId]);
 
   return (
     <>
@@ -88,19 +88,30 @@ const AdminUsersPage: NextPage<
             </MessageBox>
           )}
 
-          <div className="flex flex-row items-end gap-5">
-            <div className="flex-1">
+          <div className="flex flex-col gap-5 md:flex-row md:items-end">
+            <div className="min-w-0 flex-1">
               <TextField
-                label={"User name"}
-                list={suggestListId}
+                label="Search users by name"
                 value={userNameSearchTerm}
-                onChange={(value) => setUserNameSearchTerm(value)}
+                onChange={(value) => {
+                  setUserNameSearchTerm(value);
+                  setSelectedUserId("");
+                }}
               />
-              <datalist id={suggestListId}>
+            </div>
+            <div className="min-w-0 flex-1">
+              <SelectBoxField
+                label="User"
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(e.target.value)}
+              >
+                <option value="">- Please choose -</option>
                 {userNameSuggestions.data?.map((user) => (
-                  <option key={user.id} value={user.name || ""} />
+                  <option key={user.id} value={user.id}>
+                    {user.name || "Unnamed user"} ({user.id})
+                  </option>
                 ))}
-              </datalist>
+              </SelectBoxField>
             </div>
             <div className="flex-1">
               <SelectBoxField
@@ -117,7 +128,12 @@ const AdminUsersPage: NextPage<
               </SelectBoxField>
             </div>
             <div>
-              <Button onClick={handleAssign}>Assign role</Button>
+              <Button
+                onClick={handleAssign}
+                disabled={!selectedUserId || !role || assignRole.isPending}
+              >
+                Assign role
+              </Button>
             </div>
           </div>
         </Panel>
@@ -144,7 +160,10 @@ const AdminUsersPage: NextPage<
                   <tbody>
                     {getUserWithRoles.data.map((user) => (
                       <tr key={user.id} className="border-t">
-                        <td className={cellClasses}>{user.name}</td>
+                        <td className={cellClasses}>
+                          {user.name || "Unnamed user"}
+                          <span className="block text-sm">{user.id}</span>
+                        </td>
                         <td className={cellClasses}>
                           <ul className="flex flex-row gap-2">
                             {user.isSuperUser && (
