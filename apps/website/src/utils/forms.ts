@@ -49,3 +49,13 @@ export function getStringFromFormData(
   if (typeof value !== "string") return "";
   return trim ? value.trim() : value;
 }
+
+// Limits for the (encrypted) personal data of form entries
+export const FORM_ENTRY_MAX_LENGTHS = {
+  name: 100,
+  email: 254,
+  addressLine: 200,
+  city: 200,
+  state: 200,
+  postalCode: 20,
+} as const;

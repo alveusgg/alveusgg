@@ -9,6 +9,7 @@ import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 import { refreshTwitchChannels } from "@/server/db/twitch-channels";
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
+import { redactOutgoingWebhooks } from "@/server/outgoing-webhooks";
 
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
@@ -78,6 +79,15 @@ export const scheduledTasks: ScheduledTasksConfig = {
       startDateTime: new Date(2024, 11, 4, 0, 0, 0),
       interval: { minutes: 10 },
     })),
+    {
+      id: "outgoingWebhooks.redact",
+      task: async () => {
+        await redactOutgoingWebhooks();
+      },
+      label: "Outgoing webhooks: Redact personal data of old webhooks",
+      startDateTime: new Date(2026, 9, 17, 3, 0, 0),
+      interval: { days: 1 },
+    },
     {
       id: "auth.refreshTwitchChannels",
       task: () => refreshTwitchChannels(),
