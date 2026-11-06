@@ -42,6 +42,9 @@ import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import PartialDateDiff from "@/components/content/PartialDateDiff";
+import PrevNextNav, {
+  type PrevNextItem,
+} from "@/components/content/PrevNextNav";
 import Section from "@/components/content/Section";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
@@ -211,6 +214,45 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   };
 };
 
+// Previous/next in the same order as the /ambassadors grid, wrapping around.
+// Retired ambassadors aren't in the grid, so their pages have no prev/next.
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+const prevNextItem = ([
+  key,
+  ambassador,
+]: (typeof activeAmbassadors)[number]): PrevNextItem => {
+  const image = getAmbassadorImages(key)[0];
+  return {
+    label: ambassador.name,
+    href: `/ambassadors/${camelToKebab(key)}`,
+    image: (
+      <Image
+        src={image.src}
+        alt=""
+        width={96}
+        className="size-10 shrink-0 rounded-full object-cover"
+        style={{ objectPosition: image.position }}
+      />
+    ),
+  };
+};
+
+const getPrevNext = (ambassadorKey: AmbassadorKey) => {
+  const idx = activeAmbassadors.findIndex(([key]) => key === ambassadorKey);
+  if (idx === -1) return undefined;
+
+  const count = activeAmbassadors.length;
+  const previous = activeAmbassadors[(idx - 1 + count) % count];
+  const next = activeAmbassadors[(idx + 1) % count];
+  return {
+    previous: previous && prevNextItem(previous),
+    next: next && prevNextItem(next),
+  };
+};
+
 const stringifyLifespan = (value: number | { min: number; max: number }) => {
   return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
 };
@@ -243,6 +285,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             ),
     [ambassador, ambassadorKey],
   );
+
+  const prevNext = useMemo(() => getPrevNext(ambassadorKey), [ambassadorKey]);
 
   const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
 
@@ -606,6 +650,29 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
           }
         />
+      )}
+
+      {/* Last section before the footer, same background as the strip. When
+          the strip is shown, this continues it below a divider, so the two
+          read as one section */}
+      {prevNext && (
+        <Section
+          className={classes(
+            others.length > 0 ? "pt-2 pb-8" : "py-8",
+            ambassador.clips.length === 0 && "bg-alveus-green-100",
+          )}
+        >
+          <PrevNextNav
+            label="Ambassadors"
+            previous={prevNext.previous}
+            next={prevNext.next}
+            className={
+              others.length > 0
+                ? "border-t border-alveus-green-200 pt-8"
+                : undefined
+            }
+          />
+        </Section>
       )}
     </>
   );
