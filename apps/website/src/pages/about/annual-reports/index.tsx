@@ -41,7 +41,6 @@ const AnnualReportsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow">
-        {/* overflow-hidden clips the header background to the rounded corners */}
         <div className="overflow-hidden rounded-2xl border border-alveus-green-200 bg-alveus-tan-50">
           {/* Explicit roles keep the table semantics when rows stack on phones
               (display: block otherwise drops them in some browsers) */}

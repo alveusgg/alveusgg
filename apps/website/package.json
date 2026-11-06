@@ -19,7 +19,7 @@
   "scripts": {
     "build:next": "next build --webpack",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
-    "build:maplibre-gl": "tsx ./build-scripts/copy-maplibre-gl.ts",
+    "build:deps": "tsx ./build-scripts/copy-deps.ts",
     "build:push-sw": "tsdown --config sw.tsdown.config.ts",
     "build:trpc-types": "tsdown --config trpc.tsdown.config.ts",
     "build:manifest": "tsx ./build-scripts/create-manifest.ts",
@@ -28,7 +28,7 @@
     "dev:push-sw": "tsdown --watch --config sw.tsdown.config.ts",
     "dev:trpc-types": "tsdown --watch --config trpc.tsdown.config.ts",
     "build": "pnpm run --sequential \"/^build:(?!presets$).*$/\"",
-    "dev": "pnpm run \"/^(build:maplibre-gl|build:manifest|dev:.*)/\"",
+    "dev": "pnpm run \"/^(build:deps|build:manifest|dev:.*)/\"",
     "postinstall": "pnpm build:trpc-types",
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
@@ -36,7 +36,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "0.79.1",
+    "@alveusgg/data": "0.81.0",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@auth/prisma-adapter": "^2.11.3",
@@ -52,6 +52,7 @@
     "@maplibre/maplibre-gl-geocoder": "^1.9.4",
     "@next/env": "^16.4.3",
     "@paralleldrive/cuid2": "^3.3.0",
+    "@sec-ant/readable-stream": "^0.7.1",
     "@sentry/nextjs": "^11.9.0",
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tailwindcss/postcss": "^4.3.3",
@@ -93,6 +94,7 @@
     "react-dom": "^19.3.1",
     "react-error-boundary": "^6.1.6",
     "react-markdown": "^10.1.0",
+    "react-pdf": "^11.0.0",
     "react-quill-new": "^3.8.3",
     "react-stately": "^3.51.0",
     "react-textarea-autosize": "^8.5.9",
