@@ -2,9 +2,12 @@ import { getSession } from "next-auth/react";
 import type { GetSessionParams } from "next-auth/react";
 
 import { env } from "@/env";
+
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
+
 import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
 import { notEmpty } from "@/utils/helpers";
 
@@ -52,6 +55,11 @@ const menuItems = [
   {
     label: "Wishlist",
     href: "/admin/wishlist",
+    permission: permissions.manageWishlist,
+  },
+  {
+    label: "Wishlist Categories",
+    href: "/admin/wishlist/categories",
     permission: permissions.manageWishlist,
   },
   {

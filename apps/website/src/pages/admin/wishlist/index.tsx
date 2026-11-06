@@ -2,6 +2,7 @@ import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 
 import { getAdminSSP } from "@/server/utils/admin";
+
 import { permissions } from "@/data/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";

@@ -1,4 +1,4 @@
-﻿import { resolve } from "node:path";
+import { resolve } from "node:path";
 
 import type { NextConfig } from "next";
 import { withSuperjson } from "next-superjson";
@@ -88,7 +88,7 @@ const config: NextConfig = {
       },
       // S3 - File Storage
       s3Pattern,
-      // Wishlist â€” retailer product image CDNs
+      // Wishlist: retailer product image CDNs
       {
         protocol: "https",
         hostname: "m.media-amazon.com",
@@ -713,7 +713,7 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
-  transpilePackages: ["@alveusgg/donations-core"],
+  transpilePackages: ["@alveusgg/donations-core", "@alveusgg/neon-crm-api"],
 };
 
 export default withSuperjson()(config);

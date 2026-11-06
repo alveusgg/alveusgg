@@ -127,8 +127,18 @@ export const env = createEnv({
       .string()
       .regex(/^[a-z0-9-]+$/i)
       .default("alveussanctuary"),
+    NEON_CRM_BASE_URL: z
+      .httpUrl()
+      .refine((url) => url.endsWith("/"))
+      .default("https://api.neoncrm.com/v2/"),
+    NEON_CRM_API_KEY: z.string().optional(),
     NEON_OAUTH_CLIENT_ID: z.string().optional(),
     NEON_OAUTH_CLIENT_SECRET: z.string().optional(),
+    PAYPAL_ENV: z.literal(["sandbox", "live"]).default("sandbox"),
+    PAYPAL_CLIENT_ID: z.string().optional(),
+    PAYPAL_CLIENT_SECRET: z.string().optional(),
+    PAYPAL_WEBHOOK_ID: z.string().optional(),
+    DISCORD_WISHLIST_WEBHOOK_URL: z.url().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -242,8 +252,16 @@ export const env = createEnv({
       process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
     NEON_CRM_ORG_ID: process.env.NEON_CRM_ORG_ID || undefined,
+    NEON_CRM_BASE_URL: process.env.NEON_CRM_BASE_URL || undefined,
+    NEON_CRM_API_KEY: process.env.NEON_CRM_API_KEY || undefined,
     NEON_OAUTH_CLIENT_ID: process.env.NEON_OAUTH_CLIENT_ID,
     NEON_OAUTH_CLIENT_SECRET: process.env.NEON_OAUTH_CLIENT_SECRET,
+    PAYPAL_ENV: process.env.PAYPAL_ENV || undefined,
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID || undefined,
+    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET || undefined,
+    PAYPAL_WEBHOOK_ID: process.env.PAYPAL_WEBHOOK_ID || undefined,
+    DISCORD_WISHLIST_WEBHOOK_URL:
+      process.env.DISCORD_WISHLIST_WEBHOOK_URL || undefined,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,

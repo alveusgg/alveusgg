@@ -516,37 +516,38 @@ model Pixel {
 }
 
 model WishlistCategory {
-  id        String         @id @default(cuid())
-  name      String
-  slug      String         @unique
-  sortOrder Int            @default(0)
-  items     WishlistItem[]
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id         String         @id @default(cuid())
+  name       String
+  slug       String         @unique
+  sortOrder  Int            @default(0)
+  archivedAt DateTime?
+  items      WishlistItem[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   @@map("wishlist_categories")
 }
 
 model WishlistItem {
-  id                String                  @id @default(cuid())
-  title             String
-  description       String?                 @db.Text
-  imageUrl          String?                 @db.Text
-  notes             String?                 @db.Text
+  id          String  @id @default(cuid())
+  title       String
+  description String? @db.Text
+  imageUrl    String? @db.Text
+  notes       String? @db.Text
 
   itemType ItemType @default(PRODUCT)
 
-  url               String?                 @db.Text
+  url               String? @db.Text
   price             String?
-  quantity          Int                     @default(1)
-  quantityFulfilled Int                     @default(0)
+  quantity          Int     @default(1)
+  quantityFulfilled Int     @default(0)
 
   goalAmountCents   Int?
-  raisedAmountCents Int                     @default(0)
+  raisedAmountCents Int  @default(0)
 
-  priority   WishlistPriority @default(MEDIUM)
-  status     WishlistStatus   @default(NEEDED)
-  sortOrder  Int              @default(0)
+  priority   WishlistPriority  @default(MEDIUM)
+  status     WishlistStatus    @default(NEEDED)
+  sortOrder  Int               @default(0)
   categoryId String?
   category   WishlistCategory? @relation(fields: [categoryId], references: [id])
 
@@ -575,9 +576,9 @@ model WishlistDonationOrder {
   donorMessage String? @db.Text
 
   status              String    @default("PENDING")
-  capturedAt           DateTime?
-  paypalTransactionId  String?
-  neonDonationId       String?
+  capturedAt          DateTime?
+  paypalTransactionId String?   @unique
+  neonDonationId      String?
 
   messageReadAt DateTime?
 

@@ -1,21 +1,24 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
+import { Headline } from "@/components/admin/Headline";
+import { Panel } from "@/components/admin/Panel";
+import {
+  Button,
+  secondaryButtonClasses,
+} from "@/components/shared/form/Button";
 import WishlistAdminTable from "@/components/wishlist/WishlistAdminTable";
 import { WishlistItemForm } from "@/components/wishlist/WishlistItemForm";
-import CategoryManager from "@/components/wishlist/CategoryManager";
 
-type Tab = "items" | "categories";
+import IconPlus from "@/icons/IconPlus";
 
 export function WishlistItemsAdmin() {
-  const [activeTab, setActiveTab] = useState<Tab>("items");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const itemsQuery = trpc.adminWishlist.adminGetAllItems.useQuery({});
-  const categoriesQuery = trpc.wishlist.getCategories.useQuery();
+  const categoriesQuery = trpc.adminWishlist.adminGetAllCategories.useQuery();
 
   const handleEdit = useCallback((id: string) => {
     setEditingId(id);
@@ -32,75 +35,72 @@ export function WishlistItemsAdmin() {
     ? itemsQuery.data?.find((i) => i.id === editingId)
     : undefined;
 
+  // Archived categories are hidden from the dropdown, but an item already
+  // in one keeps it as an option so saving doesn't drop the link.
+  const categories = (categoriesQuery.data ?? []).filter(
+    (category) =>
+      !category.archivedAt || category.id === editingItem?.categoryId,
+  );
+
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-sm text-gray-500">
-          Manage items needed for Alveus ambassadors and sanctuary operations.
-        </p>
-        <button
-          onClick={() => { setEditingId(null); setShowForm(true); }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium hover:bg-green-800 transition-colors"
-        >
-          Add Item
-        </button>
-      </div>
+    <>
+      <Headline>Wishlist items</Headline>
 
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex gap-6">
-          {(["items", "categories"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={classes(
-                "pb-3 text-sm font-medium capitalize border-b-2 transition-colors",
-                activeTab === tab
-                  ? "border-green-700 text-green-700"
-                  : "border-transparent text-gray-500 hover:text-gray-700",
-              )}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {activeTab === "items" && !showForm && (
-        <WishlistAdminTable
-          items={itemsQuery.data ?? []}
-          isLoading={itemsQuery.isLoading}
-          onEdit={handleEdit}
-          onRefresh={() => void itemsQuery.refetch()}
-        />
-      )}
-      {activeTab === "categories" && (
-        <CategoryManager
-          categories={categoriesQuery.data ?? []}
-          onRefresh={() => void categoriesQuery.refetch()}
-        />
-      )}
-
-      {activeTab === "items" && showForm && (
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+      {showForm ? (
+        <Panel>
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold">
               {editingItem ? "Edit item" : "Add item"}
-            </h2>
-            <button
-              onClick={() => { setShowForm(false); setEditingId(null); }}
-              className="text-sm text-gray-500 hover:text-gray-700"
+            </h3>
+            <Button
+              size="small"
+              width="auto"
+              className={secondaryButtonClasses}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+              }}
             >
               Cancel
-            </button>
+            </Button>
           </div>
           <WishlistItemForm
+            key={editingItem?.id ?? "create"}
             action={editingItem ? "edit" : "create"}
             item={editingItem}
-            categories={categoriesQuery.data ?? []}
+            categories={categories}
             onCreate={handleCreateSuccess}
           />
-        </div>
+        </Panel>
+      ) : (
+        <Panel>
+          <p className="mb-4 text-sm text-gray-400">
+            Manage items needed for Alveus ambassadors and sanctuary operations.
+            Donors contribute through PayPal and staff buy the items.
+          </p>
+
+          <WishlistAdminTable
+            items={itemsQuery.data ?? []}
+            isLoading={itemsQuery.isPending}
+            onEdit={handleEdit}
+            onRefresh={() => void itemsQuery.refetch()}
+          />
+
+          <div className="mt-4 flex">
+            <Button
+              size="small"
+              width="auto"
+              onClick={() => {
+                setEditingId(null);
+                setShowForm(true);
+              }}
+            >
+              <IconPlus className="size-4" />
+              Add item
+            </Button>
+          </div>
+        </Panel>
       )}
-    </div>
+    </>
   );
 }

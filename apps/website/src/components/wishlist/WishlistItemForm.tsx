@@ -9,10 +9,12 @@ import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
@@ -51,18 +53,17 @@ export function WishlistItemForm({
 }: WishlistItemFormProps) {
   const router = useRouter();
 
-  // Item type is chosen once at creation and locked during edits, since
-  // Product and Goal items have fundamentally different required fields.
+  // Set at creation and locked on edit, since the two types need different fields
   const [itemType, setItemType] = useState<"PRODUCT" | "GOAL">(
     item?.itemType ?? "PRODUCT",
   );
   const [categoryId, setCategoryId] = useState(item?.categoryId ?? "");
 
-  const createMutation = trpc.wishlist.createItem.useMutation();
-  const updateMutation = trpc.wishlist.updateItem.useMutation();
-  const deleteMutation = trpc.wishlist.deleteItem.useMutation();
+  const createMutation = trpc.adminWishlist.createItem.useMutation();
+  const updateMutation = trpc.adminWishlist.updateItem.useMutation();
+  const deleteMutation = trpc.adminWishlist.deleteItem.useMutation();
 
-  const isSaving = createMutation.isLoading || updateMutation.isLoading;
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -71,10 +72,17 @@ export function WishlistItemForm({
 
       const shared = {
         title: getStringFromFormData(formData, "title"),
-        description: getStringFromFormData(formData, "description") || undefined,
+        description:
+          getStringFromFormData(formData, "description") || undefined,
         imageUrl: getStringFromFormData(formData, "imageUrl") || undefined,
-        priority: getStringFromFormData(formData, "priority") as (typeof PRIORITY_OPTIONS)[number],
-        status: getStringFromFormData(formData, "status") as (typeof STATUS_OPTIONS)[number],
+        priority: getStringFromFormData(
+          formData,
+          "priority",
+        ) as (typeof PRIORITY_OPTIONS)[number],
+        status: getStringFromFormData(
+          formData,
+          "status",
+        ) as (typeof STATUS_OPTIONS)[number],
         categoryId: categoryId || undefined,
         notes: getStringFromFormData(formData, "notes") || undefined,
       };
@@ -84,17 +92,21 @@ export function WishlistItemForm({
           ? {
               itemType: "PRODUCT" as const,
               ...shared,
-              url: getStringFromFormData(formData, "url"),
+              url: getStringFromFormData(formData, "url") || null,
               price: getStringFromFormData(formData, "price") || undefined,
-              quantity: Number(getStringFromFormData(formData, "quantity")) || 1,
-              quantityFulfilled: Number(getStringFromFormData(formData, "quantityFulfilled")) || 0,
+              quantity:
+                Number(getStringFromFormData(formData, "quantity")) || 1,
+              quantityFulfilled:
+                Number(getStringFromFormData(formData, "quantityFulfilled")) ||
+                0,
             }
           : {
               itemType: "GOAL" as const,
               ...shared,
               goalAmountCents:
                 Math.round(
-                  (Number(getStringFromFormData(formData, "goalAmount")) || 0) * 100,
+                  (Number(getStringFromFormData(formData, "goalAmount")) || 0) *
+                    100,
                 ) || 100,
             };
 
@@ -104,7 +116,8 @@ export function WishlistItemForm({
           itemType === "GOAL"
             ? {
                 raisedAmountCents: Math.round(
-                  (Number(getStringFromFormData(formData, "raisedAmount")) || 0) * 100,
+                  (Number(getStringFromFormData(formData, "raisedAmount")) ||
+                    0) * 100,
                 ),
               }
             : {};
@@ -114,29 +127,40 @@ export function WishlistItemForm({
         );
       } else {
         createMutation.mutate(payload, {
-          onSuccess:
-            onCreate ?? (() => void router.push("/admin/wishlist")),
+          onSuccess: onCreate ?? (() => void router.push("/admin/wishlist")),
         });
       }
     },
-    [action, item, itemType, categoryId, createMutation, updateMutation, router, onCreate],
+    [
+      action,
+      item,
+      itemType,
+      categoryId,
+      createMutation,
+      updateMutation,
+      router,
+      onCreate,
+    ],
   );
 
   return (
-    <form className={classes("flex flex-col gap-10", className)} onSubmit={handleSubmit}>
+    <form
+      className={classes("flex flex-col gap-10", className)}
+      onSubmit={handleSubmit}
+    >
       {createMutation.error && (
         <MessageBox variant="failure">
-          <pre>{createMutation.error.message}</pre>
+          <ProcedureErrorMessage error={createMutation.error} />
         </MessageBox>
       )}
       {updateMutation.error && (
         <MessageBox variant="failure">
-          <pre>{updateMutation.error.message}</pre>
+          <ProcedureErrorMessage error={updateMutation.error} />
         </MessageBox>
       )}
       {deleteMutation.error && (
         <MessageBox variant="failure">
-          <pre>{deleteMutation.error.message}</pre>
+          <ProcedureErrorMessage error={deleteMutation.error} />
         </MessageBox>
       )}
       {createMutation.isSuccess && (
@@ -146,13 +170,17 @@ export function WishlistItemForm({
         <MessageBox variant="success">Wishlist item updated!</MessageBox>
       )}
 
-      {/* Item type toggle — only shown when creating, locked during edit */}
       {action === "create" && (
         <FieldGroup>
           <Button
             type="button"
             width="full"
-            className={itemType === "PRODUCT" ? defaultButtonClasses : "bg-gray-300 text-gray-900"}
+            className={
+              itemType === "PRODUCT"
+                ? defaultButtonClasses
+                : secondaryButtonClasses
+            }
+            aria-pressed={itemType === "PRODUCT"}
             onClick={() => setItemType("PRODUCT")}
           >
             <IconBox className="size-4" />
@@ -161,7 +189,12 @@ export function WishlistItemForm({
           <Button
             type="button"
             width="full"
-            className={itemType === "GOAL" ? defaultButtonClasses : "bg-gray-300 text-gray-900"}
+            className={
+              itemType === "GOAL"
+                ? defaultButtonClasses
+                : secondaryButtonClasses
+            }
+            aria-pressed={itemType === "GOAL"}
             onClick={() => setItemType("GOAL")}
           >
             <IconGift className="size-4" />
@@ -170,7 +203,9 @@ export function WishlistItemForm({
         </FieldGroup>
       )}
 
-      <Fieldset legend={`${action === "create" ? "Create" : "Update"} Wishlist ${itemType === "GOAL" ? "Goal" : "Item"}`}>
+      <Fieldset
+        legend={`${action === "create" ? "Create" : "Update"} Wishlist ${itemType === "GOAL" ? "Goal" : "Item"}`}
+      >
         <TextField
           label="Title"
           name="title"
@@ -195,11 +230,10 @@ export function WishlistItemForm({
         {itemType === "PRODUCT" ? (
           <>
             <TextField
-              label="Product URL"
+              label="Product URL (optional, shown to donors as a reference link)"
               name="url"
               inputMode="url"
               type="url"
-              isRequired
               defaultValue={item?.url ?? ""}
             />
             <FieldGroup>
@@ -235,7 +269,11 @@ export function WishlistItemForm({
               type="number"
               inputMode="decimal"
               prefix={<IconDollar className="ml-2 size-4 text-gray-500" />}
-              defaultValue={item?.goalAmountCents != null ? String(item.goalAmountCents / 100) : "500"}
+              defaultValue={
+                item?.goalAmountCents != null
+                  ? String(item.goalAmountCents / 100)
+                  : "500"
+              }
               isRequired
             />
             {action === "edit" && (
@@ -245,7 +283,11 @@ export function WishlistItemForm({
                 type="number"
                 inputMode="decimal"
                 prefix={<IconDollar className="ml-2 size-4 text-gray-500" />}
-                defaultValue={item?.raisedAmountCents != null ? String(item.raisedAmountCents / 100) : "0"}
+                defaultValue={
+                  item?.raisedAmountCents != null
+                    ? String(item.raisedAmountCents / 100)
+                    : "0"
+                }
               />
             )}
           </FieldGroup>
@@ -273,7 +315,9 @@ export function WishlistItemForm({
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
-                {s === "PARTIALLY_FULFILLED" ? "Partially Fulfilled" : s.charAt(0) + s.slice(1).toLowerCase()}
+                {s === "PARTIALLY_FULFILLED"
+                  ? "Partially Fulfilled"
+                  : s.charAt(0) + s.slice(1).toLowerCase()}
               </option>
             ))}
           </SelectBoxField>
@@ -289,6 +333,7 @@ export function WishlistItemForm({
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
               {cat.name}
+              {cat.archivedAt ? " (archived)" : ""}
             </option>
           ))}
         </SelectBoxField>
@@ -301,7 +346,11 @@ export function WishlistItemForm({
       </Fieldset>
 
       <div className="flex flex-col gap-2">
-        <Button type="submit" className={defaultButtonClasses} disabled={isSaving}>
+        <Button
+          type="submit"
+          className={defaultButtonClasses}
+          disabled={isSaving}
+        >
           {isSaving ? "Saving…" : action === "create" ? "Create" : "Update"}
         </Button>
 

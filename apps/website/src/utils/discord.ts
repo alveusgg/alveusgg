@@ -1,5 +1,7 @@
 import { LinkifyIt } from "linkify-it";
 
+import { env } from "@/env";
+
 type DiscordTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
 
 export const getDiscordTimestamp = (
@@ -16,24 +18,27 @@ export const escapeLinksForDiscord = (text: string) => {
     fuzzyEmail: false,
     fuzzyIP: false,
   });
+
   const matches = linkify.match(text);
+
   let offset = 0;
   if (matches != null) {
     for (const match of matches) {
       const linkStart = match.index + offset;
       const linkEnd = match.lastIndex + offset;
+
       const linkified = `<${match.text}>`;
       text = text.slice(0, linkStart) + linkified + text.slice(linkEnd);
+
       offset += linkified.length - (match.lastIndex - match.index);
     }
   }
+
   return text;
 };
 
-// ─── Wishlist donation notifications ───────────────────────────────────────────
-// Uses a separate Discord Incoming Webhook (DISCORD_WISHLIST_WEBHOOK_URL) —
-// no bot, no OAuth, just a URL. Setup: Discord server -> channel settings ->
-// Integrations -> Webhooks -> New Webhook.
+// Wishlist alerts post to their own Discord incoming webhook, created under
+// channel settings -> Integrations -> Webhooks
 
 export interface DiscordNotifyOptions {
   itemTitle: string;
@@ -45,8 +50,8 @@ export interface DiscordNotifyOptions {
 export async function notifyWishlistDonation(
   opts: DiscordNotifyOptions,
 ): Promise<void> {
-  const webhookUrl = process.env.DISCORD_WISHLIST_WEBHOOK_URL;
-  if (!webhookUrl) return; // Silently skip if not configured — never block a donation on this
+  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
+  if (!webhookUrl) return; // Optional, never blocks a donation
 
   const donor = opts.donorName?.trim() || "Anonymous";
   const message = opts.donorMessage
@@ -62,7 +67,8 @@ export async function notifyWishlistDonation(
       { name: "Donor", value: donor, inline: true },
       ...(message ? [{ name: "Message", value: message, inline: false }] : []),
     ],
-    timestamp: getDiscordTimestamp(new Date(), "F"),
+    // Embeds need an ISO 8601 timestamp, not the <t:...> chat format
+    timestamp: new Date().toISOString(),
   };
 
   try {
@@ -71,15 +77,13 @@ export async function notifyWishlistDonation(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "Wishlist Bot", embeds: [embed] }),
     });
-    // fetch() only rejects on network failure — a rejected payload,
-    // invalid webhook URL, or rate limit still resolves normally with a
-    // non-2xx status, so it must be checked explicitly or those failures
-    // are silently treated as successful notifications.
+    // fetch only rejects on network errors, so a rejected payload or rate
+    // limit has to be caught from the status
     if (!response.ok) {
       throw new Error(`Discord webhook returned ${response.status}`);
     }
   } catch (err) {
-    // Never let a Discord failure break the donation flow — just log it.
+    // Never let a Discord failure break the donation flow, just log it.
     console.error("Discord wishlist webhook failed:", err);
   }
 }
@@ -88,25 +92,30 @@ export async function notifyWishlistDonation(
  * Sends a digest of recent wishlist donations. Call from a scheduled job.
  */
 export async function sendWishlistDigest(
-  donations: Array<{ itemTitle: string; amount: number; donorName: string | null }>,
+  donations: Array<{
+    itemTitle: string;
+    amount: number;
+    donorName: string | null;
+  }>,
 ): Promise<void> {
-  const webhookUrl = process.env.DISCORD_WISHLIST_WEBHOOK_URL;
+  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
   if (!webhookUrl || donations.length === 0) return;
 
   const total = donations.reduce((sum, d) => sum + d.amount, 0);
   const lines = donations
     .map(
       (d) =>
-        `- **$${d.amount.toFixed(2)}** for *${escapeLinksForDiscord(d.itemTitle)}* — ${d.donorName?.trim() || "Anonymous"}`,
+        `- **$${d.amount.toFixed(2)}** for *${escapeLinksForDiscord(d.itemTitle)}* by ${d.donorName?.trim() || "Anonymous"}`,
     )
     .join("\n");
 
   const embed = {
-    title: `Weekly Wishlist Digest — ${donations.length} donation${donations.length === 1 ? "" : "s"}`,
+    title: `Weekly Wishlist Digest: ${donations.length} donation${donations.length === 1 ? "" : "s"}`,
     description: lines,
     color: 0x0f6e56,
     fields: [{ name: "Total raised this week", value: `$${total.toFixed(2)}` }],
-    timestamp: getDiscordTimestamp(new Date(), "F"),
+    // Embeds need an ISO 8601 timestamp, not the <t:...> chat format
+    timestamp: new Date().toISOString(),
   };
 
   try {

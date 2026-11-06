@@ -3,8 +3,15 @@ import { useState } from "react";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
+import Button from "@/components/content/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
 import { ModalDialog } from "@/components/shared/ModalDialog";
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
+import {
+  Button as FormButton,
+  approveButtonClasses,
+} from "@/components/shared/form/Button";
+import { TextAreaField } from "@/components/shared/form/TextAreaField";
 import { TextField } from "@/components/shared/form/TextField";
 
 import IconPayPal from "@/icons/IconPayPal";
@@ -21,9 +28,17 @@ function parseDollars(raw: string | null): string {
   return isNaN(n) ? "" : n.toFixed(2);
 }
 
-export default function WishlistDonateButton({ itemId, itemTitle, suggestedAmount }: Props) {
+const MESSAGE_MAX_LENGTH = 500;
+
+export default function WishlistDonateButton({
+  itemId,
+  itemTitle,
+  suggestedAmount,
+}: Props) {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState(parseDollars(suggestedAmount) || "10.00");
+  const [amount, setAmount] = useState(
+    parseDollars(suggestedAmount) || "10.00",
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -57,114 +72,148 @@ export default function WishlistDonateButton({ itemId, itemTitle, suggestedAmoun
 
   const amountNum = parseFloat(amount);
   const isValidAmount = !isNaN(amountNum) && amountNum >= 1;
-  const presets = [...new Set(["5.00", "10.00", parseDollars(suggestedAmount) || "25.00", "50.00"])];
+  const presets = [
+    ...new Set([
+      "5.00",
+      "10.00",
+      parseDollars(suggestedAmount) || "25.00",
+      "50.00",
+    ]),
+  ];
 
   return (
     <>
-      <button
+      <Button
+        as="button"
+        type="button"
+        filled
         onClick={() => setOpen(true)}
-        className="mt-1 w-full flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-medium text-white transition-colors"
-        style={{ background: "#003087" }}
-        aria-label={`Donate the value of ${itemTitle} via PayPal`}
+        className="flex w-full items-center justify-center gap-2 text-base"
+        aria-label={`Donate toward ${itemTitle} with PayPal`}
       >
-        <IconPayPal className="size-4" />
+        <IconPayPal className="size-5" />
         Donate with PayPal
-      </button>
+      </Button>
 
       <ModalDialog
-        title="Donate toward this item"
+        title={`Donate toward ${itemTitle}`}
         isOpen={open}
         closeModal={() => setOpen(false)}
         closeLabel="Cancel"
       >
-        <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-          Can&rsquo;t ship it? Donate the value and we&rsquo;ll purchase{" "}
-          <span className="font-medium text-gray-700">{itemTitle}</span> ourselves.
-        </p>
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void handleDonate();
+          }}
+        >
+          <p className="text-sm text-gray-600">
+            Your donation goes to Alveus through PayPal. Alveus buys the item
+            and has it shipped to the sanctuary.
+          </p>
 
-        <TextField
-          label="Amount (USD)"
-          name="amount"
-          type="number"
-          inputMode="decimal"
-          value={amount}
-          onChange={(value) => setAmount(value)}
-          prefix={<span className="pl-2 text-gray-500 text-sm">$</span>}
-        />
-
-        <div className="flex gap-2 my-3 flex-wrap">
-          {presets.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => setAmount(preset)}
-              className={classes(
-                "px-3 py-1 rounded-full text-xs font-medium border transition-colors",
-                amount === preset
-                  ? "bg-blue-900 text-white border-blue-900"
-                  : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50",
-              )}
-            >
-              ${preset}
-            </button>
-          ))}
-        </div>
-
-        <div className="mb-3">
           <TextField
-            label="Your name (optional)"
+            label="Amount (USD)"
+            name="amount"
+            type="number"
+            inputMode="decimal"
+            value={amount}
+            onChange={(value) => setAmount(value)}
+            prefix={<span className="pl-2 text-sm text-gray-500">$</span>}
+            isRequired
+          />
+
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Suggested amounts"
+          >
+            {presets.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                aria-pressed={amount === preset}
+                onClick={() => setAmount(preset)}
+                className={classes(
+                  "rounded-full border-2 border-alveus-green px-3 py-1 text-sm font-semibold transition-colors",
+                  amount === preset
+                    ? "bg-alveus-green text-alveus-tan"
+                    : "text-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
+                )}
+              >
+                ${preset}
+              </button>
+            ))}
+          </div>
+
+          <TextField
+            label="Your name (optional, may be shown on stream)"
             name="name"
             value={name}
             onChange={(value) => setName(value)}
-            placeholder="Your name here"
+            maxLength={100}
           />
-        </div>
 
-        <div className="mb-1">
-          <TextField
-            label="Email for receipt (optional)"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(value) => { setEmail(value); validateEmail(value); }}
-            placeholder="you@example.com"
-          />
-        </div>
-        {emailError && <p className="text-xs text-red-500 mb-2">{emailError}</p>}
+          <div>
+            <TextField
+              label="Email for receipt (optional)"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(value) => {
+                setEmail(value);
+                validateEmail(value);
+              }}
+              isInvalid={!!emailError}
+              aria-describedby={emailError ? "wishlist-email-error" : undefined}
+            />
+            {emailError && (
+              <p
+                id="wishlist-email-error"
+                className="mt-1 text-sm text-red-700"
+              >
+                {emailError}
+              </p>
+            )}
+          </div>
 
-        <div className="mb-3 mt-2">
-          <label className="block text-sm text-gray-700 mb-1">
-            Leave a message <span className="text-gray-400 font-normal">(optional — may be read on stream!)</span>
-          </label>
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value.slice(0, 500))}
-            rows={3}
-            placeholder="A note for the animals or the team..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
-          />
-          <p className="text-xs text-gray-400 mt-1 text-right">{message.length}/500</p>
-        </div>
+          <div>
+            <TextAreaField
+              label="Leave a message (optional, may be read on stream)"
+              name="message"
+              value={message}
+              onChange={(value) =>
+                setMessage(value.slice(0, MESSAGE_MAX_LENGTH))
+              }
+              maxLength={MESSAGE_MAX_LENGTH}
+              inputClassName="min-h-20"
+            />
+            <p className="text-right text-sm text-gray-500">
+              {message.length}/{MESSAGE_MAX_LENGTH}
+            </p>
+          </div>
 
-        <p className="text-xs text-gray-400 mb-4">
-          Donations are logged to Neon CRM. A tax receipt will be emailed if you provide your address.
-        </p>
+          {createOrder.error && (
+            <MessageBox variant="failure">
+              <p>Failed to start the payment. Please try again.</p>
+              <ProcedureErrorMessage error={createOrder.error} />
+            </MessageBox>
+          )}
 
-        <Button
-          type="button"
-          className={defaultButtonClasses}
-          disabled={!isValidAmount || !!emailError || createOrder.isLoading}
-          onClick={() => void handleDonate()}
-        >
-          <IconPayPal className="size-4" />
-          {createOrder.isLoading
-            ? "Redirecting to PayPal…"
-            : `Donate $${isValidAmount ? amountNum.toFixed(2) : "—"} with PayPal`}
-        </Button>
-
-        {createOrder.isError && (
-          <p className="text-xs text-red-500 mt-2 text-center">Failed to start payment. Please try again.</p>
-        )}
+          <FormButton
+            type="submit"
+            className={approveButtonClasses}
+            disabled={!isValidAmount || !!emailError || createOrder.isPending}
+          >
+            <IconPayPal className="size-4" />
+            {createOrder.isPending
+              ? "Redirecting to PayPal …"
+              : isValidAmount
+                ? `Donate $${amountNum.toFixed(2)} with PayPal`
+                : "Donate with PayPal"}
+          </FormButton>
+        </form>
       </ModalDialog>
     </>
   );

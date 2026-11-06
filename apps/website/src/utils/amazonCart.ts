@@ -1,11 +1,5 @@
-/**
- * apps/website/src/utils/amazonCart.ts
- *
- * Builds a single Amazon "Add to Cart" URL containing every fully-funded Amazon item at once, so staff can click one link instead of buying each item individually.
- *
- * Format (Amazon's own documented cart-add endpoint):
- *   https://www.amazon.com/gp/aws/cart/add.html?ASIN.1=XXXX&Quantity.1=1&ASIN.2=YYYY&Quantity.2=2
- */
+// One Amazon cart link for all funded Amazon items, so staff buy them in one go:
+// https://www.amazon.com/gp/aws/cart/add.html?ASIN.1=XXXX&Quantity.1=1
 
 interface CartableItem {
   url: string | null;
@@ -13,7 +7,7 @@ interface CartableItem {
   quantityFulfilled: number;
 }
 
-export function extractAsin(url: string): string | null {
+function extractAsin(url: string): string | null {
   const patterns = [
     /\/dp\/([A-Z0-9]{10})/,
     /\/gp\/product\/([A-Z0-9]{10})/,

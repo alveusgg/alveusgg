@@ -1,9 +1,3 @@
-/**
- * Staff-only wishlist procedures — item/category management, donation
- * review, and fulfillment. Public/donor-facing procedures live in
- * ../wishlist.ts.
- */
-
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -20,7 +14,13 @@ import { permissions } from "@/data/permissions";
 import { buildAmazonCartUrl } from "@/utils/amazonCart";
 
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
-const statusEnum = z.enum(["NEEDED", "PARTIALLY_FULFILLED", "FULFILLED", "OPENED", "ARCHIVED"]);
+const statusEnum = z.enum([
+  "NEEDED",
+  "PARTIALLY_FULFILLED",
+  "FULFILLED",
+  "OPENED",
+  "ARCHIVED",
+]);
 const itemTypeEnum = z.enum(["PRODUCT", "GOAL"]);
 
 const baseItemFields = {
@@ -38,7 +38,7 @@ const itemCreateInput = z.discriminatedUnion("itemType", [
   z.object({
     itemType: z.literal("PRODUCT"),
     ...baseItemFields,
-    url: z.string().url(),
+    url: z.string().url().optional().nullable(),
     price: z.string().max(50).optional().nullable(),
     quantity: z.number().int().min(1).default(1),
     quantityFulfilled: z.number().int().min(0).default(0),
@@ -61,7 +61,7 @@ const itemUpdateInput = z.object({
   categoryId: z.string().optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
   sortOrder: z.number().int().optional(),
-  url: z.string().url().optional(),
+  url: z.string().url().optional().nullable(),
   price: z.string().max(50).optional().nullable(),
   quantity: z.number().int().min(1).optional(),
   quantityFulfilled: z.number().int().min(0).optional(),
@@ -71,23 +71,27 @@ const itemUpdateInput = z.object({
 
 const categoryInput = z.object({
   name: z.string().min(1).max(100),
-  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/),
-  sortOrder: z.number().int().default(0),
+  slug: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[a-z0-9-]+$/),
+  sortOrder: z.number().int().optional(),
 });
 
-// Defined once, reused on every procedure below — matches the pattern used
-// by router/admin/short-links.ts rather than chaining .use() individually.
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageWishlist),
 );
 
 export const adminWishlistRouter = router({
   adminGetAllItems: permittedProcedure
-    .input(z.object({
-      status: statusEnum.optional(),
-      categoryId: z.string().optional(),
-      itemType: itemTypeEnum.optional(),
-    }))
+    .input(
+      z.object({
+        status: statusEnum.optional(),
+        categoryId: z.string().optional(),
+        itemType: itemTypeEnum.optional(),
+      }),
+    )
     .query(async ({ input }) => {
       return prisma.wishlistItem.findMany({
         where: {
@@ -108,7 +112,8 @@ export const adminWishlistRouter = router({
     });
 
     const amazonItems = items.filter((i) => i.url?.includes("amazon."));
-    const cartUrl = amazonItems.length > 0 ? buildAmazonCartUrl(amazonItems) : null;
+    const cartUrl =
+      amazonItems.length > 0 ? buildAmazonCartUrl(amazonItems) : null;
 
     return { items, amazonCartUrl: cartUrl };
   }),
@@ -136,16 +141,26 @@ export const adminWishlistRouter = router({
       const { id, ...data } = input;
       const existing = await prisma.wishlistItem.findUnique({ where: { id } });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
-      return prisma.wishlistItem.update({ where: { id }, data, include: { category: true } });
+      return prisma.wishlistItem.update({
+        where: { id },
+        data,
+        include: { category: true },
+      });
     }),
 
   markAsOpened: permittedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
-      const item = await prisma.wishlistItem.findUnique({ where: { id: input.id } });
+      const item = await prisma.wishlistItem.findUnique({
+        where: { id: input.id },
+      });
       if (!item) throw new TRPCError({ code: "NOT_FOUND" });
       if (item.status !== "FULFILLED") {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Item must be fully funded before it can be marked as opened" });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Item must be fully funded before it can be marked as opened",
+        });
       }
       return prisma.wishlistItem.update({
         where: { id: input.id },
@@ -159,7 +174,10 @@ export const adminWishlistRouter = router({
       if (input.permanent) {
         await prisma.wishlistItem.delete({ where: { id: input.id } });
       } else {
-        await prisma.wishlistItem.update({ where: { id: input.id }, data: { status: "ARCHIVED" } });
+        await prisma.wishlistItem.update({
+          where: { id: input.id },
+          data: { status: "ARCHIVED" },
+        });
       }
       return { success: true };
     }),
@@ -169,36 +187,91 @@ export const adminWishlistRouter = router({
     .mutation(async ({ input }) => {
       await prisma.$transaction(
         input.orderedIds.map((id, idx) =>
-          prisma.wishlistItem.update({ where: { id }, data: { sortOrder: idx } })
-        )
+          prisma.wishlistItem.update({
+            where: { id },
+            data: { sortOrder: idx },
+          }),
+        ),
       );
       return { success: true };
     }),
 
   createCategory: permittedProcedure
     .input(categoryInput)
-    .mutation(async ({ input }) => prisma.wishlistCategory.create({ data: input })),
+    .mutation(async ({ input }) => {
+      // New categories go to the end of the list unless an order is given
+      const last = await prisma.wishlistCategory.findFirst({
+        orderBy: { sortOrder: "desc" },
+        select: { sortOrder: true },
+      });
+      return prisma.wishlistCategory.create({
+        data: {
+          ...input,
+          sortOrder: input.sortOrder ?? (last ? last.sortOrder + 1 : 0),
+        },
+      });
+    }),
 
+  // Includes archived categories, unlike the public getCategories
+  adminGetAllCategories: permittedProcedure.query(async () =>
+    prisma.wishlistCategory.findMany({
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+      include: { _count: { select: { items: true } } },
+    }),
+  ),
+
+  // The slug is set at creation and never changes, so renames keep links working
   updateCategory: permittedProcedure
-    .input(categoryInput.extend({ id: z.string() }))
+    .input(
+      categoryInput
+        .pick({ name: true, sortOrder: true })
+        .extend({ id: z.string() }),
+    )
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
       return prisma.wishlistCategory.update({ where: { id }, data });
     }),
 
-  deleteCategory: permittedProcedure
+  // Categories are archived rather than deleted, so items keep their category
+  archiveCategory: permittedProcedure
     .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) =>
+      prisma.wishlistCategory.update({
+        where: { id: input.id },
+        data: { archivedAt: new Date() },
+      }),
+    ),
+
+  unarchiveCategory: permittedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) =>
+      prisma.wishlistCategory.update({
+        where: { id: input.id },
+        data: { archivedAt: null },
+      }),
+    ),
+
+  reorderCategories: permittedProcedure
+    .input(z.object({ orderedIds: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      await prisma.wishlistItem.updateMany({ where: { categoryId: input.id }, data: { categoryId: null } });
-      await prisma.wishlistCategory.delete({ where: { id: input.id } });
+      await prisma.$transaction(
+        input.orderedIds.map((id, idx) =>
+          prisma.wishlistCategory.update({
+            where: { id },
+            data: { sortOrder: idx },
+          }),
+        ),
+      );
       return { success: true };
     }),
 
   adminGetDonations: permittedProcedure
-    .input(z.object({
-      status: z.enum(["PENDING", "CAPTURED", "FAILED"]).optional(),
-      unreadMessagesOnly: z.boolean().optional(),
-    }))
+    .input(
+      z.object({
+        status: z.enum(["PENDING", "CAPTURED", "FAILED"]).optional(),
+        unreadMessagesOnly: z.boolean().optional(),
+      }),
+    )
     .query(async ({ input }) => {
       return prisma.wishlistDonationOrder.findMany({
         where: {

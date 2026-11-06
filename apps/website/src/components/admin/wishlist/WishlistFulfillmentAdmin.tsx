@@ -1,157 +1,158 @@
-import { useState } from "react";
-
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
-import { Button, defaultButtonClasses, secondaryButtonClasses } from "@/components/shared/form/Button";
+import { Headline } from "@/components/admin/Headline";
+import { Panel } from "@/components/admin/Panel";
+import Link from "@/components/content/Link";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
+import {
+  Button,
+  approveButtonClasses,
+  secondaryButtonClasses,
+} from "@/components/shared/form/Button";
 
 import IconAmazon from "@/icons/IconAmazon";
-import IconExternal from "@/icons/IconExternal";
+import IconCheck from "@/icons/IconCheck";
 
 export function WishlistFulfillmentAdmin() {
-  const [tab, setTab] = useState<"funded" | "messages">("funded");
-
   const fundedQuery = trpc.adminWishlist.adminGetFullyFundedProducts.useQuery();
-  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({ status: "CAPTURED", unreadMessagesOnly: true });
-  const markOpened = trpc.adminWishlist.markAsOpened.useMutation();
-  const markRead = trpc.adminWishlist.markMessageRead.useMutation();
+  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({
+    status: "CAPTURED",
+    unreadMessagesOnly: true,
+  });
+  const markOpened = trpc.adminWishlist.markAsOpened.useMutation({
+    onSettled: () => void fundedQuery.refetch(),
+  });
+  const markRead = trpc.adminWishlist.markMessageRead.useMutation({
+    onSettled: () => void messagesQuery.refetch(),
+  });
+
+  const funded = fundedQuery.data?.items ?? [];
+  const messages = messagesQuery.data ?? [];
 
   return (
-    <div>
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex gap-6">
-          <button
-            onClick={() => setTab("funded")}
-            className={classes(
-              "pb-3 text-sm font-medium border-b-2 transition-colors",
-              tab === "funded"
-                ? "border-green-700 text-green-700"
-                : "border-transparent text-gray-500 hover:text-gray-700",
-            )}
-          >
-            Fully funded ({fundedQuery.data?.items.length ?? 0})
-          </button>
-          <button
-            onClick={() => setTab("messages")}
-            className={classes(
-              "pb-3 text-sm font-medium border-b-2 transition-colors",
-              tab === "messages"
-                ? "border-green-700 text-green-700"
-                : "border-transparent text-gray-500 hover:text-gray-700",
-            )}
-          >
-            Unread donor messages ({messagesQuery.data?.length ?? 0})
-          </button>
-        </nav>
-      </div>
+    <>
+      <Headline>Fully funded, ready to buy ({funded.length})</Headline>
 
-      {tab === "funded" && (
-        <>
-          {fundedQuery.data?.amazonCartUrl && (
-            <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-orange-900">
-                  {fundedQuery.data.items.filter((i) => i.url?.includes("amazon.")).length} item(s) ready on Amazon
-                </p>
-                <p className="text-xs text-orange-700 mt-0.5">One click adds all of them to your Amazon cart at once</p>
-              </div>
-              <a
-                href={fundedQuery.data.amazonCartUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors flex-shrink-0"
-              >
-                <IconAmazon className="size-4" />
-                Open pre-filled cart
-              </a>
-            </div>
-          )}
+      <Panel>
+        {markOpened.error && (
+          <MessageBox variant="failure" className="mb-4">
+            <ProcedureErrorMessage error={markOpened.error} />
+          </MessageBox>
+        )}
 
-          {fundedQuery.isLoading ? (
-            <div className="space-y-2">
-              {[...Array(3)].map((_, i) => <div key={i} className="h-16 bg-gray-100 animate-pulse rounded-lg" />)}
-            </div>
-          ) : fundedQuery.data?.items.length === 0 ? (
-            <p className="text-center text-gray-400 py-12 text-sm">No fully-funded items waiting on purchase right now.</p>
-          ) : (
-            <div className="space-y-2">
-              {fundedQuery.data?.items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{item.title}</p>
-                    <p className="text-xs text-gray-400">{item.category?.name ?? "Uncategorized"} · {item.price ?? "—"}</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
+        {fundedQuery.data?.amazonCartUrl && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <p>
+              {funded.filter((i) => i.url?.includes("amazon.")).length} item(s)
+              can be added to an Amazon cart in one click.
+            </p>
+            <Link
+              href={fundedQuery.data.amazonCartUrl}
+              external
+              className="flex items-center gap-1"
+            >
+              <IconAmazon className="size-4" />
+              Open pre-filled cart
+            </Link>
+          </div>
+        )}
+
+        {fundedQuery.isPending ? (
+          <MessageBox>Loading …</MessageBox>
+        ) : funded.length === 0 ? (
+          <MessageBox>
+            No fully funded items waiting on purchase right now.
+          </MessageBox>
+        ) : (
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-700">
+                <th className="text-left">Item</th>
+                <th className="text-left">Category</th>
+                <th className="text-left">Price</th>
+                <th className="text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {funded.map((item) => (
+                <tr key={item.id} className="border-b border-gray-700">
+                  <td className="p-1">
+                    <div className="text-lg">{item.title}</div>
                     {item.url && (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <IconExternal className="size-3.5" />
+                      <Link href={item.url} external className="text-sm">
                         View item
-                      </a>
+                      </Link>
                     )}
+                  </td>
+                  <td className="p-1">
+                    {item.category?.name ?? "Uncategorized"}
+                  </td>
+                  <td className="p-1">{item.price ?? "Not set"}</td>
+                  <td className="p-1">
                     <Button
-                      type="button"
                       size="small"
                       width="auto"
-                      className={defaultButtonClasses}
-                      disabled={markOpened.isLoading}
-                      onClick={() =>
-                        markOpened.mutate({ id: item.id }, { onSuccess: () => void fundedQuery.refetch() })
-                      }
+                      className={approveButtonClasses}
+                      disabled={markOpened.isPending}
+                      onClick={() => markOpened.mutate({ id: item.id })}
                     >
+                      <IconCheck className="size-4" />
                       Mark as opened
                     </Button>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               ))}
-            </div>
-          )}
-        </>
-      )}
+            </tbody>
+          </table>
+        )}
+      </Panel>
 
-      {tab === "messages" && (
-        <>
-          {messagesQuery.isLoading ? (
-            <div className="space-y-2">
-              {[...Array(3)].map((_, i) => <div key={i} className="h-20 bg-gray-100 animate-pulse rounded-lg" />)}
-            </div>
-          ) : messagesQuery.data?.length === 0 ? (
-            <p className="text-center text-gray-400 py-12 text-sm">No unread donor messages. All caught up!</p>
-          ) : (
-            <div className="space-y-3">
-              {messagesQuery.data?.map((d) => (
-                <div key={d.id} className="bg-white border border-gray-200 rounded-xl p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {d.donorName ?? "Anonymous"} · <span className="text-green-700">${(d.capturedAmount ?? d.amount).toFixed(2)}</span>
-                      </p>
-                      <p className="text-xs text-gray-400">for {d.wishlistItem?.title}</p>
-                    </div>
-                    <Button
-                      type="button"
-                      size="small"
-                      width="auto"
-                      className={secondaryButtonClasses}
-                      disabled={markRead.isLoading}
-                      onClick={() =>
-                        markRead.mutate({ donationOrderId: d.id }, { onSuccess: () => void messagesQuery.refetch() })
-                      }
-                    >
-                      Mark as read on stream
-                    </Button>
+      <Headline>Unread donor messages ({messages.length})</Headline>
+
+      <Panel>
+        {markRead.error && (
+          <MessageBox variant="failure" className="mb-4">
+            <ProcedureErrorMessage error={markRead.error} />
+          </MessageBox>
+        )}
+
+        {messagesQuery.isPending ? (
+          <MessageBox>Loading …</MessageBox>
+        ) : messages.length === 0 ? (
+          <MessageBox>No unread donor messages. All caught up!</MessageBox>
+        ) : (
+          <ul className="flex flex-col gap-4">
+            {messages.map((d) => (
+              <li key={d.id} className="border-b border-gray-700 pb-4">
+                <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <p className="font-semibold">
+                      {d.donorName ?? "Anonymous"}, $
+                      {(d.capturedAmount ?? d.amount).toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      for {d.wishlistItem.title}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 italic">&ldquo;{d.donorMessage}&rdquo;</p>
+                  <Button
+                    size="small"
+                    width="auto"
+                    className={secondaryButtonClasses}
+                    disabled={markRead.isPending}
+                    onClick={() => markRead.mutate({ donationOrderId: d.id })}
+                  >
+                    Mark as read on stream
+                  </Button>
                 </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-    </div>
+                <blockquote className="italic">
+                  &ldquo;{d.donorMessage}&rdquo;
+                </blockquote>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+    </>
   );
 }
