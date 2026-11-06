@@ -6,7 +6,7 @@ export const DEV_ADMIN_SESSION: Session = {
   user: {
     id: "dev-admin",
     roles: [] as string[],
-    scopes: scopeGroups.default,
+    twitch: { id: "dev-admin", scopes: scopeGroups.default },
     isSuperUser: true,
   },
   expires: "2090-01-01T00:00:00.000Z",
