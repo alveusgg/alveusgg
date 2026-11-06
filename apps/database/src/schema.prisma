@@ -542,8 +542,12 @@ model WishlistItem {
   quantity          Int     @default(1)
   quantityFulfilled Int     @default(0)
 
+  // Target for GOAL items, and for PRODUCT items that allow partial donations
   goalAmountCents   Int?
   raisedAmountCents Int  @default(0)
+
+  // Lets donors chip in any amount toward goalAmountCents, capped at the target
+  allowPartialDonations Boolean @default(false)
 
   priority   WishlistPriority  @default(MEDIUM)
   status     WishlistStatus    @default(NEEDED)
@@ -570,6 +574,9 @@ model WishlistDonationOrder {
 
   amount         Float
   capturedAmount Float?
+  // Part of the captured amount over the item's remaining balance, recorded
+  // as a general wishlist donation instead of crediting the item
+  excessAmount   Float?
 
   donorName    String?
   donorEmail   String?

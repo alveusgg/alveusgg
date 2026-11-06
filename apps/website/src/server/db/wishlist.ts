@@ -2,13 +2,38 @@ import { prisma } from "@alveusgg/database";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 
-import { notifyWishlistDonation } from "@/utils/discord";
+import { getPartialTargetCents, parsePriceCents } from "@/data/wishlist";
 
-/** Parses a display price like "$29.99" into whole cents. Returns null if unparseable. */
-export function parsePriceCents(price: string | null): number | null {
-  if (!price) return null;
-  const n = parseFloat(price.replace(/[^0-9.]/g, ""));
-  return isNaN(n) || n <= 0 ? null : Math.round(n * 100);
+import {
+  notifyWishlistDonation,
+  notifyWishlistItemFunded,
+} from "@/utils/discord";
+
+// Splits a capture into the item's credit and the excess over its remaining
+// balance. `raisedAfterCents` is the total after incrementing by the full amount.
+export function capCreditToRemaining({
+  amountCents,
+  raisedAfterCents,
+  goalCents,
+}: {
+  amountCents: number;
+  raisedAfterCents: number;
+  goalCents: number;
+}) {
+  const raisedBeforeCents = raisedAfterCents - amountCents;
+  const remainingCents = Math.max(0, goalCents - raisedBeforeCents);
+  const creditedCents = Math.min(amountCents, remainingCents);
+  const raisedCents = raisedBeforeCents + creditedCents;
+
+  return {
+    creditedCents,
+    excessCents: amountCents - creditedCents,
+    raisedCents,
+    isFunded: raisedCents >= goalCents,
+    // Only the donation that crosses the target reports it, so the funded
+    // alert is sent once
+    justFunded: raisedBeforeCents < goalCents && raisedCents >= goalCents,
+  };
 }
 
 export type WishlistCapture = {
@@ -53,6 +78,57 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     if (claimed.count === 0) return { status: "duplicate", order } as const;
 
     const item = order.wishlistItem;
+    const partialTargetCents = item.allowPartialDonations
+      ? getPartialTargetCents(item)
+      : null;
+
+    if (partialTargetCents != null) {
+      // The atomic increment locks the item row until this transaction
+      // commits, so a simultaneous capture waits here and then sees this
+      // donation in its total. That lets each capture cap its own credit at
+      // the remaining balance, and two donors can never overfund the item.
+      const afterIncrement = await tx.wishlistItem.update({
+        where: { id: item.id },
+        data: { raisedAmountCents: { increment: amountCents } },
+      });
+      const credit = capCreditToRemaining({
+        amountCents,
+        raisedAfterCents: afterIncrement.raisedAmountCents,
+        goalCents: partialTargetCents,
+      });
+
+      await tx.wishlistItem.update({
+        where: { id: item.id },
+        data: {
+          raisedAmountCents: { decrement: credit.excessCents },
+          ...(credit.isFunded
+            ? {
+                status: "FULFILLED",
+                ...(item.itemType === "PRODUCT"
+                  ? { quantityFulfilled: afterIncrement.quantity }
+                  : {}),
+              }
+            : credit.raisedCents > 0
+              ? { status: "PARTIALLY_FULFILLED" }
+              : {}),
+        },
+      });
+
+      // The excess is still a valid donation, kept as a general wishlist gift
+      if (credit.excessCents > 0) {
+        await tx.wishlistDonationOrder.update({
+          where: { id: order.id },
+          data: { excessAmount: credit.excessCents / 100 },
+        });
+      }
+
+      return {
+        status: "captured",
+        order,
+        excessAmount: credit.excessCents / 100,
+        justFunded: credit.justFunded,
+      } as const;
+    }
 
     // Both branches use an atomic `increment` (`UPDATE ... SET x = x + n`),
     // so two donations completing at the same moment can never overwrite
@@ -103,7 +179,12 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       });
     }
 
-    return { status: "captured", order } as const;
+    return {
+      status: "captured",
+      order,
+      excessAmount: 0,
+      justFunded: false,
+    } as const;
   });
 
   if (result.status !== "captured") return result;
@@ -115,6 +196,14 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     donorName: order.donorName,
     donorMessage: order.donorMessage,
   }).catch((err) => console.error("Discord notify failed (non-fatal):", err));
+
+  if (result.justFunded) {
+    void notifyWishlistItemFunded({
+      itemTitle: order.wishlistItem.title,
+    }).catch((err) =>
+      console.error("Discord funded alert failed (non-fatal):", err),
+    );
+  }
 
   // A Neon failure is logged and never fails or rolls back the donation.
   try {

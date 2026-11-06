@@ -3,6 +3,8 @@ import Image from "next/image";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 
+import { getPartialTargetCents } from "@/data/wishlist";
+
 import { classes } from "@/utils/classes";
 
 import useLocaleString from "@/hooks/locale";
@@ -110,6 +112,10 @@ export default function WishlistGrid({ items, loading }: Props) {
           item.status === "FULFILLED" || item.status === "OPENED";
         const isGoal = item.itemType === "GOAL";
         const showQuantityProgress = !isGoal && item.quantity > 1;
+        const partialTargetCents = item.allowPartialDonations
+          ? getPartialTargetCents(item)
+          : null;
+        const goalCents = isGoal ? item.goalAmountCents : partialTargetCents;
 
         return (
           <li key={item.id}>
@@ -169,10 +175,10 @@ export default function WishlistGrid({ items, loading }: Props) {
                   <p className="font-semibold">{item.price}</p>
                 )}
 
-                {isGoal && item.goalAmountCents != null ? (
+                {goalCents != null ? (
                   <GoalProgress
                     raisedCents={item.raisedAmountCents}
-                    goalCents={item.goalAmountCents}
+                    goalCents={goalCents}
                   />
                 ) : (
                   showQuantityProgress && (
@@ -194,6 +200,14 @@ export default function WishlistGrid({ items, loading }: Props) {
                       itemId={item.id}
                       itemTitle={item.title}
                       suggestedAmount={isGoal ? null : item.price}
+                      remainingCents={
+                        partialTargetCents != null
+                          ? Math.max(
+                              0,
+                              partialTargetCents - item.raisedAmountCents,
+                            )
+                          : null
+                      }
                     />
                   )}
 

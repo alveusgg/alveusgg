@@ -25,6 +25,7 @@ const DonateSuccessPage: NextPage = () => {
 
   const [state, setState] = useState<State>("loading");
   const [amount, setAmount] = useState<number | null>(null);
+  const [excessAmount, setExcessAmount] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   // mutateAsync keeps the same identity across renders, so the effect below
@@ -43,6 +44,7 @@ const DonateSuccessPage: NextPage = () => {
     captureDonation({ paypalOrderId: orderId, wishlistItemId: itemId })
       .then((result) => {
         setAmount(result.amount ?? null);
+        setExcessAmount(result.excessAmount ?? 0);
         setState("success");
       })
       .catch((err) => {
@@ -78,6 +80,11 @@ const DonateSuccessPage: NextPage = () => {
               {amount && (
                 <p className="text-xl font-semibold">
                   {`Your $${amount.toFixed(2)} donation was received.`}
+                </p>
+              )}
+              {excessAmount > 0 && (
+                <p>
+                  {`This item reached its target with your help, so the extra $${excessAmount.toFixed(2)} goes toward other wishlist needs.`}
                 </p>
               )}
               <p>

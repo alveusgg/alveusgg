@@ -32,6 +32,7 @@ const baseItemFields = {
   categoryId: z.string().optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
   sortOrder: z.number().int().default(0),
+  allowPartialDonations: z.boolean().default(false),
 };
 
 const itemCreateInput = z.discriminatedUnion("itemType", [
@@ -42,6 +43,8 @@ const itemCreateInput = z.discriminatedUnion("itemType", [
     price: z.string().max(50).optional().nullable(),
     quantity: z.number().int().min(1).default(1),
     quantityFulfilled: z.number().int().min(0).default(0),
+    // Target for partial donations, defaults to price x quantity when unset
+    goalAmountCents: z.number().int().min(100).optional().nullable(),
   }),
   z.object({
     itemType: z.literal("GOAL"),
@@ -65,8 +68,9 @@ const itemUpdateInput = z.object({
   price: z.string().max(50).optional().nullable(),
   quantity: z.number().int().min(1).optional(),
   quantityFulfilled: z.number().int().min(0).optional(),
-  goalAmountCents: z.number().int().min(100).optional(),
+  goalAmountCents: z.number().int().min(100).optional().nullable(),
   raisedAmountCents: z.number().int().min(0).optional(),
+  allowPartialDonations: z.boolean().optional(),
 });
 
 const categoryInput = z.object({
@@ -270,12 +274,16 @@ export const adminWishlistRouter = router({
       z.object({
         status: z.enum(["PENDING", "CAPTURED", "FAILED"]).optional(),
         unreadMessagesOnly: z.boolean().optional(),
+        wishlistItemId: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
       return prisma.wishlistDonationOrder.findMany({
         where: {
           ...(input.status ? { status: input.status } : {}),
+          ...(input.wishlistItemId
+            ? { wishlistItemId: input.wishlistItemId }
+            : {}),
           ...(input.unreadMessagesOnly
             ? { donorMessage: { not: null }, messageReadAt: null }
             : {}),

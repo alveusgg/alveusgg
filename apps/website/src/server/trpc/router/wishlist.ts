@@ -8,6 +8,8 @@ import { env } from "@/env";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
+import { getPartialTargetCents, partialDonationAmount } from "@/data/wishlist";
+
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 
 const statusEnum = z.enum([
@@ -17,6 +19,19 @@ const statusEnum = z.enum([
   "OPENED",
   "ARCHIVED",
 ]);
+
+/** What the success page shows for an order another call already captured */
+const getCapturedSummary = async (orderId: string) => {
+  const order = await prisma.wishlistDonationOrder.findUnique({
+    where: { id: orderId },
+  });
+  return {
+    success: true,
+    alreadyCaptured: true,
+    amount: order?.capturedAmount ?? undefined,
+    excessAmount: order?.excessAmount ?? 0,
+  };
+};
 
 export const wishlistRouter = router({
   getPublicItems: publicProcedure
@@ -48,6 +63,7 @@ export const wishlistRouter = router({
           quantityFulfilled: true,
           goalAmountCents: true,
           raisedAmountCents: true,
+          allowPartialDonations: true,
           priority: true,
           status: true,
           sortOrder: true,
@@ -124,6 +140,30 @@ export const wishlistRouter = router({
         });
       }
 
+      // Chip-ins are checked against the remaining balance here, and capped
+      // again at capture time in case other donors finish first.
+      const partialTargetCents = item.allowPartialDonations
+        ? getPartialTargetCents(item)
+        : null;
+      if (partialTargetCents != null) {
+        const remainingCents = partialTargetCents - item.raisedAmountCents;
+        if (remainingCents <= 0 || item.status === "FULFILLED") {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This item is already fully funded",
+          });
+        }
+        const amount = partialDonationAmount(remainingCents).safeParse(
+          input.amount,
+        );
+        if (!amount.success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: amount.error.issues[0]?.message ?? "Invalid amount",
+          });
+        }
+      }
+
       const baseUrl = env.NEXT_PUBLIC_BASE_URL;
 
       const { orderId, approvalUrl } = await createPayPalOrder({
@@ -166,7 +206,7 @@ export const wishlistRouter = router({
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
       if (existing.status === "CAPTURED")
-        return { success: true, alreadyCaptured: true };
+        return getCapturedSummary(existing.id);
 
       // The item ID comes from the return URL, which the donor can edit, so
       // the stored one is used and a mismatch is rejected
@@ -185,7 +225,7 @@ export const wishlistRouter = router({
           where: { id: existing.id },
         });
         if (current?.status === "CAPTURED") {
-          return { success: true, alreadyCaptured: true };
+          return getCapturedSummary(existing.id);
         }
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -204,9 +244,14 @@ export const wishlistRouter = router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
       if (result.status === "duplicate") {
-        return { success: true, alreadyCaptured: true };
+        return getCapturedSummary(existing.id);
       }
 
-      return { success: true, amount: capture.amount };
+      return {
+        success: true,
+        alreadyCaptured: false,
+        amount: capture.amount,
+        excessAmount: result.excessAmount,
+      };
     }),
 });

@@ -89,6 +89,35 @@ export async function notifyWishlistDonation(
 }
 
 /**
+ * Tells staff a crowdfunded item reached its target and can be bought.
+ */
+export async function notifyWishlistItemFunded({
+  itemTitle,
+}: {
+  itemTitle: string;
+}): Promise<void> {
+  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
+  if (!webhookUrl) return;
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "Wishlist Bot",
+        content: `${escapeLinksForDiscord(itemTitle)} is fully funded, time to buy it`,
+        allowed_mentions: { parse: [] },
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned ${response.status}`);
+    }
+  } catch (err) {
+    console.error("Discord wishlist funded webhook failed:", err);
+  }
+}
+
+/**
  * Sends a digest of recent wishlist donations. Call from a scheduled job.
  */
 export async function sendWishlistDigest(

@@ -1,5 +1,7 @@
 import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
+import { getPartialTargetCents } from "@/data/wishlist";
+
 import { trpc } from "@/utils/trpc";
 
 import Link from "@/components/content/Link";
@@ -7,11 +9,13 @@ import { MessageBox } from "@/components/shared/MessageBox";
 import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import {
   Button,
+  LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 
 import IconArchive from "@/icons/IconArchive";
+import IconDollar from "@/icons/IconDollar";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 
@@ -71,6 +75,11 @@ export default function WishlistAdminTable({
         <tbody>
           {items.map((item) => {
             const isGoal = item.itemType === "GOAL";
+            const targetCents = isGoal
+              ? item.goalAmountCents
+              : item.allowPartialDonations
+                ? getPartialTargetCents(item)
+                : null;
             return (
               <tr key={item.id} className="border-b border-gray-700">
                 <td className="p-1">
@@ -98,9 +107,14 @@ export default function WishlistAdminTable({
                 <td className="p-1">{formatLabel(item.priority)}</td>
                 <td className="p-1">{formatLabel(item.status)}</td>
                 <td className="p-1">
-                  {isGoal && item.goalAmountCents != null
-                    ? `${formatDollars(item.raisedAmountCents)} / ${formatDollars(item.goalAmountCents)}`
+                  {targetCents != null
+                    ? `${formatDollars(item.raisedAmountCents)} / ${formatDollars(targetCents)} raised`
                     : `${item.quantityFulfilled}/${item.quantity}`}
+                  {item.allowPartialDonations && (
+                    <div className="text-sm text-gray-400">
+                      Partial donations on
+                    </div>
+                  )}
                 </td>
                 <td className="flex flex-row flex-wrap gap-2 p-1">
                   <Button
@@ -111,6 +125,14 @@ export default function WishlistAdminTable({
                     <IconPencil className="size-4" />
                     Edit
                   </Button>
+                  <LinkButton
+                    size="small"
+                    width="auto"
+                    href={`/admin/wishlist/donations?itemId=${encodeURIComponent(item.id)}`}
+                  >
+                    <IconDollar className="size-4" />
+                    Donations
+                  </LinkButton>
                   <Button
                     size="small"
                     width="auto"

@@ -1,13 +1,22 @@
+import { useRouter } from "next/router";
+
 import { trpc } from "@/utils/trpc";
 
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import Link from "@/components/content/Link";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 const formatAmount = (amount: number) => `$${amount.toFixed(2)}`;
 
 export function WishlistDonationsAdmin() {
-  const donationsQuery = trpc.adminWishlist.adminGetDonations.useQuery({});
+  const router = useRouter();
+  const itemId =
+    typeof router.query.itemId === "string" ? router.query.itemId : undefined;
+  const donationsQuery = trpc.adminWishlist.adminGetDonations.useQuery(
+    { wishlistItemId: itemId },
+    { enabled: router.isReady },
+  );
 
   const donations = donationsQuery.data ?? [];
   const captured = donations.filter((d) => d.status === "CAPTURED");
@@ -21,6 +30,14 @@ export function WishlistDonationsAdmin() {
       <Headline>Wishlist donations</Headline>
 
       <Panel>
+        {itemId && (
+          <p className="mb-2">
+            {`Showing donations for ${donations[0]?.wishlistItem.title ?? "one item"}. `}
+            <Link href="/admin/wishlist/donations" dark>
+              Show all donations
+            </Link>
+          </p>
+        )}
         <p className="mb-4">
           {formatAmount(total)} captured from {captured.length} of{" "}
           {donations.length} PayPal orders (
@@ -64,6 +81,11 @@ export function WishlistDonationsAdmin() {
                   <td className="p-1">{d.wishlistItem.title}</td>
                   <td className="p-1">
                     {formatAmount(d.capturedAmount ?? d.amount)}
+                    {d.excessAmount != null && d.excessAmount > 0 && (
+                      <div className="text-sm text-gray-400">
+                        {`${formatAmount(d.excessAmount)} over target, general wishlist`}
+                      </div>
+                    )}
                   </td>
                   <td className="p-1">
                     <div>{d.status === "CAPTURED" ? "Captured" : d.status}</div>

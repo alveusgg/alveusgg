@@ -4,6 +4,8 @@ import { useCallback, useState } from "react";
 
 import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
+import { WISHLIST_FUNDS_NOTE } from "@/data/wishlist";
+
 import { classes } from "@/utils/classes";
 import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
@@ -16,6 +18,7 @@ import {
   defaultButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
@@ -58,6 +61,9 @@ export function WishlistItemForm({
     item?.itemType ?? "PRODUCT",
   );
   const [categoryId, setCategoryId] = useState(item?.categoryId ?? "");
+  const [allowPartialDonations, setAllowPartialDonations] = useState(
+    item?.allowPartialDonations ?? false,
+  );
 
   const createMutation = trpc.adminWishlist.createItem.useMutation();
   const updateMutation = trpc.adminWishlist.updateItem.useMutation();
@@ -85,7 +91,10 @@ export function WishlistItemForm({
         ) as (typeof STATUS_OPTIONS)[number],
         categoryId: categoryId || undefined,
         notes: getStringFromFormData(formData, "notes") || undefined,
+        allowPartialDonations,
       };
+      const dollarsToCents = (name: string) =>
+        Math.round((Number(getStringFromFormData(formData, name)) || 0) * 100);
 
       const payload =
         itemType === "PRODUCT"
@@ -99,6 +108,10 @@ export function WishlistItemForm({
               quantityFulfilled:
                 Number(getStringFromFormData(formData, "quantityFulfilled")) ||
                 0,
+              // Blank means the target is the price times the quantity
+              ...(allowPartialDonations
+                ? { goalAmountCents: dollarsToCents("partialTarget") || null }
+                : {}),
             }
           : {
               itemType: "GOAL" as const,
@@ -113,13 +126,8 @@ export function WishlistItemForm({
       if (action === "edit") {
         if (!item) return;
         const extra =
-          itemType === "GOAL"
-            ? {
-                raisedAmountCents: Math.round(
-                  (Number(getStringFromFormData(formData, "raisedAmount")) ||
-                    0) * 100,
-                ),
-              }
+          itemType === "GOAL" || allowPartialDonations
+            ? { raisedAmountCents: dollarsToCents("raisedAmount") }
             : {};
         updateMutation.mutate(
           { id: item.id, ...payload, ...extra },
@@ -136,6 +144,7 @@ export function WishlistItemForm({
       item,
       itemType,
       categoryId,
+      allowPartialDonations,
       createMutation,
       updateMutation,
       router,
@@ -260,6 +269,34 @@ export function WishlistItemForm({
                 defaultValue={String(item?.quantityFulfilled ?? 0)}
               />
             </FieldGroup>
+            {allowPartialDonations && (
+              <FieldGroup>
+                <TextField
+                  label="Funding target (USD, blank for price x quantity)"
+                  name="partialTarget"
+                  type="number"
+                  inputMode="decimal"
+                  prefix={<IconDollar className="ml-2 size-4 text-gray-500" />}
+                  defaultValue={
+                    item?.goalAmountCents != null
+                      ? String(item.goalAmountCents / 100)
+                      : ""
+                  }
+                />
+                {action === "edit" && (
+                  <TextField
+                    label="Raised so far (USD)"
+                    name="raisedAmount"
+                    type="number"
+                    inputMode="decimal"
+                    prefix={
+                      <IconDollar className="ml-2 size-4 text-gray-500" />
+                    }
+                    defaultValue={String((item?.raisedAmountCents ?? 0) / 100)}
+                  />
+                )}
+              </FieldGroup>
+            )}
           </>
         ) : (
           <FieldGroup>
@@ -291,6 +328,17 @@ export function WishlistItemForm({
               />
             )}
           </FieldGroup>
+        )}
+
+        <CheckboxField
+          isSelected={allowPartialDonations}
+          onChange={setAllowPartialDonations}
+        >
+          Allow partial donations, so donors can chip in any amount (minimum $5)
+          until the target is reached
+        </CheckboxField>
+        {allowPartialDonations && (
+          <p className="text-sm text-gray-400">{WISHLIST_FUNDS_NOTE}</p>
         )}
       </Fieldset>
 

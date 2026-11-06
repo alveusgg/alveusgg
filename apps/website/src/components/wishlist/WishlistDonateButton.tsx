@@ -1,5 +1,12 @@
 import { useState } from "react";
 
+import {
+  PARTIAL_DONATION_MIN_CENTS,
+  PARTIAL_DONATION_QUICK_PICKS,
+  WISHLIST_FUNDS_NOTE,
+  partialDonationAmount,
+} from "@/data/wishlist";
+
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
@@ -20,6 +27,8 @@ interface Props {
   itemId: string;
   itemTitle: string;
   suggestedAmount: string | null; // e.g. "$29.99"
+  // Set for items that allow partial donations (chip in)
+  remainingCents?: number | null;
 }
 
 function parseDollars(raw: string | null): string {
@@ -34,10 +43,17 @@ export default function WishlistDonateButton({
   itemId,
   itemTitle,
   suggestedAmount,
+  remainingCents = null,
 }: Props) {
+  const isPartial = remainingCents != null;
+  const remainingDollars = isPartial ? (remainingCents / 100).toFixed(2) : "";
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(
-    parseDollars(suggestedAmount) || "10.00",
+    isPartial
+      ? (
+          Math.min(PARTIAL_DONATION_MIN_CENTS * 2, remainingCents) / 100
+        ).toFixed(2)
+      : parseDollars(suggestedAmount) || "10.00",
   );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -71,15 +87,35 @@ export default function WishlistDonateButton({
   };
 
   const amountNum = parseFloat(amount);
-  const isValidAmount = !isNaN(amountNum) && amountNum >= 1;
-  const presets = [
-    ...new Set([
-      "5.00",
-      "10.00",
-      parseDollars(suggestedAmount) || "25.00",
-      "50.00",
-    ]),
-  ];
+  const partialCheck = isPartial
+    ? partialDonationAmount(remainingCents).safeParse(amountNum)
+    : null;
+  const amountError =
+    partialCheck && !partialCheck.success && amount !== ""
+      ? (partialCheck.error.issues[0]?.message ?? "Enter a valid amount")
+      : "";
+  const isValidAmount = partialCheck
+    ? partialCheck.success
+    : !isNaN(amountNum) && amountNum >= 1;
+  const presets = isPartial
+    ? PARTIAL_DONATION_QUICK_PICKS.filter(
+        (dollars) => dollars * 100 < remainingCents,
+      ).map((dollars) => dollars.toFixed(2))
+    : [
+        ...new Set([
+          "5.00",
+          "10.00",
+          parseDollars(suggestedAmount) || "25.00",
+          "50.00",
+        ]),
+      ];
+  const presetClasses = (selected: boolean) =>
+    classes(
+      "rounded-full border-2 border-alveus-green px-3 py-1 text-sm font-semibold transition-colors",
+      selected
+        ? "bg-alveus-green text-alveus-tan"
+        : "text-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
+    );
 
   return (
     <>
@@ -89,14 +125,22 @@ export default function WishlistDonateButton({
         filled
         onClick={() => setOpen(true)}
         className="flex w-full items-center justify-center gap-2 text-base"
-        aria-label={`Donate toward ${itemTitle} with PayPal`}
+        aria-label={
+          isPartial
+            ? `Chip in toward ${itemTitle} with PayPal`
+            : `Donate toward ${itemTitle} with PayPal`
+        }
       >
         <IconPayPal className="size-5" />
-        Donate with PayPal
+        {isPartial ? "Chip in" : "Donate with PayPal"}
       </Button>
 
       <ModalDialog
-        title={`Donate toward ${itemTitle}`}
+        title={
+          isPartial
+            ? `Chip in toward ${itemTitle}`
+            : `Donate toward ${itemTitle}`
+        }
         isOpen={open}
         closeModal={() => setOpen(false)}
         closeLabel="Cancel"
@@ -109,8 +153,9 @@ export default function WishlistDonateButton({
           }}
         >
           <p className="text-sm text-gray-600">
-            Your donation goes to Alveus through PayPal. Alveus buys the item
-            and has it shipped to the sanctuary.
+            {isPartial
+              ? `Chip in any amount from $${(Math.min(PARTIAL_DONATION_MIN_CENTS, remainingCents) / 100).toFixed(2)} through PayPal. $${remainingDollars} is left to raise, and Alveus buys the item once it is fully funded.`
+              : "Your donation goes to Alveus through PayPal. Alveus buys the item and has it shipped to the sanctuary."}
           </p>
 
           <TextField
@@ -122,7 +167,17 @@ export default function WishlistDonateButton({
             onChange={(value) => setAmount(value)}
             prefix={<span className="pl-2 text-sm text-gray-500">$</span>}
             isRequired
+            isInvalid={!!amountError}
+            aria-describedby={amountError ? "wishlist-amount-error" : undefined}
           />
+          {amountError && (
+            <p
+              id="wishlist-amount-error"
+              className="-mt-2 text-sm text-red-700"
+            >
+              {amountError}
+            </p>
+          )}
 
           <div
             className="flex flex-wrap gap-2"
@@ -135,17 +190,26 @@ export default function WishlistDonateButton({
                 type="button"
                 aria-pressed={amount === preset}
                 onClick={() => setAmount(preset)}
-                className={classes(
-                  "rounded-full border-2 border-alveus-green px-3 py-1 text-sm font-semibold transition-colors",
-                  amount === preset
-                    ? "bg-alveus-green text-alveus-tan"
-                    : "text-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
-                )}
+                className={presetClasses(amount === preset)}
               >
                 ${preset}
               </button>
             ))}
+            {isPartial && (
+              <button
+                type="button"
+                aria-pressed={amount === remainingDollars}
+                onClick={() => setAmount(remainingDollars)}
+                className={presetClasses(amount === remainingDollars)}
+              >
+                {`Fund the rest ($${remainingDollars})`}
+              </button>
+            )}
           </div>
+
+          {isPartial && (
+            <p className="text-sm text-gray-600">{WISHLIST_FUNDS_NOTE}</p>
+          )}
 
           <TextField
             label="Your name (optional, may be shown on stream)"
