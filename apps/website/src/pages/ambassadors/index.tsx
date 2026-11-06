@@ -124,12 +124,9 @@ const sortByOptions = {
   },
 } as const satisfies Options<ActiveAmbassadorEntry>;
 
+// Keyboard focus gets the same effect as hover
 export const ambassadorImageHover =
-  "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
-
-// Grid cards: the same image hover without the shadow, also on keyboard focus
-const cardImageHover =
-  "transition group-hover:scale-102 group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110 group-focus-visible:scale-102 group-focus-visible:brightness-105 group-focus-visible:contrast-115 group-focus-visible:saturate-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-focus-visible:scale-100";
+  "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110 group-focus-visible:scale-102 group-focus-visible:shadow-lg group-focus-visible:brightness-105 group-focus-visible:contrast-115 group-focus-visible:saturate-110";
 
 // First sentence of the fact, for the short preview on the card
 const factSummary = (fact: string) => {
@@ -151,7 +148,6 @@ const AmbassadorItem = ({
 
   const fullFact = (data as Ambassador).fact;
   const fact = fullFact ? factSummary(fullFact) : undefined;
-  const factId = `${key}-fact`;
 
   // On touch, the first tap on a card with a fact shows it, the second opens
   const pointerType = useRef<string>("mouse");
@@ -161,7 +157,6 @@ const AmbassadorItem = ({
     <div>
       <Link
         href={`/ambassadors/${camelToKebab(key)}`}
-        aria-describedby={fact ? factId : undefined}
         onPointerDown={(e: PointerEvent) => {
           pointerType.current = e.pointerType;
         }}
@@ -174,38 +169,41 @@ const AmbassadorItem = ({
         onBlur={() => setArmed(false)}
         className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700"
       >
-        <div className="relative overflow-hidden rounded-xl">
+        <div className="relative">
           <Image
             src={images[0].src}
             alt={images[0].alt}
             placeholder="blur"
             width={700}
             className={classes(
-              "aspect-4/3 h-auto w-full object-cover",
-              cardImageHover,
+              "aspect-4/3 h-auto w-full rounded-xl object-cover",
+              ambassadorImageHover,
             )}
             style={{ objectPosition: images[0].position }}
           />
-          {/* Every card dims and shows the arrow on hover or focus; only the
-              fact text depends on the data. Hidden from the link name, the
-              fact is read as its description. */}
+          {/* Shows the arrow on hover or focus, scaling with the image. Cards
+              with a fact also dim and show it; without one, only the arrow */}
           <div
-            id={fact ? factId : undefined}
             aria-hidden="true"
             className={classes(
-              "absolute inset-0 flex flex-col justify-end gap-1 bg-alveus-green-900/90 p-4 pb-12 text-alveus-tan transition-opacity duration-200 motion-reduce:transition-none",
+              "absolute inset-0 rounded-xl text-alveus-tan transition duration-200 group-hover:scale-102 group-focus-visible:scale-102 motion-reduce:transition-none",
+              fact &&
+                "flex flex-col justify-end gap-1 bg-alveus-green-900/90 p-4 pb-12",
               armed
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
             )}
           >
-            {fact && (
+            {fact ? (
               <span className="flex flex-col gap-1">
                 <span className="font-serif text-lg font-bold">
                   Did you know?
                 </span>
                 <span className="line-clamp-4 text-sm">{fact}</span>
               </span>
+            ) : (
+              // Keeps the arrow legible on bright photos
+              <span className="absolute right-0 bottom-0 size-20 rounded-br-xl bg-linear-to-tl from-alveus-green-900/70 to-transparent to-60%" />
             )}
             <IconArrowRight size={24} className="absolute right-4 bottom-4" />
           </div>
