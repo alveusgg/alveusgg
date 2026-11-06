@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { getUserFollowsBroadcaster } from "@/server/apis/twitch";
 import { createEntry, formEntrySchema } from "@/server/db/forms";
+import { decryptUserEmail } from "@/server/db/user-email";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,
@@ -120,7 +121,7 @@ export const formsRouter = router({
                 id: entry.id,
                 formId: form.id,
                 username: entry.user.name,
-                email: entry.user.email,
+                email: await decryptUserEmail(entry.user.email),
                 createdAt: entry.createdAt,
               },
             }),
