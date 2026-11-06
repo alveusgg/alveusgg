@@ -1,7 +1,13 @@
 FROM node:24-alpine
-ENV PNPM_HOME="/pnpm"
 ENV CI="true"
-ENV PATH="$PNPM_HOME:$PATH"
+
+## Install pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME/bin:$PATH"
+RUN wget -qO /tmp/install-pnpm.sh https://get.pnpm.io/install.sh && \
+    echo "53d3ad6ef67d49d6951f3326bd3180e5c504c8f695bcdf73bb61ec7a4d4c9407  /tmp/install-pnpm.sh" | sha256sum -c - && \
+    ENV="$HOME/.shrc" SHELL="$(which sh)" sh /tmp/install-pnpm.sh && \
+    rm /tmp/install-pnpm.sh
 
 ## Copy root files
 WORKDIR /app
@@ -25,12 +31,11 @@ COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
 
 ## Install dependencies
-RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
-		--mount=type=cache,id=pnpm,target=/pnpm/store \
+    --mount=type=cache,id=pnpm,target=/tmp/pnpm-store \
     set -eu; \
-		printf "//npm.pkg.github.com/:_authToken=%s\\n" "$(cat /tmp/github_token)" > "$HOME/.npmrc"; \
-    pnpm ci --filter "{.}..."; \
+    printf "//npm.pkg.github.com/:_authToken=%s\\n" "$(cat /tmp/github_token)" > "$HOME/.npmrc"; \
+    pnpm ci --store-dir=/tmp/pnpm-store --filter "{.}..."; \
     rm -f "$HOME/.npmrc"
 
 ## Copy code
