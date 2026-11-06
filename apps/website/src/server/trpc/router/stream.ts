@@ -12,6 +12,7 @@ import {
   sendChatMessage,
 } from "@/server/apis/twitch";
 import { getWeather } from "@/server/apis/weather";
+import { decryptAccountTokens } from "@/server/db/account-tokens";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
@@ -56,9 +57,15 @@ export const streamRouter = router({
     if (!twitchChannel?.broadcasterAccount?.access_token) {
       throw new Error("No Twitch account found");
     }
+    const { access_token } = await decryptAccountTokens(
+      twitchChannel.broadcasterAccount,
+    );
+    if (!access_token) {
+      throw new Error("No Twitch account found");
+    }
 
     const { total, points } = await getUsersSubscribedToBroadcaster(
-      twitchChannel.broadcasterAccount.access_token,
+      access_token,
       twitchChannel.broadcasterAccount.providerAccountId,
       1,
     );

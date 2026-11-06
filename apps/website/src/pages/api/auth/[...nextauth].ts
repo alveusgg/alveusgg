@@ -6,6 +6,11 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import {
+  decryptAccountTokens,
+  encryptAccountTokens,
+  withEncryptedAccountTokens,
+} from "@/server/db/account-tokens";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
 import {
@@ -32,7 +37,7 @@ const requireScopes = (account: { scope: string | null }, scopes: string[]) => {
   return null;
 };
 
-const adapter = PrismaAdapter(prisma);
+const adapter = withEncryptedAccountTokens(PrismaAdapter(prisma));
 
 const twitchProvider = TwitchProvider({
   clientId: env.TWITCH_CLIENT_ID,
@@ -77,8 +82,11 @@ export const authOptions: NextAuthOptions = {
         };
       }
 
+      const { access_token, refresh_token } =
+        await decryptAccountTokens(account);
+
       // If we're over an hour since we last verified the Twitch token, check it
-      if (account.access_token && account.refresh_token) {
+      if (access_token && refresh_token) {
         if (
           !account.verified_at ||
           account.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
@@ -89,8 +97,8 @@ export const authOptions: NextAuthOptions = {
               env.TWITCH_CLIENT_ID,
               env.TWITCH_CLIENT_SECRET,
               account.id,
-              account.access_token,
-              account.refresh_token,
+              access_token,
+              refresh_token,
               // Force the refresh if we're within 1hr of expiry
               !!(
                 account.expires_at &&
@@ -161,11 +169,14 @@ export const authOptions: NextAuthOptions = {
               },
             },
             data: {
-              access_token: account.access_token,
+              ...(await encryptAccountTokens({
+                access_token: account.access_token,
+                refresh_token: account.refresh_token,
+              })),
               expires_at: account.expires_at,
               verified_at: Math.floor(Date.now() / 1000),
-              id_token: account.id_token,
-              refresh_token: account.refresh_token,
+              // We don't store the ID token, it contains the user's email
+              id_token: null,
               session_state: account.session_state,
               scope: account.scope,
             },
