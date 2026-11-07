@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
-    "dotenv": "^18.0.8",
+    "dotenv": "^18.0.9",
     "prisma": "^7.10.1",
-    "tsdown": "^0.23.1"
+    "tsdown": "^0.23.3"
   },
   "exports": {
     ".": {

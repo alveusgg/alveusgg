@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
-    "hono": "^4.13.13",
+    "hono": "^4.13.14",
     "jose": "^6.2.13",
     "zod": "^4.6.7"
   },
@@ -23,8 +23,8 @@
     "eslint-plugin-import-x": "^4.17.1",
     "globals": "^17.13.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.0",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.5",
-    "wrangler": "^4.151.3"
+    "wrangler": "^4.154.0"
   }
 }
