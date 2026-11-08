@@ -13,40 +13,36 @@ type PreviewProps = {
   alt?: string;
   className?: string;
   icon?: boolean;
-  // Thumbnail URL from the YouTube API, when known, used before the defaults
-  src?: string;
 };
 
-const thumbnailSrc = (src: string) =>
-  createImageUrl({ src, width: 1280, quality: 100 });
-
 const imgSrc = (id: string, type: string) =>
-  thumbnailSrc(
-    `https://img.youtube.com/vi/${encodeURIComponent(
+  createImageUrl({
+    src: `https://img.youtube.com/vi/${encodeURIComponent(
       id,
     )}/${encodeURIComponent(type)}.jpg`,
-  );
+    width: 1280,
+    quality: 100,
+  });
 
 export const YouTubePreview = ({
   videoId,
   alt = "Video thumbnail",
   className,
   icon = true,
-  src,
 }: PreviewProps) => {
-  // Handle falling back to hq if the given or maxres image fails to load
-  const [type, setType] = useState<"src" | "maxresdefault" | "hqdefault">(
-    src ? "src" : "maxresdefault",
+  // Handle falling back to hq if there isn't a maxres image
+  const [type, setType] = useState<"maxresdefault" | "hqdefault">(
+    "maxresdefault",
   );
   const onError = useCallback(() => {
-    if (type !== "hqdefault") setType("hqdefault");
+    if (type === "maxresdefault") setType("hqdefault");
   }, [type]);
 
   return (
     <div className="relative">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={type === "src" && src ? thumbnailSrc(src) : imgSrc(videoId, type)}
+        src={imgSrc(videoId, type)}
         onError={onError}
         alt={alt}
         loading="lazy"

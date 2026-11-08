@@ -194,61 +194,31 @@ type AmbassadorPageProps = {
   merchImage?: AmbassadorImage;
   iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
-  highlights: Highlights | null;
+  highlights: Highlight[];
 };
 
-// How many of the most viewed playlist clips the Highlights section shows
-const HIGHLIGHTS_PLAYLIST_CLIP_COUNT = 4;
+// How many of the playlist's most recent clips the Highlights section shows
+const HIGHLIGHTS_CLIP_COUNT = 4;
 
-type PlaylistClip = {
+type Highlight = {
   id: string;
   title: string;
   // Upload date as an ISO string, as props must be serializable
   published: string;
-  thumbnail: string | null;
 };
 
-type Highlights =
-  | { source: "playlist"; clips: PlaylistClip[] }
-  | { source: "curated"; clips: Ambassador["clips"] };
-
-// A clip as shown in the Highlights section, from either source
-type HighlightTile = {
-  id: string;
-  title: string;
-  published?: Date;
-  thumbnail?: string;
-};
-
-// The most viewed clips from the ambassador's playlist, falling back to the
-// curated clips when there is no playlist, or it is empty or can't be fetched
-const getHighlights = async (
-  ambassador: Ambassador,
-): Promise<Highlights | null> => {
-  if (ambassador.playlist) {
-    const videos = await fetchYouTubePlaylistVideosSafe(ambassador.playlist.id);
-    if (videos.length > 0) {
-      return {
-        source: "playlist",
-        clips: [...videos]
-          .sort((a, b) => b.views - a.views)
-          .slice(0, HIGHLIGHTS_PLAYLIST_CLIP_COUNT)
-          .map(({ id, title, published, thumbnail }) => ({
-            id,
-            title,
-            published: published.toISOString(),
-            thumbnail,
-          })),
-      };
-    }
-  }
-
-  if (ambassador.clips.length > 0) {
-    return { source: "curated", clips: ambassador.clips };
-  }
-
-  return null;
-};
+// The most recent clips from the ambassador's playlist. None when there is
+// no playlist, or it is empty or can't be fetched
+const getHighlights = async (ambassador: Ambassador): Promise<Highlight[]> =>
+  ambassador.playlist
+    ? (await fetchYouTubePlaylistVideosSafe(ambassador.playlist.id))
+        .slice(0, HIGHLIGHTS_CLIP_COUNT)
+        .map(({ id, title, published }) => ({
+          id,
+          title,
+          published: published.toISOString(),
+        }))
+    : [];
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   context,
@@ -377,25 +347,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     [images],
   );
 
-  // Playlist clips are YouTube Shorts, so they are shown and played portrait.
-  // Curated clips are landscape, with their caption and no date
-  const vertical = highlights?.source === "playlist";
-  const clips = useMemo<HighlightTile[]>(() => {
-    if (!highlights) return [];
-    if (highlights.source === "curated") {
-      return highlights.clips.map(({ id, caption }) => ({
-        id,
-        title: caption,
-      }));
-    }
-    return highlights.clips.map(({ id, title, published, thumbnail }) => ({
-      id,
-      title,
-      published: new Date(published),
-      thumbnail: thumbnail ?? undefined,
-    }));
-  }, [highlights]);
-
   // Everyone sharing this playlist, for the "watch more" button
   const playlistNames = useMemo(
     () =>
@@ -417,21 +368,20 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
   const clipsLightboxItems = useMemo(
     () =>
-      clips.reduce<Record<string, ReactNode>>(
+      highlights.reduce<Record<string, ReactNode>>(
         (acc, clip) => ({
           ...acc,
-          [clip.id]: vertical ? (
-            // Same embed, switched to a 9:16 player sized by the viewport height
+          // Clips are YouTube Shorts: the same embed, switched to a 9:16
+          // player sized by the viewport height
+          [clip.id]: (
             <div className="h-full [&_iframe]:aspect-9/16 [&>div>div]:aspect-9/16">
               <YouTubeEmbed videoId={clip.id} caption={clip.title} />
             </div>
-          ) : (
-            <YouTubeEmbed videoId={clip.id} caption={clip.title} />
           ),
         }),
         {},
       ),
-    [clips, vertical],
+    [highlights],
   );
 
   return (
@@ -648,8 +598,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         </Section>
       </div>
 
-      {/* No clips from the playlist or curated: no Highlights section */}
-      {clips.length > 0 && (
+      {/* No clips from the playlist: no Highlights section */}
+      {highlights.length > 0 && (
         <Section dark className="bg-alveus-green-800">
           <Heading
             level={2}
@@ -661,15 +611,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             &apos;s Highlights
           </Heading>
 
-          <ul
-            className={classes(
-              "grid gap-6",
-              vertical
-                ? "grid-cols-2 gap-x-4 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4"
-                : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4",
-            )}
-          >
-            {clips.map((clip) => (
+          <ul className="grid grid-cols-2 gap-6 gap-x-4 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4">
+            {highlights.map((clip) => (
               <li key={clip.id}>
                 <button
                   type="button"
@@ -679,15 +622,11 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <span className="relative block w-full">
                     <YouTubePreview
                       videoId={clip.id}
-                      src={clip.thumbnail}
                       alt=""
                       icon={false}
                       // Shorts thumbnails are 16:9 with the vertical frame centred;
                       // a centred cover crop to 9:16 removes the side bars
-                      className={classes(
-                        "h-auto w-full rounded-xl object-cover object-center shadow-none group-hover/trigger:scale-100 group-hover/trigger:shadow-none",
-                        vertical ? "aspect-9/16" : "aspect-video",
-                      )}
+                      className="aspect-9/16 h-auto w-full rounded-xl object-cover object-center shadow-none group-hover/trigger:scale-100 group-hover/trigger:shadow-none"
                     />
                     <span
                       aria-hidden="true"
@@ -697,25 +636,18 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     </span>
                   </span>
                   <span className="flex flex-col gap-1">
-                    <span
-                      className={classes(
-                        "font-bold text-balance group-hover:underline",
-                        vertical
-                          ? "line-clamp-2 text-base md:text-lg"
-                          : "text-lg",
-                      )}
-                    >
+                    <span className="line-clamp-2 text-base font-bold text-balance group-hover:underline md:text-lg">
                       <span className="sr-only">Play video: </span>
                       {clip.title}
                     </span>
-                    {clip.published && (
-                      <span className="text-sm text-alveus-green-200">
-                        <span className="sr-only">, </span>
-                        <time dateTime={clip.published.toISOString()}>
-                          {formatDateTime(clip.published, { style: "long" })}
-                        </time>
-                      </span>
-                    )}
+                    <span className="text-sm text-alveus-green-200">
+                      <span className="sr-only">, </span>
+                      <time dateTime={clip.published}>
+                        {formatDateTime(new Date(clip.published), {
+                          style: "long",
+                        })}
+                      </time>
+                    </span>
                   </span>
                 </button>
               </li>
@@ -786,7 +718,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             label: "View all ambassadors by enclosure",
             href: "/ambassadors#enclosures",
           }}
-          className={clips.length > 0 ? undefined : "bg-alveus-green-100"}
+          className={highlights.length > 0 ? undefined : "bg-alveus-green-100"}
         />
       )}
     </>
