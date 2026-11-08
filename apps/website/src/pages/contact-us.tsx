@@ -3,17 +3,15 @@ import { type ComponentType, Fragment } from "react";
 
 import { classes } from "@/utils/classes";
 
-import { useCopyToClipboard } from "@/hooks/clipboard";
-
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
 
 import { type IconProps } from "@/icons/BaseIcon";
-import IconClipboard from "@/icons/IconClipboard";
 import IconDollar from "@/icons/IconDollar";
 import IconEnvelope from "@/icons/IconEnvelope";
 import IconGlobe from "@/icons/IconGlobe";
@@ -27,11 +25,9 @@ type ContactCategory = {
   key: string;
   name: string;
   icon: ComponentType<IconProps>;
-  // A line of text followed by an email address
+  className: string;
   parts: { text: string; email: string }[];
-  // Sub-titled halves shown side by side inside the card
   sections?: { title: string; link: ContactLink }[];
-  // Buttons shown on the title row
   buttons?: ContactLink[];
 };
 
@@ -40,6 +36,7 @@ const categories: ContactCategory[] = [
     key: "donors",
     name: "Donors",
     icon: IconDollar,
+    className: "lg:col-span-2",
     parts: [
       { text: "For donor inquiries:", email: "contact@alveussanctuary.org" },
     ],
@@ -52,12 +49,14 @@ const categories: ContactCategory[] = [
     key: "business",
     name: "Business",
     icon: IconGlobe,
+    className: "lg:col-span-2",
     parts: [{ text: "For business inquiries:", email: "alveus@loaded.gg" }],
   },
   {
     key: "grants",
     name: "Grants",
     icon: IconEnvelope,
+    className: "lg:col-span-2",
     parts: [
       {
         text: "For foundation & corporate grants:",
@@ -70,8 +69,8 @@ const categories: ContactCategory[] = [
     key: "shop",
     name: "Shop",
     icon: IconShoppingCart,
+    className: "lg:col-span-3",
     parts: [],
-    // Full paths, so it is clear the links go to each store's contact page
     sections: [
       {
         title: "Apparel",
@@ -93,6 +92,7 @@ const categories: ContactCategory[] = [
     key: "collaboration",
     name: "Collaboration",
     icon: IconUserGroup,
+    className: "md:col-span-2 lg:col-span-3",
     parts: [
       {
         text: "To connect with Maya regarding collaboration or to offer support for Alveus Sanctuary:",
@@ -102,20 +102,8 @@ const categories: ContactCategory[] = [
   },
 ];
 
-// Six columns on desktop: three cards on top, two wider ones below, so both
-// rows are full. Two per row on tablet, with the last card full width
-const cardSpans = [
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-3",
-  "md:col-span-2 lg:col-span-3",
-];
-
-// The site's Link style, a little larger and bold so addresses stand out
 const contactLinkClasses = "font-semibold wrap-anywhere sm:text-lg";
 
-// Let long addresses wrap at "@", "." and "/" rather than mid-word
 const withBreaks = (text: string, at = /(?=[@./])/) =>
   text.split(at).map((part, idx) => (
     <Fragment key={part + idx.toString()}>
@@ -124,51 +112,10 @@ const withBreaks = (text: string, at = /(?=[@./])/) =>
     </Fragment>
   ));
 
-const EmailRow = ({ email }: { email: string }) => {
-  const { copy, status } = useCopyToClipboard();
-  const message =
-    status === "success" ? "Copied" : status === "error" ? "Copy failed" : "";
-
-  return (
-    <div className="flex items-center gap-1">
-      <Link
-        href={`mailto:${email}`}
-        className={classes(contactLinkClasses, "min-w-0")}
-      >
-        {withBreaks(email)}
-      </Link>
-      <span className="relative shrink-0">
-        <button
-          type="button"
-          onClick={() => copy(email)}
-          aria-label="Copy email address"
-          className="rounded-lg p-2 text-alveus-green transition-colors hover:bg-alveus-green hover:text-alveus-tan focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700 motion-reduce:transition-none"
-        >
-          <IconClipboard className="size-5" />
-        </button>
-        {/* Floats above the button so the row never shifts */}
-        <span
-          aria-hidden="true"
-          className={classes(
-            "pointer-events-none absolute right-0 bottom-full mb-1 rounded-md bg-alveus-green px-2 py-0.5 text-sm whitespace-nowrap text-alveus-tan transition-opacity motion-reduce:transition-none",
-            message ? "opacity-100" : "opacity-0",
-          )}
-        >
-          {message || "Copied"}
-        </span>
-        <span className="sr-only" aria-live="polite">
-          {message}
-        </span>
-      </span>
-    </div>
-  );
-};
-
 const ContactButtons = ({ links }: { links: ContactLink[] }) => (
   <ul className="flex flex-wrap gap-2">
     {links.map((link) => (
       <li key={link.href}>
-        {/* The site's green Button, sized down to sit inside a card */}
         <Button
           href={link.href}
           className="inline-flex items-center gap-2 px-3 py-1 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
@@ -193,7 +140,6 @@ const ContactUsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow">
-        {/* The note sits on the title row from tablet up, below it on phones */}
         <div className="mb-6 flex flex-col items-start gap-2 md:flex-row md:items-center md:justify-between">
           <Heading className="text-5xl">Contact Us</Heading>
 
@@ -206,17 +152,14 @@ const ContactUsPage: NextPage = () => {
           </p>
         </div>
 
-        {/* Cards stretch to the tallest in their row */}
         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
-          {categories.map((category, idx) => (
+          {categories.map((category) => (
             <li
               key={category.key}
               id={`contact-${category.key}`}
-              className={cardSpans[idx]}
+              className={category.className}
             >
               <Box className="flex h-full flex-col gap-4 p-5">
-                {/* Buttons share the title row, right-aligned. When the row is
-                    too narrow they wrap below the title rather than squeeze it */}
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
                   <div className="flex shrink-0 items-center gap-4">
                     <div className="rounded-xl border-2 border-alveus-green bg-alveus-green p-2 text-alveus-tan">
@@ -235,15 +178,23 @@ const ContactUsPage: NextPage = () => {
                 {category.parts.map((part) => (
                   <div key={part.text} className="flex flex-col gap-1">
                     <p>{part.text}</p>
-                    <EmailRow email={part.email} />
+                    <div className="flex items-center gap-1">
+                      <Link
+                        href={`mailto:${part.email}`}
+                        className={classes(contactLinkClasses, "min-w-0")}
+                      >
+                        {withBreaks(part.email)}
+                      </Link>
+                      <CopyToClipboardButton
+                        text={part.email}
+                        options={{ initialText: "Copy email address" }}
+                      />
+                    </div>
                   </div>
                 ))}
 
                 {category.sections && (
-                  // Equal halves on desktop. On tablet the card is narrow, so
-                  // the columns fit their content and the links use the base
-                  // size. Links only wrap at "/", keeping each domain whole
-                  <div className="grid gap-4 md:grid-cols-[auto_auto] md:justify-start lg:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-auto-2 md:justify-start lg:grid-cols-2">
                     {category.sections.map((section) => (
                       <div key={section.title} className="flex flex-col gap-1">
                         <Heading level={3} className="my-0 text-xl">
@@ -268,8 +219,6 @@ const ContactUsPage: NextPage = () => {
           ))}
         </ul>
 
-        {/* Website and open-source only, so kept as a small note below the
-            general contact cards */}
         <div className="mt-10 text-center text-sm">
           <p>
             For issues with the website or Twitch extension, please open an
