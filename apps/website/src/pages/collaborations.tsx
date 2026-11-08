@@ -313,8 +313,6 @@ const CollaborationCard = ({
   // Scroll margin clears the sticky nav (taller on phones)
   return (
     <li id={collaboration.slug} className="scroll-mt-36 md:scroll-mt-24">
-      {/* Not clipped, so the preview's hover scale and shadow show in full.
-          The preview keeps its own corners, matched to the card */}
       <Box className="flex h-full flex-col overflow-visible p-0">
         <Link
           href={`https://www.youtube.com/watch?v=${collaboration.videoId}`}
@@ -326,11 +324,13 @@ const CollaborationCard = ({
           }}
           className="group/trigger block"
         >
-          <YouTubePreview
-            videoId={collaboration.videoId}
-            alt={`Watch the ${collaboration.name} collaboration`}
-            className="aspect-video h-auto w-full rounded-xl object-cover"
-          />
+          <Box className="z-20 p-0 transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl">
+            <YouTubePreview
+              videoId={collaboration.videoId}
+              alt={`Watch the ${collaboration.name} collaboration`}
+              className="aspect-video h-auto w-full rounded-xl object-cover group-hover/trigger:scale-100"
+            />
+          </Box>
         </Link>
         <div className="flex flex-col gap-1 p-4">
           <Heading level={3} className="my-0 text-2xl">
