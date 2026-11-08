@@ -20,6 +20,7 @@ import { shuffle } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { formatDateTime, getAnniversary, getToday } from "@/utils/datetime";
 import {
+  formatPartialDateString,
   parsePartialDateString,
   splitPartialDateString,
 } from "@/utils/datetime-partial";
@@ -34,6 +35,7 @@ import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
@@ -177,6 +179,26 @@ const AmbassadorCard = ({
     </Link>
   );
 };
+
+const Banner = ({
+  tag,
+  title,
+  children,
+}: {
+  tag: string;
+  title: ReactNode;
+  children?: ReactNode;
+}) => (
+  <div className="mb-6 flex flex-col gap-3 rounded-xl border border-alveus-green-200 bg-alveus-green-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p className="text-sm font-semibold tracking-wide text-alveus-green-700 uppercase">
+        {tag}
+      </p>
+      <p className="font-serif text-2xl font-bold">{title}</p>
+    </div>
+    {children}
+  </div>
+);
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -461,15 +483,39 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </Link>
         </div>
 
-        {/* Birthdays are only known after load, so they're shown on the card
-            itself rather than above the grid, which would push it down */}
+        {featured.birthdays.length > 0 && (
+          <Banner
+            tag="Happy birthday"
+            title={
+              <List
+                items={featured.birthdays.map(
+                  ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
+                )}
+              />
+            }
+          >
+            <p className="text-alveus-green-700">
+              Born{" "}
+              <List
+                items={[
+                  ...new Set(
+                    featured.birthdays.map(({ key }) =>
+                      formatPartialDateString(ambassadors[key].birth),
+                    ),
+                  ),
+                ]}
+              />
+            </p>
+          </Banner>
+        )}
+
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {featured.birthdays.map(({ key, age }) => (
+          {featured.birthdays.map(({ key }) => (
             <AmbassadorCard
               key={key}
               ambassadorKey={key}
               size={featured.birthdays.length <= 2 ? "wide" : "default"}
-              badge={`Happy birthday! Turns ${age}`}
+              badge="Birthday today"
             />
           ))}
           {featured.random.map((key) => (
