@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   type ReactNode,
+  createContext,
+  use,
   useCallback,
   useEffect,
   useId,
@@ -20,8 +22,10 @@ import { classes } from "@/utils/classes";
 import { formatDateTime } from "@/utils/datetime";
 
 import useDragScroll from "@/hooks/drag";
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import Box from "@/components/content/Box";
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
@@ -283,26 +287,38 @@ const matches = (collaboration: Collaboration, query: string) => {
   );
 };
 
-const years = collaborations.reduce<Map<string, Collaboration[]>>(
-  (map, collaboration) => {
-    const year = collaboration.date.getUTCFullYear().toString();
-    map.set(year, [...(map.get(year) || []), collaboration]);
-    return map;
+const sortByOptions = {
+  all: {
+    label: "All Collaborations",
+    sort: (collaborations) =>
+      collaborations.reduce<GroupedItems<Collaboration>>(
+        (map, collaboration) => {
+          const year = collaboration.date.getUTCFullYear().toString();
+
+          map.set(year, {
+            name: year,
+            items: [...(map.get(year)?.items || []), collaboration],
+          });
+          return map;
+        },
+        new Map(),
+      ),
   },
-  new Map(),
-);
+} as const satisfies Options<Collaboration>;
+
+const CardContext = createContext<{
+  query: string;
+  onOpen: (slug: string) => void;
+}>({ query: "", onOpen: () => {} });
 
 const slugs = new Set(collaborations.map(({ slug }) => slug));
 
 const CollaborationCard = ({
   collaboration,
-  query,
-  onOpen,
 }: {
   collaboration: Collaboration;
-  query: string;
-  onOpen: (slug: string) => void;
 }) => {
+  const { query, onOpen } = use(CardContext);
   const creatorMatch =
     query && !collaboration.name.toLowerCase().includes(query.toLowerCase())
       ? collaboration.creators.find((creator) =>
@@ -377,6 +393,38 @@ const CollaborationCard = ({
   );
 };
 
+const CollaborationYear = ({
+  items,
+  option,
+  group,
+  name,
+  ref,
+}: GroupedProps<Collaboration, HTMLElement>) => (
+  <section
+    ref={ref}
+    aria-labelledby={`${option}:${group}`}
+    hidden={items.length === 0}
+    className="scroll-mt-20"
+  >
+    <Heading
+      level={2}
+      id={`${option}:${group}`}
+      className="mt-0 mb-6 flex scroll-mt-20 items-end justify-between border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+    >
+      {name}
+      <small className="text-lg font-medium">{` (${items.length})`}</small>
+    </Heading>
+    <ul className="grid gap-6 md:grid-cols-2">
+      {items.map((collaboration) => (
+        <CollaborationCard
+          key={collaboration.slug}
+          collaboration={collaboration}
+        />
+      ))}
+    </ul>
+  </section>
+);
+
 const SearchControl = ({
   query,
   setQuery,
@@ -437,26 +485,48 @@ const SearchControl = ({
 const CollaborationsPage: NextPage = () => {
   const [query, setQuery] = useState("");
   const trimmed = query.trim();
+  const [lightboxOpen, setLightboxOpen] = useState<string>();
 
-  const filtered = useMemo(
+  const { option, group, result } = useGrouped({
+    items: collaborations,
+    options: sortByOptions,
+    initial: "all",
+  });
+
+  const filtered = useMemo<GroupedItems<Collaboration>>(
     () =>
-      [...years.entries()]
-        .map(
-          ([year, items]) =>
-            [year, items.filter((item) => matches(item, trimmed))] as const,
-        )
-        .filter(([, items]) => items.length > 0),
+      new Map(
+        [...result.entries()].map(([key, value]) => [
+          key,
+          {
+            ...value,
+            items: value.items.filter((item) => matches(item, trimmed)),
+          },
+        ]),
+      ),
+    [result, trimmed],
+  );
+  const count = [...filtered.values()].reduce(
+    (sum, { items }) => sum + items.length,
+    0,
+  );
+
+  const sectionLinks = useMemo(
+    () =>
+      [...filtered.entries()]
+        .filter(([, value]) => value.items.length > 0)
+        .map(([key, value]) => ({
+          name: value.name,
+          href: `#${option}:${key}`,
+        })),
+    [filtered, option],
+  );
+
+  const card = useMemo(
+    () => ({ query: trimmed, onOpen: setLightboxOpen }),
     [trimmed],
   );
-  const count = filtered.reduce((sum, [, items]) => sum + items.length, 0);
 
-  // Same ids as before, so existing #all:<year> links keep working
-  const sectionLinks = useMemo(
-    () => filtered.map(([year]) => ({ name: year, href: `#all:${year}` })),
-    [filtered],
-  );
-
-  const [lightboxOpen, setLightboxOpen] = useState<string>();
   const lightboxItems = useMemo(
     () =>
       collaborations.reduce<Record<string, ReactNode>>(
@@ -593,38 +663,22 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section className="grow pt-8">
-          {filtered.length === 0 && (
+          {count === 0 && (
             <p className="py-12 text-center text-lg text-alveus-green-700">
               No collaborators match that name.
             </p>
           )}
 
-          {filtered.map(([year, items], idx) => (
-            <section
-              key={year}
-              aria-labelledby={`all:${year}`}
-              className={idx > 0 ? "mt-12" : undefined}
-            >
-              <Heading
-                level={2}
-                id={`all:${year}`}
-                className="mt-0 mb-6 flex scroll-mt-20 items-end justify-between border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
-              >
-                {year}
-                <small className="text-lg font-medium">{` (${items.length})`}</small>
-              </Heading>
-              <ul className="grid gap-6 md:grid-cols-2">
-                {items.map((collaboration) => (
-                  <CollaborationCard
-                    key={collaboration.slug}
-                    collaboration={collaboration}
-                    query={trimmed}
-                    onOpen={setLightboxOpen}
-                  />
-                ))}
-              </ul>
-            </section>
-          ))}
+          <CardContext value={card}>
+            <div className="flex flex-col gap-12">
+              <Grouped
+                option={option}
+                group={group}
+                result={filtered}
+                component={CollaborationYear}
+              />
+            </div>
+          </CardContext>
 
           <Lightbox
             open={lightboxOpen}
