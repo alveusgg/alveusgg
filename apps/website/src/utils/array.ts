@@ -2,9 +2,6 @@ export function countUnique(array: unknown[]) {
   return new Set(array).size;
 }
 
-/**
- * Return a shuffled copy of an array (Fisher-Yates), leaving the input as is.
- */
 export function shuffle<T>(array: readonly T[]): T[] {
   const result = array.slice();
   for (let i = result.length - 1; i > 0; i--) {
