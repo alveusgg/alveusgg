@@ -669,14 +669,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <IconYouTube aria-hidden="true" className="shrink-0" />
                   <span>
                     {ambassador.playlist.label ? (
-                      <>Watch more {ambassador.playlist.label} clips here</>
+                      <>Watch more {ambassador.playlist.label} clips</>
                     ) : (
                       <>
-                        Watch more clips of <List items={playlistNames} /> here
+                        Watch more clips of <List items={playlistNames} />
                       </>
                     )}
                   </span>
-                  <span className="sr-only"> (opens in a new tab)</span>
                 </Button>
               )}
               {canWatchLive && (
@@ -687,8 +686,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   className="inline-flex items-center gap-3 text-left"
                 >
                   <IconTwitch aria-hidden="true" className="shrink-0" />
-                  <span>Watch {ambassador.name} live here</span>
-                  <span className="sr-only"> (opens in a new tab)</span>
+                  <span>Watch {ambassador.name} live</span>
                 </Button>
               )}
             </div>
