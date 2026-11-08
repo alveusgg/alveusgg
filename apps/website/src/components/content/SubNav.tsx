@@ -26,7 +26,6 @@ type SubNavProps = {
   links: SubNavLink[];
   className?: string;
   label?: string;
-  // Optional controls (e.g. a search) shown at the end of the bar
   children?: ReactNode;
 };
 
@@ -200,13 +199,11 @@ const SubNav = ({
         <SubNavBar links={links} />
 
         {children && (
-          // Controls keep the body text style, not the nav link font
           <div className="flex min-w-0 grow flex-wrap items-center gap-x-4 gap-y-2 py-1 text-base font-normal lg:shrink-0 lg:grow-0 lg:py-2">
             {children}
           </div>
         )}
 
-        {/* Full width when open, so with controls the menu gets its own row */}
         <Disclosure
           as="div"
           className="flex flex-row items-start data-open:w-full lg:hidden"

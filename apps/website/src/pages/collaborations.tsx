@@ -326,7 +326,6 @@ const CollaborationCard = ({
         )
       : undefined;
 
-  // Scroll margin clears the sticky nav (taller on phones)
   return (
     <li id={collaboration.slug} className="scroll-mt-36 md:scroll-mt-24">
       <Box className="flex h-full flex-col overflow-visible p-0">
@@ -368,9 +367,7 @@ const CollaborationCard = ({
               With {highlight(creatorMatch.name, query)}
             </p>
           )}
-          {/* Date on the left, VoD on the right; wraps on narrow cards */}
           <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            {/* The date deep links to this collaboration */}
             <Link
               href={`#${collaboration.slug}`}
               custom
@@ -544,21 +541,17 @@ const CollaborationsPage: NextPage = () => {
     [],
   );
 
-  // Loading with #slug opens that collaboration's video
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (hash in lightboxItems) setLightboxOpen(hash);
   }, [lightboxItems]);
 
-  // As before, loading with #all:<year> or #slug scrolls it into view once
-  // the page has rendered, as the browser's own jump can land short
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
     if (id) document.getElementById(id)?.scrollIntoView();
   }, []);
 
-  // Deep links keep working during a search: if the linked collaboration is
-  // filtered out, clear the search, then scroll to it once it renders
+  // A deep link to a collaboration hidden by the search clears the search
   const router = useRouter();
   const [pendingSlug, setPendingSlug] = useState<string>();
   useEffect(() => {
