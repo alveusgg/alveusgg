@@ -27,7 +27,7 @@ import {
 import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
-import { fetchYouTubePlaylistVideosSafe } from "@/server/apis/youtube";
+import { fetchYouTubePlaylistSafe } from "@/server/apis/youtube";
 
 import socials from "@/data/socials";
 
@@ -207,17 +207,17 @@ type Highlight = {
   published: string;
 };
 
-// The most recent clips from the ambassador's playlist. None when there is
-// no playlist, or it is empty or can't be fetched
+// The most recently uploaded clips from the ambassador's playlist, skipping
+// private and deleted videos (no upload date). None when there is no
+// playlist, or it is empty or can't be fetched
 const getHighlights = async (ambassador: Ambassador): Promise<Highlight[]> =>
   ambassador.playlist
-    ? (await fetchYouTubePlaylistVideosSafe(ambassador.playlist.id))
+    ? (await fetchYouTubePlaylistSafe(ambassador.playlist.id))
+        .flatMap(({ id, title, uploaded }) =>
+          uploaded ? [{ id, title, published: uploaded.toISOString() }] : [],
+        )
+        .sort((a, b) => b.published.localeCompare(a.published))
         .slice(0, HIGHLIGHTS_CLIP_COUNT)
-        .map(({ id, title, published }) => ({
-          id,
-          title,
-          published: published.toISOString(),
-        }))
     : [];
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (

@@ -18,6 +18,10 @@ const PlaylistItemListResponseSchema = z.object({
           videoId: z.string(),
         }),
       }),
+      contentDetails: z.object({
+        // Missing for private and deleted videos
+        videoPublishedAt: z.coerce.date().optional(),
+      }),
     }),
   ),
 });
@@ -29,7 +33,7 @@ const fetchYouTubePlaylist = async (
   if (!apiKey) throw new Error("Missing YouTube API key");
 
   const requestURL = new URL(
-    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50`,
+    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50`,
   );
   requestURL.searchParams.set("playlistId", playlistId);
   requestURL.searchParams.set("key", apiKey);
@@ -59,6 +63,7 @@ const fetchYouTubePlaylist = async (
             encodeURIComponent(item.snippet.channelId),
       },
       published: item.snippet.publishedAt,
+      uploaded: item.contentDetails.videoPublishedAt,
     };
   });
 };
@@ -69,6 +74,9 @@ export interface YouTubeVideo {
   description: string;
   author: { id: string; name: string; uri: string };
   published: Date;
+  // Upload date of a playlist item (published is when it was added to the
+  // playlist). Missing for private and deleted videos
+  uploaded?: Date;
 }
 
 export const fetchYouTubeVideosSafe = async (
@@ -174,60 +182,6 @@ export const fetchYouTubeLive = async (
   };
 };
 
-const PlaylistVideoListResponseSchema = z.object({
-  items: z.array(
-    z.object({
-      snippet: z.object({
-        title: z.string(),
-        resourceId: z.object({ videoId: z.string() }),
-      }),
-      contentDetails: z.object({
-        // Upload date, missing for private and deleted videos
-        videoPublishedAt: z.coerce.date().optional(),
-      }),
-    }),
-  ),
-});
-
-export interface YouTubePlaylistVideo {
-  id: string;
-  title: string;
-  published: Date;
-}
-
-// Videos in the first page of a playlist (up to 50), newest upload first
-const fetchYouTubePlaylistVideos = async (
-  playlistId: string,
-): Promise<YouTubePlaylistVideo[]> => {
-  const apiKey = env.YOUTUBE_API_KEY;
-  if (!apiKey) throw new Error("Missing YouTube API key");
-
-  const requestURL = new URL(
-    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50`,
-  );
-  requestURL.searchParams.set("playlistId", playlistId);
-  requestURL.searchParams.set("key", apiKey);
-
-  const resp = await fetch(requestURL);
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch YouTube playlist: ${resp.statusText}`);
-  }
-
-  return PlaylistVideoListResponseSchema.parse(await resp.json())
-    .items.flatMap(({ snippet, contentDetails }) =>
-      contentDetails.videoPublishedAt
-        ? [
-            {
-              id: snippet.resourceId.videoId,
-              title: snippet.title,
-              published: contentDetails.videoPublishedAt,
-            },
-          ]
-        : [],
-    )
-    .sort((a, b) => b.published.getTime() - a.published.getTime());
-};
-
 // Many ambassadors share a playlist, so keep each playlist's result for a
 // short while: a build (or a revalidation) then fetches each playlist once.
 // The promise is stored, so pages built at the same time share one request.
@@ -235,21 +189,22 @@ const fetchYouTubePlaylistVideos = async (
 const PLAYLIST_CACHE_TTL_MS = 10 * 60 * 1000;
 const playlistVideosCache = new Map<
   string,
-  { expires: number; videos: Promise<YouTubePlaylistVideo[]> }
+  { expires: number; videos: Promise<YouTubeVideo[]> }
 >();
 
-// Never throws: returns an empty list when there is no API key (e.g. local
-// development) or the request fails
-export const fetchYouTubePlaylistVideosSafe = async (
+// Videos in the first page of a playlist (up to 50). Never throws: returns an
+// empty list when there is no API key (e.g. local development) or the
+// request fails
+export const fetchYouTubePlaylistSafe = async (
   playlistId: string,
-): Promise<YouTubePlaylistVideo[]> => {
+): Promise<YouTubeVideo[]> => {
   if (!env.YOUTUBE_API_KEY) return [];
 
   let cached = playlistVideosCache.get(playlistId);
   if (!cached || cached.expires <= Date.now()) {
     cached = {
       expires: Date.now() + PLAYLIST_CACHE_TTL_MS,
-      videos: fetchYouTubePlaylistVideos(playlistId),
+      videos: fetchYouTubePlaylist(playlistId),
     };
     playlistVideosCache.set(playlistId, cached);
   }
