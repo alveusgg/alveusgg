@@ -1,7 +1,7 @@
-import { type DateTime } from "luxon";
+import type { DateTime } from "luxon";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import ambassadors, {
   type AmbassadorKey,
@@ -18,8 +18,11 @@ import { channels as youTubeChannels } from "@/data/youtube";
 
 import { shuffle } from "@/utils/array";
 import { classes } from "@/utils/classes";
-import { formatDateTime, getToday } from "@/utils/datetime";
-import { formatPartialDateString } from "@/utils/datetime-partial";
+import { formatDateTime, getAnniversary, getToday } from "@/utils/datetime";
+import {
+  parsePartialDateString,
+  splitPartialDateString,
+} from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
@@ -31,7 +34,6 @@ import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
-import List from "@/components/content/List";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
@@ -55,6 +57,8 @@ import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
 import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
 import instituteWolvesHeroImage from "@/assets/institute/hero/wolves.png";
+
+import { ambassadorImageHover } from "@/pages/ambassadors";
 
 const slides = [
   {
@@ -90,22 +94,19 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry,
 );
 
-// Active ambassadors with a full date of birth (YYYY-MM-DD) whose birthday is
-// on the given day. February 29 birthdays are celebrated on February 28 in
-// years that aren't leap years.
+// The grid has four card spaces: with one or two birthdays, each birthday card
+// is wide and takes two spaces
+const FEATURED_SPACES = 4;
+
+// Active ambassadors whose birthday is on the given day. Only a full date of
+// birth has a day to celebrate, as a year or month alone parses to the 1st
 const getBirthdayAmbassadors = (today: DateTime) =>
-  activeAmbassadors.flatMap(([key, ambassador]) => {
-    const birth = ambassador.birth?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (!birth) return [];
+  activeAmbassadors.flatMap(([key, { birth }]) => {
+    if (!birth || splitPartialDateString(birth).length !== 3) return [];
 
-    const [, birthYear = 0, birthMonth = 0, birthDay = 0] = birth.map(Number);
-    const celebrated =
-      birthMonth === 2 && birthDay === 29 && !today.isInLeapYear
-        ? 28
-        : birthDay;
-
-    return birthMonth === today.month && celebrated === today.day
-      ? [{ key, age: today.year - birthYear }]
+    const born = parsePartialDateString(birth);
+    return getAnniversary(born, today.year).hasSame(today, "day")
+      ? [{ key, age: today.year - born.year }]
       : [];
   });
 
@@ -135,15 +136,18 @@ const AmbassadorCard = ({
         size === "wide" && "col-span-2",
       )}
     >
-      <div className="relative">
+      {/* A wide card is exactly as tall as a square one (two columns less
+          the gap, halved), so swapping one in after load doesn't move the row */}
+      <div className="@container relative">
         <Image
           src={image.src}
           alt={image.alt}
           width={size === "default" ? 400 : 800}
           className={classes(
-            "h-auto w-full rounded-xl object-cover",
-            size === "default" && "aspect-square",
-            size === "wide" && "aspect-[2.08/1]",
+            "w-full rounded-xl object-cover",
+            size === "default" && "aspect-square h-auto",
+            size === "wide" && "h-[calc((100cqw-1.5rem)/2)]",
+            ambassadorImageHover,
           )}
           style={{ objectPosition: image.position }}
         />
@@ -173,26 +177,6 @@ const AmbassadorCard = ({
     </Link>
   );
 };
-
-const Banner = ({
-  tag,
-  title,
-  children,
-}: {
-  tag: string;
-  title: ReactNode;
-  children?: ReactNode;
-}) => (
-  <div className="mb-6 flex flex-col gap-3 rounded-xl border border-alveus-green-200 bg-alveus-green-100 p-4 sm:flex-row sm:items-center sm:justify-between">
-    <div>
-      <p className="text-sm font-semibold tracking-wide text-alveus-green-700 uppercase">
-        {tag}
-      </p>
-      <p className="font-serif text-2xl font-bold">{title}</p>
-    </div>
-    {children}
-  </div>
-);
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -231,29 +215,17 @@ export const getStaticProps = async () => {
       .slice(0, 4),
   );
 
-  // Ambassadors with a birthday today (in Texas) are featured first, at most
-  // four. The grid has four card spaces: with one or two birthdays, each
-  // birthday card is wide and takes two spaces.
-  const birthdayAmbassadors = getBirthdayAmbassadors(getToday()).slice(0, 4);
-  const birthdaySpaces =
-    birthdayAmbassadors.length * (birthdayAmbassadors.length <= 2 ? 2 : 1);
-
-  // Fill the remaining spaces with ambassadors picked at random from all
-  // active ambassadors, refreshed whenever the page revalidates
+  // Ambassadors picked at random from all active ambassadors, refreshed
+  // whenever the page revalidates. Birthdays are found on the client, so pick
+  // extra to still fill every space if some of these have a birthday today
   const randomAmbassadors = shuffle(
-    activeAmbassadors
-      .map(([key]) => key)
-      .filter((key) => !birthdayAmbassadors.some((b) => b.key === key)),
-  );
+    activeAmbassadors.map(([key]) => key),
+  ).slice(0, FEATURED_SPACES * 2);
 
   return {
     props: {
       videos: latestVideos,
-      birthdayAmbassadors,
-      randomAmbassadors: randomAmbassadors.slice(
-        0,
-        Math.max(4 - birthdaySpaces, 0),
-      ),
+      randomAmbassadors,
     },
     revalidate: 1800, // revalidate after 30 minutes
   };
@@ -261,10 +233,38 @@ export const getStaticProps = async () => {
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
-  birthdayAmbassadors,
   randomAmbassadors,
 }) => {
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
+
+  // Today in Texas, set after mount so the first render matches the server,
+  // then updated at midnight
+  const [today, setToday] = useState<DateTime>();
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const update = () => {
+      const now = getToday();
+      setToday(now);
+      timeout = setTimeout(update, now.plus({ days: 1 }).diffNow().toMillis());
+    };
+    update();
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Ambassadors with a birthday today take the place of random picks, at most
+  // four, keeping the same number of card spaces
+  const featured = useMemo(() => {
+    const birthdays = today
+      ? getBirthdayAmbassadors(today).slice(0, FEATURED_SPACES)
+      : [];
+    const spaces = birthdays.length * (birthdays.length <= 2 ? 2 : 1);
+    return {
+      birthdays,
+      random: randomAmbassadors
+        .filter((key) => !birthdays.some((birthday) => birthday.key === key))
+        .slice(0, FEATURED_SPACES - spaces),
+    };
+  }, [today, randomAmbassadors]);
 
   const latestLightboxItems = useMemo(
     () =>
@@ -461,42 +461,18 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </Link>
         </div>
 
-        {birthdayAmbassadors.length > 0 && (
-          <Banner
-            tag="Happy birthday"
-            title={
-              <List
-                items={birthdayAmbassadors.map(
-                  ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
-                )}
-              />
-            }
-          >
-            <p className="text-alveus-green-700">
-              Born{" "}
-              <List
-                items={[
-                  ...new Set(
-                    birthdayAmbassadors.map(({ key }) =>
-                      formatPartialDateString(ambassadors[key].birth),
-                    ),
-                  ),
-                ]}
-              />
-            </p>
-          </Banner>
-        )}
-
+        {/* Birthdays are only known after load, so they're shown on the card
+            itself rather than above the grid, which would push it down */}
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {birthdayAmbassadors.map(({ key }) => (
+          {featured.birthdays.map(({ key, age }) => (
             <AmbassadorCard
               key={key}
               ambassadorKey={key}
-              size={birthdayAmbassadors.length <= 2 ? "wide" : "default"}
-              badge="Birthday today"
+              size={featured.birthdays.length <= 2 ? "wide" : "default"}
+              badge={`Happy birthday! Turns ${age}`}
             />
           ))}
-          {randomAmbassadors.map((key) => (
+          {featured.random.map((key) => (
             <AmbassadorCard key={key} ambassadorKey={key} />
           ))}
         </div>
