@@ -170,8 +170,6 @@ export const wishlistRouter = router({
       const baseUrl = env.NEXT_PUBLIC_BASE_URL;
 
       const { orderId, approvalUrl } = await createPayPalOrder({
-        wishlistItemId: item.id,
-        wishlistItemTitle: item.title,
         amount: input.amount,
         donorName: input.donorName,
         donorEmail: input.donorEmail,

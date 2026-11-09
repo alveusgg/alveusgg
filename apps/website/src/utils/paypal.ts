@@ -7,6 +7,11 @@ const PAYPAL_API_BASE =
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
+// Identical on every wishlist order, so the monthly PayPal import into Neon
+// can exclude them (the website logs these donations itself)
+const WISHLIST_PAYPAL_DESCRIPTION = "Alveus Sanctuary Wishlist";
+const WISHLIST_PAYPAL_CUSTOM_ID = "campaign_wishlist";
+
 async function getAccessToken(): Promise<string> {
   const clientId = env.PAYPAL_CLIENT_ID;
   const clientSecret = env.PAYPAL_CLIENT_SECRET;
@@ -29,8 +34,6 @@ async function getAccessToken(): Promise<string> {
 }
 
 export interface CreateOrderOptions {
-  wishlistItemId: string;
-  wishlistItemTitle: string;
   amount: number;
   donorName?: string;
   donorEmail?: string;
@@ -53,11 +56,8 @@ export async function createPayPalOrder(
       intent: "CAPTURE",
       purchase_units: [
         {
-          custom_id: opts.wishlistItemId,
-          description: `Wishlist donation: ${opts.wishlistItemTitle}`.slice(
-            0,
-            127,
-          ),
+          custom_id: WISHLIST_PAYPAL_CUSTOM_ID,
+          description: WISHLIST_PAYPAL_DESCRIPTION,
           amount: { currency_code: "USD", value: opts.amount.toFixed(2) },
         },
       ],

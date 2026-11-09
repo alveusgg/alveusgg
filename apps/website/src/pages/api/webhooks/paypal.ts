@@ -31,7 +31,6 @@ interface PayPalCaptureEvent {
   event_type: string;
   resource: {
     id: string;
-    custom_id?: string; // wishlistItemId, set at order creation
     amount?: { value: string };
     supplementary_data?: {
       related_ids?: { order_id?: string };
