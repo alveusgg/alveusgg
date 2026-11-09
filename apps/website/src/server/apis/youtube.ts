@@ -8,7 +8,6 @@ const PlaylistItemListResponseSchema = z.object({
   items: z.array(
     z.object({
       snippet: z.object({
-        publishedAt: z.coerce.date(),
         channelId: z.string(),
         title: z.string(),
         description: z.string(),
@@ -19,7 +18,6 @@ const PlaylistItemListResponseSchema = z.object({
         }),
       }),
       contentDetails: z.object({
-        // Missing for private and deleted videos
         videoPublishedAt: z.coerce.date().optional(),
       }),
     }),
@@ -45,7 +43,10 @@ const fetchYouTubePlaylist = async (
 
   const json = await resp.json();
 
-  return PlaylistItemListResponseSchema.parse(json).items.map((item) => {
+  return PlaylistItemListResponseSchema.parse(json).items.flatMap((item) => {
+    const published = item.contentDetails.videoPublishedAt;
+    if (!published) return [];
+
     const custom = Object.values(channels).find(
       (channel) => channel.id === item.snippet.channelId,
     );
@@ -62,8 +63,7 @@ const fetchYouTubePlaylist = async (
           "https://youtube.com/channel/" +
             encodeURIComponent(item.snippet.channelId),
       },
-      published: item.snippet.publishedAt,
-      uploaded: item.contentDetails.videoPublishedAt,
+      published,
     };
   });
 };
@@ -74,9 +74,6 @@ export interface YouTubeVideo {
   description: string;
   author: { id: string; name: string; uri: string };
   published: Date;
-  // Upload date of a playlist item (published is when it was added to the
-  // playlist). Missing for private and deleted videos
-  uploaded?: Date;
 }
 
 export const fetchYouTubeVideosSafe = async (

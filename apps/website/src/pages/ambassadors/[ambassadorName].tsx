@@ -203,20 +203,16 @@ const HIGHLIGHTS_CLIP_COUNT = 4;
 type Highlight = {
   id: string;
   title: string;
-  // Upload date as an ISO string, as props must be serializable
-  published: string;
+  published: Date;
 };
 
-// The most recently uploaded clips from the ambassador's playlist, skipping
-// private and deleted videos (no upload date). None when there is no
-// playlist, or it is empty or can't be fetched
+// The most recently uploaded clips from the ambassador's playlist. None when
+// there is no playlist, or it is empty or can't be fetched
 const getHighlights = async (ambassador: Ambassador): Promise<Highlight[]> =>
   ambassador.playlist
     ? (await fetchYouTubePlaylistSafe(ambassador.playlist.id))
-        .flatMap(({ id, title, uploaded }) =>
-          uploaded ? [{ id, title, published: uploaded.toISOString() }] : [],
-        )
-        .sort((a, b) => b.published.localeCompare(a.published))
+        .map(({ id, title, published }) => ({ id, title, published }))
+        .sort((a, b) => b.published.getTime() - a.published.getTime())
         .slice(0, HIGHLIGHTS_CLIP_COUNT)
     : [];
 
@@ -642,8 +638,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     </span>
                     <span className="text-sm text-alveus-green-200">
                       <span className="sr-only">, </span>
-                      <time dateTime={clip.published}>
-                        {formatDateTime(new Date(clip.published), {
+                      <time dateTime={clip.published.toISOString()}>
+                        {formatDateTime(clip.published, {
                           style: "long",
                         })}
                       </time>
