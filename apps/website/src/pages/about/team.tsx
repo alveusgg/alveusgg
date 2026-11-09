@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { useState } from "react";
 
 import staff, { departments } from "@/data/staff";
 
@@ -9,9 +10,12 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
-import People, { type Person } from "@/components/content/People";
+import Modal from "@/components/content/Modal";
+import People, { type Person, PersonImage } from "@/components/content/People";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -25,39 +29,30 @@ import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import nickElectricianImage from "@/assets/people/nick-electrician.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 
-const staffWithDepartments = Object.fromEntries(
-  Object.entries(staff).map<[string, Person]>(([key, person]) => [
-    key,
-    {
-      ...person,
-      title: (
-        <span className="flex flex-col flex-wrap items-baseline lg:flex-row">
-          {person.title}
-          {!!departments[person.department] && (
-            <span className="font-sans text-base text-alveus-green-600 uppercase lg:ml-auto">
-              {departments[person.department]}
-            </span>
-          )}
-        </span>
-      ),
-      description: (
-        <>
-          {person.description}
-          {person.twitch && (
-            <p>
-              You&apos;ll see {person.name.split(" ")[0]} in chat as{" "}
-              <Link href={`https://twitch.tv/${person.twitch}`} external>
-                @{person.twitch}
-              </Link>
-              {person.twitchSharedWith &&
-                `, sharing the same account with ${person.twitchSharedWith}`}
-            </p>
-          )}
-        </>
-      ),
-    },
-  ]),
-);
+type Department = Exclude<keyof typeof departments, "leadership">;
+
+const departmentKeys = ["operations", "animalCare", "facilities"] as const;
+
+const Pronouns = ({ pronouns }: { pronouns?: string }) =>
+  pronouns && (
+    <>
+      {" "}
+      <span className="font-sans text-lg font-normal whitespace-nowrap text-gray-500">
+        ({pronouns})
+      </span>
+    </>
+  );
+
+const DepartmentLabel = ({
+  department,
+}: {
+  department: keyof typeof departments;
+}) =>
+  departments[department] && (
+    <p className="font-sans text-base text-alveus-green-600 uppercase">
+      {departments[department]}
+    </p>
+  );
 
 interface Member {
   name: string;
@@ -238,6 +233,10 @@ const sectionLinks = [
 ];
 
 const AboutTeamPage: NextPage = () => {
+  const [department, setDepartment] = useState<Department>();
+  const [open, setOpen] = useState<string>();
+  const person = open ? staff[open] : undefined;
+
   return (
     <>
       <Meta
@@ -286,7 +285,135 @@ const AboutTeamPage: NextPage = () => {
         />
 
         <Section>
-          <People people={staffWithDepartments} link />
+          <div
+            role="group"
+            aria-label="Filter by department"
+            className="mb-10 flex flex-wrap items-center border-b border-alveus-green-200"
+          >
+            {([undefined, ...departmentKeys] as const).map((key, idx) => (
+              <span key={key ?? "all"} className="flex items-center">
+                {idx > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="h-4 w-px bg-alveus-green-300"
+                  />
+                )}
+                <button
+                  type="button"
+                  aria-pressed={department === key}
+                  onClick={() => setDepartment(key)}
+                  className={classes(
+                    "border-b-3 px-3 pt-3 pb-2.5 font-serif text-lg whitespace-nowrap transition-colors focus:outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-alveus-green-700 motion-reduce:transition-none",
+                    department === key
+                      ? "border-alveus-green-700"
+                      : "border-transparent hover:border-alveus-green-300",
+                  )}
+                >
+                  {key ? departments[key] : "All"}{" "}
+                  <span className="font-sans text-sm text-alveus-green-600">
+                    (
+                    {
+                      Object.values(staff).filter(
+                        (member) => !key || member.department === key,
+                      ).length
+                    }
+                    )
+                  </span>
+                </button>
+              </span>
+            ))}
+          </div>
+
+          <ul className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {Object.entries(staff)
+              .filter(
+                ([, member]) => !department || member.department === department,
+              )
+              .map(([key, member]) => (
+                <li
+                  key={key}
+                  id={key}
+                  className="group flex scroll-mt-4 flex-col"
+                  tabIndex={-1}
+                >
+                  <div className="mx-auto flex w-full max-w-xs grow flex-col">
+                    <PersonImage image={member.image} />
+
+                    <div className="flex grow flex-col pt-4">
+                      <Heading level={3} className="my-0 text-3xl">
+                        {member.name}
+                        <Pronouns pronouns={member.pronouns} />
+                      </Heading>
+                      <Heading level={4} className="my-1 text-xl">
+                        {member.title}
+                      </Heading>
+                      <DepartmentLabel department={member.department} />
+
+                      <div className="mt-3 line-clamp-3 text-gray-500">
+                        {member.description}
+                      </div>
+
+                      <button
+                        type="button"
+                        aria-haspopup="dialog"
+                        onClick={() => setOpen(key)}
+                        className="mt-auto inline-flex items-center gap-1 self-start pt-3 text-red-600 underline transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
+                      >
+                        Read full bio
+                        <span className="sr-only"> of {member.name}</span>
+                        <IconArrowRight className="size-4" />
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+          </ul>
+
+          <Modal
+            open={!!person}
+            onClose={() => setOpen(undefined)}
+            title={
+              person && (
+                <>
+                  {person.name}
+                  <Pronouns pronouns={person.pronouns} />
+                </>
+              )
+            }
+          >
+            {person && (
+              <>
+                <div className="flex flex-col gap-6 sm:flex-row">
+                  <div className="w-40 shrink-0 sm:w-48">
+                    <PersonImage image={person.image} />
+                  </div>
+                  <div>
+                    <Heading level={4} className="my-1 text-xl">
+                      {person.title}
+                    </Heading>
+                    <DepartmentLabel department={person.department} />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-4 text-gray-500">
+                  {person.description}
+                  {person.twitch && (
+                    <p>
+                      You&apos;ll see {person.name.split(" ")[0]} in chat as{" "}
+                      <Link
+                        href={`https://twitch.tv/${person.twitch}`}
+                        external
+                      >
+                        @{person.twitch}
+                      </Link>
+                      {person.twitchSharedWith &&
+                        `, sharing the same account with ${person.twitchSharedWith}`}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
+          </Modal>
 
           <p className="mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
