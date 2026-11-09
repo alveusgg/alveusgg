@@ -33,10 +33,14 @@ function accountPage(
   donations: { id: string; accountId: string }[],
   currentPage = 0,
   totalPages = 1,
+  totalResults = donations.length,
 ) {
   return Response.json({
-    donations,
-    pagination: { currentPage, totalPages, pageSize: 20, totalResults: 40 },
+    searchResults: donations.map(({ id, accountId }) => ({
+      "Donation ID": id,
+      "Account ID": accountId,
+    })),
+    pagination: { currentPage, totalPages, pageSize: 200, totalResults },
   });
 }
 
@@ -104,13 +108,51 @@ test("relinks existing donations by source ID across all pages", async () => {
   await syncNeonDonationAccounts("200");
 
   expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
-    "https://api.neoncrm.com/v2/accounts/200/donations?currentPage=0",
-    "https://api.neoncrm.com/v2/accounts/200/donations?currentPage=1",
+    "https://api.neoncrm.com/v2/donations/search",
+    "https://api.neoncrm.com/v2/donations/search",
   ]);
   expect(getDonations).toHaveBeenCalledWith("example", "200", [
     "example-1",
     "example-2",
   ]);
+  expect(updateAccounts).toHaveBeenCalledExactlyOnceWith([
+    { id: "local-1", accountId: "200" },
+  ]);
+  expect(cache.get(key)?.value).toBe("complete");
+});
+
+test("syncs more than 200 donations using account-filtered 200-item pages", async () => {
+  const donations = Array.from({ length: 201 }, (_, index) => ({
+    id: String(index + 1),
+    accountId: "200",
+  }));
+  fetchMock
+    .mockResolvedValueOnce(accountPage(donations.slice(0, 200), 0, 2, 201))
+    .mockResolvedValueOnce(accountPage(donations.slice(200), 1, 2, 201));
+  getDonations.mockResolvedValue([storedDonation("1", "100")]);
+
+  await syncNeonDonationAccounts("200");
+
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+  for (const [page, [url, request]] of fetchMock.mock.calls.entries()) {
+    expect(url).toBe("https://api.neoncrm.com/v2/donations/search");
+    expect(request?.method).toBe("POST");
+    expect(JSON.parse(request?.body as string)).toEqual({
+      searchFields: [{ field: "Account ID", operator: "EQUAL", value: "200" }],
+      outputFields: ["Donation ID", "Account ID"],
+      pagination: {
+        currentPage: page,
+        pageSize: 200,
+        sortColumn: "Donation ID",
+        sortDirection: "ASC",
+      },
+    });
+  }
+  expect(getDonations).toHaveBeenCalledWith(
+    "example",
+    "200",
+    donations.map(({ id }) => `example-${id}`),
+  );
   expect(updateAccounts).toHaveBeenCalledExactlyOnceWith([
     { id: "local-1", accountId: "200" },
   ]);
@@ -130,7 +172,7 @@ test("verifies locally linked donations missing from Neon's list", async () => {
   await syncNeonDonationAccounts("200");
 
   expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
-    "https://api.neoncrm.com/v2/accounts/200/donations?currentPage=0",
+    "https://api.neoncrm.com/v2/donations/search",
     "https://api.neoncrm.com/v2/donations/1",
     "https://api.neoncrm.com/v2/donations/2",
   ]);
@@ -180,6 +222,70 @@ test("rejects donations belonging to another account", async () => {
   );
   expect(getDonations).not.toHaveBeenCalled();
   expect(updateAccounts).not.toHaveBeenCalled();
+});
+
+test.each([null, 1, "invalid"])(
+  "rejects an invalid search donation ID (%s) without changing ownership",
+  async (id) => {
+    fetchMock.mockResolvedValue(
+      Response.json({
+        searchResults: [{ "Donation ID": id, "Account ID": "200" }],
+        pagination: {
+          currentPage: 0,
+          totalPages: 1,
+          pageSize: 200,
+          totalResults: 1,
+        },
+      }),
+    );
+
+    await expect(syncNeonDonationAccounts("200")).rejects.toThrow(
+      "invalid donation ID",
+    );
+    expect(getDonations).not.toHaveBeenCalled();
+    expect(updateAccounts).not.toHaveBeenCalled();
+    expect(cache.get(key)?.value).toBe("pending");
+  },
+);
+
+test("retries rate-limited searches before applying ownership changes", async () => {
+  vi.spyOn(Math, "random").mockReturnValue(0);
+  fetchMock
+    .mockResolvedValueOnce(new Response(null, { status: 429 }))
+    .mockResolvedValueOnce(accountPage([{ id: "1", accountId: "200" }]));
+  getDonations.mockResolvedValue([storedDonation("1", "100")]);
+
+  await syncNeonDonationAccounts("200");
+
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+  expect(updateAccounts).toHaveBeenCalledExactlyOnceWith([
+    { id: "local-1", accountId: "200" },
+  ]);
+  expect(cache.get(key)?.value).toBe("complete");
+});
+
+test("shares the timeout across search pages without applying partial ownership", async () => {
+  const controller = new AbortController();
+  const timeout = vi
+    .spyOn(AbortSignal, "timeout")
+    .mockReturnValue(controller.signal);
+  fetchMock
+    .mockResolvedValueOnce(accountPage([{ id: "1", accountId: "200" }], 0, 2))
+    .mockImplementationOnce(async (_url, request) => {
+      expect(request?.signal).toBe(controller.signal);
+      controller.abort();
+      controller.signal.throwIfAborted();
+      return accountPage([]);
+    });
+
+  await expect(syncNeonDonationAccounts("200")).rejects.toThrow(
+    "Failed to fetch Neon account donations",
+  );
+
+  expect(timeout).toHaveBeenCalledExactlyOnceWith(10_000);
+  expect(fetchMock.mock.calls[0]?.[1]?.signal).toBe(controller.signal);
+  expect(updateAccounts).not.toHaveBeenCalled();
+  expect(cache.get(key)?.value).toBe("pending");
 });
 
 test("rejects a mismatched donation ID when verifying missing ownership", async () => {

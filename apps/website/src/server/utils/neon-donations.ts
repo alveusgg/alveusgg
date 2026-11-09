@@ -1,4 +1,4 @@
-import { getAccountDonations, getDonation } from "@alveusgg/neon-crm-api";
+import { getDonation, searchDonations } from "@alveusgg/neon-crm-api";
 
 import { env } from "@/env";
 
@@ -10,6 +10,7 @@ import { RedisValueAlreadyExistsError, getRedis } from "@/server/utils/redis";
 
 const SYNC_INTERVAL_SECONDS = 15 * 60;
 const MAX_PAGES = 10;
+const PAGE_SIZE = 200;
 
 export async function syncNeonDonationAccounts(accountId: string) {
   if (!env.NEON_CRM_API_KEY) return;
@@ -35,7 +36,18 @@ export async function syncNeonDonationAccounts(accountId: string) {
   const prefix = `${options.organizationId}-`;
   const owners = new Map<string, string>();
   for (let page = 0, pages = 1; page < pages; page++) {
-    const response = await getAccountDonations(options, accountId, page);
+    const response = await searchDonations(options, {
+      searchFields: [
+        { field: "Account ID", operator: "EQUAL", value: accountId },
+      ],
+      outputFields: ["Donation ID", "Account ID"],
+      pagination: {
+        currentPage: page,
+        pageSize: PAGE_SIZE,
+        sortColumn: "Donation ID",
+        sortDirection: "ASC",
+      },
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch Neon account donations", {
         cause:
@@ -45,18 +57,23 @@ export async function syncNeonDonationAccounts(accountId: string) {
       });
     }
 
-    const { donations, pagination } = response.data;
+    const { searchResults, pagination } = response.data;
     pages = pagination.totalPages;
     if (pages > MAX_PAGES || pagination.currentPage !== page) {
       throw new Error("Neon account donation pagination exceeded sync limits");
     }
-    for (const donation of donations) {
-      if (donation.accountId !== accountId) {
+    for (const donation of searchResults) {
+      const id = donation["Donation ID"];
+      if (typeof id !== "string" || !/^\d+$/.test(id)) {
+        throw new Error("Neon returned an invalid donation ID");
+      }
+      const owner = donation["Account ID"];
+      if (owner !== accountId) {
         throw new Error(
           "Neon returned a donation belonging to another account",
         );
       }
-      owners.set(`${prefix}${donation.id}`, donation.accountId);
+      owners.set(`${prefix}${id}`, owner);
     }
   }
 

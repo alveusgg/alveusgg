@@ -4,7 +4,6 @@ import {
   type DonationSearchResponse as DonationSearch,
   type RecordId,
   type UpdateCustomFieldInput,
-  AccountDonationsResponse,
   AccountResponse,
   CreateWebhookResponse,
   CustomFieldResponse,
@@ -94,17 +93,6 @@ export const getDonation = async (options: Options, id: RecordId) => {
 
   return donation;
 };
-
-export const getAccountDonations = (
-  options: Options,
-  id: RecordId,
-  currentPage = 0,
-) =>
-  fetchWithSchema(
-    options,
-    `${url`accounts/${id}/donations`}?currentPage=${currentPage}`,
-    AccountDonationsResponse,
-  );
 
 export const searchDonations = (
   options: Options,
