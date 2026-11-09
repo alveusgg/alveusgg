@@ -34,13 +34,14 @@ function accountPage(
   currentPage = 0,
   totalPages = 1,
   totalResults = donations.length,
+  pageSize = 200,
 ) {
   return Response.json({
     searchResults: donations.map(({ id, accountId }) => ({
       "Donation ID": id,
       "Account ID": accountId,
     })),
-    pagination: { currentPage, totalPages, pageSize: 200, totalResults },
+    pagination: { currentPage, totalPages, pageSize, totalResults },
   });
 }
 
@@ -98,8 +99,12 @@ afterEach(() => {
 
 test("relinks existing donations by source ID across all pages", async () => {
   fetchMock
-    .mockResolvedValueOnce(accountPage([{ id: "1", accountId: "200" }], 0, 2))
-    .mockResolvedValueOnce(accountPage([{ id: "2", accountId: "200" }], 1, 2));
+    .mockResolvedValueOnce(
+      accountPage([{ id: "1", accountId: "200" }], 0, 2, 2, 1),
+    )
+    .mockResolvedValueOnce(
+      accountPage([{ id: "2", accountId: "200" }], 1, 2, 2, 1),
+    );
   getDonations.mockResolvedValue([
     storedDonation("1", "100"),
     storedDonation("2", "200"),
@@ -159,6 +164,90 @@ test("syncs more than 200 donations using account-filtered 200-item pages", asyn
   expect(cache.get(key)?.value).toBe("complete");
 });
 
+test.each(["pending", "complete"])(
+  "bounds a stalled %s cache write and does not continue after its timeout",
+  async (stage) => {
+    vi.useFakeTimers();
+    let finishWrite!: () => void;
+    const stalledWrite = new Promise<void>((resolve) => {
+      finishWrite = resolve;
+    });
+    if (stage === "complete") {
+      redis.set.mockImplementationOnce(redis.set.getMockImplementation()!);
+    }
+    redis.set.mockImplementationOnce(() => stalledWrite);
+    let failure: unknown;
+    const sync = syncNeonDonationAccounts("200").catch((error: unknown) => {
+      failure = error;
+    });
+
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(failure).toBeInstanceOf(Error);
+    expect((failure as Error).message).toBe(
+      "Neon donation sync cache write timed out",
+    );
+    await sync;
+    finishWrite();
+    await Promise.resolve();
+    expect(fetchMock).toHaveBeenCalledTimes(stage === "pending" ? 0 : 1);
+    expect(updateAccounts).not.toHaveBeenCalled();
+    expect(cache.get(key)?.value).not.toBe("complete");
+  },
+);
+
+test.each([
+  "duplicate ID",
+  "missing row",
+  "changed totals",
+  "changed page count",
+  "changed page size",
+])(
+  "rejects a %s in paginated history before reading local ownership",
+  async (failure) => {
+    const donations = Array.from({ length: 201 }, (_, index) => ({
+      id: String(index + 1),
+      accountId: "200",
+    }));
+    const lastPage =
+      failure === "missing row"
+        ? []
+        : [donations[failure === "duplicate ID" ? 0 : 200]!];
+    fetchMock
+      .mockResolvedValueOnce(accountPage(donations.slice(0, 200), 0, 2, 201))
+      .mockResolvedValueOnce(
+        accountPage(
+          lastPage,
+          1,
+          failure === "changed page count" ? 3 : 2,
+          failure === "changed totals" ? 202 : 201,
+          failure === "changed page size" ? 199 : 200,
+        ),
+      );
+
+    await expect(syncNeonDonationAccounts("200")).rejects.toThrow(
+      "incomplete or inconsistent",
+    );
+
+    expect(getDonations).not.toHaveBeenCalled();
+    expect(updateAccounts).not.toHaveBeenCalled();
+    expect(cache.get(key)?.value).toBe("pending");
+  },
+);
+
+test.each([0, 1])(
+  "accepts an empty history reporting %s total pages",
+  async (pages) => {
+    fetchMock.mockResolvedValue(accountPage([], 0, pages, 0));
+
+    await syncNeonDonationAccounts("200");
+
+    expect(getDonations).toHaveBeenCalledWith("example", "200", []);
+    expect(updateAccounts).not.toHaveBeenCalled();
+    expect(cache.get(key)?.value).toBe("complete");
+  },
+);
+
 test("verifies locally linked donations missing from Neon's list", async () => {
   getDonations.mockResolvedValue([
     storedDonation("1", "200"),
@@ -187,7 +276,7 @@ test.each(["later page", "missing donation"])(
   async (failure) => {
     if (failure === "later page") {
       fetchMock.mockResolvedValueOnce(
-        accountPage([{ id: "1", accountId: "200" }], 0, 2),
+        accountPage([{ id: "1", accountId: "200" }], 0, 2, 2, 1),
       );
     } else {
       fetchMock.mockResolvedValueOnce(
@@ -270,7 +359,9 @@ test("shares the timeout across search pages without applying partial ownership"
     .spyOn(AbortSignal, "timeout")
     .mockReturnValue(controller.signal);
   fetchMock
-    .mockResolvedValueOnce(accountPage([{ id: "1", accountId: "200" }], 0, 2))
+    .mockResolvedValueOnce(
+      accountPage([{ id: "1", accountId: "200" }], 0, 2, 2, 1),
+    )
     .mockImplementationOnce(async (_url, request) => {
       expect(request?.signal).toBe(controller.signal);
       controller.abort();
