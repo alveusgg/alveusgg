@@ -172,7 +172,9 @@ export const wishlistRouter = router({
         amount: input.amount,
         donorName: input.donorName,
         donorEmail: input.donorEmail,
-        returnUrl: `${baseUrl}/wishlist/donate/success?orderId=PAYPAL_ORDER_ID&itemId=${item.id}`,
+        // PayPal appends the order ID as `token` (and `PayerID`) when it
+        // sends the donor back
+        returnUrl: `${baseUrl}/wishlist/donate/success?itemId=${item.id}`,
         cancelUrl: `${baseUrl}/wishlist?donated=cancelled`,
       });
 

@@ -18,8 +18,9 @@ type State = "loading" | "success" | "error";
 
 const DonateSuccessPage: NextPage = () => {
   const router = useRouter();
-  const { orderId, itemId } = router.query as {
-    orderId?: string;
+  // PayPal adds the approved order ID to the return URL as `token`
+  const { token: orderId, itemId } = router.query as {
+    token?: string;
     itemId?: string;
   };
 
