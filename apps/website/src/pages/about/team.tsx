@@ -6,6 +6,7 @@ import staff, { departments } from "@/data/staff";
 import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
 import People, { type Person } from "@/components/content/People";
@@ -38,6 +39,21 @@ const staffWithDepartments = Object.fromEntries(
             </span>
           )}
         </span>
+      ),
+      description: (
+        <>
+          {person.description}
+          {person.twitch && (
+            <p>
+              You&apos;ll see {person.name.split(" ")[0]} in chat as{" "}
+              <Link href={`https://twitch.tv/${person.twitch}`} external>
+                @{person.twitch}
+              </Link>
+              {person.twitchSharedWith &&
+                `, sharing the same account with ${person.twitchSharedWith}`}
+            </p>
+          )}
+        </>
       ),
     },
   ]),
