@@ -9,6 +9,7 @@ import Link from "./Link";
 export interface Person {
   image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
   name: string;
+  pronouns?: string;
   title: ReactNode;
   description: ReactNode;
 }
@@ -93,13 +94,19 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
             columns === 1 && align === "center" && "text-center",
           )}
         >
-          <Heading level={3} className="mt-0 text-4xl">
+          <Heading
+            level={3}
+            className={classes("mt-0 text-4xl", person.pronouns && "text-wrap")}
+          >
             {link ? (
               <Link href={`#${key}`} custom>
                 {person.name}
               </Link>
             ) : (
               person.name
+            )}
+            {person.pronouns && (
+              <small className="text-xl text-gray-500">{` (${person.pronouns})`}</small>
             )}
           </Heading>
           <Heading level={4} className="text-xl">
