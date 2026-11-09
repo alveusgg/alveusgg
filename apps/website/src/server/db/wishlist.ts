@@ -1,5 +1,7 @@
 import { prisma } from "@alveusgg/database";
 
+import { env } from "@/env";
+
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 
 import { getPartialTargetCents, parsePriceCents } from "@/data/wishlist";
@@ -191,6 +193,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
   const { order } = result;
 
   void notifyWishlistDonation({
+    webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
     itemTitle: order.wishlistItem.title,
     amount: capture.amount,
     donorName: order.donorName,
@@ -199,6 +202,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
 
   if (result.justFunded) {
     void notifyWishlistItemFunded({
+      webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
       itemTitle: order.wishlistItem.title,
     }).catch((err) =>
       console.error("Discord funded alert failed (non-fatal):", err),

@@ -1,7 +1,5 @@
 import { LinkifyIt } from "linkify-it";
 
-import { env } from "@/env";
-
 type DiscordTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
 
 export const getDiscordTimestamp = (
@@ -41,6 +39,7 @@ export const escapeLinksForDiscord = (text: string) => {
 // channel settings -> Integrations -> Webhooks
 
 export interface DiscordNotifyOptions {
+  webhookUrl: string | undefined;
   itemTitle: string;
   amount: number;
   donorName: string | null;
@@ -50,7 +49,7 @@ export interface DiscordNotifyOptions {
 export async function notifyWishlistDonation(
   opts: DiscordNotifyOptions,
 ): Promise<void> {
-  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
+  const { webhookUrl } = opts;
   if (!webhookUrl) return; // Optional, never blocks a donation
 
   const donor = opts.donorName?.trim() || "Anonymous";
@@ -92,11 +91,12 @@ export async function notifyWishlistDonation(
  * Tells staff a crowdfunded item reached its target and can be bought.
  */
 export async function notifyWishlistItemFunded({
+  webhookUrl,
   itemTitle,
 }: {
+  webhookUrl: string | undefined;
   itemTitle: string;
 }): Promise<void> {
-  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
   if (!webhookUrl) return;
 
   try {
@@ -121,13 +121,13 @@ export async function notifyWishlistItemFunded({
  * Sends a digest of recent wishlist donations. Call from a scheduled job.
  */
 export async function sendWishlistDigest(
+  webhookUrl: string | undefined,
   donations: Array<{
     itemTitle: string;
     amount: number;
     donorName: string | null;
   }>,
 ): Promise<void> {
-  const webhookUrl = env.DISCORD_WISHLIST_WEBHOOK_URL;
   if (!webhookUrl || donations.length === 0) return;
 
   const total = donations.reduce((sum, d) => sum + d.amount, 0);
