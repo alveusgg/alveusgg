@@ -197,7 +197,6 @@ type AmbassadorPageProps = {
   highlights: Highlight[];
 };
 
-// How many of the playlist's most recent clips the Highlights section shows
 const HIGHLIGHTS_CLIP_COUNT = 4;
 
 type Highlight = {
@@ -206,8 +205,6 @@ type Highlight = {
   published: Date;
 };
 
-// The most recently uploaded clips from the ambassador's playlist. None when
-// there is no playlist, or it is empty or can't be fetched
 const getHighlights = async (ambassador: Ambassador): Promise<Highlight[]> =>
   ambassador.playlist
     ? (await fetchYouTubePlaylistSafe(ambassador.playlist.id))
@@ -343,7 +340,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     [images],
   );
 
-  // Everyone sharing this playlist, for the "watch more" button
   const playlistNames = useMemo(
     () =>
       Object.values<Ambassador>(ambassadors)
@@ -367,8 +363,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       highlights.reduce<Record<string, ReactNode>>(
         (acc, clip) => ({
           ...acc,
-          // Clips are YouTube Shorts: the same embed, switched to a 9:16
-          // player sized by the viewport height
+          // Clips are YouTube Shorts, so the player is 9:16
           [clip.id]: (
             <div className="h-full [&_iframe]:aspect-9/16 [&>div>div]:aspect-9/16">
               <YouTubeEmbed videoId={clip.id} caption={clip.title} />
@@ -594,7 +589,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         </Section>
       </div>
 
-      {/* No clips from the playlist: no Highlights section */}
       {highlights.length > 0 && (
         <Section dark className="bg-alveus-green-800">
           <Heading
@@ -651,7 +645,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           </ul>
 
           {(ambassador.playlist || canWatchLive) && (
-            // Equal-height rows when stacked on phones, side by side from sm up
             <div className="mt-10 grid auto-rows-fr gap-4 sm:flex sm:flex-row sm:items-stretch sm:justify-center">
               {ambassador.playlist && (
                 <Button

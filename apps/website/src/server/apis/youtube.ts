@@ -179,19 +179,13 @@ export const fetchYouTubeLive = async (
   };
 };
 
-// Many ambassadors share a playlist, so keep each playlist's result for a
-// short while: a build (or a revalidation) then fetches each playlist once.
-// The promise is stored, so pages built at the same time share one request.
-// A failed fetch is removed straight away, so the next request tries again.
+// Many ambassadors share a playlist, so each one is only fetched once per build
 const PLAYLIST_CACHE_TTL_MS = 10 * 60 * 1000;
 const playlistVideosCache = new Map<
   string,
   { expires: number; videos: Promise<YouTubeVideo[]> }
 >();
 
-// Videos in the first page of a playlist (up to 50). Never throws: returns an
-// empty list when there is no API key (e.g. local development) or the
-// request fails
 export const fetchYouTubePlaylistSafe = async (
   playlistId: string,
 ): Promise<YouTubeVideo[]> => {
