@@ -9,7 +9,11 @@ import {
   isActiveAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/filters";
 
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import {
+  type ImageMimeType,
+  imageMimeTypes,
+  maxImageUploadSize,
+} from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
@@ -215,6 +219,7 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
             multiple={false}
             upload={upload}
             allowedFileTypes={imageMimeTypes}
+            maxFileSize={maxImageUploadSize}
             resizeImageOptions={resizeImageOptions}
             renderAttachment={(props) => (
               <ImageUploadAttachment {...props}>

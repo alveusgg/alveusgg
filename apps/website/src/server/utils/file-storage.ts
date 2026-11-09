@@ -1,5 +1,6 @@
 import {
   DeleteObjectCommand,
+  GetObjectCommand,
   type ObjectCannedACL,
   PutObjectCommand,
   S3Client,
@@ -7,12 +8,22 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createId } from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
+import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
+
+import { imageMimeTypes, maxImageUploadSize } from "@/utils/files";
+
+export const imageUploadInputSchema = z.object({
+  // Becomes part of the storage key, which S3 limits to 1024 bytes
+  fileName: z.string().max(255),
+  fileType: z.literal(imageMimeTypes),
+  fileSize: z.number().int().positive().max(maxImageUploadSize),
+});
 
 export function getBucketUrl() {
   const endpointUrl = new URL(env.FILE_STORAGE_ENDPOINT);
@@ -46,6 +57,27 @@ function getS3Client() {
   }
 
   return __client;
+}
+
+// Returns null if the object is missing, empty or larger than maxSize
+async function getFileStorageObjectContent(key: string, maxSize: number) {
+  try {
+    // Request one byte more than allowed to detect larger objects without
+    // reading them completely
+    const res = await getS3Client().send(
+      new GetObjectCommand({
+        Bucket: env.FILE_STORAGE_BUCKET,
+        Key: key,
+        Range: `bytes=0-${maxSize}`,
+      }),
+    );
+    const content = await res.Body?.transformToByteArray();
+    if (!content?.length || content.length > maxSize) return null;
+    return content;
+  } catch (err) {
+    console.error("Failed to get file storage object", key, err);
+    return null;
+  }
 }
 
 export function getViewUrlForFileStorageObjectKey(key: string) {
@@ -83,12 +115,14 @@ export async function deleteFileStorageObject(id: string) {
 export async function createFileStorageUpload({
   fileName,
   fileType,
+  fileSize,
   prefix = "",
   acl = "public-read",
   expires = 3600,
 }: {
   fileName: string;
   fileType: string;
+  fileSize: number;
   acl?: ObjectCannedACL;
   prefix?: string;
   expires?: number;
@@ -100,6 +134,8 @@ export async function createFileStorageUpload({
     Key: key,
     Bucket: env.FILE_STORAGE_BUCKET,
     ContentType: fileType,
+    // Signed, so the upload has to be exactly the requested size
+    ContentLength: fileSize,
     ACL: acl,
     Metadata: {
       acl,
@@ -108,7 +144,7 @@ export async function createFileStorageUpload({
 
   const signedUrlString = await getSignedUrl(getS3Client(), command, {
     expiresIn: expires,
-    signableHeaders: new Set(["content-type", "x-amz-acl"]),
+    signableHeaders: new Set(["content-type", "content-length", "x-amz-acl"]),
     unhoistableHeaders: new Set(["x-amz-acl"]),
   });
 
@@ -142,13 +178,21 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
     return { error: "Upload has expired" };
   }
 
-  const url = String(getViewUrlForFileStorageObjectKey(data.key));
-  const metaData = await probeImageMeta(url);
+  const content = await getFileStorageObjectContent(
+    data.key,
+    maxImageUploadSize,
+  );
+  const image = content && probeImageMeta(content);
 
-  if (!metaData || metaData.mimeType !== data.type) {
+  if (!image || image.mimeType !== data.type) {
     await deleteFileStorageObject(data.id);
     return { error: "Invalid image" };
   }
+
+  const metaData = {
+    ...image,
+    url: String(getViewUrlForFileStorageObjectKey(data.key)),
+  };
 
   const tasks = [];
   tasks.push(

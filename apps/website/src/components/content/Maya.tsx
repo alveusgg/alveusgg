@@ -64,3 +64,29 @@ export const MayaSignature = ({ className }: { className?: string }) => (
     />
   </svg>
 );
+
+export const MayaQuote = ({ short = false }: { short?: boolean }) => (
+  <figure className="flex flex-col gap-2">
+    <blockquote className="font-serif text-2xl text-pretty text-alveus-green-100">
+      <p>
+        <span>&ldquo;</span>
+        {!short && (
+          <>
+            I love the natural world with my whole heart and entire being.
+            <br className="hidden sm:block" />{" "}
+          </>
+        )}
+        All I want is to inspire that same love in others.
+        <span>&rdquo;</span>
+      </p>
+    </blockquote>
+
+    <figcaption className="flex items-start gap-2">
+      <MayaSignature className="h-8 text-alveus-green-200" />
+      <p className="sr-only">Maya Higa</p>
+      <p className="text-xs/loose tracking-widest text-alveus-green-200 uppercase">
+        Founder, Alveus Sanctuary
+      </p>
+    </figcaption>
+  </figure>
+);

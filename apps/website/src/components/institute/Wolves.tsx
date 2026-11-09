@@ -72,7 +72,7 @@ const Wolves = ({
         [2]{" "}
         <Link
           external
-          href="https://read.dgf.nm.gov/mexican-wolf-population-survey-reveals-a-minimum-of-319-mexican-wolves-distributed-across-arizona-and-new-mexico"
+          href="https://www.azgfd.com/2026/02/25/mexican-wolf-population-count-complete/"
           dark
         >
           New Mexico Department of Wildlife and Arizona Game & Fish Department -

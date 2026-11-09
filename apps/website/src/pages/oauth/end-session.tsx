@@ -4,6 +4,8 @@ import { z } from "zod";
 import { getOAuthClient, isAllowedRedirectUri } from "@/server/oauth/config";
 import { hasOAuthSigningKey } from "@/server/oauth/keys";
 
+import Meta from "@/components/content/Meta";
+
 type EndSessionPageProps = {
   error?: string;
 };
@@ -88,5 +90,11 @@ export const getServerSideProps: GetServerSideProps<
 export default function EndSessionPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
-  return <main>{props.error ?? "Redirecting..."}</main>;
+  return (
+    <>
+      <Meta title="End Session | OAuth" noindex />
+
+      <main>{props.error ?? "Redirecting..."}</main>
+    </>
+  );
 }

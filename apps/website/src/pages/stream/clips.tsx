@@ -13,6 +13,7 @@ import { type Clip, getClips } from "@/server/apis/twitch";
 import { channels } from "@/data/twitch";
 
 import { queryArray } from "@/utils/array";
+import { classes } from "@/utils/classes";
 
 import useChat from "@/hooks/chat";
 
@@ -258,11 +259,14 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     [],
   );
 
+  const [title, setTitle] = useState(() => {
+    if (typeof query.title === "string") {
+      return query.title.trim();
+    }
+    return "Be Right Back";
+  });
+
   // Allow a title to be set by mods in chat, or skipping to the next clip
-  const [title, setTitle] = useState("");
-  useEffect(() => {
-    setTitle(typeof query.title === "string" ? query.title.trim() : "");
-  }, [query.title]);
   useChat(
     useMemo(() => {
       const param = queryArray(query.channels);
@@ -301,6 +305,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
         <div
+          key={
+            clip.id /* replace all elements (as opposed to reuse) when changing clips so things like transitions don't step on each other */
+          }
           className={`flex aspect-video max-w-full items-center justify-center ${
             title ? "h-[calc(100%-6rem)]" : "h-full"
           }`}
@@ -316,20 +323,23 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 </div>
               </Transition>
 
-              <Transition show={details === "above"}>
-                {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
-                <div className="flex items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-closed:opacity-0 data-enter:duration-700 data-leave:duration-0">
-                  <p className="text-lg">{clip.title}</p>
-                  <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
-                  <p>
-                    {new Date(clip.created).toLocaleDateString(undefined, {
-                      dateStyle: "long",
-                    })}
-                  </p>
-                  <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
-                  <p>Clipped by {clip.creator}</p>
-                </div>
-              </Transition>
+              <div
+                // don't use Transition so that this element starts off mounted (but invisible) so that layout doesn't shift when it appears
+                className={classes(
+                  "flex items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity duration-700",
+                  details !== "above" && "opacity-0",
+                )}
+              >
+                <p className="text-lg">{clip.title}</p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>
+                  {new Date(clip.created).toLocaleDateString(undefined, {
+                    dateStyle: "long",
+                  })}
+                </p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>Clipped by {clip.creator}</p>
+              </div>
             </div>
 
             <Transition show={details === "overlay"}>
