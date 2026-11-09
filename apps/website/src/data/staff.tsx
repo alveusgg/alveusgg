@@ -69,9 +69,8 @@ export interface Staff extends Person {
   title: string;
   joined: PartialDateString;
   department: Department;
-  pronouns?: string;
-  // Twitch username, without the @ or URL (e.g. "SpaceVoyage")
   twitch?: string;
+  twitchSharedWith?: string;
 }
 
 const staff: Record<string, Staff> = {
@@ -293,6 +292,7 @@ const staff: Record<string, Staff> = {
     department: "operations",
     pronouns: "he/him",
     twitch: "srutiloops",
+    twitchSharedWith: "Sruti",
   },
   rocky: {
     image: rockyImage,
