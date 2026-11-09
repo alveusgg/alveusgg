@@ -1302,9 +1302,11 @@ const AboutAlveusPage: NextPage = () => {
                   (typeof historyTypes)[HistoryType],
                 ][]
               ).map(([key, { label, icon: Icon }]) => (
-                <button
+                <Button
                   key={key}
+                  as="button"
                   type="button"
+                  filled={visibleTypes[key]}
                   aria-pressed={visibleTypes[key]}
                   onClick={() =>
                     setVisibleTypes((prev) => ({
@@ -1312,16 +1314,11 @@ const AboutAlveusPage: NextPage = () => {
                       [key]: !prev[key],
                     }))
                   }
-                  className={classes(
-                    "inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700 motion-reduce:transition-none",
-                    visibleTypes[key]
-                      ? "border-alveus-green bg-alveus-green text-alveus-tan"
-                      : "border-alveus-green-300 bg-transparent text-alveus-green-700 line-through",
-                  )}
+                  className="inline-flex items-center gap-2"
                 >
                   <Icon size={16} />
                   {label}
-                </button>
+                </Button>
               ))}
             </div>
             <button
