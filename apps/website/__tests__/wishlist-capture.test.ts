@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { recordWishlistCapture } from "@/server/db/wishlist";
 
+import { notifyWishlistDonation } from "@/utils/discord";
+
 const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
   const tx = {
     wishlistDonationOrder: {
@@ -87,6 +89,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.clearAllMocks();
   vi.restoreAllMocks();
@@ -99,6 +102,8 @@ describe("recordWishlistCapture", () => {
       .mockResolvedValueOnce(neonSearch([{ "Account ID": "123" }]))
       .mockResolvedValueOnce(Response.json({ id: "789" }));
     vi.stubGlobal("fetch", fetch);
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-07T18:00:00Z"));
 
     const result = await recordWishlistCapture(capture);
 
@@ -120,12 +125,13 @@ describe("recordWishlistCapture", () => {
     expect(bodyOf(fetch, 1)).toEqual({
       accountId: "123",
       amount: 25,
-      date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+      date: "2026-11-07",
       payments: [
         {
           amount: 25,
           tenderType: 17,
           paymentStatus: "Succeeded",
+          receivedDate: "2026-11-07",
           note: "PayPal capture ID: CAPTURE-1 (Wishlist: Heat lamp)",
         },
       ],
@@ -221,6 +227,45 @@ describe("recordWishlistCapture", () => {
     expect(mockPrisma.wishlistDonationOrder.update).not.toHaveBeenCalled();
     expect(error).toHaveBeenCalledWith(
       expect.stringContaining("Neon CRM log failed"),
+      expect.any(Error),
+    );
+  });
+
+  test("waits for the Discord alert before returning", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    let sendAlert = () => {};
+    vi.mocked(notifyWishlistDonation).mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        sendAlert = resolve;
+      }),
+    );
+
+    let settled = false;
+    const pending = recordWishlistCapture(capture).then((result) => {
+      settled = true;
+      return result;
+    });
+    await vi.waitFor(() => expect(notifyWishlistDonation).toHaveBeenCalled());
+    expect(settled).toBe(false);
+
+    sendAlert();
+    expect((await pending).status).toBe("captured");
+  });
+
+  test("keeps the donation when the Discord alert fails", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(notifyWishlistDonation).mockRejectedValueOnce(
+      new Error("Discord is down"),
+    );
+
+    const result = await recordWishlistCapture(capture);
+
+    expect(result.status).toBe("captured");
+    expect(error).toHaveBeenCalledWith(
+      expect.stringContaining("Discord notify failed"),
       expect.any(Error),
     );
   });

@@ -27,6 +27,7 @@ const describeError = (result: { errorType: string; error: unknown }) =>
 
 export type WishlistNeonDonation = {
   captureId: string;
+  capturedAt: Date;
   amount: number;
   email: string | null;
   name: string | null;
@@ -63,15 +64,20 @@ export async function logWishlistDonationToNeon(
     throw new Error(`Neon account lookup failed (${describeError(account)})`);
   }
 
+  const capturedDate = formatDateInTimezone(
+    donation.capturedAt,
+    options.localTimezone,
+  );
   const created = await createDonation(options, {
     accountId: account.data.id,
     amount: donation.amount,
-    date: formatDateInTimezone(new Date(), options.localTimezone),
+    date: capturedDate,
     payments: [
       {
         amount: donation.amount,
         tenderType: PAYPAL_TENDER_TYPE,
         paymentStatus: "Succeeded",
+        receivedDate: capturedDate,
         // The monthly PayPal import skips transactions with this capture ID
         note: `PayPal capture ID: ${donation.captureId} (Wishlist: ${donation.itemTitle})`,
       },

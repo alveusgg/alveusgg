@@ -53,6 +53,7 @@ export type WishlistCapture = {
  */
 export async function recordWishlistCapture(capture: WishlistCapture) {
   const amountCents = Math.round(capture.amount * 100);
+  const capturedAt = new Date();
 
   const result = await prisma.$transaction(async (tx) => {
     const order = await tx.wishlistDonationOrder.findUnique({
@@ -72,7 +73,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       },
       data: {
         status: "CAPTURED",
-        capturedAt: new Date(),
+        capturedAt,
         paypalTransactionId: capture.captureId,
         capturedAmount: capture.amount,
       },
@@ -192,27 +193,35 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
   if (result.status !== "captured") return result;
   const { order } = result;
 
-  void notifyWishlistDonation({
-    webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
-    itemTitle: order.wishlistItem.title,
-    amount: capture.amount,
-    donorName: order.donorName,
-    donorMessage: order.donorMessage,
-  }).catch((err) => console.error("Discord notify failed (non-fatal):", err));
-
-  if (result.justFunded) {
-    void notifyWishlistItemFunded({
+  // Awaited so a serverless function cannot end before the alert is sent
+  try {
+    await notifyWishlistDonation({
       webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
       itemTitle: order.wishlistItem.title,
-    }).catch((err) =>
-      console.error("Discord funded alert failed (non-fatal):", err),
-    );
+      amount: capture.amount,
+      donorName: order.donorName,
+      donorMessage: order.donorMessage,
+    });
+  } catch (err) {
+    console.error("Discord notify failed (non-fatal):", err);
+  }
+
+  if (result.justFunded) {
+    try {
+      await notifyWishlistItemFunded({
+        webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
+        itemTitle: order.wishlistItem.title,
+      });
+    } catch (err) {
+      console.error("Discord funded alert failed (non-fatal):", err);
+    }
   }
 
   // A Neon failure is logged and never fails or rolls back the donation.
   try {
     const neonDonationId = await logWishlistDonationToNeon({
       captureId: capture.captureId,
+      capturedAt,
       amount: capture.amount,
       email: capture.payerEmail ?? order.donorEmail,
       name: capture.payerName ?? order.donorName,

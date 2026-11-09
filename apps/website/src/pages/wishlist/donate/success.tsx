@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+import { getPayPalReturnParams } from "@/data/wishlist";
+
 import { trpc } from "@/utils/trpc";
 
 import Button from "@/components/content/Button";
@@ -18,14 +20,12 @@ type State = "loading" | "success" | "error";
 
 const DonateSuccessPage: NextPage = () => {
   const router = useRouter();
-  const { orderId, itemId } = router.query as {
-    orderId?: string;
-    itemId?: string;
-  };
+  const { orderId, itemId } = getPayPalReturnParams(router.query);
 
   const [state, setState] = useState<State>("loading");
   const [amount, setAmount] = useState<number | null>(null);
   const [excessAmount, setExcessAmount] = useState(0);
+  const [alreadyCaptured, setAlreadyCaptured] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // mutateAsync keeps the same identity across renders, so the effect below
@@ -45,6 +45,7 @@ const DonateSuccessPage: NextPage = () => {
       .then((result) => {
         setAmount(result.amount ?? null);
         setExcessAmount(result.excessAmount ?? 0);
+        setAlreadyCaptured(result.alreadyCaptured);
         setState("success");
       })
       .catch((err) => {
@@ -80,6 +81,11 @@ const DonateSuccessPage: NextPage = () => {
               {amount && (
                 <p className="text-xl font-semibold">
                   {`Your $${amount.toFixed(2)} donation was received.`}
+                </p>
+              )}
+              {alreadyCaptured && !amount && (
+                <p className="text-xl font-semibold">
+                  Your donation was already received.
                 </p>
               )}
               {excessAmount > 0 && (

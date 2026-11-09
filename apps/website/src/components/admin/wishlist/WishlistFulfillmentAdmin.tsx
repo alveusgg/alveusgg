@@ -16,10 +16,10 @@ import IconCheck from "@/icons/IconCheck";
 
 export function WishlistFulfillmentAdmin() {
   const fundedQuery = trpc.adminWishlist.adminGetFullyFundedProducts.useQuery();
-  const messagesQuery = trpc.adminWishlist.adminGetDonations.useQuery({
-    status: "CAPTURED",
-    unreadMessagesOnly: true,
-  });
+  const messagesQuery = trpc.adminWishlist.adminGetDonations.useInfiniteQuery(
+    { status: "CAPTURED", unreadMessagesOnly: true },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
+  );
   const markOpened = trpc.adminWishlist.markAsOpened.useMutation({
     onSettled: () => void fundedQuery.refetch(),
   });
@@ -28,7 +28,8 @@ export function WishlistFulfillmentAdmin() {
   });
 
   const funded = fundedQuery.data?.items ?? [];
-  const messages = messagesQuery.data ?? [];
+  const messages =
+    messagesQuery.data?.pages.flatMap((page) => page.donations) ?? [];
 
   return (
     <>
@@ -108,7 +109,10 @@ export function WishlistFulfillmentAdmin() {
         )}
       </Panel>
 
-      <Headline>Unread donor messages ({messages.length})</Headline>
+      <Headline>
+        Unread donor messages ({messages.length}
+        {messagesQuery.hasNextPage ? "+" : ""})
+      </Headline>
 
       <Panel>
         {markRead.error && (
@@ -151,6 +155,17 @@ export function WishlistFulfillmentAdmin() {
               </li>
             ))}
           </ul>
+        )}
+
+        {messagesQuery.hasNextPage && (
+          <div className="mt-4">
+            <Button
+              disabled={messagesQuery.isFetchingNextPage}
+              onClick={() => void messagesQuery.fetchNextPage()}
+            >
+              {messagesQuery.isFetchingNextPage ? "Loading …" : "Load more"}
+            </Button>
+          </div>
         )}
       </Panel>
     </>

@@ -23,9 +23,22 @@ const statusEnum = z.enum([
 ]);
 const itemTypeEnum = z.enum(["PRODUCT", "GOAL"]);
 
+const DONATIONS_PER_PAGE = 50;
+
+const quantityFulfilledWithinQuantity = (item: {
+  quantity?: number;
+  quantityFulfilled?: number;
+}) =>
+  item.quantity === undefined ||
+  item.quantityFulfilled === undefined ||
+  item.quantityFulfilled <= item.quantity;
+
+const QUANTITY_FULFILLED_ERROR =
+  "Quantity fulfilled cannot be more than the quantity";
+
 const baseItemFields = {
   title: z.string().min(1).max(255),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(2000).optional().nullable(),
   imageUrl: z.string().url().optional().nullable(),
   priority: priorityEnum.default("MEDIUM"),
   status: statusEnum.default("NEEDED"),
@@ -36,16 +49,21 @@ const baseItemFields = {
 };
 
 const itemCreateInput = z.discriminatedUnion("itemType", [
-  z.object({
-    itemType: z.literal("PRODUCT"),
-    ...baseItemFields,
-    url: z.string().url().optional().nullable(),
-    price: z.string().max(50).optional().nullable(),
-    quantity: z.number().int().min(1).default(1),
-    quantityFulfilled: z.number().int().min(0).default(0),
-    // Target for partial donations, defaults to price x quantity when unset
-    goalAmountCents: z.number().int().min(100).optional().nullable(),
-  }),
+  z
+    .object({
+      itemType: z.literal("PRODUCT"),
+      ...baseItemFields,
+      url: z.string().url().optional().nullable(),
+      price: z.string().max(50).optional().nullable(),
+      quantity: z.number().int().min(1).default(1),
+      quantityFulfilled: z.number().int().min(0).default(0),
+      // Target for partial donations, defaults to price x quantity when unset
+      goalAmountCents: z.number().int().min(100).optional().nullable(),
+    })
+    .refine(quantityFulfilledWithinQuantity, {
+      message: QUANTITY_FULFILLED_ERROR,
+      path: ["quantityFulfilled"],
+    }),
   z.object({
     itemType: z.literal("GOAL"),
     ...baseItemFields,
@@ -53,25 +71,30 @@ const itemCreateInput = z.discriminatedUnion("itemType", [
   }),
 ]);
 
-const itemUpdateInput = z.object({
-  id: z.string(),
-  itemType: itemTypeEnum.optional(),
-  title: z.string().min(1).max(255).optional(),
-  description: z.string().max(2000).optional(),
-  imageUrl: z.string().url().optional().nullable(),
-  priority: priorityEnum.optional(),
-  status: statusEnum.optional(),
-  categoryId: z.string().optional().nullable(),
-  notes: z.string().max(1000).optional().nullable(),
-  sortOrder: z.number().int().optional(),
-  url: z.string().url().optional().nullable(),
-  price: z.string().max(50).optional().nullable(),
-  quantity: z.number().int().min(1).optional(),
-  quantityFulfilled: z.number().int().min(0).optional(),
-  goalAmountCents: z.number().int().min(100).optional().nullable(),
-  raisedAmountCents: z.number().int().min(0).optional(),
-  allowPartialDonations: z.boolean().optional(),
-});
+// itemType is fixed at creation, so it is not accepted here
+const itemUpdateInput = z
+  .object({
+    id: z.string(),
+    title: z.string().min(1).max(255).optional(),
+    description: z.string().max(2000).optional().nullable(),
+    imageUrl: z.string().url().optional().nullable(),
+    priority: priorityEnum.optional(),
+    status: statusEnum.optional(),
+    categoryId: z.string().optional().nullable(),
+    notes: z.string().max(1000).optional().nullable(),
+    sortOrder: z.number().int().optional(),
+    url: z.string().url().optional().nullable(),
+    price: z.string().max(50).optional().nullable(),
+    quantity: z.number().int().min(1).optional(),
+    quantityFulfilled: z.number().int().min(0).optional(),
+    goalAmountCents: z.number().int().min(100).optional().nullable(),
+    raisedAmountCents: z.number().int().min(0).optional(),
+    allowPartialDonations: z.boolean().optional(),
+  })
+  .refine(quantityFulfilledWithinQuantity, {
+    message: QUANTITY_FULFILLED_ERROR,
+    path: ["quantityFulfilled"],
+  });
 
 const categoryInput = z.object({
   name: z.string().min(1).max(100),
@@ -145,6 +168,36 @@ export const adminWishlistRouter = router({
       const { id, ...data } = input;
       const existing = await prisma.wishlistItem.findUnique({ where: { id } });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (existing.itemType === "GOAL") {
+        const productFields = [
+          data.url,
+          data.price,
+          data.quantity,
+          data.quantityFulfilled,
+        ];
+        if (productFields.some((value) => value !== undefined)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Goals cannot have product fields",
+          });
+        }
+        if (data.goalAmountCents === null) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Goals need a target amount",
+          });
+        }
+      }
+
+      const quantity = data.quantity ?? existing.quantity;
+      if ((data.quantityFulfilled ?? existing.quantityFulfilled) > quantity) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: QUANTITY_FULFILLED_ERROR,
+        });
+      }
+
       return prisma.wishlistItem.update({
         where: { id },
         data,
@@ -275,10 +328,11 @@ export const adminWishlistRouter = router({
         status: z.enum(["PENDING", "CAPTURED", "FAILED"]).optional(),
         unreadMessagesOnly: z.boolean().optional(),
         wishlistItemId: z.string().optional(),
+        cursor: z.string().nullish(),
       }),
     )
     .query(async ({ input }) => {
-      return prisma.wishlistDonationOrder.findMany({
+      const donations = await prisma.wishlistDonationOrder.findMany({
         where: {
           ...(input.status ? { status: input.status } : {}),
           ...(input.wishlistItemId
@@ -289,9 +343,38 @@ export const adminWishlistRouter = router({
             : {}),
         },
         include: { wishlistItem: { select: { title: true, id: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 200,
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        take: DONATIONS_PER_PAGE + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
       });
+
+      let nextCursor: string | undefined = undefined;
+      if (donations.length > DONATIONS_PER_PAGE) {
+        nextCursor = donations.pop()?.id;
+      }
+
+      return { donations, nextCursor };
+    }),
+
+  adminGetDonationTotals: permittedProcedure
+    .input(z.object({ wishlistItemId: z.string().optional() }))
+    .query(async ({ input }) => {
+      const groups = await prisma.wishlistDonationOrder.groupBy({
+        by: ["status"],
+        where: input.wishlistItemId
+          ? { wishlistItemId: input.wishlistItemId }
+          : {},
+        _count: { _all: true },
+        _sum: { capturedAmount: true },
+      });
+
+      const captured = groups.find((g) => g.status === "CAPTURED");
+      return {
+        orders: groups.reduce((sum, g) => sum + g._count._all, 0),
+        captured: captured?._count._all ?? 0,
+        pending: groups.find((g) => g.status === "PENDING")?._count._all ?? 0,
+        capturedAmount: captured?._sum.capturedAmount ?? 0,
+      };
     }),
 
   markMessageRead: permittedProcedure

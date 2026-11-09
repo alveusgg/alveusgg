@@ -331,6 +331,7 @@ export const CreateDonationInput = z.object({
         amount: z.number().positive(),
         tenderType: z.number().int(),
         paymentStatus: z.literal("Succeeded"),
+        receivedDate: z.iso.date().optional(),
         note: z.string().optional(),
       }),
     )

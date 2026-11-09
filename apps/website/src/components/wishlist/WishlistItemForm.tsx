@@ -78,9 +78,9 @@ export function WishlistItemForm({
 
       const shared = {
         title: getStringFromFormData(formData, "title"),
-        description:
-          getStringFromFormData(formData, "description") || undefined,
-        imageUrl: getStringFromFormData(formData, "imageUrl") || undefined,
+        // null, not undefined, so clearing a field on edit saves the change
+        description: getStringFromFormData(formData, "description") || null,
+        imageUrl: getStringFromFormData(formData, "imageUrl") || null,
         priority: getStringFromFormData(
           formData,
           "priority",
@@ -89,8 +89,8 @@ export function WishlistItemForm({
           formData,
           "status",
         ) as (typeof STATUS_OPTIONS)[number],
-        categoryId: categoryId || undefined,
-        notes: getStringFromFormData(formData, "notes") || undefined,
+        categoryId: categoryId || null,
+        notes: getStringFromFormData(formData, "notes") || null,
         allowPartialDonations,
       };
       const dollarsToCents = (name: string) =>
@@ -102,7 +102,7 @@ export function WishlistItemForm({
               itemType: "PRODUCT" as const,
               ...shared,
               url: getStringFromFormData(formData, "url") || null,
-              price: getStringFromFormData(formData, "price") || undefined,
+              price: getStringFromFormData(formData, "price") || null,
               quantity:
                 Number(getStringFromFormData(formData, "quantity")) || 1,
               quantityFulfilled:
@@ -129,8 +129,9 @@ export function WishlistItemForm({
           itemType === "GOAL" || allowPartialDonations
             ? { raisedAmountCents: dollarsToCents("raisedAmount") }
             : {};
+        const { itemType: _itemType, ...fields } = payload;
         updateMutation.mutate(
-          { id: item.id, ...payload, ...extra },
+          { id: item.id, ...fields, ...extra },
           { onSuccess: () => void router.push("/admin/wishlist") },
         );
       } else {

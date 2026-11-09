@@ -121,6 +121,7 @@ describe("createDonation", () => {
           amount: 25,
           tenderType: PAYPAL_TENDER_TYPE,
           paymentStatus: "Succeeded",
+          receivedDate: "2026-11-07",
           note: "PayPal capture ID: CAPTURE-1",
         },
       ],
@@ -138,10 +139,33 @@ describe("createDonation", () => {
           amount: 25,
           tenderType: 17,
           paymentStatus: "Succeeded",
+          receivedDate: "2026-11-07",
           note: "PayPal capture ID: CAPTURE-1",
         },
       ],
     });
+  });
+
+  it("rejects a payment received date that is not a plain date", async () => {
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+
+    const result = await createDonation(options, {
+      accountId: "123",
+      amount: 25,
+      date: "2026-11-07",
+      payments: [
+        {
+          amount: 25,
+          tenderType: PAYPAL_TENDER_TYPE,
+          paymentStatus: "Succeeded",
+          receivedDate: "2026-11-07T12:00:00Z",
+        },
+      ],
+    });
+
+    expect(result.ok).toBe(false);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it("rejects invalid input without calling Neon", async () => {

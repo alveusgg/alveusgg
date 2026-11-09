@@ -8,16 +8,19 @@ import { env } from "@/env";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
-import { getPartialTargetCents, partialDonationAmount } from "@/data/wishlist";
+import {
+  canAcceptDonations,
+  getPartialTargetCents,
+  partialDonationAmount,
+} from "@/data/wishlist";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 
-const statusEnum = z.enum([
+const publicStatusEnum = z.enum([
   "NEEDED",
   "PARTIALLY_FULFILLED",
   "FULFILLED",
   "OPENED",
-  "ARCHIVED",
 ]);
 
 /** What the success page shows for an order another call already captured */
@@ -38,7 +41,7 @@ export const wishlistRouter = router({
     .input(
       z.object({
         categorySlug: z.string().optional(),
-        status: statusEnum.optional(),
+        status: publicStatusEnum.optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -133,10 +136,10 @@ export const wishlistRouter = router({
         where: { id: input.wishlistItemId },
       });
       if (!item) throw new TRPCError({ code: "NOT_FOUND" });
-      if (item.status === "ARCHIVED") {
+      if (!canAcceptDonations(item.status)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Item is no longer available",
+          message: "This item is no longer accepting donations",
         });
       }
 
@@ -147,7 +150,7 @@ export const wishlistRouter = router({
         : null;
       if (partialTargetCents != null) {
         const remainingCents = partialTargetCents - item.raisedAmountCents;
-        if (remainingCents <= 0 || item.status === "FULFILLED") {
+        if (remainingCents <= 0) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "This item is already fully funded",
@@ -172,7 +175,8 @@ export const wishlistRouter = router({
         amount: input.amount,
         donorName: input.donorName,
         donorEmail: input.donorEmail,
-        returnUrl: `${baseUrl}/wishlist/donate/success?orderId=PAYPAL_ORDER_ID&itemId=${item.id}`,
+        // PayPal appends the order ID as `token`, plus `PayerID`
+        returnUrl: `${baseUrl}/wishlist/donate/success?itemId=${item.id}`,
         cancelUrl: `${baseUrl}/wishlist?donated=cancelled`,
       });
 

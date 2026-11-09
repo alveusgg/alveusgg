@@ -6,6 +6,7 @@ import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import Link from "@/components/content/Link";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { Button } from "@/components/shared/form/Button";
 
 const formatAmount = (amount: number) => `$${amount.toFixed(2)}`;
 
@@ -13,17 +14,21 @@ export function WishlistDonationsAdmin() {
   const router = useRouter();
   const itemId =
     typeof router.query.itemId === "string" ? router.query.itemId : undefined;
-  const donationsQuery = trpc.adminWishlist.adminGetDonations.useQuery(
+  const donationsQuery = trpc.adminWishlist.adminGetDonations.useInfiniteQuery(
+    { wishlistItemId: itemId },
+    {
+      enabled: router.isReady,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+  const totalsQuery = trpc.adminWishlist.adminGetDonationTotals.useQuery(
     { wishlistItemId: itemId },
     { enabled: router.isReady },
   );
 
-  const donations = donationsQuery.data ?? [];
-  const captured = donations.filter((d) => d.status === "CAPTURED");
-  const total = captured.reduce(
-    (sum, d) => sum + (d.capturedAmount ?? d.amount),
-    0,
-  );
+  const donations =
+    donationsQuery.data?.pages.flatMap((page) => page.donations) ?? [];
+  const totals = totalsQuery.data;
 
   return (
     <>
@@ -38,11 +43,13 @@ export function WishlistDonationsAdmin() {
             </Link>
           </p>
         )}
-        <p className="mb-4">
-          {formatAmount(total)} captured from {captured.length} of{" "}
-          {donations.length} PayPal orders (
-          {donations.filter((d) => d.status === "PENDING").length} pending)
-        </p>
+        {totals && (
+          <p className="mb-4">
+            {formatAmount(totals.capturedAmount)} captured from{" "}
+            {totals.captured} of {totals.orders} PayPal orders ({totals.pending}{" "}
+            pending)
+          </p>
+        )}
 
         {donationsQuery.isPending ? (
           <MessageBox>Loading …</MessageBox>
@@ -106,6 +113,17 @@ export function WishlistDonationsAdmin() {
               ))}
             </tbody>
           </table>
+        )}
+
+        {donationsQuery.hasNextPage && (
+          <div className="mt-4">
+            <Button
+              disabled={donationsQuery.isFetchingNextPage}
+              onClick={() => void donationsQuery.fetchNextPage()}
+            >
+              {donationsQuery.isFetchingNextPage ? "Loading …" : "Load more"}
+            </Button>
+          </div>
         )}
       </Panel>
     </>
