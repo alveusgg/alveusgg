@@ -44,6 +44,7 @@ import IconQuote from "@/icons/IconQuote";
 import IconUserGroup from "@/icons/IconUserGroup";
 
 import imageCharityNavigatorBadge from "@/assets/charity-navigator-badge.svg";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
@@ -1285,133 +1286,143 @@ const AboutAlveusPage: NextPage = () => {
         </div>
       </Section>
 
-      <Section>
-        <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <Heading id="history" level={2} className="my-0" link>
-            Alveus&apos; History
-          </Heading>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-            <div
-              role="group"
-              aria-label="Filter by type"
-              className="flex flex-wrap items-center gap-2"
-            >
-              {(
-                Object.entries(historyTypes) as [
-                  HistoryType,
-                  (typeof historyTypes)[HistoryType],
-                ][]
-              ).map(([key, { label, icon: Icon }]) => (
-                <Button
-                  key={key}
-                  as="button"
-                  type="button"
-                  filled={visibleTypes[key]}
-                  aria-pressed={visibleTypes[key]}
-                  onClick={() =>
-                    setVisibleTypes((prev) => ({
-                      ...prev,
-                      [key]: !prev[key],
-                    }))
-                  }
-                  className="inline-flex items-center gap-2"
-                >
-                  <Icon size={16} />
-                  {label}
-                </Button>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpenYears({})}
-              className="text-red-600 underline transition-colors hover:text-blue-600"
-            >
-              Collapse all
-            </button>
-          </div>
-        </div>
+      <div className="relative">
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute top-14 left-0 z-10 hidden h-auto w-1/2 max-w-40 -translate-y-full drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
+        />
 
-        <Timeline>
-          {historyYears.map(([year, entries]) => {
-            const items = entries.filter(
-              (entry): entry is HistoryItem =>
-                "date" in entry && visibleTypes[entry.type ?? "milestone"],
-            );
-            const open = !!openYears[year];
-
-            return (
-              <section key={year} className="relative mb-6">
-                <Heading
-                  level={3}
-                  id={`history-${year}`}
-                  className="relative z-10 my-0 scroll-mt-4 pl-14 md:pl-0 md:text-center"
-                >
-                  <button
+        <Section>
+          <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <Heading id="history" level={2} className="my-0" link>
+              Alveus&apos; History
+            </Heading>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <div
+                role="group"
+                aria-label="Filter by type"
+                className="flex flex-wrap items-center gap-2"
+              >
+                {(
+                  Object.entries(historyTypes) as [
+                    HistoryType,
+                    (typeof historyTypes)[HistoryType],
+                  ][]
+                ).map(([key, { label, icon: Icon }]) => (
+                  <Button
+                    key={key}
+                    as="button"
                     type="button"
-                    aria-expanded={open}
-                    aria-controls={`history-${year}-panel`}
+                    filled={visibleTypes[key]}
+                    aria-pressed={visibleTypes[key]}
                     onClick={() =>
-                      setOpenYears((prev) => ({
+                      setVisibleTypes((prev) => ({
                         ...prev,
-                        [year]: !prev[year],
+                        [key]: !prev[key],
                       }))
                     }
-                    className="inline-flex items-center gap-3 rounded-xl bg-alveus-tan px-4 py-2 focus-visible:outline-2 focus-visible:outline-alveus-green-700"
+                    className="inline-flex items-center gap-2"
                   >
-                    <span className="text-5xl text-alveus-green-800 tabular-nums">
-                      {year}
-                    </span>
-                    <span className="font-sans text-base font-normal text-alveus-green-700">
-                      {items.length} {items.length === 1 ? "event" : "events"}
-                    </span>
-                    <IconChevronDown
-                      className={classes(
-                        "size-5 text-alveus-green-700 transition-transform motion-reduce:transition-none",
-                        open && "rotate-180",
-                      )}
-                    />
-                  </button>
-                </Heading>
+                    <Icon size={16} />
+                    {label}
+                  </Button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenYears({})}
+                className="text-red-600 underline transition-colors hover:text-blue-600"
+              >
+                Collapse all
+              </button>
+            </div>
+          </div>
 
-                <div
-                  id={`history-${year}-panel`}
-                  hidden={!open}
-                  className="pt-4"
-                >
-                  <ol className="flex flex-col gap-6">
-                    {entries.map((entry) =>
-                      "cta" in entry ? (
-                        <li
-                          key={entry.key}
-                          className="relative z-10 overflow-clip rounded-xl bg-alveus-green px-4 py-10 text-alveus-tan md:px-8"
-                        >
-                          {entry.cta}
-                        </li>
-                      ) : (
-                        items.includes(entry) && (
-                          <TimelineItem
+          <Timeline>
+            {historyYears.map(([year, entries]) => {
+              const items = entries.filter(
+                (entry): entry is HistoryItem =>
+                  "date" in entry && visibleTypes[entry.type ?? "milestone"],
+              );
+              const open = !!openYears[year];
+
+              return (
+                <section key={year} className="relative mb-6">
+                  <Heading
+                    level={3}
+                    id={`history-${year}`}
+                    className="relative z-10 my-0 scroll-mt-4 pl-14 md:pl-0 md:text-center"
+                  >
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      aria-controls={`history-${year}-panel`}
+                      onClick={() =>
+                        setOpenYears((prev) => ({
+                          ...prev,
+                          [year]: !prev[year],
+                        }))
+                      }
+                      className="inline-flex items-center gap-3 rounded-xl bg-alveus-tan px-4 py-2 focus-visible:outline-2 focus-visible:outline-alveus-green-700"
+                    >
+                      <span className="text-5xl text-alveus-green-800 tabular-nums">
+                        {year}
+                      </span>
+                      <span className="font-sans text-base font-normal text-alveus-green-700">
+                        {items.length} {items.length === 1 ? "event" : "events"}
+                      </span>
+                      <IconChevronDown
+                        className={classes(
+                          "size-5 text-alveus-green-700 transition-transform motion-reduce:transition-none",
+                          open && "rotate-180",
+                        )}
+                      />
+                    </button>
+                  </Heading>
+
+                  <div
+                    id={`history-${year}-panel`}
+                    hidden={!open}
+                    className="pt-4"
+                  >
+                    <ol className="flex flex-col gap-6">
+                      {entries.map((entry) =>
+                        "cta" in entry ? (
+                          <li
                             key={entry.key}
-                            icon={historyTypes[entry.type ?? "milestone"].icon}
-                            dark={!entry.type}
-                            right={items.indexOf(entry) % 2 === 1}
+                            className="relative z-10 overflow-clip rounded-xl bg-alveus-green px-4 py-10 text-alveus-tan md:px-8"
                           >
-                            <HistoryItemContent item={entry} />
-                          </TimelineItem>
-                        )
-                      ),
+                            {entry.cta}
+                          </li>
+                        ) : (
+                          items.includes(entry) && (
+                            <TimelineItem
+                              key={entry.key}
+                              icon={
+                                historyTypes[entry.type ?? "milestone"].icon
+                              }
+                              dark={!entry.type}
+                              right={items.indexOf(entry) % 2 === 1}
+                            >
+                              <HistoryItemContent item={entry} />
+                            </TimelineItem>
+                          )
+                        ),
+                      )}
+                    </ol>
+                    {items.length === 0 && (
+                      <p className="mt-6 pl-14 text-alveus-green-700 md:pl-0 md:text-center">
+                        No events match the current filter.
+                      </p>
                     )}
-                  </ol>
-                  {items.length === 0 && (
-                    <p className="mt-6 pl-14 text-alveus-green-700 md:pl-0 md:text-center">
-                      No events match the current filter.
-                    </p>
-                  )}
-                </div>
-              </section>
-            );
-          })}
-        </Timeline>
-      </Section>
+                  </div>
+                </section>
+              );
+            })}
+          </Timeline>
+        </Section>
+      </div>
 
       {/* TODO: CTA slice for ambassadors? */}
 
