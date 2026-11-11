@@ -11,6 +11,7 @@ import {
   encryptAccountTokens,
   withEncryptedAccountTokens,
 } from "@/server/db/account-tokens";
+import { withEncryptedUserEmail } from "@/server/db/user-email";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
 import {
@@ -37,7 +38,10 @@ const requireScopes = (account: { scope: string | null }, scopes: string[]) => {
   return null;
 };
 
-const adapter = withEncryptedAccountTokens(PrismaAdapter(prisma));
+const adapter = withEncryptedUserEmail(
+  withEncryptedAccountTokens(PrismaAdapter(prisma)),
+  prisma,
+);
 
 const twitchProvider = TwitchProvider({
   clientId: env.TWITCH_CLIENT_ID,
