@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@alveusgg/database": "workspace:*",
-    "@sentry/node": "^11.9.0",
+    "@sentry/node": "^11.10.0",
     "@t3-oss/env-core": "^0.13.11",
     "@twurple/api": "^8.2.0",
     "@twurple/auth": "^8.2.0",
