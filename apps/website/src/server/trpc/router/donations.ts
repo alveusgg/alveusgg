@@ -17,6 +17,7 @@ import { env } from "@/env";
 
 import { getNeonLogoutUrl, getNeonOAuthConfig } from "@/server/apis/neon";
 import { sendChatMessage } from "@/server/apis/twitch";
+import { decryptAccountTokens } from "@/server/db/account-tokens";
 import {
   type PixelWithDonation,
   createDonations,
@@ -479,6 +480,10 @@ const sendChatMessages = async (
   if (!account?.access_token) {
     throw new Error("No Twitch account found");
   }
+  const { access_token } = await decryptAccountTokens(account);
+  if (!access_token) {
+    throw new Error("No Twitch account found");
+  }
 
   const pixelsByBroadcasterId = Object.groupBy(
     pixels,
@@ -495,7 +500,7 @@ const sendChatMessages = async (
         const pixels = users[identifier];
 
         await sendChatMessage(
-          account.access_token,
+          access_token,
           channels.alveusgg.id,
           broadcasterId,
           `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! ${getShortBaseUrl()}/pixels?s=${encodeURIComponent(identifier).replace(/^%40/, "@")}`,

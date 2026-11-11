@@ -1,7 +1,15 @@
 import { prisma } from "@alveusgg/database";
 import { type AccessTokenWithUserId } from "@twurple/auth";
 
+import { env } from "@/env";
+
+import { fieldEncryption } from "@/utils/field-encryption";
+
 const DEFAULT_ACCOUNT_PROVIDER = "twitch";
+
+// Must match the contexts used by the website
+const ACCESS_TOKEN = { model: "Account", field: "access_token" };
+const REFRESH_TOKEN = { model: "Account", field: "refresh_token" };
 
 export async function getUserRoles(userName: string) {
   return prisma.userRole
@@ -19,7 +27,7 @@ export async function getAccountByProviderAccountId({
   provider?: string;
   providerAccountId: string;
 }) {
-  return prisma.account.findFirst({
+  const account = await prisma.account.findFirst({
     select: {
       access_token: true,
       refresh_token: true,
@@ -31,6 +39,18 @@ export async function getAccountByProviderAccountId({
       providerAccountId,
     },
   });
+  if (!account) return account;
+
+  // TODO(201-cleanup): remove allowPlaintext once the OAuth token backfill has been run in production
+  const [access_token, refresh_token] = await Promise.all([
+    fieldEncryption.decryptOptional(account.access_token, ACCESS_TOKEN, {
+      allowPlaintext: true,
+    }),
+    fieldEncryption.decryptOptional(account.refresh_token, REFRESH_TOKEN, {
+      allowPlaintext: true,
+    }),
+  ]);
+  return { ...account, access_token, refresh_token };
 }
 
 export async function updateAccessToken({
@@ -42,6 +62,17 @@ export async function updateAccessToken({
   providerAccountId: string;
   newAccessToken: AccessTokenWithUserId;
 }) {
+  const [access_token, refresh_token] = await Promise.all([
+    env.OAUTH_TOKEN_ENCRYPTION_ENABLED
+      ? fieldEncryption.encrypt(newAccessToken.accessToken, ACCESS_TOKEN)
+      : newAccessToken.accessToken,
+    env.OAUTH_TOKEN_ENCRYPTION_ENABLED
+      ? fieldEncryption.encryptOptional(
+          newAccessToken.refreshToken,
+          REFRESH_TOKEN,
+        )
+      : newAccessToken.refreshToken,
+  ]);
   return prisma.account.update({
     select: {
       id: true,
@@ -53,12 +84,12 @@ export async function updateAccessToken({
       },
     },
     data: {
-      access_token: newAccessToken.accessToken,
+      access_token,
       expires_at: newAccessToken.expiresIn
         ? newAccessToken.expiresIn +
           Math.floor(newAccessToken.obtainmentTimestamp / 1000)
         : null,
-      refresh_token: newAccessToken.refreshToken,
+      refresh_token,
     },
   });
 }
