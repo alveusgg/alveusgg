@@ -200,14 +200,14 @@ model NotificationDiscordChannelWebhook {
 }
 
 model MailingAddress {
-  id           String @id @default(cuid())
-  country      String
-  addressLine1 String
-  addressLine2 String
-  city         String
-  state        String
-  postalCode   String
-  salt         String @db.Char(32)
+  id           String  @id @default(cuid())
+  country      String  @db.Text
+  addressLine1 String  @db.Text
+  addressLine2 String  @db.Text
+  city         String  @db.Text
+  state        String  @db.Text
+  postalCode   String  @db.Text
+  salt         String? @db.Char(32)
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -240,11 +240,11 @@ model FormEntry {
   userId               String
   mailingAddressId     String? @unique
   outgoingWebhookId    String? @unique
-  email                String?
-  givenName            String
-  familyName           String
+  email                String? @db.Text
+  givenName            String  @db.Text
+  familyName           String  @db.Text
   allowMarketingEmails Boolean @default(false)
-  salt                 String  @db.Char(32)
+  salt                 String? @db.Char(32)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
