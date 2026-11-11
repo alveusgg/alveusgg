@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { getUserRoles } from "@/db/users";
+import { getUserRolesByTwitchId } from "@/db/users";
 
 type UserRoleCacheEntry = {
   roles: string[];
@@ -9,28 +9,36 @@ type UserRoleCacheEntry = {
 
 const notificationsUserRole = "notifications";
 
-export async function checkUserIsAllowedToSendNotifications(userName: string) {
+export async function checkUserIsAllowedToSendNotifications({
+  twitchUserId,
+  userName,
+}: {
+  twitchUserId: string;
+  userName: string;
+}) {
   userName = userName.toLowerCase();
 
   if (env.MODERATOR_USER_NAMES.includes(userName)) {
     return true;
   }
 
-  const useRoles = await getRolesForUser(userName);
-  return useRoles.includes(notificationsUserRole);
+  const roles = await getRolesForUser(twitchUserId);
+  return roles.includes(notificationsUserRole);
 }
 
 const userRoleCache = new Map<string, UserRoleCacheEntry>();
-async function getRolesForUser(userName: string) {
-  if (userRoleCache.has(userName)) {
-    const cacheEntry = userRoleCache.get(userName);
+async function getRolesForUser(twitchUserId: string) {
+  if (userRoleCache.has(twitchUserId)) {
+    const cacheEntry = userRoleCache.get(twitchUserId);
     if (cacheEntry) {
       // if the cached entry is stale, refresh entry, update cache, return stale roles immediately
       if (cacheEntry.expiresAt <= Date.now()) {
         cacheEntry.isRefreshing = true;
-        getNewUserRoleEntry(userName).then((newEntry: UserRoleCacheEntry) => {
-          userRoleCache.set(userName, newEntry);
-        });
+        getNewUserRoleEntry(twitchUserId).then(
+          (newEntry: UserRoleCacheEntry) => {
+            userRoleCache.set(twitchUserId, newEntry);
+          },
+        );
       }
 
       return cacheEntry.roles;
@@ -38,15 +46,15 @@ async function getRolesForUser(userName: string) {
   }
 
   // if no cache entry, refresh entry, update cache, return roles
-  const entry = await getNewUserRoleEntry(userName);
-  userRoleCache.set(userName, entry);
+  const entry = await getNewUserRoleEntry(twitchUserId);
+  userRoleCache.set(twitchUserId, entry);
   return entry.roles;
 }
 
 async function getNewUserRoleEntry(
-  userName: string,
+  twitchUserId: string,
 ): Promise<UserRoleCacheEntry> {
-  const roles = await getUserRoles(userName);
+  const roles = await getUserRolesByTwitchId(twitchUserId);
   const expiresAt = Date.now() + 60_000;
   return {
     roles,

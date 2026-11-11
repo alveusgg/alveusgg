@@ -3,13 +3,20 @@ import { type AccessTokenWithUserId } from "@twurple/auth";
 
 const DEFAULT_ACCOUNT_PROVIDER = "twitch";
 
-export async function getUserRoles(userName: string) {
-  return prisma.userRole
-    .findMany({
-      select: { role: true },
-      where: { user: { name: userName } },
-    })
-    .then((userRoles) => userRoles.map(({ role }) => role));
+export async function getUserRolesByTwitchId(twitchUserId: string) {
+  const account = await prisma.account.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider: "twitch",
+        providerAccountId: twitchUserId,
+      },
+    },
+    select: {
+      user: { select: { roles: { select: { role: true } } } },
+    },
+  });
+
+  return account?.user.roles.map(({ role }) => role) ?? [];
 }
 
 export async function getAccountByProviderAccountId({
