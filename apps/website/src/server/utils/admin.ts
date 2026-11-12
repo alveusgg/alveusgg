@@ -53,6 +53,26 @@ const menuItems = [
     permission: permissions.manageRoundsChecks,
   },
   {
+    label: "Wishlist",
+    href: "/admin/wishlist",
+    permission: permissions.manageWishlist,
+  },
+  {
+    label: "Wishlist Categories",
+    href: "/admin/wishlist/categories",
+    permission: permissions.manageWishlist,
+  },
+  {
+    label: "Wishlist Donations",
+    href: "/admin/wishlist/donations",
+    permission: permissions.manageWishlist,
+  },
+  {
+    label: "Wishlist Fulfillment",
+    href: "/admin/wishlist/fulfillment",
+    permission: permissions.manageWishlist,
+  },
+  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,
@@ -89,7 +109,6 @@ export async function getAdminSSP(
   }
 
   const isSuperUser = checkIsSuperUserSession(session);
-
   const filteredMenuItems = menuItems
     .map((item) =>
       isSuperUser || checkRolesGivePermission(user.roles, item.permission)

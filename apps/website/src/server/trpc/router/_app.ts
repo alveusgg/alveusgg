@@ -9,6 +9,7 @@ import { adminShortLinksRouter } from "./admin/short-links";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
 import { adminTwitchRouter } from "./admin/twitch";
 import { adminUsersRouter } from "./admin/users";
+import { adminWishlistRouter } from "./admin/wishlist";
 import { authRouter } from "./auth";
 import { bingosRouter } from "./bingos";
 import { calendarEventsRouter } from "./calendar-events";
@@ -19,6 +20,7 @@ import { pushSubscriptionRouter } from "./push/subscription";
 import { shortLinksRouter } from "./short-links";
 import { showAndTellRouter } from "./show-and-tell";
 import { streamRouter } from "./stream";
+import { wishlistRouter } from "./wishlist";
 
 export const appRouter = router({
   adminActivityFeed: adminActivityFeedRouter,
@@ -32,6 +34,8 @@ export const appRouter = router({
   adminTwitch: adminTwitchRouter,
   adminUsersRouter: adminUsersRouter,
   donations: donationsRouter,
+  wishlist: wishlistRouter,
+  adminWishlist: adminWishlistRouter,
   auth: authRouter,
   bingos: bingosRouter,
   calendarEvents: calendarEventsRouter,

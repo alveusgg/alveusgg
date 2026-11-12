@@ -291,6 +291,57 @@ export const DonationSearchResponse = z.object({
   ),
 });
 
+export type AccountSearchResponse = z.output<typeof AccountSearchResponse>;
+// Account search results use the same paginated shape as donation searches.
+export const AccountSearchResponse = DonationSearchResponse;
+
+export type CreateIndividualAccountInput = z.input<
+  typeof CreateIndividualAccountInput
+>;
+// Scoped to the fields the website sets when it creates a donor.
+// https://developer.neoncrm.com/api-v2/#/Accounts/addUsingPOST
+export const CreateIndividualAccountInput = z.object({
+  individualAccount: z.object({
+    primaryContact: z.object({
+      firstName: RecordName.optional(),
+      lastName: RecordName.optional(),
+      email1: z.email(),
+    }),
+  }),
+});
+
+export const CreateAccountResponse = z.object({
+  id: RecordId,
+});
+
+// Tender types are configured per organization in Neon. Alveus uses 17 for
+// PayPal (code PYPL).
+export const PAYPAL_TENDER_TYPE = 17;
+
+export type CreateDonationInput = z.input<typeof CreateDonationInput>;
+// Scoped to the fields the website sets for wishlist donations.
+// https://developer.neoncrm.com/api-v2/#/Donations/createUsingPOST_1
+export const CreateDonationInput = z.object({
+  accountId: RecordId,
+  amount: z.number().positive(),
+  date: z.iso.date(),
+  payments: z
+    .array(
+      z.object({
+        amount: z.number().positive(),
+        tenderType: z.number().int(),
+        paymentStatus: z.literal("Succeeded"),
+        receivedDate: z.iso.date().optional(),
+        note: z.string().optional(),
+      }),
+    )
+    .min(1),
+});
+
+export const CreateDonationResponse = z.object({
+  id: RecordId,
+});
+
 const AddressBase = z.object({
   addressId: RecordId,
   type: IdNamePair,
