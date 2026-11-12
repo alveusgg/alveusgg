@@ -5,7 +5,9 @@
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "apps/donations/*",
+    "apps/cams/*"
   ],
   "repository": {
     "type": "git",
