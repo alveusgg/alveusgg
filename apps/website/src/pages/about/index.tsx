@@ -1,9 +1,10 @@
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { type ReactNode, useState } from "react";
+import { type ComponentType, type ReactNode, useState } from "react";
 
 import { env } from "@/env";
 
+import { classes } from "@/utils/classes";
 import {
   type PartialDateString,
   formatPartialDateString,
@@ -24,17 +25,23 @@ import {
   getStreamUrlIframe,
 } from "@/components/content/Stream";
 import SubNav from "@/components/content/SubNav";
-import Timeline from "@/components/content/Timeline";
+import Timeline, { TimelineItem } from "@/components/content/Timeline";
 import {
   YouTubeEmbed,
   YouTubeLightbox,
   YouTubePreview,
 } from "@/components/content/YouTube";
 
+import { type IconProps } from "@/icons/BaseIcon";
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconBolt from "@/icons/IconBolt";
+import IconBox from "@/icons/IconBox";
+import IconChevronDown from "@/icons/IconChevronDown";
 import IconDocument from "@/icons/IconDocument";
+import IconDollar from "@/icons/IconDollar";
 import IconExternal from "@/icons/IconExternal";
 import IconQuote from "@/icons/IconQuote";
+import IconUserGroup from "@/icons/IconUserGroup";
 
 import imageCharityNavigatorBadge from "@/assets/charity-navigator-badge.svg";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -266,10 +273,23 @@ const newsLightboxItems = Object.entries(news).reduce<
   }
 }, {});
 
+type HistoryType = "build" | "fundraiser" | "team" | "milestone";
+
+const historyTypes: Record<
+  HistoryType,
+  { label: string; icon: ComponentType<IconProps> }
+> = {
+  build: { label: "Build", icon: IconBox },
+  fundraiser: { label: "Fundraiser", icon: IconDollar },
+  team: { label: "Team", icon: IconUserGroup },
+  milestone: { label: "Milestone", icon: IconBolt },
+};
+
 type HistoryCTA = { key: string; cta: ReactNode };
 type HistoryItem = {
   key: string;
   date: PartialDateString;
+  type?: Exclude<HistoryType, "milestone">;
   content: [string, ...string[]];
   link?: {
     text: string;
@@ -285,6 +305,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "idea",
         date: "2020-12", // https://youtu.be/7DvtjAqmWl8?t=138
+        type: "build",
         content: ["Initial idea + 3-5 year plan written"],
       },
       {
@@ -299,6 +320,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "fund-a-thon",
         date: "2021-02",
+        type: "fundraiser",
         content: [
           "Fund-a-thon charity stream",
           "Over $573,000 USD raised through donations during the 20-hour long livestream to kick-start the sanctuary.",
@@ -311,6 +333,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "fencing-pasture",
         date: "2021-05", // https://youtu.be/pTnYmPKDaF8?t=2373 + https://youtu.be/QPsbX1HefRk?t=1230
+        type: "build",
         content: [
           "Fencing and pasture installed",
           "A total of 4,000 linear feet of predator-proof fencing was installed around the property, and a barn was built at the top of the pasture.",
@@ -319,6 +342,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "parrot-aviary",
         date: "2021-06", // https://youtu.be/rSaWp3pEvFE?t=5729
+        type: "build",
         content: [
           "Parrot Aviary constructed",
           "A 20ft by 20ft wire-mesh enclosure with a solid floor and planters, plus an addon with enclosed rooms for the parrots to shelter in and storage for supplies.",
@@ -328,6 +352,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "crow-aviary",
         date: "2021-07", // https://youtu.be/BgtVRjQC0Vk?t=917
+        type: "build",
         content: [
           "Crow Aviary constructed",
           "A 15ft by 18ft wire-mesh enclosure, with a solid rear wall.",
@@ -337,6 +362,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "chicken-coop",
         date: "2021-08", // https://youtu.be/W05oJEwNI_s?t=810
+        type: "build",
         content: [
           "Chicken Coop constructed",
           "A 10ft by 20ft wire-mesh enclosure with a bark/dirt floor, and a 6ft by 6ft indoor area for shelter at night.",
@@ -372,6 +398,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "training-center",
         date: "2021-08", // https://youtu.be/i0DbJjU41eM?t=1409
+        type: "build",
         content: [
           "Training Center constructed",
           "A large 50ft by 40ft wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations.",
@@ -392,6 +419,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "kayla-connor",
         date: "2021-10", // https://youtu.be/7DvtjAqmWl8?t=145
+        type: "team",
         content: [
           "Kayla and Connor join the team",
           "Kayla joins Alveus as the Animal Care & Training Manager, and Connor joins as the Operations Manager.",
@@ -404,6 +432,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "halloween-fundraiser",
         date: "2021-10-31",
+        type: "fundraiser",
         content: [
           "Halloween fundraiser stream",
           "Over $101,000 USD raised through donations during the live event at Alveus, with 34 creators from the industry joining us.",
@@ -416,6 +445,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "fox-enclosure",
         date: "2022-01", // https://youtu.be/DN8apMfuNCY?t=19152 + https://youtu.be/Bu0HVHcMc_M?t=6822
+        type: "build",
         content: [
           "Fox enclosure constructed",
           "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, and an air-conditioned indoor area.",
@@ -437,6 +467,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "art-auction",
         date: "2022-04",
+        type: "fundraiser",
         content: [
           "Art Auction fundraiser",
           "Livestream viewers donated over $42,000 USD for signed prints and artwork produced by the ambassadors at Alveus.",
@@ -449,6 +480,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "falcon-aviary",
         date: "2022-09", // https://youtu.be/Gat85y-RGBo?t=11592 + https://youtu.be/gbTYxTTHK30
+        type: "build",
         content: [
           "Falcon/Crow Aviary constructed",
           "Originally built for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
@@ -495,6 +527,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "valentines-day-2023",
         date: "2023-02",
+        type: "fundraiser",
         content: [
           "Valentine's Day fundraiser",
           "Over $40,000 USD was donated by viewers of the livestream event, with hand-crafted plushies being sent to 24 donors.",
@@ -507,6 +540,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "art-auction-2023",
         date: "2023-04",
+        type: "fundraiser",
         content: [
           "Art Auction fundraiser",
           "Over 30 pieces of artwork produced by our ambassadors, and over 250 signed prints, were donated for during the event, raising over $63,000 USD.",
@@ -519,6 +553,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "marmoset-enclosure",
         date: "2023-06", // https://youtu.be/3LV02t0ZWR8?t=820
+        type: "build",
         content: [
           "Marmoset enclosure retro-fitted",
           "The original crow aviary was retro-fitted, with a new 8ft by 18ft indoor area added to the rear to provide air-conditioned shelter for the marmosets and space to store supplies.",
@@ -527,6 +562,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "lindsay",
         date: "2023-07",
+        type: "team",
         content: [
           "Lindsay joins the Alveus team",
           "Bringing a wealth of animal care experience and knowledge, Lindsay joins the team as an Animal Care Coordinator.",
@@ -539,6 +575,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "summer-camp-2023",
         date: "2023-07",
+        type: "fundraiser",
         content: [
           "Summer Camp and merch drop",
           "Alveus hosted a 24-hour long charity stream from the training center, accompanied by a limited-time merch drop to raise funds for the sanctuary.",
@@ -551,6 +588,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "fall-carnival-2023",
         date: "2023-11",
+        type: "fundraiser",
         content: [
           "Fall Carnival",
           "To celebrate fall and raise some money for the sanctuary, Alveus hosted a carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
@@ -571,6 +609,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "valentines-day-2024",
         date: "2024-02",
+        type: "fundraiser",
         content: [
           "Valentine's Day fundraiser",
           "Once again, Alveus hosted a fundraiser for Valentine's Day, sending over 450 signed postcards to donors, raising over $32,000 USD.",
@@ -583,6 +622,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "sruti",
         date: "2024-04",
+        type: "team",
         content: [
           "Sruti joins the Alveus team",
           "As the number of ambassadors at Alveus continues to grow, Sruti joins the team as an Animal Care Coordinator.",
@@ -595,6 +635,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "wolf-enclosure",
         date: "2024-05", // https://youtu.be/wAsLMuj_iLs?t=4925
+        type: "build",
         content: [
           "Wolf enclosure constructed",
           "Located behind the crow and fox enclosures, the wolf enclosure is a massive open-air 200ft by 65ft enclosure, including a river/pond, with a 30ft by 30ft air-conditioned indoor area on the side.",
@@ -603,6 +644,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "art-auction-2024",
         date: "2024-05",
+        type: "fundraiser",
         content: [
           "Art Auction fundraiser",
           "Once again hosted in the Session Yard at Alveus, the art auction sold 35 paintings from the ambassadors, and just under 500 postcards, raising over $44,000 USD.",
@@ -615,6 +657,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "summer-camp-2024",
         date: "2024-07",
+        type: "fundraiser",
         content: [
           "Summer Camp and merch drop",
           "Accompanied by a limited-time merch drop, Alveus hosted a 12-hour long stream for the staff at Alveus to participate in some fun activities, with over 3 million minutes watched live by the end.",
@@ -627,6 +670,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "amanda",
         date: "2024-07",
+        type: "team",
         content: [
           "Amanda joins the Alveus team",
           "Revealed during the Summer Camp stream, Amanda joins the team as another Animal Care Coordinator.",
@@ -639,6 +683,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "fall-carnival-2024",
         date: "2024-11",
+        type: "fundraiser",
         content: [
           "Fall Carnival",
           "Celebrating fall and halloween once again, live viewers tuned in to a fundraising stream at Alveus where they could participate in games and activities with the ambassadors.",
@@ -679,6 +724,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "lukas",
         date: "2025-01",
+        type: "team",
         content: [
           "Lukas joins the Alveus team",
           "Announced at the start of the year, Lukas joins the team as the Herpetology & Invert Lead as well as a Habitat Specialist.",
@@ -691,6 +737,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "new-studio",
         date: "2025-03-05",
+        type: "build",
         content: [
           "New studio launch",
           "Alveus unveils a completely refurbished studio space, featuring live plant walls, an interactive whiteboard, a new fish tank and improved equipment for live streams.",
@@ -699,6 +746,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "art-auction-2025",
         date: "2025-04",
+        type: "fundraiser",
         content: [
           "Art Auction fundraiser",
           "Celebrating Earth Day and hosted in the Session Yard at Alveus, the art auction sold 36 pieces of art from the ambassadors and staff, as well as over 450 signed prints, raising over $87,000 USD.",
@@ -711,6 +759,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "colton-chandler",
         date: "2025-04",
+        type: "team",
         content: [
           "Colton and Chandler join the Alveus team",
           "Colton joins the team as Alveus' Creative Producer, and Chandler joins as the YouTube Channel Manager.",
@@ -723,6 +772,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "daniel",
         date: "2025-07",
+        type: "team",
         content: [
           "Daniel joins the Alveus team",
           "Daniel (Dan the Doorman) joins the team as a Facilities Specialist.",
@@ -747,6 +797,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "rocky",
         date: "2025-08",
+        type: "team",
         content: [
           "Rocky joins the Alveus team",
           "Rocky joins the team as a Facilities Specialist.",
@@ -759,6 +810,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "summer-camp-2025",
         date: "2025-08",
+        type: "fundraiser",
         content: [
           "Summer Camp and merch drop",
           'Celebrating summer once again, Alveus hosted a 12-hour long stream at Alveus with staff participating in "The Alveus Games", accompanied by a limited-time merch release, helping to raise funds for the sanctuary.',
@@ -783,6 +835,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "linden",
         date: "2025-12",
+        type: "team",
         content: [
           "Linden joins the Alveus team",
           "Linden joins the team as a Horticulturist.",
@@ -795,6 +848,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "jacob",
         date: "2026-01",
+        type: "team",
         content: [
           "Jacob joins the Alveus team",
           "Jacob joins the team as Alveus' Development and Administration Coordinator.",
@@ -807,6 +861,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "miranda",
         date: "2026-03",
+        type: "team",
         content: [
           "Miranda joins the Alveus team",
           "Alveus continues to grow, with Miranda joining the team as an Animal Care Coordinator.",
@@ -819,6 +874,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "art-auction-2026",
         date: "2026-04",
+        type: "fundraiser",
         content: [
           "Art Auction fundraiser",
           "The most successful art auction yet sold 54 pieces of art from the ambassadors, staff and a guest artist, as well as over 800 signed postcards, raising over $117,000 USD.",
@@ -831,6 +887,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "chris",
         date: "2026-06",
+        type: "team",
         content: [
           "Chris joins the Alveus team",
           "Chris joins the FAID department as a Facilities Specialist.",
@@ -867,12 +924,51 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
   },
 ];
 
-const transformHistoryItem = (item: HistoryItem) => ({
-  key: item.key,
-  date: formatPartialDateString(item.date),
-  content: (
+const historyYears = history.reduce<[string, (HistoryItem | HistoryCTA)[]][]>(
+  (acc, section) => {
+    for (const entry of "items" in section ? section.items : [section]) {
+      const last = acc.at(-1);
+      const year = "date" in entry ? entry.date.slice(0, 4) : last?.[0];
+      if (last && last[0] === year) last[1].push(entry);
+      else if (year) acc.push([year, [entry]]);
+    }
+    return acc;
+  },
+  [],
+);
+
+const HistoryItemContent = ({ item }: { item: HistoryItem }) => {
+  const type = item.type ?? "milestone";
+  const dark = type === "milestone";
+  const amount =
+    type === "fundraiser" &&
+    item.content
+      .slice(1)
+      .join(" ")
+      .match(/(over\s+)?\$[\d,]+/i)?.[0]
+      .replace(/^over/i, "Over");
+
+  return (
     <>
-      <p className="font-serif text-lg font-bold">{item.content[0]}</p>
+      <p
+        className={classes(
+          "text-sm font-semibold tracking-wide uppercase",
+          dark ? "text-alveus-green-200" : "text-alveus-green-600",
+        )}
+      >
+        {formatPartialDateString(item.date)} &middot; {historyTypes[type].label}
+      </p>
+      <Heading
+        level={4}
+        className={classes("mt-1 mb-0", dark ? "text-2xl" : "text-xl")}
+      >
+        {item.content[0]}
+      </Heading>
+      {amount && (
+        <p className="mt-1 font-serif text-3xl font-bold text-red-700 tabular-nums">
+          {amount}
+        </p>
+      )}
       {item.content.slice(1).map((paragraph, idx) => (
         // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content in the timeline entry.
         <p key={idx} className="mt-2">
@@ -884,22 +980,30 @@ const transformHistoryItem = (item: HistoryItem) => ({
           <Link
             external={!item.link.href.startsWith("/")}
             href={item.link.href}
-            dark
-            className="flex items-center"
+            dark={dark}
+            className="inline-flex items-center gap-1"
           >
             {item.link.text}
             {item.link.href.startsWith("/") && (
-              <IconArrowRight size={16} className="mt-0.5 ml-1" />
+              <IconArrowRight className="size-4" />
             )}
           </Link>
         </p>
       )}
     </>
-  ),
-});
+  );
+};
 
 const AboutAlveusPage: NextPage = () => {
   const [newsLightboxOpen, setNewsLightboxOpen] = useState<string>();
+  const [openYears, setOpenYears] = useState<Record<string, boolean>>(() => ({
+    2020: true,
+    2021: true,
+    [historyYears.at(-1)?.[0] ?? ""]: true,
+  }));
+  const [visibleTypes, setVisibleTypes] = useState<
+    Record<HistoryType, boolean>
+  >({ build: true, fundraiser: true, team: true, milestone: true });
 
   return (
     <>
@@ -1186,40 +1290,139 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute top-14 left-0 z-10 hidden h-auto w-1/2 max-w-40 -translate-y-full drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
-          <Heading
-            id="history"
-            level={2}
-            className="mb-16 text-center text-5xl text-alveus-green"
-            link
-          >
-            Alveus&apos; History
-          </Heading>
+          <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <Heading id="history" level={2} className="my-0" link>
+              Alveus&apos; History
+            </Heading>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <div
+                role="group"
+                aria-label="Filter by type"
+                className="flex flex-wrap items-center gap-2"
+              >
+                {(
+                  Object.entries(historyTypes) as [
+                    HistoryType,
+                    (typeof historyTypes)[HistoryType],
+                  ][]
+                ).map(([key, { label, icon: Icon }]) => (
+                  <Button
+                    key={key}
+                    as="button"
+                    type="button"
+                    filled={visibleTypes[key]}
+                    aria-pressed={visibleTypes[key]}
+                    onClick={() =>
+                      setVisibleTypes((prev) => ({
+                        ...prev,
+                        [key]: !prev[key],
+                      }))
+                    }
+                    className="inline-flex items-center gap-2"
+                  >
+                    <Icon size={16} />
+                    {label}
+                  </Button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenYears({})}
+                className="text-red-600 underline transition-colors hover:text-blue-600"
+              >
+                Collapse all
+              </button>
+            </div>
+          </div>
 
-          <Timeline
-            after={"cta" in (history[1] || {}) ? "-bottom-20" : undefined}
-            items={history[0].items.map(transformHistoryItem)}
-          />
+          <Timeline>
+            {historyYears.map(([year, entries]) => {
+              const items = entries.filter(
+                (entry): entry is HistoryItem =>
+                  "date" in entry && visibleTypes[entry.type ?? "milestone"],
+              );
+              const open = !!openYears[year];
+
+              return (
+                <section key={year} className="relative mb-6">
+                  <Heading
+                    level={3}
+                    id={`history-${year}`}
+                    className="relative z-10 my-0 scroll-mt-4 pl-14 md:pl-0 md:text-center"
+                  >
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      aria-controls={`history-${year}-panel`}
+                      onClick={() =>
+                        setOpenYears((prev) => ({
+                          ...prev,
+                          [year]: !prev[year],
+                        }))
+                      }
+                      className="inline-flex items-center gap-3 rounded-xl bg-alveus-tan px-4 py-2 focus-visible:outline-2 focus-visible:outline-alveus-green-700"
+                    >
+                      <span className="text-5xl text-alveus-green-800 tabular-nums">
+                        {year}
+                      </span>
+                      <span className="font-sans text-base font-normal text-alveus-green-700">
+                        {items.length} {items.length === 1 ? "event" : "events"}
+                      </span>
+                      <IconChevronDown
+                        className={classes(
+                          "size-5 text-alveus-green-700 transition-transform motion-reduce:transition-none",
+                          open && "rotate-180",
+                        )}
+                      />
+                    </button>
+                  </Heading>
+
+                  <div
+                    id={`history-${year}-panel`}
+                    hidden={!open}
+                    className="pt-4"
+                  >
+                    <ol className="flex flex-col gap-6">
+                      {entries.map((entry) =>
+                        "cta" in entry ? (
+                          <li
+                            key={entry.key}
+                            className="relative z-10 overflow-clip rounded-xl bg-alveus-green px-4 py-10 text-alveus-tan md:px-8"
+                          >
+                            {entry.cta}
+                          </li>
+                        ) : (
+                          items.includes(entry) && (
+                            <TimelineItem
+                              key={entry.key}
+                              icon={
+                                historyTypes[entry.type ?? "milestone"].icon
+                              }
+                              dark={!entry.type}
+                              right={items.indexOf(entry) % 2 === 1}
+                            >
+                              <HistoryItemContent item={entry} />
+                            </TimelineItem>
+                          )
+                        ),
+                      )}
+                    </ol>
+                    {items.length === 0 && (
+                      <p className="mt-6 pl-14 text-alveus-green-700 md:pl-0 md:text-center">
+                        No events match the current filter.
+                      </p>
+                    )}
+                  </div>
+                </section>
+              );
+            })}
+          </Timeline>
         </Section>
       </div>
-
-      {history.slice(1).map((section, idx) =>
-        "items" in section ? (
-          <Section key={section.key}>
-            <Timeline
-              before={"cta" in (history[idx] || {}) ? "-top-20" : undefined}
-              items={section.items.map(transformHistoryItem)}
-            />
-          </Section>
-        ) : (
-          <Section key={section.key} dark>
-            {section.cta}
-          </Section>
-        ),
-      )}
 
       {/* TODO: CTA slice for ambassadors? */}
 
