@@ -3,9 +3,9 @@ packages:
   - "apps/donations/*"
   - "apps/cams/*"
 
-optimisticRepeatInstall: true
 strictPeerDependencies: true
 dedupePeers: true
+autoDedupe: true
 
 peerDependencyRules:
   allowedVersions:
@@ -42,6 +42,14 @@ allowBuilds:
   "sharp": true
   "unrs-resolver": true
   "workerd": true
+
+permissions:
+  "@trpc/client":
+    skills: false
+  "@trpc/next":
+    skills: false
+  "@trpc/server":
+    skills: false
 
 minimumReleaseAgeExclude:
   - "@alveusgg/data"

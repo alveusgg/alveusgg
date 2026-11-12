@@ -5,7 +5,9 @@
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "apps/donations/*",
+    "apps/cams/*"
   ],
   "repository": {
     "type": "git",
@@ -14,11 +16,19 @@
   "bugs": {
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
-  "engines": {
-    "node": ">=24.11.0",
-    "pnpm": "^11.28.9"
+  "packageManager": "pnpm@12.18.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.11.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.18.0",
+      "onFail": "download"
+    }
   },
-  "packageManager": "pnpm@11.28.9",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
