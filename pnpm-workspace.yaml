@@ -43,5 +43,13 @@ allowBuilds:
   "unrs-resolver": true
   "workerd": true
 
+permissions:
+  "@trpc/client":
+    skills: false
+  "@trpc/next":
+    skills: false
+  "@trpc/server":
+    skills: false
+
 minimumReleaseAgeExclude:
   - "@alveusgg/data"
