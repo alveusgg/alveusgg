@@ -3,7 +3,6 @@ packages:
   - "apps/donations/*"
   - "apps/cams/*"
 
-optimisticRepeatInstall: true
 strictPeerDependencies: true
 dedupePeers: true
 autoDedupe: true
