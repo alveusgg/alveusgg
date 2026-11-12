@@ -36,7 +36,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "0.81.0",
+    "@alveusgg/data": "0.82.0",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@auth/prisma-adapter": "^2.11.3",
