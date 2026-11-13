@@ -8,7 +8,6 @@ const PlaylistItemListResponseSchema = z.object({
   items: z.array(
     z.object({
       snippet: z.object({
-        publishedAt: z.coerce.date(),
         channelId: z.string(),
         title: z.string(),
         description: z.string(),
@@ -17,6 +16,9 @@ const PlaylistItemListResponseSchema = z.object({
           kind: z.string(),
           videoId: z.string(),
         }),
+      }),
+      contentDetails: z.object({
+        videoPublishedAt: z.coerce.date().optional(),
       }),
     }),
   ),
@@ -29,7 +31,7 @@ const fetchYouTubePlaylist = async (
   if (!apiKey) throw new Error("Missing YouTube API key");
 
   const requestURL = new URL(
-    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50`,
+    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50`,
   );
   requestURL.searchParams.set("playlistId", playlistId);
   requestURL.searchParams.set("key", apiKey);
@@ -41,7 +43,10 @@ const fetchYouTubePlaylist = async (
 
   const json = await resp.json();
 
-  return PlaylistItemListResponseSchema.parse(json).items.map((item) => {
+  return PlaylistItemListResponseSchema.parse(json).items.flatMap((item) => {
+    const published = item.contentDetails.videoPublishedAt;
+    if (!published) return [];
+
     const custom = Object.values(channels).find(
       (channel) => channel.id === item.snippet.channelId,
     );
@@ -58,7 +63,7 @@ const fetchYouTubePlaylist = async (
           "https://youtube.com/channel/" +
             encodeURIComponent(item.snippet.channelId),
       },
-      published: item.snippet.publishedAt,
+      published,
     };
   });
 };
@@ -172,4 +177,39 @@ export const fetchYouTubeLive = async (
     },
     published: new Date(live.snippet.publishedAt),
   };
+};
+
+// Many ambassadors share a playlist, so each one is only fetched once per build
+const PLAYLIST_CACHE_TTL_MS = 10 * 60 * 1000;
+const playlistVideosCache = new Map<
+  string,
+  { expires: number; videos: Promise<YouTubeVideo[]> }
+>();
+
+export const fetchYouTubePlaylistSafe = async (
+  playlistId: string,
+): Promise<YouTubeVideo[]> => {
+  if (!env.YOUTUBE_API_KEY) return [];
+
+  let cached = playlistVideosCache.get(playlistId);
+  if (!cached || cached.expires <= Date.now()) {
+    cached = {
+      expires: Date.now() + PLAYLIST_CACHE_TTL_MS,
+      videos: fetchYouTubePlaylist(playlistId),
+    };
+    playlistVideosCache.set(playlistId, cached);
+  }
+
+  try {
+    return await cached.videos;
+  } catch (error) {
+    if (playlistVideosCache.get(playlistId) === cached) {
+      playlistVideosCache.delete(playlistId);
+    }
+    console.error(
+      `Failed to fetch YouTube videos for playlist ${playlistId}:`,
+      error,
+    );
+    return [];
+  }
 };
