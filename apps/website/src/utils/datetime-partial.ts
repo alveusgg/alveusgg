@@ -7,7 +7,7 @@ import { DATETIME_ALVEUS_ZONE } from "./timezone";
 
 export type { PartialDateString };
 
-const splitPartialDateString = (date: PartialDateString) =>
+export const splitPartialDateString = (date: PartialDateString) =>
   date.split("-").map((x) => parseInt(x)) as
     [number] | [number, number] | [number, number, number];
 
