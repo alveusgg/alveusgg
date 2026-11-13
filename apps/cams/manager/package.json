@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
-    "hono": "^4.13.14",
-    "jose": "^6.2.13",
+    "hono": "^4.13.16",
+    "jose": "^6.2.15",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.17.1",
-    "globals": "^17.13.0",
+    "globals": "^17.14.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.1",
-    "vitest": "^5.0.5",
-    "wrangler": "^4.154.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.157.0"
   }
 }
