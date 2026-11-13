@@ -1,9 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import {
   type ReactNode,
+  createContext,
+  use,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -19,8 +23,8 @@ import { formatDateTime } from "@/utils/datetime";
 
 import useDragScroll from "@/hooks/drag";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
-import useLocaleString from "@/hooks/locale";
 
+import Box from "@/components/content/Box";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
@@ -31,6 +35,8 @@ import SubNav from "@/components/content/SubNav";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconSearch from "@/icons/IconSearch";
+import IconX from "@/icons/IconX";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -256,6 +262,31 @@ const Creators = ({ className }: { className?: string }) => {
   );
 };
 
+const highlight = (text: string, query: string): ReactNode => {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="rounded-xs bg-yellow-300 text-inherit">
+        {text.slice(idx, idx + query.length)}
+      </mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+};
+
+const matches = (collaboration: Collaboration, query: string) => {
+  const q = query.toLowerCase();
+  return (
+    collaboration.name.toLowerCase().includes(q) ||
+    collaboration.creators.some((creator) =>
+      creator.name.toLowerCase().includes(q),
+    )
+  );
+};
+
 const sortByOptions = {
   all: {
     label: "All Collaborations",
@@ -275,19 +306,227 @@ const sortByOptions = {
   },
 } as const satisfies Options<Collaboration>;
 
-const CollaborationItems = ({
+const CardContext = createContext<{
+  query: string;
+  onOpen: (slug: string) => void;
+}>({ query: "", onOpen: () => {} });
+
+const slugs = new Set(collaborations.map(({ slug }) => slug));
+
+const CollaborationCard = ({
+  collaboration,
+}: {
+  collaboration: Collaboration;
+}) => {
+  const { query, onOpen } = use(CardContext);
+  const creatorMatch =
+    query && !collaboration.name.toLowerCase().includes(query.toLowerCase())
+      ? collaboration.creators.find((creator) =>
+          creator.name.toLowerCase().includes(query.toLowerCase()),
+        )
+      : undefined;
+
+  return (
+    <li id={collaboration.slug} className="scroll-mt-36 md:scroll-mt-24">
+      <Box className="flex h-full flex-col overflow-visible p-0">
+        <Link
+          href={`https://www.youtube.com/watch?v=${collaboration.videoId}`}
+          external
+          custom
+          onClick={(e) => {
+            e.preventDefault();
+            onOpen(collaboration.slug);
+          }}
+          className="group/trigger block"
+        >
+          <Box className="z-20 p-0 transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl">
+            <YouTubePreview
+              videoId={collaboration.videoId}
+              alt={`Watch the ${collaboration.name} collaboration`}
+              className="aspect-video h-auto w-full rounded-xl object-cover group-hover/trigger:scale-100"
+            />
+          </Box>
+        </Link>
+        <div className="flex flex-col gap-1 p-4">
+          <Heading level={3} className="my-0 text-2xl">
+            {collaboration.link !== null ? (
+              <Link
+                href={collaboration.link}
+                external
+                custom
+                className="hover:text-alveus-green-600 hover:underline"
+              >
+                {highlight(collaboration.name, query)}
+              </Link>
+            ) : (
+              highlight(collaboration.name, query)
+            )}
+          </Heading>
+          {creatorMatch && (
+            <p className="text-sm text-alveus-green-700">
+              With {highlight(creatorMatch.name, query)}
+            </p>
+          )}
+          <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <Link
+              href={`#${collaboration.slug}`}
+              custom
+              className="text-alveus-green-700 hover:underline"
+            >
+              {formatDateTime(collaboration.date, { style: "long" })}
+            </Link>
+            {collaboration.vodId && (
+              <Link
+                href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
+                external
+              >
+                Full stream VoD
+              </Link>
+            )}
+          </p>
+        </div>
+      </Box>
+    </li>
+  );
+};
+
+const CollaborationYear = ({
   items,
   option,
   group,
   name,
-  index,
   ref,
-}: GroupedProps<Collaboration, HTMLDivElement>) => {
+}: GroupedProps<Collaboration, HTMLElement>) => (
+  <section
+    ref={ref}
+    aria-labelledby={`${option}:${group}`}
+    hidden={items.length === 0}
+    className="scroll-mt-20"
+  >
+    <Heading
+      level={2}
+      id={`${option}:${group}`}
+      className="mt-0 mb-6 flex scroll-mt-20 items-end justify-between border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+    >
+      {name}
+      <small className="text-lg font-medium">{` (${items.length})`}</small>
+    </Heading>
+    <ul className="grid gap-6 md:grid-cols-2">
+      {items.map((collaboration) => (
+        <CollaborationCard
+          key={collaboration.slug}
+          collaboration={collaboration}
+        />
+      ))}
+    </ul>
+  </section>
+);
+
+const SearchControl = ({
+  query,
+  setQuery,
+  count,
+}: {
+  query: string;
+  setQuery: (value: string) => void;
+  count: number;
+}) => {
+  const searchId = useId();
+  const countId = useId();
+  const trimmed = query.trim();
+
+  return (
+    <div className="flex w-full items-center gap-3 sm:w-auto">
+      <label htmlFor={searchId} className="sr-only">
+        Search by collaborator name
+      </label>
+      <div className="flex min-w-0 grow items-center rounded-lg border border-alveus-green/40 bg-alveus-tan-50 focus-within:outline-2 focus-within:outline-alveus-green-700 sm:w-64 sm:grow-0">
+        <IconSearch className="ml-3 size-4 shrink-0 text-alveus-green-700" />
+        <input
+          id={searchId}
+          type="search"
+          value={query}
+          placeholder="Search by name"
+          aria-describedby={countId}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setQuery("");
+          }}
+          autoComplete="off"
+          className="min-w-0 grow bg-transparent px-2 py-1.5 outline-none placeholder:text-alveus-green-600 [&::-webkit-search-cancel-button]:hidden"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="mr-1 rounded-md p-1.5 text-alveus-green-700 hover:bg-alveus-green-100"
+          >
+            <IconX className="size-4" />
+            <span className="sr-only">Clear search</span>
+          </button>
+        )}
+      </div>
+      <p
+        id={countId}
+        aria-live="polite"
+        className="shrink-0 text-sm whitespace-nowrap text-alveus-green-700 tabular-nums"
+      >
+        {trimmed
+          ? `${count.toLocaleString()} of ${collaborations.length.toLocaleString()}`
+          : `${collaborations.length.toLocaleString()} total`}
+      </p>
+    </div>
+  );
+};
+
+const CollaborationsPage: NextPage = () => {
+  const [query, setQuery] = useState("");
+  const trimmed = query.trim();
   const [lightboxOpen, setLightboxOpen] = useState<string>();
+
+  const { option, group, result } = useGrouped({
+    items: collaborations,
+    options: sortByOptions,
+    initial: "all",
+  });
+
+  const filtered = useMemo<GroupedItems<Collaboration>>(
+    () =>
+      new Map(
+        [...result.entries()].map(([key, value]) => [
+          key,
+          {
+            ...value,
+            items: value.items.filter((item) => matches(item, trimmed)),
+          },
+        ]),
+      ),
+    [result, trimmed],
+  );
+  const count = [...filtered.values()].reduce(
+    (sum, { items }) => sum + items.length,
+    0,
+  );
+
+  const sectionLinks = useMemo(
+    () =>
+      [...filtered.entries()]
+        .filter(([, value]) => value.items.length > 0)
+        .map(([key, value]) => ({
+          name: value.name,
+          href: `#${option}:${key}`,
+        })),
+    [filtered, option],
+  );
+
+  const card = useMemo(
+    () => ({ query: trimmed, onOpen: setLightboxOpen }),
+    [trimmed],
+  );
 
   const lightboxItems = useMemo(
     () =>
-      items.reduce<Record<string, ReactNode>>(
+      collaborations.reduce<Record<string, ReactNode>>(
         (acc, collaboration) => ({
           ...acc,
           [collaboration.slug]: (
@@ -299,7 +538,7 @@ const CollaborationItems = ({
         }),
         {},
       ),
-    [items],
+    [],
   );
 
   useEffect(() => {
@@ -307,111 +546,35 @@ const CollaborationItems = ({
     if (hash in lightboxItems) setLightboxOpen(hash);
   }, [lightboxItems]);
 
-  const count = useLocaleString(items.length);
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id) document.getElementById(id)?.scrollIntoView();
+  }, []);
 
-  return (
-    <>
-      {name && (
-        <Heading
-          level={-1}
-          className={classes(
-            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
-            index === 0 ? "mt-0" : "mt-8",
-          )}
-          id={`${option}:${group}`}
-          link
-        >
-          {name}
-          <small className="text-lg font-medium">{` (${count})`}</small>
-        </Heading>
-      )}
-
-      <div className="flex flex-wrap" ref={ref}>
-        {items.map((collaboration) => (
-          <div
-            key={collaboration.slug}
-            className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
-          >
-            <Heading
-              level={2}
-              className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
-              id={collaboration.slug}
-            >
-              {collaboration.link !== null ? (
-                <Link
-                  href={collaboration.link}
-                  className="hover:text-alveus-green-600 hover:underline"
-                  external
-                  custom
-                >
-                  {collaboration.name}
-                </Link>
-              ) : (
-                collaboration.name
-              )}
-              <small className="text-xl text-alveus-green-600">
-                <Link href={`#${collaboration.slug}`} custom>
-                  {formatDateTime(collaboration.date, { style: "long" })}
-                </Link>
-              </small>
-            </Heading>
-
-            <Link
-              href={`https://www.youtube.com/watch?v=${collaboration.videoId}`}
-              external
-              onClick={(e) => {
-                e.preventDefault();
-                setLightboxOpen(collaboration.slug);
-              }}
-              custom
-              className="group/trigger w-full max-w-2xl"
-            >
-              <YouTubePreview
-                videoId={collaboration.videoId}
-                className="aspect-video h-auto w-full"
-              />
-            </Link>
-
-            {collaboration.vodId && (
-              <p className="mt-2">
-                (
-                <Link
-                  href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
-                  external
-                >
-                  Full stream VoD
-                </Link>
-                )
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <Lightbox
-        open={lightboxOpen}
-        onClose={() => setLightboxOpen(undefined)}
-        items={lightboxItems}
-      />
-    </>
-  );
-};
-
-const CollaborationsPage: NextPage = () => {
-  const { option, group, result } = useGrouped({
-    items: collaborations,
-    options: sortByOptions,
-    initial: "all",
-  });
-
-  const sectionLinks = useMemo(
-    () =>
-      [...result.entries()].map(([key, value]) => ({
-        name: value.name,
-        href: `#${option}:${key}`,
-      })),
-    [result, option],
-  );
+  // A deep link to a collaboration hidden by the search clears the search
+  const router = useRouter();
+  const [pendingSlug, setPendingSlug] = useState<string>();
+  useEffect(() => {
+    const onHash = () => {
+      const slug = decodeURIComponent(window.location.hash.slice(1));
+      if (!slugs.has(slug)) return;
+      if (document.getElementById(slug)) return;
+      setQuery("");
+      setPendingSlug(slug);
+    };
+    onHash();
+    window.addEventListener("hashchange", onHash);
+    router.events.on("hashChangeComplete", onHash);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      router.events.off("hashChangeComplete", onHash);
+    };
+  }, [router.events]);
+  useEffect(() => {
+    if (!pendingSlug) return;
+    document.getElementById(pendingSlug)?.scrollIntoView();
+    setPendingSlug(undefined);
+  }, [pendingSlug, filtered]);
 
   return (
     <>
@@ -475,7 +638,9 @@ const CollaborationsPage: NextPage = () => {
         </Section>
       </div>
 
-      <SubNav links={sectionLinks} className="z-20" />
+      <SubNav links={sectionLinks} label="Collaboration years" className="z-20">
+        <SearchControl query={query} setQuery={setQuery} count={count} />
+      </SubNav>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
@@ -490,12 +655,28 @@ const CollaborationsPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
-        <Section className="grow">
-          <Grouped
-            option={option}
-            group={group}
-            result={result}
-            component={CollaborationItems}
+        <Section className="grow pt-8">
+          {count === 0 && (
+            <p className="py-12 text-center text-lg text-alveus-green-700">
+              No collaborators match that name.
+            </p>
+          )}
+
+          <CardContext value={card}>
+            <div className="flex flex-col gap-12">
+              <Grouped
+                option={option}
+                group={group}
+                result={filtered}
+                component={CollaborationYear}
+              />
+            </div>
+          </CardContext>
+
+          <Lightbox
+            open={lightboxOpen}
+            onClose={() => setLightboxOpen(undefined)}
+            items={lightboxItems}
           />
         </Section>
       </div>
