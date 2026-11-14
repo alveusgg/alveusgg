@@ -4,7 +4,14 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -19,6 +26,7 @@ type SubNavProps = {
   links: SubNavLink[];
   className?: string;
   label?: string;
+  children?: ReactNode;
 };
 
 // Phone menu: vertical list of links shown when the hamburger is open
@@ -168,7 +176,12 @@ const SubNavBar = ({ links }: { links: SubNavLink[] }) => {
   );
 };
 
-const SubNav = ({ links, className, label = "On this page" }: SubNavProps) => {
+const SubNav = ({
+  links,
+  className,
+  label = "On this page",
+  children,
+}: SubNavProps) => {
   return (
     <nav
       aria-label={label}
@@ -177,10 +190,24 @@ const SubNav = ({ links, className, label = "On this page" }: SubNavProps) => {
         className,
       )}
     >
-      <div className="container mx-auto px-2 py-1 lg:px-4 lg:py-0">
+      <div
+        className={classes(
+          "container mx-auto px-2 py-1 lg:px-4 lg:py-0",
+          children && "flex flex-wrap items-center gap-x-6",
+        )}
+      >
         <SubNavBar links={links} />
 
-        <Disclosure as="div" className="flex flex-row items-start lg:hidden">
+        {children && (
+          <div className="flex min-w-0 grow flex-wrap items-center gap-x-4 gap-y-2 py-1 text-base font-normal lg:shrink-0 lg:grow-0 lg:py-2">
+            {children}
+          </div>
+        )}
+
+        <Disclosure
+          as="div"
+          className="flex flex-row items-start data-open:w-full lg:hidden"
+        >
           <DisclosurePanel as={Fragment}>
             <SubNavInner links={links} className="flex flex-col" />
           </DisclosurePanel>
