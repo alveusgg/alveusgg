@@ -61,7 +61,7 @@ function parseKeyring(keys: string) {
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-  const keyring = new Map<string, Buffer>();
+  const keyring = new Map<string, Buffer<ArrayBuffer>>();
   for (const entry of entries) {
     const [, id, key] = KEYRING_ENTRY_PATTERN.exec(entry) ?? [];
     if (!id || !key) {
