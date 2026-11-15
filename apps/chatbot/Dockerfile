@@ -1,7 +1,9 @@
 FROM node:24-alpine
-ENV PNPM_HOME="/pnpm"
 ENV CI="true"
-ENV PATH="$PNPM_HOME:$PATH"
+
+## Install pnpm
+COPY --from=ghcr.io/pnpm/pnpm:12-alpine /opt/pnpm /opt/pnpm
+RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 
 ## Copy root files
 WORKDIR /app
@@ -25,7 +27,6 @@ COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
 
 ## Install dependencies
-RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=secret,id=github_token,target=/tmp/github_token \
 		--mount=type=cache,id=pnpm,target=/pnpm/store \
     set -eu; \

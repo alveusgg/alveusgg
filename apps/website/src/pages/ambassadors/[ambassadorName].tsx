@@ -27,7 +27,12 @@ import {
 import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
+import { fetchYouTubePlaylistSafe } from "@/server/apis/youtube";
+
+import socials from "@/data/socials";
+
 import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
 import { formatPartialDateString } from "@/utils/datetime-partial";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
@@ -36,14 +41,19 @@ import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import AmbassadorStrip from "@/components/content/AmbassadorStrip";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import PartialDateDiff from "@/components/content/PartialDateDiff";
 import Section from "@/components/content/Section";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+
+import IconTwitch from "@/icons/IconTwitch";
+import IconYouTube from "@/icons/IconYouTube";
 
 type Stat = {
   title: string;
@@ -184,7 +194,24 @@ type AmbassadorPageProps = {
   merchImage?: AmbassadorImage;
   iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
+  highlights: Highlight[];
 };
+
+const HIGHLIGHTS_CLIP_COUNT = 4;
+
+type Highlight = {
+  id: string;
+  title: string;
+  published: Date;
+};
+
+const getHighlights = async (ambassador: Ambassador): Promise<Highlight[]> =>
+  ambassador.playlist
+    ? (await fetchYouTubePlaylistSafe(ambassador.playlist.id))
+        .map(({ id, title, published }) => ({ id, title, published }))
+        .sort((a, b) => b.published.getTime() - a.published.getTime())
+        .slice(0, HIGHLIGHTS_CLIP_COUNT)
+    : [];
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   context,
@@ -200,6 +227,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
     props: {
       ambassador,
       ambassadorKey,
+      highlights: await getHighlights(ambassador),
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
       iconImage:
@@ -222,6 +250,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   merchImage,
   iconImage,
   animalQuest,
+  highlights,
 }) => {
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
   const sounds = useMemo(
@@ -311,18 +340,39 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     [images],
   );
 
+  const playlistNames = useMemo(
+    () =>
+      Object.values<Ambassador>(ambassadors)
+        .filter(
+          (other) =>
+            ambassador.playlist &&
+            other.playlist?.id === ambassador.playlist.id,
+        )
+        .map((other) => other.name),
+    [ambassador.playlist],
+  );
+
+  // Retired ambassadors and plants are never on stream
+  const canWatchLive =
+    !ambassador.retired && getSpecies(ambassador.species).class !== "plantae";
+
   const [clipsLightboxOpen, setClipsLightboxOpen] = useState<string>();
 
   const clipsLightboxItems = useMemo(
     () =>
-      ambassador.clips.reduce<Record<string, ReactNode>>(
+      highlights.reduce<Record<string, ReactNode>>(
         (acc, clip) => ({
           ...acc,
-          [clip.id]: <YouTubeEmbed videoId={clip.id} caption={clip.caption} />,
+          // Clips are YouTube Shorts, so the player is 9:16
+          [clip.id]: (
+            <div className="h-full [&_iframe]:aspect-9/16 [&>div>div]:aspect-9/16">
+              <YouTubeEmbed videoId={clip.id} caption={clip.title} />
+            </div>
+          ),
         }),
         {},
       ),
-    [ambassador.clips],
+    [highlights],
   );
 
   return (
@@ -539,44 +589,97 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         </Section>
       </div>
 
-      {ambassador.clips.length > 0 && (
+      {highlights.length > 0 && (
         <Section dark className="bg-alveus-green-800">
           <Heading
             level={2}
             id="highlights"
             link
-            className="text-center text-4xl"
+            className="mt-0 mb-8 text-center text-4xl"
           >
             {ambassador.name}
             &apos;s Highlights
           </Heading>
 
-          <div className="flex flex-wrap">
-            {ambassador.clips.map(({ id, caption }) => (
-              <div
-                key={id}
-                className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
-              >
-                <Link
-                  href={`https://www.youtube.com/watch?v=${id}`}
-                  external
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setClipsLightboxOpen(id);
-                  }}
-                  className="group/trigger w-full max-w-2xl"
-                  custom
+          <ul className="grid grid-cols-2 gap-6 gap-x-4 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4">
+            {highlights.map((clip) => (
+              <li key={clip.id}>
+                <button
+                  type="button"
+                  onClick={() => setClipsLightboxOpen(clip.id)}
+                  className="group flex w-full flex-col gap-3 rounded-xl text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-tan"
                 >
-                  <YouTubePreview
-                    videoId={id}
-                    className="aspect-video h-auto w-full"
-                  />
-                </Link>
-
-                <p className="mt-2 text-center text-xl">{caption}</p>
-              </div>
+                  <span className="relative block w-full">
+                    <YouTubePreview
+                      videoId={clip.id}
+                      alt=""
+                      icon={false}
+                      // Shorts thumbnails are 16:9 with the vertical frame centred;
+                      // a centred cover crop to 9:16 removes the side bars
+                      className="aspect-9/16 h-auto w-full rounded-xl object-cover object-center shadow-none group-hover/trigger:scale-100 group-hover/trigger:shadow-none"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 m-auto flex size-14 items-center justify-center rounded-full bg-alveus-green-900/85 text-alveus-tan"
+                    >
+                      <IconYouTube size={28} />
+                    </span>
+                  </span>
+                  <span className="flex flex-col gap-1">
+                    <span className="line-clamp-2 text-base font-bold text-balance group-hover:underline md:text-lg">
+                      <span className="sr-only">Play video: </span>
+                      {clip.title}
+                    </span>
+                    <span className="text-sm text-alveus-green-200">
+                      <span className="sr-only">, </span>
+                      <time dateTime={clip.published.toISOString()}>
+                        {formatDateTime(clip.published, {
+                          style: "long",
+                        })}
+                      </time>
+                    </span>
+                  </span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
+
+          {(ambassador.playlist || canWatchLive) && (
+            <div className="mt-10 grid auto-rows-fr gap-4 sm:flex sm:flex-row sm:items-stretch sm:justify-center">
+              {ambassador.playlist && (
+                <Button
+                  dark
+                  href={`https://www.youtube.com/playlist?list=${encodeURIComponent(
+                    ambassador.playlist.id,
+                  )}`}
+                  external
+                  className="inline-flex items-center gap-3 text-left"
+                >
+                  <IconYouTube aria-hidden="true" className="shrink-0" />
+                  <span>
+                    {ambassador.playlist.label ? (
+                      <>Watch more {ambassador.playlist.label} clips</>
+                    ) : (
+                      <>
+                        Watch more clips of <List items={playlistNames} />
+                      </>
+                    )}
+                  </span>
+                </Button>
+              )}
+              {canWatchLive && (
+                <Button
+                  dark
+                  href={socials.twitch.link}
+                  external
+                  className="inline-flex items-center gap-3 text-left"
+                >
+                  <IconTwitch aria-hidden="true" className="shrink-0" />
+                  <span>Watch {ambassador.name} live</span>
+                </Button>
+              )}
+            </div>
+          )}
 
           <Lightbox
             open={clipsLightboxOpen}
@@ -602,9 +705,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             label: "View all ambassadors by enclosure",
             href: "/ambassadors#enclosures",
           }}
-          className={
-            ambassador.clips.length > 0 ? undefined : "bg-alveus-green-100"
-          }
+          className={highlights.length > 0 ? undefined : "bg-alveus-green-100"}
         />
       )}
     </>
