@@ -158,9 +158,12 @@ const advisors: Record<string, Person> = {
           how jumping spiders get their audience&apos;s attention when
           performing their spectacular courtship dances. Currently, he is
           researching the evolution of eye size across tarantulas. To learn more
-          about his work, visit www.spiderdaynightlive.com. Sebastian advises
-          Alveus on the care and behavior of the sanctuary&apos;s arthropod
-          ambassadors.
+          about his work, visit{" "}
+          <Link href="https://www.spiderdaynightlive.com" external>
+            www.spiderdaynightlive.com
+          </Link>
+          . Sebastian advises Alveus on the care and behavior of the
+          sanctuary&apos;s arthropod ambassadors.
         </p>
       </>
     ),
@@ -328,7 +331,7 @@ const AboutTeamPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-20 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
         <Section>
-          <People people={advisors} columns={2} align="center" />
+          <People people={advisors} />
         </Section>
       </div>
 
@@ -349,7 +352,7 @@ const AboutTeamPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-52 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Section>
-          <People people={directors} columns={2} align="center" />
+          <People people={directors} />
         </Section>
       </div>
     </>

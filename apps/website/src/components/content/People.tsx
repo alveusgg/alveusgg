@@ -16,47 +16,22 @@ export interface Person {
 
 type PeopleProps = {
   people: Record<string, Person>;
-  columns?: 1 | 2;
-  align?: "left" | "center";
   link?: boolean;
 };
 
 const imageClasses =
   "aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover";
 
-const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
-  <ul
-    className={classes(
-      "flex flex-wrap",
-      ...(columns === 1
-        ? []
-        : [
-            "md:-m-4 md:items-start",
-            align === "center" && "md:justify-center",
-          ]),
-    )}
-  >
+const People = ({ people, link }: PeopleProps) => (
+  <ul className="flex flex-wrap">
     {Object.entries(people).map(([key, person]) => (
       <li
         key={key}
-        className={classes(
-          "group flex basis-full flex-col",
-          ...(columns === 1
-            ? ["md:flex-row"]
-            : [
-                "md:basis-1/2 md:p-4",
-                align === "center" && "items-center text-center",
-              ]),
-        )}
+        className="group flex basis-full flex-col md:flex-row"
         tabIndex={-1}
       >
         <a id={key} className="scroll-mt-4" />
-        <div
-          className={classes(
-            "my-auto w-full max-w-xs shrink-0 p-4",
-            align === "center" && "mx-auto",
-          )}
-        >
+        <div className="my-auto w-full max-w-xs shrink-0 p-4">
           <div className="relative aspect-square h-auto w-full overflow-clip rounded-2xl">
             {Array.isArray(person.image) ? (
               <>
@@ -88,12 +63,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
             <div className="absolute inset-0 rounded-2xl border-4 border-alveus-green/75" />
           </div>
         </div>
-        <div
-          className={classes(
-            "my-auto grow p-4",
-            columns === 1 && align === "center" && "text-center",
-          )}
-        >
+        <div className="my-auto grow p-4">
           <Heading
             level={3}
             className={classes("mt-0 text-4xl", person.pronouns && "text-wrap")}
