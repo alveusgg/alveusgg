@@ -12,7 +12,12 @@ import {
   recordWishlistPaymentIssue,
 } from "@/server/db/wishlist";
 
-import { getPayPalOrderPayer, verifyPayPalWebhook } from "@/utils/paypal";
+import {
+  WISHLIST_PAYPAL_CUSTOM_ID,
+  getPayPalCaptureOrderId,
+  getPayPalOrderPayer,
+  verifyPayPalWebhook,
+} from "@/utils/paypal";
 
 export const config = {
   api: {
@@ -37,6 +42,7 @@ interface PayPalCaptureEvent {
   // A capture, or for refunds and reversals a refund that links "up" to it
   resource: {
     id: string;
+    custom_id?: string;
     amount?: { value: string };
     supplementary_data?: {
       related_ids?: { order_id?: string };
@@ -63,19 +69,45 @@ async function handlePaymentIssue(
   status: WishlistPaymentIssueStatus,
   res: NextApiResponse,
 ) {
+  const customId = event.resource.custom_id;
+  if (customId && customId !== WISHLIST_PAYPAL_CUSTOM_ID) {
+    return res.status(200).json({ received: true });
+  }
+
   const captureId = getCaptureId(event.resource);
   const amount = event.resource.amount
     ? parseFloat(event.resource.amount.value)
     : null;
+  const paypalOrderId =
+    event.resource.supplementary_data?.related_ids?.order_id ?? null;
 
   try {
-    const result = await recordWishlistPaymentIssue({
+    let result = await recordWishlistPaymentIssue({
       captureId,
-      paypalOrderId:
-        event.resource.supplementary_data?.related_ids?.order_id ?? null,
+      paypalOrderId,
       status,
       amount,
     });
+
+    // A refund of a capture we never recorded carries no order ID, so ask
+    // PayPal which order the capture belongs to
+    if (result.status === "not_found" && !paypalOrderId) {
+      const captureOrderId = await getPayPalCaptureOrderId(captureId).catch(
+        (err) => {
+          console.warn("PayPal webhook: capture lookup failed", err);
+          return null;
+        },
+      );
+      if (captureOrderId) {
+        result = await recordWishlistPaymentIssue({
+          captureId,
+          paypalOrderId: captureOrderId,
+          status,
+          amount,
+        });
+      }
+    }
+
     if (result.status === "not_found") {
       console.warn(
         `PayPal webhook: no donation order found for ${event.event_type} on capture ${captureId}`,

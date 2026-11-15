@@ -136,6 +136,7 @@ export async function notifyWishlistPaymentIssue(opts: {
   wasCredited: boolean;
   paypalOrderId: string;
   captureId: string;
+  neonDonationId: string | null;
 }): Promise<void> {
   if (!opts.webhookUrl) return;
 
@@ -155,6 +156,11 @@ export async function notifyWishlistPaymentIssue(opts: {
       },
       { name: "PayPal order", value: opts.paypalOrderId, inline: false },
       { name: "PayPal capture", value: opts.captureId, inline: false },
+      {
+        name: "Neon CRM",
+        value: `Not updated automatically, needs a manual update${opts.neonDonationId ? ` (donation #${opts.neonDonationId})` : ""}`,
+        inline: false,
+      },
     ],
     timestamp: new Date().toISOString(),
   };

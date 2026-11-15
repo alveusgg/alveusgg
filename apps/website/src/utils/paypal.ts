@@ -10,7 +10,7 @@ const PAYPAL_API_BASE =
 // Identical on every wishlist order, so the monthly PayPal import into Neon
 // can exclude them (the website logs these donations itself)
 const WISHLIST_PAYPAL_DESCRIPTION = "Alveus Sanctuary Wishlist";
-const WISHLIST_PAYPAL_CUSTOM_ID = "campaign_wishlist";
+export const WISHLIST_PAYPAL_CUSTOM_ID = "campaign_wishlist";
 
 async function getAccessToken(): Promise<string> {
   const clientId = env.PAYPAL_CLIENT_ID;
@@ -180,6 +180,24 @@ export async function getPayPalOrderPayer(
 ): Promise<{ email: string | null; name: string | null }> {
   const order = await getPayPalOrder(orderId);
   return { email: order.payerEmail, name: order.payerName };
+}
+
+/** Finds the order of a capture, for refund events that only link the capture */
+export async function getPayPalCaptureOrderId(
+  captureId: string,
+): Promise<string | null> {
+  const token = await getAccessToken();
+
+  const res = await fetch(
+    `${PAYPAL_API_BASE}/v2/payments/captures/${encodeURIComponent(captureId)}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!res.ok) throw new Error(`PayPal capture lookup failed: ${res.status}`);
+
+  const data = (await res.json()) as {
+    supplementary_data?: { related_ids?: { order_id?: string } };
+  };
+  return data.supplementary_data?.related_ids?.order_id ?? null;
 }
 
 /**

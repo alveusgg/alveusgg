@@ -3,12 +3,18 @@ import { Readable } from "node:stream";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 import type * as WishlistDb from "@/server/db/wishlist";
 import type { Context } from "@/server/trpc/context";
 import { wishlistRouter } from "@/server/trpc/router/wishlist";
 
-import { notifyWishlistPaymentIssue } from "@/utils/discord";
+import {
+  notifyWishlistDonation,
+  notifyWishlistPaymentIssue,
+} from "@/utils/discord";
+import type * as Discord from "@/utils/discord";
+import { WISHLIST_PAYPAL_CUSTOM_ID } from "@/utils/paypal";
 import type * as PayPal from "@/utils/paypal";
 
 import handler from "@/pages/api/webhooks/paypal";
@@ -22,6 +28,7 @@ type Order = {
   donorName: string | null;
   status: string;
   paypalTransactionId: string | null;
+  neonDonationId: string | null;
 };
 
 const { db, mockPrisma } = vi.hoisted(() => {
@@ -54,19 +61,47 @@ const { db, mockPrisma } = vi.hoisted(() => {
               : null;
           },
         ),
-        findUnique: vi.fn(async ({ where }: { where: { id: string } }) => {
-          const order = db.orders.find((o) => o.id === where.id);
-          return order ? { ...order, excessAmount: null } : null;
-        }),
+        findUnique: vi.fn(
+          async ({
+            where,
+          }: {
+            where: { id?: string; paypalOrderId?: string };
+          }) => {
+            const order = db.orders.find(
+              (o) =>
+                o.id === where.id || o.paypalOrderId === where.paypalOrderId,
+            );
+            return order
+              ? {
+                  ...order,
+                  excessAmount: null,
+                  wishlistItem: { id: "item-1", title: "Heat lamp" },
+                }
+              : null;
+          },
+        ),
       },
-      // The payment issue UPDATE: status, updatedAt, id, status
+      wishlistItem: { update: vi.fn() },
+      $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
+      // The capture claim (capturedAt, captureId, amount, updatedAt, id) or
+      // the payment issue UPDATE (status, updatedAt, id, status)
       $executeRaw: vi.fn(
-        async (
-          _sql: TemplateStringsArray,
-          status: string,
-          _updatedAt: Date,
-          id: string,
-        ) => {
+        async (sql: TemplateStringsArray, ...values: unknown[]) => {
+          if (sql.join("").includes("'CAPTURED'")) {
+            const order = db.orders.find((o) => o.id === values[4]);
+            if (
+              !order ||
+              order.status !== "PENDING" ||
+              order.paypalTransactionId
+            ) {
+              return 0;
+            }
+            order.status = "CAPTURED";
+            order.paypalTransactionId = values[1] as string;
+            order.capturedAmount = values[2] as number;
+            return 1;
+          }
+          const [status, , id] = values as [string, Date, string];
           const order = db.orders.find((o) => o.id === id);
           if (!order || order.status === status) return 0;
           order.status = status;
@@ -92,6 +127,9 @@ vi.mock("@/utils/discord", () => ({
   notifyWishlistItemFunded: vi.fn(() => Promise.resolve()),
   notifyWishlistPaymentIssue: vi.fn(() => Promise.resolve()),
 }));
+vi.mock("@/server/apis/neon-crm", () => ({
+  logWishlistDonationToNeon: vi.fn(),
+}));
 vi.mock("@/server/db/wishlist", async (importOriginal) => ({
   ...(await importOriginal<typeof WishlistDb>()),
   recordWishlistCapture: vi.fn(),
@@ -110,6 +148,7 @@ const makeOrder = (overrides: Partial<Order> = {}): Order => ({
   donorName: "Stream Name",
   status: "PENDING",
   paypalTransactionId: null,
+  neonDonationId: null,
   ...overrides,
 });
 
@@ -305,5 +344,187 @@ describe("PayPal payment issue webhooks", () => {
     expect(repeat.body).toEqual({ received: true, alreadyProcessed: true });
     expect(db.orders[0]?.status).toBe("REFUNDED");
     expect(notifyWishlistPaymentIssue).toHaveBeenCalledOnce();
+  });
+
+  // Token, then GET /v2/payments/captures/CAPTURE-1
+  const captureLookup = (orderId: string) =>
+    vi.fn(async (url: string) =>
+      url.includes("/v1/oauth2/token")
+        ? Response.json({ access_token: "token" })
+        : Response.json({
+            id: "CAPTURE-1",
+            supplementary_data: { related_ids: { order_id: orderId } },
+          }),
+    );
+
+  test.each([
+    ["PAYMENT.CAPTURE.REFUNDED", "REFUNDED"],
+    ["PAYMENT.CAPTURE.REVERSED", "REVERSED"],
+  ])(
+    "matches %s on an unrecorded capture through the capture's order",
+    async (eventType, status) => {
+      const fetchMock = captureLookup("PAYPAL-ORDER-1");
+      vi.stubGlobal("fetch", fetchMock);
+
+      const res = await send(refundEvent(eventType));
+
+      expect(res.statusCode).toBe(200);
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://api-m.sandbox.paypal.com/v2/payments/captures/CAPTURE-1",
+        expect.anything(),
+      );
+      expect(db.orders[0]).toMatchObject({
+        status,
+        paypalTransactionId: null,
+      });
+      expect(notifyWishlistPaymentIssue).toHaveBeenCalledOnce();
+      expect(notifyWishlistPaymentIssue).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status,
+          wasCredited: false,
+          captureId: "CAPTURE-1",
+          amount: 25,
+        }),
+      );
+    },
+  );
+
+  test("does not credit a refunded order when COMPLETED arrives late", async () => {
+    vi.stubGlobal("fetch", captureLookup("PAYPAL-ORDER-1"));
+    const actual = await vi.importActual<typeof WishlistDb>(
+      "@/server/db/wishlist",
+    );
+    vi.mocked(recordWishlistCapture).mockImplementation(
+      actual.recordWishlistCapture,
+    );
+
+    await send(refundEvent("PAYMENT.CAPTURE.REFUNDED"));
+    const late = await send({
+      event_type: "PAYMENT.CAPTURE.COMPLETED",
+      resource: {
+        id: "CAPTURE-1",
+        amount: { value: "25.00" },
+        supplementary_data: { related_ids: { order_id: "PAYPAL-ORDER-1" } },
+      },
+    });
+
+    expect(late.statusCode).toBe(200);
+    expect(late.body).toEqual({ received: true, alreadyProcessed: true });
+    expect(db.orders[0]).toMatchObject({
+      status: "REFUNDED",
+      paypalTransactionId: null,
+      capturedAmount: null,
+    });
+    expect(recordWishlistCapture).toHaveBeenCalledOnce();
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+    expect(notifyWishlistDonation).not.toHaveBeenCalled();
+    expect(logWishlistDonationToNeon).not.toHaveBeenCalled();
+    expect(notifyWishlistPaymentIssue).toHaveBeenCalledOnce();
+  });
+
+  test("alerts once when a refund of an unrecorded capture repeats", async () => {
+    vi.stubGlobal("fetch", captureLookup("PAYPAL-ORDER-1"));
+
+    await send(refundEvent("PAYMENT.CAPTURE.REFUNDED"));
+    const repeat = await send(refundEvent("PAYMENT.CAPTURE.REFUNDED"));
+
+    expect(repeat.body).toEqual({ received: true, alreadyProcessed: true });
+    expect(db.orders[0]?.status).toBe("REFUNDED");
+    expect(notifyWishlistPaymentIssue).toHaveBeenCalledOnce();
+  });
+
+  test("acknowledges a refund when the capture lookup fails", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(null, { status: 500 })),
+    );
+
+    const res = await send(refundEvent("PAYMENT.CAPTURE.REFUNDED"));
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ received: true });
+    expect(db.orders[0]?.status).toBe("PENDING");
+    expect(notifyWishlistPaymentIssue).not.toHaveBeenCalled();
+  });
+
+  test("acknowledges a refund whose capture matches no order", async () => {
+    vi.stubGlobal("fetch", captureLookup("SOME-OTHER-ORDER"));
+
+    const res = await send(refundEvent("PAYMENT.CAPTURE.REFUNDED"));
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ received: true });
+    expect(db.orders[0]?.status).toBe("PENDING");
+    expect(notifyWishlistPaymentIssue).not.toHaveBeenCalled();
+  });
+
+  test("skips a non-wishlist refund without any lookup", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const event = refundEvent("PAYMENT.CAPTURE.REFUNDED");
+
+    const res = await send({
+      ...event,
+      resource: { ...event.resource, custom_id: "campaign_wolf" },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ received: true });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockPrisma.wishlistDonationOrder.findFirst).not.toHaveBeenCalled();
+    expect(mockPrisma.$executeRaw).not.toHaveBeenCalled();
+    expect(db.orders[0]?.status).toBe("PENDING");
+  });
+
+  test("handles a refund tagged with the wishlist custom ID", async () => {
+    db.orders = [capturedOrder()];
+    const event = refundEvent("PAYMENT.CAPTURE.REFUNDED");
+
+    const res = await send({
+      ...event,
+      resource: { ...event.resource, custom_id: WISHLIST_PAYPAL_CUSTOM_ID },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(db.orders[0]?.status).toBe("REFUNDED");
+    expect(notifyWishlistPaymentIssue).toHaveBeenCalledOnce();
+  });
+});
+
+describe("staff payment issue alert", () => {
+  test("says Neon needs a manual update, with the capture and amount", async () => {
+    const { notifyWishlistPaymentIssue: notify } =
+      await vi.importActual<typeof Discord>("@/utils/discord");
+    const fetchMock = vi.fn(async () => new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await notify({
+      webhookUrl: "https://discord.example.test/webhook",
+      itemTitle: "Heat lamp",
+      status: "REFUNDED",
+      amount: 25,
+      donorName: null,
+      wasCredited: true,
+      paypalOrderId: "PAYPAL-ORDER-1",
+      captureId: "CAPTURE-1",
+      neonDonationId: "777",
+    });
+
+    const body = JSON.parse(
+      (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1]
+        .body as string,
+    ) as { embeds: { fields: { name: string; value: string }[] }[] };
+    expect(body.embeds[0]?.fields).toEqual(
+      expect.arrayContaining([
+        { name: "Amount", value: "$25.00", inline: true },
+        { name: "PayPal capture", value: "CAPTURE-1", inline: false },
+        {
+          name: "Neon CRM",
+          value:
+            "Not updated automatically, needs a manual update (donation #777)",
+          inline: false,
+        },
+      ]),
+    );
   });
 });

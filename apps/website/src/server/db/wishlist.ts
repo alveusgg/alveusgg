@@ -4,7 +4,11 @@ import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 
-import { getPartialTargetCents, parsePriceCents } from "@/data/wishlist";
+import {
+  type PAYMENT_ISSUE_STATUSES,
+  getPartialTargetCents,
+  parsePriceCents,
+} from "@/data/wishlist";
 
 import {
   notifyWishlistDonation,
@@ -243,7 +247,8 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
   return result;
 }
 
-export type WishlistPaymentIssueStatus = "DENIED" | "REFUNDED" | "REVERSED";
+export type WishlistPaymentIssueStatus =
+  (typeof PAYMENT_ISSUE_STATUSES)[number];
 
 export type WishlistPaymentIssue = {
   captureId: string;
@@ -255,7 +260,8 @@ export type WishlistPaymentIssue = {
 /**
  * Marks the order of a denied, refunded or reversed capture and tells staff.
  * The item keeps its credit, since it may already have been bought. A
- * denied capture was never recorded, so it is also matched by order ID.
+ * capture may not be recorded yet, so the order is also matched by order ID,
+ * and a later capture claim skips the order since it is no longer pending.
  */
 export async function recordWishlistPaymentIssue(issue: WishlistPaymentIssue) {
   const order = await prisma.wishlistDonationOrder.findFirst({
@@ -290,6 +296,7 @@ export async function recordWishlistPaymentIssue(issue: WishlistPaymentIssue) {
       wasCredited: order.paypalTransactionId != null,
       paypalOrderId: order.paypalOrderId,
       captureId: issue.captureId,
+      neonDonationId: order.neonDonationId,
     });
   } catch (err) {
     console.error("Discord payment issue alert failed (non-fatal):", err);

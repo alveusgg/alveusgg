@@ -36,6 +36,27 @@ export const DONATABLE_STATUSES = ["NEEDED", "PARTIALLY_FULFILLED"] as const;
 export const canAcceptDonations = (status: string) =>
   (DONATABLE_STATUSES as readonly string[]).includes(status);
 
+export const DONATION_ORDER_STATUS_LABELS = {
+  PENDING: "Pending",
+  CAPTURED: "Captured",
+  FAILED: "Failed",
+  REFUNDED: "Refunded",
+  DENIED: "Denied",
+  REVERSED: "Reversed",
+} as const;
+
+export type DonationOrderStatus = keyof typeof DONATION_ORDER_STATUS_LABELS;
+
+export const DONATION_ORDER_STATUSES = Object.keys(
+  DONATION_ORDER_STATUS_LABELS,
+) as [DonationOrderStatus, ...DonationOrderStatus[]];
+
+export const PAYMENT_ISSUE_STATUSES = [
+  "REFUNDED",
+  "DENIED",
+  "REVERSED",
+] as const satisfies DonationOrderStatus[];
+
 /** Parses a display price like "$29.99" into whole cents. Returns null if unparseable. */
 export function parsePriceCents(price: string | null): number | null {
   if (!price) return null;

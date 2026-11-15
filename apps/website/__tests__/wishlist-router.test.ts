@@ -287,6 +287,31 @@ describe("donation list", () => {
     expect(page.nextCursor).toBeUndefined();
   });
 
+  test.each([
+    "PENDING",
+    "CAPTURED",
+    "FAILED",
+    "REFUNDED",
+    "DENIED",
+    "REVERSED",
+  ])("filters donations by %s", async (status) => {
+    mockPrisma.wishlistDonationOrder.findMany.mockResolvedValue([]);
+
+    await adminCaller.adminGetDonations({
+      status: status as "PENDING",
+    });
+
+    expect(mockPrisma.wishlistDonationOrder.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { status } }),
+    );
+  });
+
+  test("rejects an unknown status filter", async () => {
+    await expect(
+      adminCaller.adminGetDonations({ status: "LOST" as "PENDING" }),
+    ).rejects.toThrow();
+  });
+
   test("totals every order with a database aggregate", async () => {
     mockPrisma.wishlistDonationOrder.groupBy.mockResolvedValue([
       {
@@ -300,6 +325,12 @@ describe("donation list", () => {
         _sum: { capturedAmount: null },
       },
       { status: "FAILED", _count: { _all: 3 }, _sum: { capturedAmount: null } },
+      {
+        status: "REFUNDED",
+        _count: { _all: 2 },
+        _sum: { capturedAmount: 50 },
+      },
+      { status: "DENIED", _count: { _all: 1 }, _sum: { capturedAmount: null } },
     ]);
 
     const totals = await adminCaller.adminGetDonationTotals({
@@ -307,9 +338,10 @@ describe("donation list", () => {
     });
 
     expect(totals).toEqual({
-      orders: 315,
+      orders: 318,
       captured: 300,
       pending: 12,
+      paymentIssues: 3,
       capturedAmount: 4500,
     });
     expect(mockPrisma.wishlistDonationOrder.groupBy).toHaveBeenCalledWith(

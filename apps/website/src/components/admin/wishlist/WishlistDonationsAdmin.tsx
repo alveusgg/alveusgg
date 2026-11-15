@@ -1,4 +1,12 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
+
+import {
+  DONATION_ORDER_STATUSES,
+  DONATION_ORDER_STATUS_LABELS,
+  type DonationOrderStatus,
+  PAYMENT_ISSUE_STATUSES,
+} from "@/data/wishlist";
 
 import { trpc } from "@/utils/trpc";
 
@@ -7,15 +15,23 @@ import { Panel } from "@/components/admin/Panel";
 import Link from "@/components/content/Link";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
+import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
 const formatAmount = (amount: number) => `$${amount.toFixed(2)}`;
+
+const statusLabel = (status: string) =>
+  DONATION_ORDER_STATUS_LABELS[status as DonationOrderStatus] ?? status;
+
+const isPaymentIssue = (status: string) =>
+  (PAYMENT_ISSUE_STATUSES as readonly string[]).includes(status);
 
 export function WishlistDonationsAdmin() {
   const router = useRouter();
   const itemId =
     typeof router.query.itemId === "string" ? router.query.itemId : undefined;
+  const [status, setStatus] = useState<DonationOrderStatus>();
   const donationsQuery = trpc.adminWishlist.adminGetDonations.useInfiniteQuery(
-    { wishlistItemId: itemId },
+    { wishlistItemId: itemId, status },
     {
       enabled: router.isReady,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -47,14 +63,32 @@ export function WishlistDonationsAdmin() {
           <p className="mb-4">
             {formatAmount(totals.capturedAmount)} captured from{" "}
             {totals.captured} of {totals.orders} PayPal orders ({totals.pending}{" "}
-            pending)
+            pending, {totals.paymentIssues} refunded, denied or reversed)
           </p>
         )}
+
+        <SelectBoxField
+          label="Status"
+          className="mb-4 max-w-xs"
+          value={status ?? ""}
+          onChange={(e) =>
+            setStatus((e.target.value || undefined) as DonationOrderStatus)
+          }
+        >
+          <option value="">All statuses</option>
+          {DONATION_ORDER_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {DONATION_ORDER_STATUS_LABELS[s]}
+            </option>
+          ))}
+        </SelectBoxField>
 
         {donationsQuery.isPending ? (
           <MessageBox>Loading …</MessageBox>
         ) : donations.length === 0 ? (
-          <MessageBox>No donations yet.</MessageBox>
+          <MessageBox>
+            {status ? "No donations with this status." : "No donations yet."}
+          </MessageBox>
         ) : (
           <table className="w-full">
             <thead>
@@ -95,7 +129,7 @@ export function WishlistDonationsAdmin() {
                     )}
                   </td>
                   <td className="p-1">
-                    <div>{d.status === "CAPTURED" ? "Captured" : d.status}</div>
+                    <div>{statusLabel(d.status)}</div>
                     {d.paypalTransactionId && (
                       <div className="font-mono text-sm text-gray-400">
                         {d.paypalTransactionId}
@@ -104,8 +138,8 @@ export function WishlistDonationsAdmin() {
                   </td>
                   <td className="p-1">
                     {d.neonDonationId
-                      ? `Logged #${d.neonDonationId}`
-                      : d.status === "CAPTURED"
+                      ? `Logged #${d.neonDonationId}${isPaymentIssue(d.status) ? ", needs manual update" : ""}`
+                      : d.paypalTransactionId
                         ? "Not logged"
                         : "Not captured"}
                   </td>

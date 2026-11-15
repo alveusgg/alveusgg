@@ -10,6 +10,10 @@ import {
 } from "@/server/trpc/trpc";
 
 import { permissions } from "@/data/permissions";
+import {
+  DONATION_ORDER_STATUSES,
+  PAYMENT_ISSUE_STATUSES,
+} from "@/data/wishlist";
 
 import { buildAmazonCartUrl } from "@/utils/amazonCart";
 
@@ -325,7 +329,7 @@ export const adminWishlistRouter = router({
   adminGetDonations: permittedProcedure
     .input(
       z.object({
-        status: z.enum(["PENDING", "CAPTURED", "FAILED"]).optional(),
+        status: z.enum(DONATION_ORDER_STATUSES).optional(),
         unreadMessagesOnly: z.boolean().optional(),
         wishlistItemId: z.string().optional(),
         cursor: z.string().nullish(),
@@ -373,6 +377,11 @@ export const adminWishlistRouter = router({
         orders: groups.reduce((sum, g) => sum + g._count._all, 0),
         captured: captured?._count._all ?? 0,
         pending: groups.find((g) => g.status === "PENDING")?._count._all ?? 0,
+        paymentIssues: groups
+          .filter((g) =>
+            (PAYMENT_ISSUE_STATUSES as readonly string[]).includes(g.status),
+          )
+          .reduce((sum, g) => sum + g._count._all, 0),
         capturedAmount: captured?._sum.capturedAmount ?? 0,
       };
     }),
