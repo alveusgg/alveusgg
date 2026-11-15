@@ -31,6 +31,7 @@ const getCapturedSummary = async (orderId: string) => {
   return {
     success: true,
     alreadyCaptured: true,
+    processing: false,
     amount: order?.capturedAmount ?? undefined,
     excessAmount: order?.excessAmount ?? 0,
   };
@@ -220,7 +221,25 @@ export const wishlistRouter = router({
       }
 
       const capture = await capturePayPalOrder(input.paypalOrderId);
-      if (capture.status !== "COMPLETED" || !capture.transactionId) {
+      // A pending capture (e.g. held for review) stays a pending order, and
+      // the PAYMENT.CAPTURE.COMPLETED webhook records it once it clears
+      if (
+        capture.status === "COMPLETED" &&
+        capture.captureStatus === "PENDING"
+      ) {
+        return {
+          success: true,
+          alreadyCaptured: false,
+          processing: true,
+          amount: capture.amount,
+          excessAmount: 0,
+        };
+      }
+      if (
+        capture.status !== "COMPLETED" ||
+        capture.captureStatus !== "COMPLETED" ||
+        !capture.transactionId
+      ) {
         // A second capture call for an order the first call (or the webhook)
         // already recorded is rejected by PayPal, so check our record again.
         const current = await prisma.wishlistDonationOrder.findUnique({
@@ -231,7 +250,7 @@ export const wishlistRouter = router({
         }
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `PayPal status: ${capture.status}`,
+          message: `PayPal status: ${capture.captureStatus ?? capture.status}`,
         });
       }
 
@@ -252,6 +271,7 @@ export const wishlistRouter = router({
       return {
         success: true,
         alreadyCaptured: false,
+        processing: false,
         amount: capture.amount,
         excessAmount: result.excessAmount,
       };

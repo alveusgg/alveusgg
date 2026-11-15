@@ -33,6 +33,7 @@ export {
   CreateDonationResponse,
   CreateWebhookResponse,
   PAYPAL_TENDER_TYPE,
+  WISHLIST_CAMPAIGN_ID,
   CustomFieldResponse,
   DonationResponse,
   DonationSearchResponse,

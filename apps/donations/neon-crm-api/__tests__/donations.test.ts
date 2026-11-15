@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   PAYPAL_TENDER_TYPE,
+  WISHLIST_CAMPAIGN_ID,
   createDonation,
   findOrCreateAccount,
 } from "../index";
@@ -116,6 +117,7 @@ describe("createDonation", () => {
       accountId: "123",
       amount: 25,
       date: "2026-11-07",
+      campaign: { id: WISHLIST_CAMPAIGN_ID },
       payments: [
         {
           amount: 25,
@@ -134,6 +136,7 @@ describe("createDonation", () => {
       accountId: "123",
       amount: 25,
       date: "2026-11-07",
+      campaign: { id: "24" },
       payments: [
         {
           amount: 25,

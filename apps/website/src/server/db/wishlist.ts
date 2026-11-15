@@ -9,6 +9,7 @@ import { getPartialTargetCents, parsePriceCents } from "@/data/wishlist";
 import {
   notifyWishlistDonation,
   notifyWishlistItemFunded,
+  notifyWishlistPaymentIssue,
 } from "@/utils/discord";
 
 // Splits a capture into the item's credit and the excess over its remaining
@@ -62,23 +63,22 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     });
     if (!order) return { status: "not_found" } as const;
 
-    // Claim the order with a conditional update, so when the capture call,
+    // Claim the order in one conditional UPDATE, so when the capture call,
     // the webhook, or a webhook retry overlap, exactly one of them applies
-    // the donation. The others see zero updated rows and stop here.
-    const claimed = await tx.wishlistDonationOrder.updateMany({
-      where: {
-        id: order.id,
-        status: { not: "CAPTURED" },
-        paypalTransactionId: null,
-      },
-      data: {
-        status: "CAPTURED",
-        capturedAt,
-        paypalTransactionId: capture.captureId,
-        capturedAmount: capture.amount,
-      },
-    });
-    if (claimed.count === 0) return { status: "duplicate", order } as const;
+    // the donation. updateMany can't be used here: with relationMode
+    // "prisma" it selects the ids first and doesn't re-check the conditions.
+    // Only pending orders are claimed, never denied, refunded or reversed ones.
+    const claimed = await tx.$executeRaw`
+      UPDATE wishlist_donation_orders
+      SET status = 'CAPTURED',
+        capturedAt = ${capturedAt},
+        paypalTransactionId = ${capture.captureId},
+        capturedAmount = ${capture.amount},
+        updatedAt = ${capturedAt}
+      WHERE id = ${order.id}
+        AND status = 'PENDING'
+        AND paypalTransactionId IS NULL`;
+    if (claimed === 0) return { status: "duplicate", order } as const;
 
     const item = order.wishlistItem;
     const partialTargetCents = item.allowPartialDonations
@@ -241,4 +241,59 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
   }
 
   return result;
+}
+
+export type WishlistPaymentIssueStatus = "DENIED" | "REFUNDED" | "REVERSED";
+
+export type WishlistPaymentIssue = {
+  captureId: string;
+  paypalOrderId: string | null;
+  status: WishlistPaymentIssueStatus;
+  amount: number | null;
+};
+
+/**
+ * Marks the order of a denied, refunded or reversed capture and tells staff.
+ * The item keeps its credit, since it may already have been bought. A
+ * denied capture was never recorded, so it is also matched by order ID.
+ */
+export async function recordWishlistPaymentIssue(issue: WishlistPaymentIssue) {
+  const order = await prisma.wishlistDonationOrder.findFirst({
+    where: {
+      OR: [
+        { paypalTransactionId: issue.captureId },
+        ...(issue.paypalOrderId
+          ? [{ paypalOrderId: issue.paypalOrderId }]
+          : []),
+      ],
+    },
+    include: { wishlistItem: { select: { title: true } } },
+  });
+  if (!order) return { status: "not_found" } as const;
+
+  // One conditional UPDATE, so a repeated or overlapping delivery of the
+  // same event alerts staff once
+  const updated = await prisma.$executeRaw`
+    UPDATE wishlist_donation_orders
+    SET status = ${issue.status}, updatedAt = ${new Date()}
+    WHERE id = ${order.id} AND status <> ${issue.status}`;
+  if (updated === 0) return { status: "duplicate", order } as const;
+
+  try {
+    await notifyWishlistPaymentIssue({
+      webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
+      itemTitle: order.wishlistItem.title,
+      status: issue.status,
+      amount: issue.amount ?? order.capturedAmount ?? order.amount,
+      donorName: order.donorName,
+      // Only the capture claim sets the transaction ID
+      wasCredited: order.paypalTransactionId != null,
+      paypalOrderId: order.paypalOrderId,
+      captureId: issue.captureId,
+    });
+  } catch (err) {
+    console.error("Discord payment issue alert failed (non-fatal):", err);
+  }
+
+  return { status: "updated", order } as const;
 }

@@ -118,6 +118,32 @@ describe("PayPal IPN handling", () => {
     expect(add).not.toHaveBeenCalled();
   });
 
+  it("acknowledges wishlist donations without storing them", async () => {
+    vi.spyOn(console, "info").mockImplementation(() => {});
+    const provider = await makeProvider();
+
+    const response = await provider.handle(
+      ipn({ ...completedIpn, custom: "campaign_wishlist" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(add).not.toHaveBeenCalled();
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+  });
+
+  it("stores donations tagged with another campaign", async () => {
+    const provider = await makeProvider();
+
+    const response = await provider.handle(
+      ipn({ ...completedIpn, custom: "campaign_wishlists" }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({ tags: { campaign: "wishlists" } }),
+    );
+  });
+
   it("acknowledges subscription notifications without payment fields", async () => {
     const provider = await makeProvider();
 

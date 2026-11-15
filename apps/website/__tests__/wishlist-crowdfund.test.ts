@@ -52,21 +52,6 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
           return order ? { ...order, wishlistItem: { ...db.item } } : null;
         },
       ),
-      updateMany: vi.fn(
-        async ({
-          where,
-          data,
-        }: {
-          where: { id: string };
-          data: { paypalTransactionId: string };
-        }) => {
-          const order = db.orders.find((o) => o.id === where.id);
-          if (!order || order.paypalTransactionId) return { count: 0 };
-          order.status = "CAPTURED";
-          order.paypalTransactionId = data.paypalTransactionId;
-          return { count: 1 };
-        },
-      ),
       update: vi.fn(
         async ({
           where,
@@ -81,6 +66,24 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
         },
       ),
     },
+    // The conditional claim UPDATE, values in template order
+    $executeRaw: vi.fn(
+      async (
+        _sql: TemplateStringsArray,
+        _capturedAt: Date,
+        captureId: string,
+        _amount: number,
+        _updatedAt: Date,
+        id: string,
+      ) => {
+        const order = db.orders.find((o) => o.id === id);
+        if (!order || order.status !== "PENDING" || order.paypalTransactionId)
+          return 0;
+        order.status = "CAPTURED";
+        order.paypalTransactionId = captureId;
+        return 1;
+      },
+    ),
     wishlistItem: {
       update: vi.fn(
         async ({
@@ -358,6 +361,7 @@ describe("recordWishlistCapture with partial donations", () => {
         accountId: "123",
         amount: 5,
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        campaign: { id: "24" },
         payments: [
           {
             amount: 5,
@@ -372,6 +376,7 @@ describe("recordWishlistCapture with partial donations", () => {
         accountId: "123",
         amount: 5,
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        campaign: { id: "24" },
         payments: [
           {
             amount: 5,

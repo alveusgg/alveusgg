@@ -13,10 +13,11 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconInformationCircle from "@/icons/IconInformationCircle";
 import IconLoading from "@/icons/IconLoading";
 import IconXCircle from "@/icons/IconXCircle";
 
-type State = "loading" | "success" | "error";
+type State = "loading" | "success" | "processing" | "error";
 
 const DonateSuccessPage: NextPage = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const DonateSuccessPage: NextPage = () => {
         setAmount(result.amount ?? null);
         setExcessAmount(result.excessAmount ?? 0);
         setAlreadyCaptured(result.alreadyCaptured);
-        setState("success");
+        setState(result.processing ? "processing" : "success");
       })
       .catch((err) => {
         setError(err instanceof Error ? err.message : "Something went wrong");
@@ -99,6 +100,23 @@ const DonateSuccessPage: NextPage = () => {
               </p>
               <p className="text-sm">
                 PayPal will email you a receipt for your donation.
+              </p>
+              <Button href="/wishlist" filled className="mt-4">
+                Back to wishlist
+              </Button>
+            </>
+          )}
+
+          {state === "processing" && (
+            <>
+              <IconInformationCircle className="size-16" />
+              <Heading className="my-0">Your payment is processing</Heading>
+              <p>
+                PayPal is still processing your payment. Your donation will be
+                added to the wishlist as soon as it clears.
+              </p>
+              <p className="text-sm">
+                PayPal will email you once the payment is complete.
               </p>
               <Button href="/wishlist" filled className="mt-4">
                 Back to wishlist

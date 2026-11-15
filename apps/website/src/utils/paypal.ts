@@ -61,10 +61,16 @@ export async function createPayPalOrder(
           amount: { currency_code: "USD", value: opts.amount.toFixed(2) },
         },
       ],
-      application_context: {
-        return_url: opts.returnUrl,
-        cancel_url: opts.cancelUrl,
-        user_action: "PAY_NOW",
+      payment_source: {
+        paypal: {
+          experience_context: {
+            return_url: opts.returnUrl,
+            cancel_url: opts.cancelUrl,
+            user_action: "PAY_NOW",
+            // Rules out eChecks and other payments that capture as pending
+            payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
+          },
+        },
       },
     }),
   });
@@ -75,7 +81,11 @@ export async function createPayPalOrder(
     links: { rel: string; href: string }[];
   };
 
-  const approvalUrl = data.links.find((l) => l.rel === "approve")?.href;
+  // Orders created with payment_source return the approval link as
+  // "payer-action" instead of "approve"
+  const approvalUrl = data.links.find(
+    (l) => l.rel === "payer-action" || l.rel === "approve",
+  )?.href;
   if (!approvalUrl) throw new Error("PayPal response missing approval link");
 
   return { orderId: data.id, approvalUrl };
@@ -84,10 +94,46 @@ export async function createPayPalOrder(
 export interface CaptureResult {
   orderId: string;
   status: string;
+  // An order can be COMPLETED while its capture is still PENDING
+  captureStatus: string | null;
   amount: number;
   payerEmail: string | null;
   payerName: string | null;
   transactionId: string | null;
+}
+
+type PayPalOrderResponse = {
+  status: string;
+  payer?: {
+    email_address?: string;
+    name?: { given_name?: string; surname?: string };
+  };
+  purchase_units?: {
+    payments?: {
+      captures?: { id: string; status?: string; amount: { value: string } }[];
+    };
+  }[];
+};
+
+function toCaptureResult(
+  orderId: string,
+  data: PayPalOrderResponse,
+): CaptureResult {
+  const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
+
+  return {
+    orderId,
+    status: data.status,
+    captureStatus: capture?.status ?? null,
+    amount: capture ? parseFloat(capture.amount.value) : 0,
+    payerEmail: data.payer?.email_address ?? null,
+    payerName: data.payer?.name
+      ? [data.payer.name.given_name, data.payer.name.surname]
+          .filter(Boolean)
+          .join(" ")
+      : null,
+    transactionId: capture?.id ?? null,
+  };
 }
 
 export async function capturePayPalOrder(
@@ -106,33 +152,23 @@ export async function capturePayPalOrder(
     },
   );
 
-  const data = (await res.json()) as {
-    status: string;
-    payer?: {
-      email_address?: string;
-      name?: { given_name?: string; surname?: string };
-    };
-    purchase_units?: {
-      payments?: {
-        captures?: { id: string; amount: { value: string } }[];
-      };
-    }[];
-  };
+  // PayPal rejects a second capture, e.g. when the donor reloads the page
+  // while the payment is processing, so read the order's current state
+  if (!res.ok) return getPayPalOrder(orderId);
 
-  const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
+  return toCaptureResult(orderId, (await res.json()) as PayPalOrderResponse);
+}
 
-  return {
-    orderId,
-    status: data.status,
-    amount: capture ? parseFloat(capture.amount.value) : 0,
-    payerEmail: data.payer?.email_address ?? null,
-    payerName: data.payer?.name
-      ? [data.payer.name.given_name, data.payer.name.surname]
-          .filter(Boolean)
-          .join(" ")
-      : null,
-    transactionId: capture?.id ?? null,
-  };
+export async function getPayPalOrder(orderId: string): Promise<CaptureResult> {
+  const token = await getAccessToken();
+
+  const res = await fetch(
+    `${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(orderId)}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!res.ok) throw new Error(`PayPal order lookup failed: ${res.status}`);
+
+  return toCaptureResult(orderId, (await res.json()) as PayPalOrderResponse);
 }
 
 /**
@@ -142,29 +178,8 @@ export async function capturePayPalOrder(
 export async function getPayPalOrderPayer(
   orderId: string,
 ): Promise<{ email: string | null; name: string | null }> {
-  const token = await getAccessToken();
-
-  const res = await fetch(
-    `${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(orderId)}`,
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
-  if (!res.ok) throw new Error(`PayPal order lookup failed: ${res.status}`);
-
-  const data = (await res.json()) as {
-    payer?: {
-      email_address?: string;
-      name?: { given_name?: string; surname?: string };
-    };
-  };
-
-  return {
-    email: data.payer?.email_address ?? null,
-    name: data.payer?.name
-      ? [data.payer.name.given_name, data.payer.name.surname]
-          .filter(Boolean)
-          .join(" ")
-      : null,
-  };
+  const order = await getPayPalOrder(orderId);
+  return { email: order.payerEmail, name: order.payerName };
 }
 
 /**

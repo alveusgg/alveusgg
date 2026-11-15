@@ -8,8 +8,8 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
   const tx = {
     wishlistDonationOrder: {
       findUnique: vi.fn(),
-      updateMany: vi.fn(),
     },
+    $executeRaw: vi.fn(),
     wishlistItem: {
       update: vi.fn(),
     },
@@ -80,7 +80,7 @@ const bodyOf = (fetch: ReturnType<typeof vi.fn>, call: number) =>
 beforeEach(() => {
   mockEnv.NEON_CRM_API_KEY = "test-key";
   tx.wishlistDonationOrder.findUnique.mockResolvedValue(order);
-  tx.wishlistDonationOrder.updateMany.mockResolvedValue({ count: 1 });
+  tx.$executeRaw.mockResolvedValue(1);
   tx.wishlistItem.update.mockResolvedValue({
     ...item,
     raisedAmountCents: 2_500,
@@ -126,6 +126,7 @@ describe("recordWishlistCapture", () => {
       accountId: "123",
       amount: 25,
       date: "2026-11-07",
+      campaign: { id: "24" },
       payments: [
         {
           amount: 25,
@@ -182,18 +183,21 @@ describe("recordWishlistCapture", () => {
 
     await recordWishlistCapture(capture);
 
-    expect(tx.wishlistDonationOrder.updateMany).toHaveBeenCalledWith({
-      where: {
-        id: "order-1",
-        status: { not: "CAPTURED" },
-        paypalTransactionId: null,
-      },
-      data: expect.objectContaining({
-        status: "CAPTURED",
-        paypalTransactionId: "CAPTURE-1",
-        capturedAmount: 25,
-      }),
-    });
+    const [sql, ...values] = tx.$executeRaw.mock.calls[0] as [
+      TemplateStringsArray,
+      ...unknown[],
+    ];
+    const statement = sql.join("?").replace(/\s+/g, " ").trim();
+    expect(statement).toBe(
+      "UPDATE wishlist_donation_orders SET status = 'CAPTURED', capturedAt = ?, paypalTransactionId = ?, capturedAmount = ?, updatedAt = ? WHERE id = ? AND status = 'PENDING' AND paypalTransactionId IS NULL",
+    );
+    expect(values).toEqual([
+      expect.any(Date),
+      "CAPTURE-1",
+      25,
+      expect.any(Date),
+      "order-1",
+    ]);
     expect(tx.wishlistItem.update).toHaveBeenCalledWith({
       where: { id: "item-1" },
       data: { raisedAmountCents: { increment: 2_500 } },
@@ -201,7 +205,7 @@ describe("recordWishlistCapture", () => {
   });
 
   test("ignores a duplicate capture without crediting or logging again", async () => {
-    tx.wishlistDonationOrder.updateMany.mockResolvedValue({ count: 0 });
+    tx.$executeRaw.mockResolvedValue(0);
     const fetch = vi.fn();
     vi.stubGlobal("fetch", fetch);
 
@@ -210,6 +214,7 @@ describe("recordWishlistCapture", () => {
     expect(result.status).toBe("duplicate");
     expect(tx.wishlistItem.update).not.toHaveBeenCalled();
     expect(fetch).not.toHaveBeenCalled();
+    expect(notifyWishlistDonation).not.toHaveBeenCalled();
     expect(mockPrisma.wishlistDonationOrder.update).not.toHaveBeenCalled();
   });
 

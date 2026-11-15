@@ -92,13 +92,21 @@ describe("PayPal order request", () => {
         .mockResolvedValueOnce(
           Response.json({
             id: "PAYPAL-ORDER-1",
-            links: [{ rel: "approve", href: "https://paypal.test/approve" }],
+            status: "PAYER_ACTION_REQUIRED",
+            links: [
+              { rel: "self", href: "https://paypal.test/self" },
+              { rel: "payer-action", href: "https://paypal.test/approve" },
+            ],
           }),
         );
       vi.stubGlobal("fetch", fetch);
 
-      await caller.createDonateOrder({ wishlistItemId: item.id, amount });
+      const result = await caller.createDonateOrder({
+        wishlistItemId: item.id,
+        amount,
+      });
 
+      expect(result.approvalUrl).toBe("https://paypal.test/approve");
       expect(orderBody(fetch)).toEqual({
         intent: "CAPTURE",
         purchase_units: [
@@ -108,10 +116,16 @@ describe("PayPal order request", () => {
             amount: { currency_code: "USD", value: amount.toFixed(2) },
           },
         ],
-        application_context: {
-          return_url: `https://alveus.example.test/wishlist/donate/success?itemId=${item.id}`,
-          cancel_url: "https://alveus.example.test/wishlist?donated=cancelled",
-          user_action: "PAY_NOW",
+        payment_source: {
+          paypal: {
+            experience_context: {
+              return_url: `https://alveus.example.test/wishlist/donate/success?itemId=${item.id}`,
+              cancel_url:
+                "https://alveus.example.test/wishlist?donated=cancelled",
+              user_action: "PAY_NOW",
+              payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
+            },
+          },
         },
       });
     },

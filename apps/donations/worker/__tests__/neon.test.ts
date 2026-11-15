@@ -837,3 +837,79 @@ describe("removing failed payments", () => {
     expect(service.remove).toHaveBeenCalledOnce();
   });
 });
+
+describe("wishlist Neon donations", () => {
+  const wishlistCampaign = { id: "24", name: "Wishlist" };
+
+  it("acknowledges a wishlist webhook without importing it", async () => {
+    const provider = await NeonDonationProvider.init(service, env);
+    const response = await provider.handle(
+      new Request("https://example.com/neon/live", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${btoa("donations:example")}`,
+        },
+        body: JSON.stringify({
+          eventTrigger: "createDonation",
+          eventTimestamp: "2026-01-01T12:00:00Z",
+          organizationId: "example",
+          data: {
+            ...rawDonation,
+            anonymousType: "No",
+            campaign: wishlistCampaign,
+          },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(service.add).not.toHaveBeenCalled();
+    expect(getDonation).not.toHaveBeenCalled();
+    expect(getAccount).not.toHaveBeenCalled();
+  });
+
+  it("skips a wishlist donation, imports the next donation, and advances sync", async () => {
+    vi.mocked(searchDonations).mockResolvedValue({
+      ok: true,
+      data: {
+        pagination: {
+          currentPage: 0,
+          pageSize: 50,
+          totalPages: 1,
+          totalResults: 2,
+        },
+        searchResults: [{ "Donation ID": "1" }, { "Donation ID": "2" }],
+      },
+    });
+    vi.mocked(getDonation).mockImplementation(async (_options, id) => ({
+      ok: true,
+      data: DonationResponse.parse({
+        ...rawDonation,
+        id,
+        anonymousType: "No",
+        campaign:
+          id === "1"
+            ? { ...wishlistCampaign, status: "ACTIVE" }
+            : { id: "7", name: "Pixels", status: "ACTIVE" },
+      }),
+    }));
+    const provider = await NeonDonationProvider.init(service, env);
+
+    await expect(provider.syncRecentDonations()).resolves.toEqual({
+      complete: true,
+      found: 2,
+      imported: 1,
+      skipped: 1,
+      retrying: 0,
+    });
+    expect(service.add).toHaveBeenCalledOnce();
+    expect(service.add).toHaveBeenCalledWith(
+      expect.objectContaining({ providerUniqueId: "example-2" }),
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      "Skipping wishlist Neon donation",
+      { id: "1" },
+    );
+  });
+});

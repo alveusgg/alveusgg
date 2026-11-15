@@ -117,6 +117,62 @@ export async function notifyWishlistItemFunded({
   }
 }
 
+const paymentIssueLabels = {
+  DENIED: "denied",
+  REFUNDED: "refunded",
+  REVERSED: "reversed",
+} as const;
+
+/**
+ * Tells staff a wishlist payment was denied, refunded or reversed. The item
+ * total is not changed automatically, so staff adjust it if needed.
+ */
+export async function notifyWishlistPaymentIssue(opts: {
+  webhookUrl: string | undefined;
+  itemTitle: string;
+  status: keyof typeof paymentIssueLabels;
+  amount: number;
+  donorName: string | null;
+  wasCredited: boolean;
+  paypalOrderId: string;
+  captureId: string;
+}): Promise<void> {
+  if (!opts.webhookUrl) return;
+
+  const embed = {
+    title: `Wishlist payment ${paymentIssueLabels[opts.status]}`,
+    description: opts.wasCredited
+      ? "This donation was credited to the item. Check whether its total needs adjusting."
+      : "This donation was never credited to the item.",
+    color: 0xb91c1c,
+    fields: [
+      { name: "Item", value: opts.itemTitle, inline: false },
+      { name: "Amount", value: `$${opts.amount.toFixed(2)}`, inline: true },
+      {
+        name: "Donor",
+        value: opts.donorName?.trim() || "Anonymous",
+        inline: true,
+      },
+      { name: "PayPal order", value: opts.paypalOrderId, inline: false },
+      { name: "PayPal capture", value: opts.captureId, inline: false },
+    ],
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    const response = await fetch(opts.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: "Wishlist Bot", embeds: [embed] }),
+    });
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned ${response.status}`);
+    }
+  } catch (err) {
+    console.error("Discord wishlist payment issue webhook failed:", err);
+  }
+}
+
 /**
  * Sends a digest of recent wishlist donations. Call from a scheduled job.
  */

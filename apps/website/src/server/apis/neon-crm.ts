@@ -1,5 +1,6 @@
 import {
   PAYPAL_TENDER_TYPE,
+  WISHLIST_CAMPAIGN_ID,
   createDonation,
   findOrCreateAccount,
   formatDateInTimezone,
@@ -72,6 +73,8 @@ export async function logWishlistDonationToNeon(
     accountId: account.data.id,
     amount: donation.amount,
     date: capturedDate,
+    // The donations worker skips this campaign, so no pixels are awarded
+    campaign: { id: WISHLIST_CAMPAIGN_ID },
     payments: [
       {
         amount: donation.amount,
