@@ -11,8 +11,8 @@ import {
   DonationSearchResponse,
   WebhookResponse,
   WebhooksResponse,
-} from "./schema.js";
-import { fetchOk, fetchWithSchema, type Options, url } from "./api.js";
+} from "./schema";
+import { fetchOk, fetchWithSchema, type Options, url } from "./api";
 import { fixTimestampsTimezone } from "./utils";
 
 export { formatDateInTimezone } from "./utils";
@@ -27,7 +27,7 @@ export {
   DonationSearchResponse,
   WebhookResponse,
   WebhooksResponse,
-} from "./schema.js";
+} from "./schema";
 
 export type DonationSearchInput = {
   searchFields: Array<{
