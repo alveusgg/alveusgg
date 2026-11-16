@@ -9,6 +9,7 @@ import {
   type PartialDateString,
   formatPartialDateString,
 } from "@/utils/datetime-partial";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -1304,30 +1305,27 @@ const AboutAlveusPage: NextPage = () => {
                 aria-label="Filter by type"
                 className="flex flex-wrap items-center gap-2"
               >
-                {(
-                  Object.entries(historyTypes) as [
-                    HistoryType,
-                    (typeof historyTypes)[HistoryType],
-                  ][]
-                ).map(([key, { label, icon: Icon }]) => (
-                  <Button
-                    key={key}
-                    as="button"
-                    type="button"
-                    filled={visibleTypes[key]}
-                    aria-pressed={visibleTypes[key]}
-                    onClick={() =>
-                      setVisibleTypes((prev) => ({
-                        ...prev,
-                        [key]: !prev[key],
-                      }))
-                    }
-                    className="inline-flex items-center gap-2"
-                  >
-                    <Icon size={16} />
-                    {label}
-                  </Button>
-                ))}
+                {typeSafeObjectEntries(historyTypes).map(
+                  ([key, { label, icon: Icon }]) => (
+                    <Button
+                      key={key}
+                      as="button"
+                      type="button"
+                      filled={visibleTypes[key]}
+                      aria-pressed={visibleTypes[key]}
+                      onClick={() =>
+                        setVisibleTypes((prev) => ({
+                          ...prev,
+                          [key]: !prev[key],
+                        }))
+                      }
+                      className="inline-flex items-center gap-2"
+                    >
+                      <Icon size={16} />
+                      {label}
+                    </Button>
+                  ),
+                )}
               </div>
               <button
                 type="button"
