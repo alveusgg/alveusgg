@@ -5,6 +5,7 @@ import { useState } from "react";
 import staff, { departments } from "@/data/staff";
 
 import { classes } from "@/utils/classes";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -29,9 +30,13 @@ import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import nickElectricianImage from "@/assets/people/nick-electrician.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 
-type Department = Exclude<keyof typeof departments, "leadership">;
+type Department = keyof typeof departments;
 
-const departmentKeys = ["operations", "animalCare", "facilities"] as const;
+const departmentKeys = typeSafeObjectKeys(departments).filter(
+  (key) =>
+    !!departments[key] &&
+    Object.values(staff).some((member) => member.department === key),
+);
 
 const Pronouns = ({ pronouns }: { pronouns?: string }) =>
   pronouns && (
