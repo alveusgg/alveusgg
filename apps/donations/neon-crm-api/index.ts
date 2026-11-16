@@ -157,11 +157,8 @@ const splitName = (name: string | null | undefined) => {
   };
 };
 
-/** Reuses the first account whose email matches, otherwise creates one. */
-export const findOrCreateAccount = async (
-  options: Options,
-  { email, name }: { email: string; name?: string | null },
-) => {
+/** Returns the ID of the first account whose email matches, or null. */
+export const findAccountIdByEmail = async (options: Options, email: string) => {
   const search = await searchAccounts(options, {
     searchFields: [{ field: "Email", operator: "EQUAL", value: email }],
     outputFields: ["Account ID"],
@@ -170,23 +167,82 @@ export const findOrCreateAccount = async (
   if (!search.ok) return search;
 
   const existing = search.data.searchResults[0]?.["Account ID"];
-  if (existing !== undefined && existing !== null) {
-    // Fail rather than create a duplicate account if the id is unexpected.
-    const id = RecordId.safeParse(String(existing));
-    if (!id.success) {
-      return { ok: false, errorType: "parse", error: id.error } as const;
-    }
-    return { ok: true, data: { id: id.data, created: false } } as const;
+  if (existing === undefined || existing === null) {
+    return { ok: true, data: null } as const;
+  }
+  // Fail rather than create a duplicate account if the id is unexpected.
+  const id = RecordId.safeParse(String(existing));
+  if (!id.success) {
+    return { ok: false, errorType: "parse", error: id.error } as const;
+  }
+  return { ok: true, data: id.data } as const;
+};
+
+/**
+ * Reuses the first account whose email matches, otherwise creates one. Pass
+ * `firstName` and `lastName` when the source has them separately, otherwise
+ * `name` is split at the last space.
+ */
+export const findOrCreateAccount = async (
+  options: Options,
+  {
+    email,
+    name,
+    firstName,
+    lastName,
+  }: {
+    email: string;
+    name?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+  },
+) => {
+  const existing = await findAccountIdByEmail(options, email);
+  if (!existing.ok) return existing;
+  if (existing.data !== null) {
+    return { ok: true, data: { id: existing.data, created: false } } as const;
   }
 
+  const names =
+    firstName?.trim() || lastName?.trim()
+      ? {
+          ...(firstName?.trim() ? { firstName: firstName.trim() } : {}),
+          ...(lastName?.trim() ? { lastName: lastName.trim() } : {}),
+        }
+      : splitName(name);
   const created = await createAccount(options, {
     individualAccount: {
-      primaryContact: { ...splitName(name), email1: email },
+      primaryContact: { ...names, email1: email },
     },
   });
   if (!created.ok) return created;
 
   return { ok: true, data: { id: created.data.id, created: true } } as const;
+};
+
+/**
+ * Returns the IDs of donations whose custom field has exactly this value, e.g.
+ * a payment's transaction ID. Searches allow one request at a time per org.
+ */
+export const findDonationIdsByCustomField = async (
+  options: Options,
+  fieldId: RecordId,
+  value: string,
+) => {
+  const search = await searchDonations(options, {
+    searchFields: [{ field: fieldId, operator: "EQUAL", value }],
+    outputFields: ["Donation ID"],
+    pagination: { currentPage: 0, pageSize: 10 },
+  });
+  if (!search.ok) return search;
+
+  return {
+    ok: true,
+    data: search.data.searchResults
+      .map((result) => result["Donation ID"])
+      .filter((id) => id !== undefined && id !== null)
+      .map(String),
+  } as const;
 };
 
 export const createDonation = async (

@@ -89,6 +89,30 @@ describe("findOrCreateAccount", () => {
     });
   });
 
+  it("keeps separate first and last names as they are", async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(searchResponse([]))
+      .mockResolvedValueOnce(Response.json({ id: "456" }));
+    vi.stubGlobal("fetch", fetch);
+
+    await findOrCreateAccount(options, {
+      email: "donor@example.com",
+      firstName: "Jane",
+      lastName: "van der Donor",
+    });
+
+    expect(requestBody(fetch, 1)).toEqual({
+      individualAccount: {
+        primaryContact: {
+          firstName: "Jane",
+          lastName: "van der Donor",
+          email1: "donor@example.com",
+        },
+      },
+    });
+  });
+
   it("does not create an account when the search fails", async () => {
     const fetch = vi
       .fn()

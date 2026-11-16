@@ -5,6 +5,7 @@ import { NeonDonationProvider } from "../src/providers/neon/neon";
 import { PaypalDonationProvider } from "../src/providers/paypal/paypal";
 import { TwitchDonationProvider } from "../src/providers/twitch/twitch";
 import { createIfNotExistsDonationsTable } from "../src/providers/storage";
+import { createSqlStorage } from "./fixtures/sql-storage";
 
 const { setScopeTag } = vi.hoisted(() => ({ setScopeTag: vi.fn() }));
 
@@ -52,7 +53,7 @@ function makeManager(envOverrides: Partial<Env> = {}) {
   const background: Promise<unknown>[] = [];
   const setAlarm = vi.fn(async () => {});
   const ctx = {
-    storage: { sql: {}, setAlarm },
+    storage: { sql: createSqlStorage(), setAlarm },
     waitUntil: (task: Promise<unknown>) => background.push(task),
   } as unknown as DurableObjectState;
   const env = {

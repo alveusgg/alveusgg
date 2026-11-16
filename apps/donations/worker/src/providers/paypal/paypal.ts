@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/cloudflare";
 import type { ZodError } from "zod";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
+import type { PaypalNeonExport } from "./neon-export";
 import {
   PaypalVerificationURL,
   SandboxPaypalVerificationURL,
@@ -36,17 +37,19 @@ export class PaypalDonationProvider implements DonationProvider {
   constructor(
     private options: PaypalDonationProviderOptions,
     private service: DonationStorage,
+    private neonExport?: PaypalNeonExport,
   ) {}
 
   static async init(
     service: DonationStorage,
     env: Env,
+    neonExport?: PaypalNeonExport,
   ): Promise<PaypalDonationProvider> {
     const options: PaypalDonationProviderOptions = {
       sandbox: env.SANDBOX === "true",
       expectedBusinessEmailAddress: env.PAYPAL_BUSINESS_EMAIL!,
     };
-    return new PaypalDonationProvider(options, service);
+    return new PaypalDonationProvider(options, service, neonExport);
   }
 
   async handle(request: Request): Promise<Response> {
@@ -94,7 +97,16 @@ export class PaypalDonationProvider implements DonationProvider {
       });
     }
 
-    if (params.get("payment_status") !== "Completed") {
+    const paymentStatus = params.get("payment_status");
+    const parentTxnId = params.get("parent_txn_id");
+    if (
+      (paymentStatus === "Refunded" || paymentStatus === "Reversed") &&
+      parentTxnId
+    ) {
+      this.neonExport?.flagRefund(parentTxnId, paymentStatus);
+    }
+
+    if (paymentStatus !== "Completed") {
       console.warn(`Valid IPN but payment status is not Completed.`);
       return new Response(`Valid IPN but payment status is not Completed.`, {
         status: 200,
@@ -139,6 +151,14 @@ export class PaypalDonationProvider implements DonationProvider {
     } satisfies PaypalDonation;
 
     await this.service.add(donation);
+    this.neonExport?.enqueue({
+      txnId: donation.providerUniqueId,
+      amount: donation.amount,
+      donatedAt: donation.donatedAt,
+      email: donation.donatedBy.email,
+      firstName: donation.donatedBy.firstName,
+      lastName: donation.donatedBy.lastName,
+    });
     return new Response("OK", { status: 200 });
   }
 }

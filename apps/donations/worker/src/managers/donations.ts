@@ -6,6 +6,10 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
+import {
+  createIfNotExistsPaypalNeonExportsTable,
+  PaypalNeonExport,
+} from "../providers/paypal/neon-export";
 import { NeonDonationProvider } from "../providers/neon/neon";
 import {
   createIfNotExistsDonationsTable,
@@ -47,6 +51,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private ready?: Promise<void>;
   private reconcileTwitchSubscriptions?: () => Promise<true | undefined>;
   private registerNeonWebhook?: () => Promise<true | undefined>;
+  private paypalNeonExport?: PaypalNeonExport;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -74,6 +79,10 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
           this.ctx.waitUntil(this.registerNeonWebhook());
         }
         return next();
+      })
+      .get("/paypal/neon-export", sharedKeyMiddleware, (c) => {
+        if (!this.paypalNeonExport) return c.json({ mode: "off" });
+        return c.json(this.paypalNeonExport.summary());
       })
       .post("/:providerId/sync", sharedKeyMiddleware, async (c) => {
         if (!this.providers) {
@@ -144,12 +153,30 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     if (!provider) return undefined;
 
     const result = await provider.syncRecentDonations();
-    if (!result.complete) {
-      await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
-    } else {
+    if (result.complete) {
       await provider.removeFailedDonations();
     }
-    return result;
+    const exported = await this.exportPaypalToNeon();
+    if (!result.complete || (exported?.processed && exported.remaining)) {
+      await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
+    }
+    return { ...result, paypalNeonExport: exported };
+  }
+
+  // Runs with the Neon sync, so the two never search Neon at the same time
+  private async exportPaypalToNeon() {
+    if (!this.paypalNeonExport) return undefined;
+    try {
+      return await this.paypalNeonExport.run();
+    } catch (error) {
+      console.error("PayPal Neon export run failed", error);
+      Sentry.withScope((scope) => {
+        scope.setTag("integration", "neon-crm");
+        scope.setTag("error.kind", "paypal-export");
+        Sentry.captureException(error);
+      });
+      return undefined;
+    }
   }
 
   async alarm() {
@@ -164,7 +191,18 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     await createIfNotExistsDonationsTable(this.ctx.storage.sql);
     await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
 
+    await createIfNotExistsPaypalNeonExportsTable(this.ctx.storage.sql);
+
     const storage = new DurableObjectDonationStorage(this.ctx, this.env);
+    try {
+      this.paypalNeonExport = PaypalNeonExport.fromEnv(
+        this.ctx.storage.sql,
+        this.env,
+      );
+    } catch (error) {
+      // A bad export setting must not take the donation providers down
+      reportInitializationError("paypal", "neon-export-initialization")(error);
+    }
 
     this.providers = {
       twitch: createRetryingInitializer(
@@ -187,7 +225,8 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         reportInitializationError("twitch", "provider-initialization"),
       ),
       paypal: createRetryingInitializer(
-        () => PaypalDonationProvider.init(storage, this.env),
+        () =>
+          PaypalDonationProvider.init(storage, this.env, this.paypalNeonExport),
         reportInitializationError("paypal", "provider-initialization"),
       ),
       neon: createRetryingInitializer(
