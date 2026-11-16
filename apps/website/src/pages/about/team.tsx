@@ -402,19 +402,15 @@ const AboutTeamPage: NextPage = () => {
           >
             {person && (
               <>
-                <div className="flex flex-col gap-6 sm:flex-row">
-                  <div className="w-40 shrink-0 sm:w-48">
-                    <PersonImage image={person.image} />
-                  </div>
-                  <div>
-                    <Heading level={4} className="my-1 text-xl">
-                      {person.title}
-                    </Heading>
-                    <DepartmentLabel department={person.department} />
-                  </div>
+                <div className="mb-6 w-40 sm:float-left sm:mr-6 sm:mb-4 sm:w-48">
+                  <PersonImage image={person.image} />
                 </div>
+                <Heading level={4} className="my-1 text-xl">
+                  {person.title}
+                </Heading>
+                <DepartmentLabel department={person.department} />
 
-                <div className="mt-6 flex flex-col gap-4 text-gray-500">
+                <div className="mt-6 space-y-4 text-gray-500">
                   {person.description}
                   {person.twitch && (
                     <p>
