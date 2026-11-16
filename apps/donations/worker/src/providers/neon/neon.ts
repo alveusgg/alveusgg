@@ -191,11 +191,10 @@ export class NeonDonationProvider implements DonationProvider {
     let origin = data.origin;
     let customFields = data.donationCustomFields;
     // API donations may come from the PayPal export, which is recognized by
-    // its custom field
+    // its transaction ID, so read their custom fields from the record
     if (
       origin === undefined ||
-      (origin?.originCategory === API_ORIGIN_CATEGORY &&
-        customFields === undefined)
+      origin?.originCategory === API_ORIGIN_CATEGORY
     ) {
       const donationRes = await getDonation(this.options, data.id);
       if (!donationRes.ok) {
@@ -208,7 +207,7 @@ export class NeonDonationProvider implements DonationProvider {
     }
     if (
       this.isManualDonation(data.id, origin) ||
-      this.isPaypalExport(data.id, origin, customFields)
+      this.isImportedFromPaypal(data.id, origin, customFields)
     ) {
       return new Response("OK", { status: 200 });
     }
@@ -604,7 +603,9 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
 
-    if (this.isPaypalExport(data.id, data.origin, data.donationCustomFields)) {
+    if (
+      this.isImportedFromPaypal(data.id, data.origin, data.donationCustomFields)
+    ) {
       return false;
     }
 
@@ -631,10 +632,11 @@ export class NeonDonationProvider implements DonationProvider {
 
   /**
    * The worker exports PayPal donations to Neon after importing them from the
-   * IPN, so their Neon copy must not be imported a second time. They are the
-   * only API donations with a transaction ID.
+   * IPN, so their Neon copy must not be imported a second time. Only a
+   * transaction this worker imported from PayPal counts, so other API
+   * donations with a transaction ID are still imported.
    */
-  private isPaypalExport(
+  private isImportedFromPaypal(
     id: string,
     origin: NeonDonationData["origin"],
     customFields: NeonDonationData["donationCustomFields"],
@@ -644,7 +646,9 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
     const field = customFields?.find((field) => field.id === fieldId);
-    if (!field || !("value" in field) || !field.value.trim()) return false;
+    if (!field || !("value" in field)) return false;
+    const txnId = field.value.trim();
+    if (!txnId || !this.service.has("paypal", txnId)) return false;
 
     console.info("Skipping Neon donation exported from PayPal", { id });
     return true;

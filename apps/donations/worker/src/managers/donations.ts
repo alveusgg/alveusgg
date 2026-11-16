@@ -7,6 +7,7 @@ import { logger } from "hono/logger";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
 import {
+  cleanUpPaypalNeonExports,
   createIfNotExistsPaypalNeonExportsTable,
   PaypalNeonExport,
 } from "../providers/paypal/neon-export";
@@ -165,7 +166,11 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
   // Runs with the Neon sync, so the two never search Neon at the same time
   private async exportPaypalToNeon() {
-    if (!this.paypalNeonExport) return undefined;
+    if (!this.paypalNeonExport) {
+      // Donor details left from an earlier run still expire
+      cleanUpPaypalNeonExports(this.ctx.storage.sql);
+      return undefined;
+    }
     try {
       return await this.paypalNeonExport.run();
     } catch (error) {

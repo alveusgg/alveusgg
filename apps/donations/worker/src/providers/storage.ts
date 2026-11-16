@@ -4,6 +4,8 @@ import { createSiteApi } from "../utils/site-api";
 
 export interface DonationStorage {
   add: (...donations: Donation[]) => Promise<number>;
+  /** Whether a donation from this provider was already imported. */
+  has: (provider: string, providerUniqueId: string) => boolean;
   /**
    * Delete donations and their pixels, e.g. after a payment failed, clean up
    * orphaned pixels, and resync the mural.
@@ -61,6 +63,18 @@ export class DurableObjectDonationStorage implements DonationStorage {
     if (!response.ok) {
       throw new Error(`Failed to resync pixels: ${response.status}`);
     }
+  }
+
+  has(provider: string, providerUniqueId: string) {
+    return (
+      this.ctx.storage.sql
+        .exec(
+          `SELECT 1 FROM donations WHERE provider = ? AND providerUniqueId = ?`,
+          provider,
+          providerUniqueId,
+        )
+        .toArray().length > 0
+    );
   }
 
   async add(...donations: Donation[]) {

@@ -34,12 +34,13 @@ const completedIpn = {
 const fetchMock = vi.fn<typeof fetch>();
 const add = vi.fn<DonationStorage["add"]>(async () => 1);
 
-const neonExport = { enqueue: vi.fn(), flagRefund: vi.fn() };
+const neonExport = { enqueue: vi.fn(), recordRefund: vi.fn() };
 
 async function makeProvider() {
   return PaypalDonationProvider.init(
     {
       add,
+      has: vi.fn(() => false),
       remove: vi.fn(async () => {}),
       config: { get: vi.fn(), set: vi.fn() },
     },
@@ -204,7 +205,7 @@ describe("PayPal IPN handling", () => {
     expect(neonExport.enqueue).not.toHaveBeenCalled();
   });
 
-  it("flags refunds of exported donations", async () => {
+  it("records refunds with the refunded amount", async () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const provider = await makeProvider();
 
@@ -214,15 +215,16 @@ describe("PayPal IPN handling", () => {
         txn_id: "8AB12345CD678901E",
         parent_txn_id: completedIpn.txn_id,
         payment_status: "Refunded",
-        mc_gross: "-25.00",
+        mc_gross: "-10.00",
       }),
     );
 
     expect(response.status).toBe(200);
     expect(add).not.toHaveBeenCalled();
-    expect(neonExport.flagRefund).toHaveBeenCalledWith(
+    expect(neonExport.recordRefund).toHaveBeenCalledWith(
       completedIpn.txn_id,
       "Refunded",
+      1000,
     );
   });
 });

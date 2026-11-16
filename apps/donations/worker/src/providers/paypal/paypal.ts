@@ -11,6 +11,8 @@ import {
 } from "./const";
 import { PaypalDonationSchema, Tags } from "./schema";
 
+const REFUND_STATUSES = new Set(["Refunded", "Partially_Refunded", "Reversed"]);
+
 // PayPal retries any non-2xx response for days and eventually disables IPN for
 // the account, so verified notifications are always acknowledged. Anything we
 // can't handle is reported to Sentry instead of being rejected.
@@ -97,13 +99,15 @@ export class PaypalDonationProvider implements DonationProvider {
       });
     }
 
-    const paymentStatus = params.get("payment_status");
+    const paymentStatus = params.get("payment_status") ?? "";
     const parentTxnId = params.get("parent_txn_id");
-    if (
-      (paymentStatus === "Refunded" || paymentStatus === "Reversed") &&
-      parentTxnId
-    ) {
-      this.neonExport?.flagRefund(parentTxnId, paymentStatus);
+    if (REFUND_STATUSES.has(paymentStatus) && parentTxnId) {
+      // Refunds carry the refunded amount as a negative gross
+      const gross = params.get("mc_gross") ?? "";
+      const cents = /^-?\d+\.\d{2}$/.test(gross)
+        ? Math.abs(parseAmount(gross.replace("-", ""), ".", 2))
+        : 0;
+      this.neonExport?.recordRefund(parentTxnId, paymentStatus, cents);
     }
 
     if (paymentStatus !== "Completed") {
