@@ -81,10 +81,6 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
         }
         return next();
       })
-      .get("/paypal/neon-export", sharedKeyMiddleware, (c) => {
-        if (!this.paypalNeonExport) return c.json({ mode: "off" });
-        return c.json(this.paypalNeonExport.summary());
-      })
       .post("/:providerId/sync", sharedKeyMiddleware, async (c) => {
         if (!this.providers) {
           throw new Error(
@@ -154,14 +150,13 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
     if (!provider) return undefined;
 
     const result = await provider.syncRecentDonations();
-    if (result.complete) {
+    if (!result.complete) {
+      await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
+    } else {
       await provider.removeFailedDonations();
     }
-    const exported = await this.exportPaypalToNeon();
-    if (!result.complete || (exported?.processed && exported.remaining)) {
-      await this.ctx.storage.setAlarm(Date.now() + NEON_SYNC_CONTINUE_DELAY_MS);
-    }
-    return { ...result, paypalNeonExport: exported };
+    const paypalNeonExport = await this.exportPaypalToNeon();
+    return { ...result, paypalNeonExport };
   }
 
   // Runs with the Neon sync, so the two never search Neon at the same time

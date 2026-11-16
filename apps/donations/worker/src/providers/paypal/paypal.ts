@@ -154,15 +154,18 @@ export class PaypalDonationProvider implements DonationProvider {
       },
     } satisfies PaypalDonation;
 
-    await this.service.add(donation);
-    this.neonExport?.enqueue({
-      txnId: donation.providerUniqueId,
-      amount: donation.amount,
-      donatedAt: donation.donatedAt,
-      email: donation.donatedBy.email,
-      firstName: donation.donatedBy.firstName,
-      lastName: donation.donatedBy.lastName,
-    });
+    const added = await this.service.add(donation);
+    // A repeated IPN for the same transaction isn't queued again
+    if (added) {
+      this.neonExport?.enqueue({
+        txnId: donation.providerUniqueId,
+        amount: donation.amount,
+        donatedAt: donation.donatedAt,
+        email: donation.donatedBy.email,
+        firstName: donation.donatedBy.firstName,
+        lastName: donation.donatedBy.lastName,
+      });
+    }
     return new Response("OK", { status: 200 });
   }
 }

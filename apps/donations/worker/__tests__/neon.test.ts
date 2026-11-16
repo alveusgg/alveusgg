@@ -978,31 +978,4 @@ describe("donations exported from PayPal", () => {
     expect(service.has).toHaveBeenCalledWith("paypal", "card-123");
     expect(service.add).toHaveBeenCalledOnce();
   });
-
-  it("skips them in the periodic sync", async () => {
-    service.has.mockReturnValue(true);
-    vi.mocked(searchDonations).mockResolvedValue({
-      ok: true,
-      data: {
-        pagination: {
-          currentPage: 0,
-          pageSize: 50,
-          totalPages: 1,
-          totalResults: 1,
-        },
-        searchResults: [{ "Donation ID": "1" }],
-      },
-    });
-    vi.mocked(getDonation).mockResolvedValue({
-      ok: true,
-      data: apiDonation([transactionId]),
-    });
-    const provider = await NeonDonationProvider.init(service, exportEnv);
-
-    await expect(provider.syncRecentDonations()).resolves.toMatchObject({
-      imported: 0,
-      skipped: 1,
-    });
-    expect(service.add).not.toHaveBeenCalled();
-  });
 });

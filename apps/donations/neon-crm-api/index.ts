@@ -157,27 +157,6 @@ const splitName = (name: string | null | undefined) => {
   };
 };
 
-/** Returns the ID of the first account whose email matches, or null. */
-export const findAccountIdByEmail = async (options: Options, email: string) => {
-  const search = await searchAccounts(options, {
-    searchFields: [{ field: "Email", operator: "EQUAL", value: email }],
-    outputFields: ["Account ID"],
-    pagination: { currentPage: 0, pageSize: 1 },
-  });
-  if (!search.ok) return search;
-
-  const existing = search.data.searchResults[0]?.["Account ID"];
-  if (existing === undefined || existing === null) {
-    return { ok: true, data: null } as const;
-  }
-  // Fail rather than create a duplicate account if the id is unexpected.
-  const id = RecordId.safeParse(String(existing));
-  if (!id.success) {
-    return { ok: false, errorType: "parse", error: id.error } as const;
-  }
-  return { ok: true, data: id.data } as const;
-};
-
 /**
  * Reuses the first account whose email matches, otherwise creates one. Pass
  * `firstName` and `lastName` when the source has them separately, otherwise
@@ -193,22 +172,30 @@ export const findOrCreateAccount = async (
   }: {
     email: string;
     name?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
+    firstName?: string;
+    lastName?: string;
   },
 ) => {
-  const existing = await findAccountIdByEmail(options, email);
-  if (!existing.ok) return existing;
-  if (existing.data !== null) {
-    return { ok: true, data: { id: existing.data, created: false } } as const;
+  const search = await searchAccounts(options, {
+    searchFields: [{ field: "Email", operator: "EQUAL", value: email }],
+    outputFields: ["Account ID"],
+    pagination: { currentPage: 0, pageSize: 1 },
+  });
+  if (!search.ok) return search;
+
+  const existing = search.data.searchResults[0]?.["Account ID"];
+  if (existing !== undefined && existing !== null) {
+    // Fail rather than create a duplicate account if the id is unexpected.
+    const id = RecordId.safeParse(String(existing));
+    if (!id.success) {
+      return { ok: false, errorType: "parse", error: id.error } as const;
+    }
+    return { ok: true, data: { id: id.data, created: false } } as const;
   }
 
   const names =
-    firstName?.trim() || lastName?.trim()
-      ? {
-          ...(firstName?.trim() ? { firstName: firstName.trim() } : {}),
-          ...(lastName?.trim() ? { lastName: lastName.trim() } : {}),
-        }
+    firstName || lastName
+      ? { firstName: firstName || undefined, lastName: lastName || undefined }
       : splitName(name);
   const created = await createAccount(options, {
     individualAccount: {
@@ -221,10 +208,11 @@ export const findOrCreateAccount = async (
 };
 
 /**
- * Returns the IDs of donations whose custom field has exactly this value, e.g.
- * a payment's transaction ID. Searches allow one request at a time per org.
+ * Returns the ID of a donation whose custom field has exactly this value, e.g.
+ * a payment's transaction ID, or null. Searches allow one request at a time
+ * per org.
  */
-export const findDonationIdsByCustomField = async (
+export const findDonationIdByCustomField = async (
   options: Options,
   fieldId: RecordId,
   value: string,
@@ -232,16 +220,14 @@ export const findDonationIdsByCustomField = async (
   const search = await searchDonations(options, {
     searchFields: [{ field: fieldId, operator: "EQUAL", value }],
     outputFields: ["Donation ID"],
-    pagination: { currentPage: 0, pageSize: 10 },
+    pagination: { currentPage: 0, pageSize: 1 },
   });
   if (!search.ok) return search;
 
+  const id = search.data.searchResults[0]?.["Donation ID"];
   return {
     ok: true,
-    data: search.data.searchResults
-      .map((result) => result["Donation ID"])
-      .filter((id) => id !== undefined && id !== null)
-      .map(String),
+    data: id === undefined || id === null ? null : String(id),
   } as const;
 };
 

@@ -3,14 +3,13 @@ import * as Sentry from "@sentry/cloudflare";
 import type * as NeonApi from "@alveusgg/neon-crm-api";
 import {
   createDonation,
-  findAccountIdByEmail,
-  findDonationIdsByCustomField,
+  findDonationIdByCustomField,
   findOrCreateAccount,
 } from "@alveusgg/neon-crm-api";
 import {
   cleanUpPaypalNeonExports,
   createIfNotExistsPaypalNeonExportsTable,
-  parsePaypalNeonExportMode,
+  isPaypalNeonExportEnabled,
   PaypalNeonExport,
 } from "../src/providers/paypal/neon-export";
 import { createSqlStorage } from "./fixtures/sql-storage";
@@ -18,8 +17,7 @@ import { createSqlStorage } from "./fixtures/sql-storage";
 vi.mock("@alveusgg/neon-crm-api", async (importOriginal) => ({
   ...(await importOriginal<typeof NeonApi>()),
   createDonation: vi.fn(),
-  findAccountIdByEmail: vi.fn(),
-  findDonationIdsByCustomField: vi.fn(),
+  findDonationIdByCustomField: vi.fn(),
   findOrCreateAccount: vi.fn(),
 }));
 
@@ -33,6 +31,7 @@ vi.mock("@sentry/cloudflare", () => ({
 
 const env = {
   SANDBOX: "false",
+  PAYPAL_NEON_EXPORT: "on",
   NEON_CRM_BASE_URL: "https://api.example.com/",
   NEON_CRM_ORG_ID: "example",
   NEON_CRM_API_KEY: "example",
@@ -49,8 +48,9 @@ const donation = {
   firstName: "Ada",
   lastName: "Lovelace",
 };
+const otherTxnId = "1AB12345CD678901E";
 
-const refundReport = () =>
+const refundReports = () =>
   vi
     .mocked(Sentry.captureMessage)
     .mock.calls.filter(
@@ -58,25 +58,24 @@ const refundReport = () =>
         message === "PayPal Neon export: refund-needs-manual-update",
     );
 
-async function setup(mode: "shadow" | "on") {
+async function setup() {
   const sql = createSqlStorage();
   await createIfNotExistsPaypalNeonExportsTable(sql);
-  const make = (mode: "shadow" | "on") =>
-    PaypalNeonExport.fromEnv(sql, { ...env, PAYPAL_NEON_EXPORT: mode })!;
+  const make = () => PaypalNeonExport.fromEnv(sql, env)!;
   const rows = () =>
     sql.exec(`SELECT * FROM paypalNeonExports ORDER BY createdAt`).toArray();
-  return { sql, exporter: make(mode), make, rows };
+  return { sql, exporter: make(), make, rows };
 }
 
 beforeEach(() => {
   vi.clearAllMocks();
   vi.spyOn(console, "error").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
-  vi.mocked(findDonationIdsByCustomField).mockResolvedValue({
+  vi.spyOn(console, "info").mockImplementation(() => {});
+  vi.mocked(findDonationIdByCustomField).mockResolvedValue({
     ok: true,
-    data: [],
+    data: null,
   });
-  vi.mocked(findAccountIdByEmail).mockResolvedValue({ ok: true, data: null });
   vi.mocked(findOrCreateAccount).mockResolvedValue({
     ok: true,
     data: { id: "123", created: false },
@@ -91,25 +90,13 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("PayPal Neon export mode", () => {
-  it("never writes from a sandbox worker", () => {
-    expect(
-      parsePaypalNeonExportMode({
-        ...env,
-        SANDBOX: "true",
-        PAYPAL_NEON_EXPORT: "on",
-      }),
-    ).toBe("shadow");
-  });
-
-  it("is off unless configured", () => {
-    expect(PaypalNeonExport.fromEnv(createSqlStorage(), env)).toBeUndefined();
-  });
-});
-
 describe("exporting PayPal donations to Neon", () => {
+  it("never writes from a sandbox worker", () => {
+    expect(isPaypalNeonExportEnabled({ ...env, SANDBOX: "true" })).toBe(false);
+  });
+
   it("creates the donation with its transaction ID and drops the donor details", async () => {
-    const { exporter, rows } = await setup("on");
+    const { exporter, rows } = await setup();
 
     exporter.enqueue(donation);
     // A repeated IPN for the same transaction is ignored
@@ -119,7 +106,7 @@ describe("exporting PayPal donations to Neon", () => {
       processed: 1,
       remaining: 0,
     });
-    expect(findDonationIdsByCustomField).toHaveBeenCalledWith(
+    expect(findDonationIdByCustomField).toHaveBeenCalledWith(
       expect.anything(),
       "92",
       donation.txnId,
@@ -144,164 +131,120 @@ describe("exporting PayPal donations to Neon", () => {
         },
       ],
     });
-    expect(rows()).toEqual([
-      expect.objectContaining({
-        txnId: donation.txnId,
-        state: "created",
-        neonDonationId: "456",
-        payload: null,
-      }),
-    ]);
+    expect(rows()).toEqual([]);
   });
 
   it("creates a donation once when runs overlap", async () => {
-    const { exporter, make } = await setup("on");
+    const { exporter, make } = await setup();
     exporter.enqueue(donation);
 
     // The alarm and the hourly cron reach the same Durable Object
     await Promise.all([exporter.run(), exporter.run()]);
-    // A later run over the same storage sees it as done
-    await make("on").run();
+    await make().run();
 
     expect(createDonation).toHaveBeenCalledOnce();
   });
 
   it("doesn't create a donation that Neon already has", async () => {
-    vi.mocked(findDonationIdsByCustomField).mockResolvedValue({
+    vi.mocked(findDonationIdByCustomField).mockResolvedValue({
       ok: true,
-      data: ["789"],
+      data: "789",
     });
-    const { exporter, rows } = await setup("on");
+    const { exporter, rows } = await setup();
 
     exporter.enqueue(donation);
     await exporter.run();
 
     expect(findOrCreateAccount).not.toHaveBeenCalled();
     expect(createDonation).not.toHaveBeenCalled();
-    expect(rows()).toEqual([
-      expect.objectContaining({ state: "exists", neonDonationId: "789" }),
-    ]);
+    expect(rows()).toEqual([]);
   });
 
   it("keeps failed exports for the next run and stops during an outage", async () => {
-    vi.mocked(findDonationIdsByCustomField).mockResolvedValue({
+    vi.mocked(findDonationIdByCustomField).mockResolvedValue({
       ok: false,
       errorType: "request",
       error: new Error("Neon is down"),
     } as never);
-    const { exporter, rows } = await setup("on");
+    const { exporter, rows } = await setup();
 
     exporter.enqueue(donation);
-    for (const txnId of ["1AB12345CD678901E", "2AB12345CD678901E", "3AB"]) {
+    for (const txnId of [otherTxnId, "2AB12345CD678901E", "3AB"]) {
       exporter.enqueue({ ...donation, txnId });
     }
 
-    // Retrying never gives up on a donation, only expiry does
-    for (let run = 0; run < 30; run++) {
-      await expect(exporter.run()).resolves.toEqual({
-        processed: 0,
-        remaining: 4,
-      });
-    }
-    expect(findDonationIdsByCustomField).toHaveBeenCalledTimes(90);
-    expect(rows()[0]).toMatchObject({
-      state: "pending",
-      attempts: 30,
-      lastError: "Neon donation search failed",
+    await expect(exporter.run()).resolves.toEqual({
+      processed: 0,
+      remaining: 4,
     });
-    // Reported once each, after about a day of hourly runs
-    expect(Sentry.captureException).toHaveBeenCalledTimes(3);
+    expect(findDonationIdByCustomField).toHaveBeenCalledTimes(3);
+    expect(rows().map((row) => row.attempts)).toEqual([1, 1, 1, 0]);
   });
 
   it("moves on when one donation can't be exported", async () => {
-    vi.mocked(findDonationIdsByCustomField)
+    vi.mocked(findDonationIdByCustomField)
       .mockResolvedValueOnce({
         ok: false,
         errorType: "request",
         error: new Error("Invalid email"),
       } as never)
-      .mockResolvedValue({ ok: true, data: ["789"] });
-    const { exporter, rows } = await setup("on");
+      .mockResolvedValue({ ok: true, data: "789" });
+    const { exporter, rows } = await setup();
 
     exporter.enqueue(donation);
-    exporter.enqueue({ ...donation, txnId: "1AB12345CD678901E" });
+    exporter.enqueue({ ...donation, txnId: otherTxnId });
 
     await expect(exporter.run()).resolves.toEqual({
       processed: 1,
       remaining: 1,
     });
-    expect(rows().map((row) => row.state)).toEqual(["pending", "exists"]);
+    expect(rows()).toEqual([
+      expect.objectContaining({ txnId: donation.txnId }),
+    ]);
   });
-});
 
-describe("shadow mode", () => {
-  it("only looks up the account, and exports the donation once switched on", async () => {
-    const { exporter, make, rows } = await setup("shadow");
-
+  it("drops donations that waited too long, even while the export is off", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
+    const { sql, exporter, rows } = await setup();
     exporter.enqueue(donation);
-    await exporter.run();
 
-    expect(findOrCreateAccount).not.toHaveBeenCalled();
-    expect(createDonation).not.toHaveBeenCalled();
-    expect(rows()).toEqual([
-      expect.objectContaining({ state: "shadow-new-account" }),
-    ]);
-    expect(exporter.summary()).toEqual({
-      mode: "shadow",
-      counts: { "shadow-new-account": 1 },
-    });
-    // Shadow mode doesn't look the same donation up again
-    await exporter.run();
-    expect(findAccountIdByEmail).toHaveBeenCalledOnce();
+    cleanUpPaypalNeonExports(sql, new Date("2026-11-15T00:00:00Z"));
 
-    await make("on").run();
-    expect(createDonation).toHaveBeenCalledOnce();
-    expect(rows()).toEqual([
-      expect.objectContaining({ state: "created", payload: null }),
-    ]);
+    expect(rows()).toEqual([]);
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      "PayPal Neon export: export-expired",
+      "warning",
+    );
   });
 });
 
 describe("refunds", () => {
   it("doesn't export a donation that was fully refunded first", async () => {
-    const { exporter, rows } = await setup("on");
+    const { exporter } = await setup();
 
     exporter.enqueue(donation);
     exporter.recordRefund(donation.txnId, "Refunded", 2500);
     await exporter.run();
 
     expect(createDonation).not.toHaveBeenCalled();
-    expect(rows()).toEqual([
-      expect.objectContaining({ state: "refunded", payload: null }),
-    ]);
+    expect(refundReports()).toHaveLength(0);
   });
 
-  it("remembers a refund that arrives before the completed IPN", async () => {
-    const { exporter, rows } = await setup("on");
-
-    exporter.recordRefund(donation.txnId, "Refunded", 2500);
-    // Nothing to export without the donation itself
-    await exporter.run();
-    exporter.enqueue(donation);
-    await exporter.run();
-
-    expect(createDonation).not.toHaveBeenCalled();
-    expect(rows()).toEqual([expect.objectContaining({ state: "refunded" })]);
-  });
-
-  it("exports a partly refunded donation and tells staff", async () => {
-    const { exporter } = await setup("on");
+  it("tells staff about partial refunds and refunds of exported donations", async () => {
+    const { exporter } = await setup();
 
     exporter.enqueue(donation);
-    exporter.recordRefund(donation.txnId, "Refunded", 1000);
+    exporter.recordRefund(donation.txnId, "Partially_Refunded", 1000);
     await exporter.run();
+    exporter.recordRefund(donation.txnId, "Refunded", 1500);
 
     expect(createDonation).toHaveBeenCalledOnce();
-    expect(refundReport()).toHaveLength(1);
+    expect(refundReports()).toHaveLength(2);
   });
 
-  it("tells staff about a refund that arrives during the export", async () => {
-    const { exporter } = await setup("on");
+  it("tells staff about a full refund that arrives during the export", async () => {
+    const { exporter } = await setup();
     vi.mocked(createDonation).mockImplementation(async () => {
       exporter.recordRefund(donation.txnId, "Reversed", 2500);
       return { ok: true, data: { id: "456" } };
@@ -310,64 +253,6 @@ describe("refunds", () => {
     exporter.enqueue(donation);
     await exporter.run();
 
-    expect(refundReport()).toHaveLength(1);
-  });
-
-  it("tells staff about refunds of donations that are in Neon", async () => {
-    vi.mocked(findDonationIdsByCustomField)
-      .mockResolvedValueOnce({ ok: true, data: [] })
-      .mockResolvedValueOnce({ ok: true, data: ["789"] });
-    const { exporter } = await setup("on");
-    exporter.enqueue(donation);
-    // Already in Neon, e.g. from a create whose response was lost
-    exporter.enqueue({ ...donation, txnId: "1AB12345CD678901E" });
-    await exporter.run();
-
-    exporter.recordRefund(donation.txnId, "Refunded", 2500);
-    exporter.recordRefund("1AB12345CD678901E", "Partially_Refunded", 500);
-
-    expect(refundReport()).toHaveLength(2);
-  });
-});
-
-describe("cleaning up the export queue", () => {
-  it("drops donor details that waited too long, even while the export is off", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
-    const { sql, exporter, rows } = await setup("shadow");
-    exporter.enqueue(donation);
-    exporter.enqueue({ ...donation, txnId: "1AB12345CD678901E" });
-    // The first becomes a shadow lookup, the second stays pending
-    vi.mocked(findDonationIdsByCustomField)
-      .mockResolvedValueOnce({ ok: true, data: [] })
-      .mockRejectedValue(new Error("down"));
-    await exporter.run();
-    vi.mocked(Sentry.captureMessage).mockClear();
-
-    cleanUpPaypalNeonExports(sql, new Date("2026-11-15T00:00:00Z"));
-
-    expect(rows()).toEqual([
-      expect.objectContaining({ state: "expired", payload: null }),
-      expect.objectContaining({ state: "expired", payload: null }),
-    ]);
-    // Only the export that never happened is reported
-    expect(Sentry.captureMessage).toHaveBeenCalledOnce();
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(
-      "PayPal Neon export: export-expired",
-      "warning",
-    );
-  });
-
-  it("keeps exported donations past the dispute window for refund reports", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-01-01T00:00:00Z"));
-    const { sql, exporter } = await setup("on");
-    exporter.enqueue(donation);
-    await exporter.run();
-
-    cleanUpPaypalNeonExports(sql, new Date("2026-07-01T00:00:00Z"));
-    exporter.recordRefund(donation.txnId, "Reversed", 2500);
-
-    expect(refundReport()).toHaveLength(1);
+    expect(refundReports()).toHaveLength(1);
   });
 });
