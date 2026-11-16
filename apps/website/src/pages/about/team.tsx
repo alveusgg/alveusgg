@@ -342,50 +342,51 @@ const AboutTeamPage: NextPage = () => {
                 <li
                   key={key}
                   id={key}
-                  className="group flex scroll-mt-4 flex-col"
+                  className="group row-span-4 mx-auto grid w-full max-w-xs scroll-mt-4 grid-rows-subgrid gap-0"
                   tabIndex={-1}
                 >
-                  <div className="mx-auto flex w-full max-w-xs grow flex-col">
-                    <PersonImage image={member.image} />
+                  <PersonImage image={member.image} />
 
-                    <div className="flex grow flex-col pt-4">
-                      <Heading level={3} className="my-0 text-3xl">
-                        {member.name}
-                        <Pronouns pronouns={member.pronouns} />
-                      </Heading>
-                      <Heading level={4} className="my-1 text-xl">
-                        {member.title}
-                      </Heading>
-                      <DepartmentLabel department={member.department} />
+                  <div className="pt-4">
+                    <Heading level={3} className="my-0 text-3xl">
+                      {member.name}
+                      <Pronouns pronouns={member.pronouns} />
+                    </Heading>
+                    <Heading
+                      level={4}
+                      className="my-1 text-xl whitespace-pre-line"
+                    >
+                      {member.title}
+                    </Heading>
+                    <DepartmentLabel department={member.department} />
+                  </div>
 
-                      <div className="mt-auto flex flex-col">
-                        {member.twitch && (
-                          <Link
-                            href={`https://twitch.tv/${member.twitch}`}
-                            external
-                            className="mt-3 inline-flex items-center gap-1 self-start"
-                          >
-                            <IconTwitch className="size-4" />@{member.twitch}
-                          </Link>
-                        )}
+                  <div className="flex flex-col">
+                    {member.twitch && (
+                      <Link
+                        href={`https://twitch.tv/${member.twitch}`}
+                        external
+                        className="mt-3 inline-flex items-center gap-1 self-start"
+                      >
+                        <IconTwitch className="size-4" />@{member.twitch}
+                      </Link>
+                    )}
 
-                        <div className="mt-3 line-clamp-4 text-gray-500">
-                          {member.description}
-                        </div>
-
-                        <button
-                          type="button"
-                          aria-haspopup="dialog"
-                          onClick={() => setOpen(key)}
-                          className="inline-flex items-center gap-1 self-start pt-3 text-red-600 underline transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
-                        >
-                          Read full bio
-                          <span className="sr-only"> of {member.name}</span>
-                          <IconArrowRight className="size-4" />
-                        </button>
-                      </div>
+                    <div className="mt-3 line-clamp-4 text-gray-500">
+                      {member.description}
                     </div>
                   </div>
+
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    onClick={() => setOpen(key)}
+                    className="inline-flex items-center gap-1 justify-self-start pt-3 text-red-600 underline transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
+                  >
+                    Read full bio
+                    <span className="sr-only"> of {member.name}</span>
+                    <IconArrowRight className="size-4" />
+                  </button>
                 </li>
               ))}
           </ul>
