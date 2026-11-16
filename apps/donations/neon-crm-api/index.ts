@@ -157,10 +157,24 @@ const splitName = (name: string | null | undefined) => {
   };
 };
 
-/** Reuses the first account whose email matches, otherwise creates one. */
+/**
+ * Reuses the first account whose email matches, otherwise creates one. Pass
+ * `firstName` and `lastName` when the source has them separately, otherwise
+ * `name` is split at the last space.
+ */
 export const findOrCreateAccount = async (
   options: Options,
-  { email, name }: { email: string; name?: string | null },
+  {
+    email,
+    name,
+    firstName,
+    lastName,
+  }: {
+    email: string;
+    name?: string | null;
+    firstName?: string;
+    lastName?: string;
+  },
 ) => {
   const search = await searchAccounts(options, {
     searchFields: [{ field: "Email", operator: "EQUAL", value: email }],
@@ -179,14 +193,42 @@ export const findOrCreateAccount = async (
     return { ok: true, data: { id: id.data, created: false } } as const;
   }
 
+  const names =
+    firstName || lastName
+      ? { firstName: firstName || undefined, lastName: lastName || undefined }
+      : splitName(name);
   const created = await createAccount(options, {
     individualAccount: {
-      primaryContact: { ...splitName(name), email1: email },
+      primaryContact: { ...names, email1: email },
     },
   });
   if (!created.ok) return created;
 
   return { ok: true, data: { id: created.data.id, created: true } } as const;
+};
+
+/**
+ * Returns the ID of a donation whose custom field has exactly this value, e.g.
+ * a payment's transaction ID, or null. Searches allow one request at a time
+ * per org.
+ */
+export const findDonationIdByCustomField = async (
+  options: Options,
+  fieldId: RecordId,
+  value: string,
+) => {
+  const search = await searchDonations(options, {
+    searchFields: [{ field: fieldId, operator: "EQUAL", value }],
+    outputFields: ["Donation ID"],
+    pagination: { currentPage: 0, pageSize: 1 },
+  });
+  if (!search.ok) return search;
+
+  const id = search.data.searchResults[0]?.["Donation ID"];
+  return {
+    ok: true,
+    data: id === undefined || id === null ? null : String(id),
+  } as const;
 };
 
 export const createDonation = async (

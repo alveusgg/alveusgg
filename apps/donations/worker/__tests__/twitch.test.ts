@@ -12,6 +12,7 @@ vi.mock("@trpc/client", () => ({
 }));
 const service = {
   add: vi.fn(async () => 1),
+  has: vi.fn(() => false),
   remove: vi.fn(async () => {}),
   config: { get: vi.fn(), set: vi.fn() },
 } satisfies DonationStorage;

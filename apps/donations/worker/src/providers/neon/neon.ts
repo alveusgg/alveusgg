@@ -22,6 +22,7 @@ import timingSafeCompareString from "../../utils/timing-safe-compare-string";
 
 type NeonDonationProviderOptions = Options & {
   donationDisplayNameCustomFieldId?: string;
+  transactionIdCustomFieldId?: string;
   onParseError?: (
     error: ZodError,
     context: {
@@ -69,6 +70,7 @@ const MANUAL_ORIGIN_CATEGORIES = new Set([
   "Data Entry",
   "Self-Import",
 ]);
+const API_ORIGIN_CATEGORY = "API";
 const SUCCEEDED_STATUS = "SUCCEEDED";
 const SYNC_MAX_RETRIES_PER_RUN = 10;
 // More failures in a row than this look like an outage rather than a broken
@@ -139,6 +141,8 @@ export class NeonDonationProvider implements DonationProvider {
       ...envToOptions(env),
       donationDisplayNameCustomFieldId:
         env.NEON_DONATION_DISPLAY_NAME_CUSTOM_FIELD_ID,
+      transactionIdCustomFieldId:
+        env.NEON_TRANSACTION_ID_CUSTOM_FIELD_ID || undefined,
       onParseError: reportNeonParseError,
     };
 
@@ -185,7 +189,13 @@ export class NeonDonationProvider implements DonationProvider {
     }
 
     let origin = data.origin;
-    if (origin === undefined) {
+    let customFields = data.donationCustomFields;
+    // API donations may come from the PayPal export, which is recognized by
+    // its transaction ID, so read their custom fields from the record
+    if (
+      origin === undefined ||
+      origin?.originCategory === API_ORIGIN_CATEGORY
+    ) {
       const donationRes = await getDonation(this.options, data.id);
       if (!donationRes.ok) {
         return new Response("Failed to fetch this donation's origin.", {
@@ -193,8 +203,12 @@ export class NeonDonationProvider implements DonationProvider {
         });
       }
       origin = donationRes.data.origin;
+      customFields = donationRes.data.donationCustomFields ?? undefined;
     }
-    if (this.isManualDonation(data.id, origin)) {
+    if (
+      this.isManualDonation(data.id, origin) ||
+      this.isImportedFromPaypal(data.id, origin, customFields)
+    ) {
       return new Response("OK", { status: 200 });
     }
 
@@ -589,6 +603,12 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
 
+    if (
+      this.isImportedFromPaypal(data.id, data.origin, data.donationCustomFields)
+    ) {
+      return false;
+    }
+
     if (data.status && data.status !== SUCCEEDED_STATUS) {
       return false;
     }
@@ -607,6 +627,30 @@ export class NeonDonationProvider implements DonationProvider {
     if (!category || !MANUAL_ORIGIN_CATEGORIES.has(category)) return false;
 
     console.info("Skipping manually entered Neon donation", { id, category });
+    return true;
+  }
+
+  /**
+   * The worker exports PayPal donations to Neon after importing them from the
+   * IPN, so their Neon copy must not be imported a second time. Only a
+   * transaction this worker imported from PayPal counts, so other API
+   * donations with a transaction ID are still imported.
+   */
+  private isImportedFromPaypal(
+    id: string,
+    origin: NeonDonationData["origin"],
+    customFields: NeonDonationData["donationCustomFields"],
+  ) {
+    const fieldId = this.options.transactionIdCustomFieldId;
+    if (!fieldId || origin?.originCategory !== API_ORIGIN_CATEGORY) {
+      return false;
+    }
+    const field = customFields?.find((field) => field.id === fieldId);
+    if (!field || !("value" in field)) return false;
+    const txnId = field.value.trim();
+    if (!txnId || !this.service.has("paypal", txnId)) return false;
+
+    console.info("Skipping Neon donation exported from PayPal", { id });
     return true;
   }
 

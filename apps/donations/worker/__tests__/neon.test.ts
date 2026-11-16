@@ -51,6 +51,7 @@ const env = {
 } as Env;
 const service = {
   add: vi.fn(async () => 1),
+  has: vi.fn((_provider: string, _id: string) => false),
   remove: vi.fn(async () => {}),
   config: { get: vi.fn(), set: vi.fn() },
 } satisfies DonationStorage;
@@ -911,5 +912,70 @@ describe("wishlist Neon donations", () => {
       "Skipping wishlist Neon donation",
       { id: "1" },
     );
+  });
+});
+
+describe("donations exported from PayPal", () => {
+  const exportEnv = { ...env, NEON_TRANSACTION_ID_CUSTOM_FIELD_ID: "92" };
+  const transactionId = {
+    id: "92",
+    name: "Transaction ID",
+    value: "9AB12345CD678901E",
+  };
+  const apiOrigin = { originCategory: "API", originDetail: null };
+  const apiDonation = (customFields: unknown[]) =>
+    DonationResponse.parse({
+      ...rawDonation,
+      anonymousType: "No",
+      origin: apiOrigin,
+      donationCustomFields: customFields,
+    });
+
+  function webhook(data: Record<string, unknown>) {
+    return new Request("https://example.com/neon/live", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${btoa("donations:example")}`,
+      },
+      body: JSON.stringify({
+        eventTrigger: "createDonation",
+        eventTimestamp: "2026-01-01T12:00:00Z",
+        organizationId: "example",
+        data: { ...rawDonation, anonymousType: "No", ...data },
+      }),
+    });
+  }
+
+  it("skips a donation whose transaction was imported from PayPal", async () => {
+    service.has.mockImplementation(
+      (provider, id) => provider === "paypal" && id === transactionId.value,
+    );
+    // The webhook's own custom fields aren't trusted for API donations
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: apiDonation([transactionId]),
+    });
+    const provider = await NeonDonationProvider.init(service, exportEnv);
+    const response = await provider.handle(
+      webhook({ origin: apiOrigin, donationCustomFields: [] }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(getDonation).toHaveBeenCalledWith(expect.anything(), "1");
+    expect(service.add).not.toHaveBeenCalled();
+  });
+
+  it("imports API donations with a transaction ID PayPal didn't send", async () => {
+    vi.mocked(getDonation).mockResolvedValue({
+      ok: true,
+      data: apiDonation([{ ...transactionId, value: "card-123" }]),
+    });
+    const provider = await NeonDonationProvider.init(service, exportEnv);
+    const response = await provider.handle(webhook({ origin: apiOrigin }));
+
+    expect(response.status).toBe(200);
+    expect(service.has).toHaveBeenCalledWith("paypal", "card-123");
+    expect(service.add).toHaveBeenCalledOnce();
   });
 });

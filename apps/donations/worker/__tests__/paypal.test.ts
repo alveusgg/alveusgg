@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/cloudflare";
 import { PaypalDonationProvider } from "../src/providers/paypal/paypal";
 import { PaypalVerificationURL } from "../src/providers/paypal/const";
 import type { DonationStorage } from "../src/providers/storage";
+import type { PaypalNeonExport } from "../src/providers/paypal/neon-export";
 
 vi.mock("@sentry/cloudflare", () => ({
   captureException: vi.fn(),
@@ -33,14 +34,18 @@ const completedIpn = {
 const fetchMock = vi.fn<typeof fetch>();
 const add = vi.fn<DonationStorage["add"]>(async () => 1);
 
+const neonExport = { enqueue: vi.fn(), recordRefund: vi.fn() };
+
 async function makeProvider() {
   return PaypalDonationProvider.init(
     {
       add,
+      has: vi.fn(() => false),
       remove: vi.fn(async () => {}),
       config: { get: vi.fn(), set: vi.fn() },
     },
     { SANDBOX: "false", PAYPAL_BUSINESS_EMAIL: business } as Env,
+    neonExport as unknown as PaypalNeonExport,
   );
 }
 
@@ -172,5 +177,54 @@ describe("PayPal IPN handling", () => {
     expect(responses.map((response) => response.status)).toEqual([200, 200]);
     expect(add).not.toHaveBeenCalled();
     expect(Sentry.captureException).toHaveBeenCalledTimes(2);
+  });
+
+  it("queues stored donations for the Neon export", async () => {
+    const provider = await makeProvider();
+
+    await provider.handle(ipn(completedIpn));
+
+    expect(neonExport.enqueue).toHaveBeenCalledWith({
+      txnId: completedIpn.txn_id,
+      amount: 2500,
+      donatedAt: expect.any(Date),
+      email: "ada@example.com",
+      firstName: "Ada",
+      lastName: "Lovelace",
+    });
+  });
+
+  it("doesn't queue wishlist donations for the Neon export", async () => {
+    vi.spyOn(console, "info").mockImplementation(() => {});
+    const provider = await makeProvider();
+
+    await provider.handle(
+      ipn({ ...completedIpn, custom: "campaign_wishlist" }),
+    );
+
+    expect(neonExport.enqueue).not.toHaveBeenCalled();
+  });
+
+  it("records refunds with the refunded amount", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const provider = await makeProvider();
+
+    const response = await provider.handle(
+      ipn({
+        ...completedIpn,
+        txn_id: "8AB12345CD678901E",
+        parent_txn_id: completedIpn.txn_id,
+        payment_status: "Refunded",
+        mc_gross: "-10.00",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(add).not.toHaveBeenCalled();
+    expect(neonExport.recordRefund).toHaveBeenCalledWith(
+      completedIpn.txn_id,
+      "Refunded",
+      1000,
+    );
   });
 });

@@ -322,13 +322,16 @@ export const PAYPAL_TENDER_TYPE = 17;
 export const WISHLIST_CAMPAIGN_ID = "24";
 
 export type CreateDonationInput = z.input<typeof CreateDonationInput>;
-// Scoped to the fields the website sets for wishlist donations.
+// Scoped to the fields the website and the donations worker set.
 // https://developer.neoncrm.com/api-v2/#/Donations/createUsingPOST_1
 export const CreateDonationInput = z.object({
   accountId: RecordId,
   amount: z.number().positive(),
   date: z.iso.date(),
   campaign: z.object({ id: RecordId }).optional(),
+  donationCustomFields: z
+    .array(z.object({ id: RecordId, value: z.string().min(1) }))
+    .optional(),
   payments: z
     .array(
       z.object({
