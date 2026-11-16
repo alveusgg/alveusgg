@@ -941,13 +941,6 @@ const historyYears = history.reduce<[string, (HistoryItem | HistoryCTA)[]][]>(
 const HistoryItemContent = ({ item }: { item: HistoryItem }) => {
   const type = item.type ?? "milestone";
   const dark = type === "milestone";
-  const amount =
-    type === "fundraiser" &&
-    item.content
-      .slice(1)
-      .join(" ")
-      .match(/(over\s+)?\$[\d,]+/i)?.[0]
-      .replace(/^over/i, "Over");
 
   return (
     <>
@@ -965,11 +958,6 @@ const HistoryItemContent = ({ item }: { item: HistoryItem }) => {
       >
         {item.content[0]}
       </Heading>
-      {amount && (
-        <p className="mt-1 font-serif text-3xl font-bold text-red-700 tabular-nums">
-          {amount}
-        </p>
-      )}
       {item.content.slice(1).map((paragraph, idx) => (
         // eslint-disable-next-line @eslint-react/no-array-index-key -- These paragraphs are static content in the timeline entry.
         <p key={idx} className="mt-2">
