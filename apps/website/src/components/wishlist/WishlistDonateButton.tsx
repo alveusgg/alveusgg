@@ -4,11 +4,11 @@ import {
   PARTIAL_DONATION_MIN_CENTS,
   PARTIAL_DONATION_QUICK_PICKS,
   WISHLIST_FUNDS_NOTE,
-  partialDonationAmount,
 } from "@/data/wishlist";
 
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { partialDonationAmount } from "@/utils/wishlist";
 
 import Button from "@/components/content/Button";
 import { MessageBox } from "@/components/shared/MessageBox";

@@ -1,20 +1,17 @@
-import { prisma } from "@alveusgg/database";
+import { Prisma, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 
-import {
-  type PAYMENT_ISSUE_STATUSES,
-  getPartialTargetCents,
-  parsePriceCents,
-} from "@/data/wishlist";
+import type { PAYMENT_ISSUE_STATUSES } from "@/data/wishlist";
 
 import {
   notifyWishlistDonation,
   notifyWishlistItemFunded,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
+import { getPartialTargetCents, parsePriceCents } from "@/utils/wishlist";
 
 // Splits a capture into the item's credit and the excess over its remaining
 // balance. `raisedAfterCents` is the total after incrementing by the full amount.
@@ -43,6 +40,32 @@ export function capCreditToRemaining({
   };
 }
 
+/**
+ * Identifiers for raw conditional UPDATEs on donation orders. Prisma's own
+ * update and updateMany select the matching ids first under relationMode
+ * "prisma", so overlapping calls both report success.
+ *
+ * TODO: Switch to `updateMany` with the conditions in `where` once Prisma keeps
+ * them in the UPDATE and returns its affected row count:
+ * https://github.com/prisma/orm/issues/30758
+ */
+const donationOrderSql = () => {
+  const quoteIdentifier = (name: string) =>
+    Prisma.raw(`\`${name.replaceAll("`", "``")}\``);
+  // Field references keep the columns type checked. The client doesn't expose
+  // the table's @@map name, so it is written out here.
+  const fields = prisma.wishlistDonationOrder.fields;
+  return {
+    table: quoteIdentifier("wishlist_donation_orders"),
+    id: quoteIdentifier(fields.id.name),
+    status: quoteIdentifier(fields.status.name),
+    capturedAt: quoteIdentifier(fields.capturedAt.name),
+    paypalTransactionId: quoteIdentifier(fields.paypalTransactionId.name),
+    capturedAmount: quoteIdentifier(fields.capturedAmount.name),
+    updatedAt: quoteIdentifier(fields.updatedAt.name),
+  };
+};
+
 export type WishlistCapture = {
   paypalOrderId: string;
   captureId: string;
@@ -69,19 +92,19 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
 
     // Claim the order in one conditional UPDATE, so when the capture call,
     // the webhook, or a webhook retry overlap, exactly one of them applies
-    // the donation. updateMany can't be used here: with relationMode
-    // "prisma" it selects the ids first and doesn't re-check the conditions.
-    // Only pending orders are claimed, never denied, refunded or reversed ones.
+    // the donation. Only pending orders are claimed, never denied, refunded
+    // or reversed ones.
+    const col = donationOrderSql();
     const claimed = await tx.$executeRaw`
-      UPDATE wishlist_donation_orders
-      SET status = 'CAPTURED',
-        capturedAt = ${capturedAt},
-        paypalTransactionId = ${capture.captureId},
-        capturedAmount = ${capture.amount},
-        updatedAt = ${capturedAt}
-      WHERE id = ${order.id}
-        AND status = 'PENDING'
-        AND paypalTransactionId IS NULL`;
+      UPDATE ${col.table}
+      SET ${col.status} = 'CAPTURED',
+        ${col.capturedAt} = ${capturedAt},
+        ${col.paypalTransactionId} = ${capture.captureId},
+        ${col.capturedAmount} = ${capture.amount},
+        ${col.updatedAt} = ${capturedAt}
+      WHERE ${col.id} = ${order.id}
+        AND ${col.status} = 'PENDING'
+        AND ${col.paypalTransactionId} IS NULL`;
     if (claimed === 0) return { status: "duplicate", order } as const;
 
     const item = order.wishlistItem;
@@ -279,10 +302,11 @@ export async function recordWishlistPaymentIssue(issue: WishlistPaymentIssue) {
 
   // One conditional UPDATE, so a repeated or overlapping delivery of the
   // same event alerts staff once
+  const col = donationOrderSql();
   const updated = await prisma.$executeRaw`
-    UPDATE wishlist_donation_orders
-    SET status = ${issue.status}, updatedAt = ${new Date()}
-    WHERE id = ${order.id} AND status <> ${issue.status}`;
+    UPDATE ${col.table}
+    SET ${col.status} = ${issue.status}, ${col.updatedAt} = ${new Date()}
+    WHERE ${col.id} = ${order.id} AND ${col.status} <> ${issue.status}`;
   if (updated === 0) return { status: "duplicate", order } as const;
 
   try {

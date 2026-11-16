@@ -1,5 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { Prisma } from "@alveusgg/database";
+import type * as Database from "@alveusgg/database";
+
 import { recordWishlistCapture } from "@/server/db/wishlist";
 
 import { notifyWishlistDonation } from "@/utils/discord";
@@ -23,13 +26,19 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
     tx,
     mockPrisma: {
       $transaction: vi.fn((fn: (client: typeof tx) => unknown) => fn(tx)),
-      wishlistDonationOrder: { update: vi.fn() },
+      wishlistDonationOrder: {
+        update: vi.fn(),
+        fields: new Proxy({}, { get: (_, name) => ({ name }) }),
+      },
     },
   };
 });
 
 vi.mock("@/env", () => ({ env: mockEnv }));
-vi.mock("@alveusgg/database", () => ({ prisma: mockPrisma }));
+vi.mock("@alveusgg/database", async (importOriginal) => ({
+  ...(await importOriginal<typeof Database>()),
+  prisma: mockPrisma,
+}));
 vi.mock("@/utils/discord", () => ({
   notifyWishlistDonation: vi.fn(() => Promise.resolve()),
 }));
@@ -183,13 +192,13 @@ describe("recordWishlistCapture", () => {
 
     await recordWishlistCapture(capture);
 
-    const [sql, ...values] = tx.$executeRaw.mock.calls[0] as [
+    const [strings, ...parts] = tx.$executeRaw.mock.calls[0] as [
       TemplateStringsArray,
       ...unknown[],
     ];
-    const statement = sql.join("?").replace(/\s+/g, " ").trim();
-    expect(statement).toBe(
-      "UPDATE wishlist_donation_orders SET status = 'CAPTURED', capturedAt = ?, paypalTransactionId = ?, capturedAmount = ?, updatedAt = ? WHERE id = ? AND status = 'PENDING' AND paypalTransactionId IS NULL",
+    const { sql, values } = Prisma.sql(strings, ...parts);
+    expect(sql.replace(/\s+/g, " ").trim()).toBe(
+      "UPDATE `wishlist_donation_orders` SET `status` = 'CAPTURED', `capturedAt` = ?, `paypalTransactionId` = ?, `capturedAmount` = ?, `updatedAt` = ? WHERE `id` = ? AND `status` = 'PENDING' AND `paypalTransactionId` IS NULL",
     );
     expect(values).toEqual([
       expect.any(Date),

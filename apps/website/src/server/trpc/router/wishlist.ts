@@ -8,13 +8,12 @@ import { env } from "@/env";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
+import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 import {
   canAcceptDonations,
   getPartialTargetCents,
   partialDonationAmount,
-} from "@/data/wishlist";
-
-import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
+} from "@/utils/wishlist";
 
 const publicStatusEnum = z.enum([
   "NEEDED",
