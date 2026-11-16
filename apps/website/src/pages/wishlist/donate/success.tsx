@@ -2,9 +2,8 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import { getPayPalReturnParams } from "@/data/wishlist";
-
 import { trpc } from "@/utils/trpc";
+import { getPayPalReturnParams } from "@/utils/wishlist";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";

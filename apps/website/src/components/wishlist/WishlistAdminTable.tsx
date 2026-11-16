@@ -1,8 +1,7 @@
 import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
-import { getPartialTargetCents } from "@/data/wishlist";
-
 import { trpc } from "@/utils/trpc";
+import { getPartialTargetCents } from "@/utils/wishlist";
 
 import Link from "@/components/content/Link";
 import { MessageBox } from "@/components/shared/MessageBox";

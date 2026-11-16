@@ -4,9 +4,8 @@ import type { Context } from "@/server/trpc/context";
 import { adminWishlistRouter } from "@/server/trpc/router/admin/wishlist";
 import { wishlistRouter } from "@/server/trpc/router/wishlist";
 
-import { getPayPalReturnParams } from "@/data/wishlist";
-
 import { createPayPalOrder } from "@/utils/paypal";
+import { getPayPalReturnParams } from "@/utils/wishlist";
 
 const { mockPrisma } = vi.hoisted(() => ({
   mockPrisma: {

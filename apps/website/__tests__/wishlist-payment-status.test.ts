@@ -3,6 +3,9 @@ import { Readable } from "node:stream";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { Prisma } from "@alveusgg/database";
+import type * as Database from "@alveusgg/database";
+
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 import type * as WishlistDb from "@/server/db/wishlist";
@@ -80,14 +83,16 @@ const { db, mockPrisma } = vi.hoisted(() => {
               : null;
           },
         ),
+        fields: new Proxy({}, { get: (_, name) => ({ name }) }),
       },
       wishlistItem: { update: vi.fn() },
       $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
       // The capture claim (capturedAt, captureId, amount, updatedAt, id) or
       // the payment issue UPDATE (status, updatedAt, id, status)
       $executeRaw: vi.fn(
-        async (sql: TemplateStringsArray, ...values: unknown[]) => {
-          if (sql.join("").includes("'CAPTURED'")) {
+        async (strings: TemplateStringsArray, ...parts: unknown[]) => {
+          const { sql, values } = Prisma.sql(strings, ...parts);
+          if (sql.includes("'CAPTURED'")) {
             const order = db.orders.find((o) => o.id === values[4]);
             if (
               !order ||
@@ -121,7 +126,10 @@ vi.mock("@/env", () => ({
     DISCORD_WISHLIST_WEBHOOK_URL: "https://discord.example.test/webhook",
   },
 }));
-vi.mock("@alveusgg/database", () => ({ prisma: mockPrisma }));
+vi.mock("@alveusgg/database", async (importOriginal) => ({
+  ...(await importOriginal<typeof Database>()),
+  prisma: mockPrisma,
+}));
 vi.mock("@/utils/discord", () => ({
   notifyWishlistDonation: vi.fn(() => Promise.resolve()),
   notifyWishlistItemFunded: vi.fn(() => Promise.resolve()),

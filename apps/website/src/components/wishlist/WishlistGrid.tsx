@@ -3,9 +3,8 @@ import Image from "next/image";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 
-import { getPartialTargetCents } from "@/data/wishlist";
-
 import { classes } from "@/utils/classes";
+import { getPartialTargetCents } from "@/utils/wishlist";
 
 import useLocaleString from "@/hooks/locale";
 

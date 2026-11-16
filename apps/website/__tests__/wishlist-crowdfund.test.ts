@@ -1,11 +1,14 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { Prisma } from "@alveusgg/database";
+import type * as Database from "@alveusgg/database";
+
 import {
   capCreditToRemaining,
   recordWishlistCapture,
 } from "@/server/db/wishlist";
 
-import { getPartialTargetCents, partialDonationAmount } from "@/data/wishlist";
+import { getPartialTargetCents, partialDonationAmount } from "@/utils/wishlist";
 
 const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
   type Item = {
@@ -66,16 +69,16 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
         },
       ),
     },
-    // The conditional claim UPDATE, values in template order
+    // The conditional claim UPDATE: capturedAt, captureId, amount, updatedAt, id
     $executeRaw: vi.fn(
-      async (
-        _sql: TemplateStringsArray,
-        _capturedAt: Date,
-        captureId: string,
-        _amount: number,
-        _updatedAt: Date,
-        id: string,
-      ) => {
+      async (strings: TemplateStringsArray, ...parts: unknown[]) => {
+        const [, captureId, , , id] = Prisma.sql(strings, ...parts).values as [
+          Date,
+          string,
+          number,
+          Date,
+          string,
+        ];
         const order = db.orders.find((o) => o.id === id);
         if (!order || order.status !== "PENDING" || order.paypalTransactionId)
           return 0;
@@ -139,13 +142,19 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
           }
         },
       ),
-      wishlistDonationOrder: { update: vi.fn(() => Promise.resolve({})) },
+      wishlistDonationOrder: {
+        update: vi.fn(() => Promise.resolve({})),
+        fields: new Proxy({}, { get: (_, name) => ({ name }) }),
+      },
     },
   };
 });
 
 vi.mock("@/env", () => ({ env: mockEnv }));
-vi.mock("@alveusgg/database", () => ({ prisma: mockPrisma }));
+vi.mock("@alveusgg/database", async (importOriginal) => ({
+  ...(await importOriginal<typeof Database>()),
+  prisma: mockPrisma,
+}));
 vi.mock("@/utils/discord", () => discord);
 
 const makeOrder = (n: number) => ({
