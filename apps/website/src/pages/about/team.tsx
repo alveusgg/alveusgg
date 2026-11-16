@@ -17,6 +17,7 @@ import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconTwitch from "@/icons/IconTwitch";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -356,6 +357,16 @@ const AboutTeamPage: NextPage = () => {
                         {member.title}
                       </Heading>
                       <DepartmentLabel department={member.department} />
+
+                      {member.twitch && (
+                        <Link
+                          href={`https://twitch.tv/${member.twitch}`}
+                          external
+                          className="mt-3 inline-flex items-center gap-1 self-start"
+                        >
+                          <IconTwitch className="size-4" />@{member.twitch}
+                        </Link>
+                      )}
 
                       <div className="mt-3 line-clamp-3 text-gray-500">
                         {member.description}
