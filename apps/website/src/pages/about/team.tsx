@@ -358,30 +358,32 @@ const AboutTeamPage: NextPage = () => {
                       </Heading>
                       <DepartmentLabel department={member.department} />
 
-                      {member.twitch && (
-                        <Link
-                          href={`https://twitch.tv/${member.twitch}`}
-                          external
-                          className="mt-3 inline-flex items-center gap-1 self-start"
+                      <div className="mt-auto flex flex-col">
+                        {member.twitch && (
+                          <Link
+                            href={`https://twitch.tv/${member.twitch}`}
+                            external
+                            className="mt-3 inline-flex items-center gap-1 self-start"
+                          >
+                            <IconTwitch className="size-4" />@{member.twitch}
+                          </Link>
+                        )}
+
+                        <div className="mt-3 line-clamp-4 text-gray-500">
+                          {member.description}
+                        </div>
+
+                        <button
+                          type="button"
+                          aria-haspopup="dialog"
+                          onClick={() => setOpen(key)}
+                          className="inline-flex items-center gap-1 self-start pt-3 text-red-600 underline transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
                         >
-                          <IconTwitch className="size-4" />@{member.twitch}
-                        </Link>
-                      )}
-
-                      <div className="mt-3 line-clamp-3 text-gray-500">
-                        {member.description}
+                          Read full bio
+                          <span className="sr-only"> of {member.name}</span>
+                          <IconArrowRight className="size-4" />
+                        </button>
                       </div>
-
-                      <button
-                        type="button"
-                        aria-haspopup="dialog"
-                        onClick={() => setOpen(key)}
-                        className="mt-auto inline-flex items-center gap-1 self-start pt-3 text-red-600 underline transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700"
-                      >
-                        Read full bio
-                        <span className="sr-only"> of {member.name}</span>
-                        <IconArrowRight className="size-4" />
-                      </button>
                     </div>
                   </div>
                 </li>
