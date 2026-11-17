@@ -48,8 +48,8 @@ const POBoxPage: NextPage = () => {
               </Button>
             </li>
             <li>
-              <Button href="/wishlist" external className="px-6 text-xl">
-                Wishlist
+              <Button href="/wishlist" className="px-6 text-xl">
+                Sanctuary Wishlist
               </Button>
             </li>
           </ul>

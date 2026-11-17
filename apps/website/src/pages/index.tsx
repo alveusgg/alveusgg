@@ -214,9 +214,9 @@ const help = [
   },
   {
     type: "wishlist",
-    title: "Gift via our Amazon Wishlist",
+    title: "Support the Sanctuary Wishlist",
     link: "/wishlist",
-    external: true,
+    external: false,
   },
   {
     type: "poBox",
