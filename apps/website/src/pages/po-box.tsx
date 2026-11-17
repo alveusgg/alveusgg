@@ -48,11 +48,7 @@ const POBoxPage: NextPage = () => {
               </Button>
             </li>
             <li>
-              <Button
-                href="https://alveus.gg/amazon"
-                external
-                className="px-6 text-xl"
-              >
+              <Button href="/amazon" external className="px-6 text-xl">
                 Wishlist
               </Button>
             </li>

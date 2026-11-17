@@ -215,7 +215,7 @@ const help = [
   {
     type: "wishlist",
     title: "Gift via our Amazon Wishlist",
-    link: "https://alveus.gg/amazon",
+    link: "/amazon",
     external: true,
   },
   {
