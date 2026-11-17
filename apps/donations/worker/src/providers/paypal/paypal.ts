@@ -3,8 +3,12 @@ import * as Sentry from "@sentry/cloudflare";
 import type { ZodError } from "zod";
 import type { DonationProvider } from "..";
 import type { DonationStorage } from "../storage";
-import { PaypalVerificationURL, SandboxPaypalVerificationURL } from "./const";
-import { PaypalDonationSchema } from "./schema";
+import {
+  PaypalVerificationURL,
+  SandboxPaypalVerificationURL,
+  WishlistPaypalCampaign,
+} from "./const";
+import { PaypalDonationSchema, Tags } from "./schema";
 
 // PayPal retries any non-2xx response for days and eventually disables IPN for
 // the account, so verified notifications are always acknowledged. Anything we
@@ -78,6 +82,14 @@ export class PaypalDonationProvider implements DonationProvider {
     if (params.get("business") !== this.options.expectedBusinessEmailAddress) {
       console.warn(`Valid IPN but business email address mismatch.`);
       return new Response(`Valid IPN but business email address mismatch.`, {
+        status: 200,
+      });
+    }
+
+    const custom = Tags.safeParse(params.get("custom") ?? "");
+    if (custom.data?.campaign === WishlistPaypalCampaign) {
+      console.info(`Valid IPN for a wishlist donation, ignored.`);
+      return new Response(`Valid IPN for a wishlist donation, ignored.`, {
         status: 200,
       });
     }
