@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 
+import { WISHLIST_FUNDS_NOTE } from "@/data/wishlist";
+
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
@@ -56,7 +58,7 @@ const WishlistPage: NextPage = () => {
     <>
       <Meta
         title="Wishlist"
-        description="Help support Alveus Sanctuary's animal ambassadors by donating toward items on our wishlist. Alveus buys each item once it is funded."
+        description="Help support Alveus Sanctuary's animal ambassadors by donating toward items on our wishlist."
       />
 
       {/* Nav background */}
@@ -71,9 +73,8 @@ const WishlistPage: NextPage = () => {
             Alveus.
           </p>
           <p>
-            Donate toward any item through PayPal. Once an item is funded,
-            Alveus buys it and has it shipped to the sanctuary. Product links
-            are for reference only. Have a question?{" "}
+            Donate toward any item through PayPal. Product links are for
+            reference only. Have a question?{" "}
             <Link href="/contact-us" dark>
               Contact us
             </Link>
@@ -161,6 +162,9 @@ const WishlistPage: NextPage = () => {
             )}
           </>
         )}
+        <p className="mt-10 max-w-prose border-t border-alveus-green/20 pt-4 text-sm">
+          {WISHLIST_FUNDS_NOTE}
+        </p>
       </Section>
     </>
   );

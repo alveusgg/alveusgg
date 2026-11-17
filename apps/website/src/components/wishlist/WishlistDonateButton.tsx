@@ -154,8 +154,8 @@ export default function WishlistDonateButton({
         >
           <p className="text-sm text-gray-600">
             {isPartial
-              ? `Chip in any amount from $${(Math.min(PARTIAL_DONATION_MIN_CENTS, remainingCents) / 100).toFixed(2)} through PayPal. $${remainingDollars} is left to raise, and Alveus buys the item once it is fully funded.`
-              : "Your donation goes to Alveus through PayPal. Alveus buys the item and has it shipped to the sanctuary."}
+              ? `Chip in any amount from $${(Math.min(PARTIAL_DONATION_MIN_CENTS, remainingCents) / 100).toFixed(2)} through PayPal. $${remainingDollars} is left to raise.`
+              : "Your donation goes to Alveus through PayPal."}
           </p>
 
           <TextField
@@ -206,10 +206,6 @@ export default function WishlistDonateButton({
               </button>
             )}
           </div>
-
-          {isPartial && (
-            <p className="text-sm text-gray-600">{WISHLIST_FUNDS_NOTE}</p>
-          )}
 
           <TextField
             label="Your name (optional, may be shown on stream)"
@@ -277,6 +273,9 @@ export default function WishlistDonateButton({
                 ? `Donate $${amountNum.toFixed(2)} with PayPal`
                 : "Donate with PayPal"}
           </FormButton>
+          <p className="border-t border-gray-200 pt-3 text-sm text-gray-600">
+            {WISHLIST_FUNDS_NOTE}
+          </p>
         </form>
       </ModalDialog>
     </>

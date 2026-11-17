@@ -3,7 +3,7 @@ export const PARTIAL_DONATION_MIN_CENTS = 500;
 export const PARTIAL_DONATION_QUICK_PICKS = [10, 25, 50];
 
 export const WISHLIST_FUNDS_NOTE =
-  "Donations support Alveus's wishlist. If an item is no longer needed, funds go to other needs.";
+  "Alveus will do its best to purchase the item shown. If it’s unavailable or no longer needed, your donation will support the sanctuary’s general operations. Any amount raised above the item’s funding goal also supports general operations.";
 
 // Partial-donation items stay in these statuses until their target is reached
 export const DONATABLE_STATUSES = ["NEEDED", "PARTIALLY_FULFILLED"] as const;
