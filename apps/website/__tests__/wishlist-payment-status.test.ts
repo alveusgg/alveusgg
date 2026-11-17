@@ -3,7 +3,7 @@ import { Readable } from "node:stream";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { Prisma } from "@alveusgg/database";
+import type { Prisma } from "@alveusgg/database";
 import type * as Database from "@alveusgg/database";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
@@ -89,30 +89,27 @@ const { db, mockPrisma } = vi.hoisted(() => {
       $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
       // The capture claim (capturedAt, captureId, amount, updatedAt, id) or
       // the payment issue UPDATE (status, updatedAt, id, status)
-      $executeRaw: vi.fn(
-        async (strings: TemplateStringsArray, ...parts: unknown[]) => {
-          const { sql, values } = Prisma.sql(strings, ...parts);
-          if (sql.includes("'CAPTURED'")) {
-            const order = db.orders.find((o) => o.id === values[4]);
-            if (
-              !order ||
-              order.status !== "PENDING" ||
-              order.paypalTransactionId
-            ) {
-              return 0;
-            }
-            order.status = "CAPTURED";
-            order.paypalTransactionId = values[1] as string;
-            order.capturedAmount = values[2] as number;
-            return 1;
+      $executeRaw: vi.fn(async ({ sql, values }: Prisma.Sql) => {
+        if (sql.includes("'CAPTURED'")) {
+          const order = db.orders.find((o) => o.id === values[4]);
+          if (
+            !order ||
+            order.status !== "PENDING" ||
+            order.paypalTransactionId
+          ) {
+            return 0;
           }
-          const [status, , id] = values as [string, Date, string];
-          const order = db.orders.find((o) => o.id === id);
-          if (!order || order.status === status) return 0;
-          order.status = status;
+          order.status = "CAPTURED";
+          order.paypalTransactionId = values[1] as string;
+          order.capturedAmount = values[2] as number;
           return 1;
-        },
-      ),
+        }
+        const [status, , id] = values as [string, Date, string];
+        const order = db.orders.find((o) => o.id === id);
+        if (!order || order.status === status) return 0;
+        order.status = status;
+        return 1;
+      }),
     },
   };
 });

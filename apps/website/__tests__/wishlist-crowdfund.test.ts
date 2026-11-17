@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { Prisma } from "@alveusgg/database";
+import type { Prisma } from "@alveusgg/database";
 import type * as Database from "@alveusgg/database";
 
 import {
@@ -70,23 +70,21 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
       ),
     },
     // The conditional claim UPDATE: capturedAt, captureId, amount, updatedAt, id
-    $executeRaw: vi.fn(
-      async (strings: TemplateStringsArray, ...parts: unknown[]) => {
-        const [, captureId, , , id] = Prisma.sql(strings, ...parts).values as [
-          Date,
-          string,
-          number,
-          Date,
-          string,
-        ];
-        const order = db.orders.find((o) => o.id === id);
-        if (!order || order.status !== "PENDING" || order.paypalTransactionId)
-          return 0;
-        order.status = "CAPTURED";
-        order.paypalTransactionId = captureId;
-        return 1;
-      },
-    ),
+    $executeRaw: vi.fn(async ({ values }: Prisma.Sql) => {
+      const [, captureId, , , id] = values as [
+        Date,
+        string,
+        number,
+        Date,
+        string,
+      ];
+      const order = db.orders.find((o) => o.id === id);
+      if (!order || order.status !== "PENDING" || order.paypalTransactionId)
+        return 0;
+      order.status = "CAPTURED";
+      order.paypalTransactionId = captureId;
+      return 1;
+    }),
     wishlistItem: {
       update: vi.fn(
         async ({

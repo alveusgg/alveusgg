@@ -44,6 +44,8 @@ export function capCreditToRemaining({
  * Identifiers for raw conditional UPDATEs on donation orders. Prisma's own
  * update and updateMany select the matching ids first under relationMode
  * "prisma", so overlapping calls both report success.
+ * Compose these fragments with Prisma.sql to inline the identifiers before
+ * execution and keep the data values bound as parameters.
  *
  * TODO: Switch to `updateMany` with the conditions in `where` once Prisma keeps
  * them in the UPDATE and returns its affected row count:
@@ -95,7 +97,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     // the donation. Only pending orders are claimed, never denied, refunded
     // or reversed ones.
     const col = donationOrderSql();
-    const claimed = await tx.$executeRaw`
+    const claimed = await tx.$executeRaw(Prisma.sql`
       UPDATE ${col.table}
       SET ${col.status} = 'CAPTURED',
         ${col.capturedAt} = ${capturedAt},
@@ -104,7 +106,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
         ${col.updatedAt} = ${capturedAt}
       WHERE ${col.id} = ${order.id}
         AND ${col.status} = 'PENDING'
-        AND ${col.paypalTransactionId} IS NULL`;
+        AND ${col.paypalTransactionId} IS NULL`);
     if (claimed === 0) return { status: "duplicate", order } as const;
 
     const item = order.wishlistItem;
@@ -303,10 +305,10 @@ export async function recordWishlistPaymentIssue(issue: WishlistPaymentIssue) {
   // One conditional UPDATE, so a repeated or overlapping delivery of the
   // same event alerts staff once
   const col = donationOrderSql();
-  const updated = await prisma.$executeRaw`
+  const updated = await prisma.$executeRaw(Prisma.sql`
     UPDATE ${col.table}
     SET ${col.status} = ${issue.status}, ${col.updatedAt} = ${new Date()}
-    WHERE ${col.id} = ${order.id} AND ${col.status} <> ${issue.status}`;
+    WHERE ${col.id} = ${order.id} AND ${col.status} <> ${issue.status}`);
   if (updated === 0) return { status: "duplicate", order } as const;
 
   try {

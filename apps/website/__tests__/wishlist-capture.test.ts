@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { Prisma } from "@alveusgg/database";
+import type { Prisma } from "@alveusgg/database";
 import type * as Database from "@alveusgg/database";
 
 import { recordWishlistCapture } from "@/server/db/wishlist";
@@ -192,11 +192,7 @@ describe("recordWishlistCapture", () => {
 
     await recordWishlistCapture(capture);
 
-    const [strings, ...parts] = tx.$executeRaw.mock.calls[0] as [
-      TemplateStringsArray,
-      ...unknown[],
-    ];
-    const { sql, values } = Prisma.sql(strings, ...parts);
+    const [{ sql, values }] = tx.$executeRaw.mock.calls[0] as [Prisma.Sql];
     expect(sql.replace(/\s+/g, " ").trim()).toBe(
       "UPDATE `wishlist_donation_orders` SET `status` = 'CAPTURED', `capturedAt` = ?, `paypalTransactionId` = ?, `capturedAmount` = ?, `updatedAt` = ? WHERE `id` = ? AND `status` = 'PENDING' AND `paypalTransactionId` IS NULL",
     );
