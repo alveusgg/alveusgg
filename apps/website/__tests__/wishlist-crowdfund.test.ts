@@ -142,10 +142,7 @@ const { mockEnv, mockPrisma, discord, db } = vi.hoisted(() => {
       ),
       wishlistDonationOrder: {
         update: vi.fn(() => Promise.resolve({})),
-        fields: new Proxy(
-          {},
-          { get: (_, name) => ({ name, modelName: "WishlistDonationOrder" }) },
-        ),
+        fields: new Proxy({}, { get: (_, name) => ({ name }) }),
       },
     },
   };

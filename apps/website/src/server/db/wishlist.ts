@@ -56,13 +56,10 @@ export function capCreditToRemaining({
 const donationOrderSql = () => {
   const quoteIdentifier = (name: string) =>
     Prisma.raw(`\`${name.replaceAll("`", "``")}\``);
-  // Keep the SQL table name in sync with WishlistDonationOrder's @@map.
-  const tables = {
-    [Prisma.ModelName.WishlistDonationOrder]: "wishlist_donation_orders",
-  };
   const fields = prisma.wishlistDonationOrder.fields;
   return {
-    table: quoteIdentifier(tables[fields.id.modelName]),
+    // Raw SQL uses the table name from WishlistDonationOrder's @@map.
+    table: quoteIdentifier("wishlist_donation_orders"),
     id: quoteIdentifier(fields.id.name),
     status: quoteIdentifier(fields.status.name),
     capturedAt: quoteIdentifier(fields.capturedAt.name),
