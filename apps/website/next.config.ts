@@ -410,6 +410,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/amazon",
+      destination: "/go/amazon",
+      permanent: false,
+    },
+    {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",
       permanent: true,
