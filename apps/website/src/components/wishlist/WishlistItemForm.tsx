@@ -4,8 +4,6 @@ import { useCallback, useState } from "react";
 
 import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
-import { WISHLIST_FUNDS_NOTE } from "@/data/wishlist";
-
 import { classes } from "@/utils/classes";
 import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
@@ -28,6 +26,8 @@ import { TextField } from "@/components/shared/form/TextField";
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
 import IconGift from "@/icons/IconGift";
+
+import WishlistFundsNote from "./WishlistFundsNote";
 
 type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
 
@@ -349,7 +349,7 @@ export function WishlistItemForm({
           until the target is reached
         </CheckboxField>
         {allowPartialDonations && (
-          <p className="text-sm text-gray-400">{WISHLIST_FUNDS_NOTE}</p>
+          <WishlistFundsNote className="text-gray-400" />
         )}
       </Fieldset>
 

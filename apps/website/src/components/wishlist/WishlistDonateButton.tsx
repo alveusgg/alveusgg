@@ -1,14 +1,12 @@
 import { useState } from "react";
 
+import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
 import {
   PARTIAL_DONATION_MIN_CENTS,
   PARTIAL_DONATION_QUICK_PICKS,
-  WISHLIST_FUNDS_NOTE,
-} from "@/data/wishlist";
-
-import { classes } from "@/utils/classes";
-import { trpc } from "@/utils/trpc";
-import { partialDonationAmount } from "@/utils/wishlist";
+  partialDonationAmount,
+} from "@/utils/wishlist";
 
 import Button from "@/components/content/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -22,6 +20,8 @@ import { TextAreaField } from "@/components/shared/form/TextAreaField";
 import { TextField } from "@/components/shared/form/TextField";
 
 import IconPayPal from "@/icons/IconPayPal";
+
+import WishlistFundsNote from "./WishlistFundsNote";
 
 interface Props {
   itemId: string;
@@ -273,9 +273,7 @@ export default function WishlistDonateButton({
                 ? `Donate $${amountNum.toFixed(2)} with PayPal`
                 : "Donate with PayPal"}
           </FormButton>
-          <p className="border-t border-gray-200 pt-3 text-sm text-gray-600">
-            {WISHLIST_FUNDS_NOTE}
-          </p>
+          <WishlistFundsNote className="border-t border-gray-200 pt-3 text-gray-600" />
         </form>
       </ModalDialog>
     </>

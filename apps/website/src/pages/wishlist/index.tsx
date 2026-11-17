@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 
-import { WISHLIST_FUNDS_NOTE } from "@/data/wishlist";
-
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
@@ -10,6 +8,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import WishlistFundsNote from "@/components/wishlist/WishlistFundsNote";
 import WishlistGrid from "@/components/wishlist/WishlistGrid";
 
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -162,9 +161,7 @@ const WishlistPage: NextPage = () => {
             )}
           </>
         )}
-        <p className="mt-10 max-w-prose border-t border-alveus-green/20 pt-4 text-sm">
-          {WISHLIST_FUNDS_NOTE}
-        </p>
+        <WishlistFundsNote className="mt-10 max-w-prose border-t border-alveus-green/20 pt-4" />
       </Section>
     </>
   );

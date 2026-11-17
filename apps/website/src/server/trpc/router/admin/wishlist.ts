@@ -10,12 +10,12 @@ import {
 } from "@/server/trpc/trpc";
 
 import { permissions } from "@/data/permissions";
+
+import { buildAmazonCartUrl } from "@/utils/amazonCart";
 import {
   DONATION_ORDER_STATUSES,
   PAYMENT_ISSUE_STATUSES,
-} from "@/data/wishlist";
-
-import { buildAmazonCartUrl } from "@/utils/amazonCart";
+} from "@/utils/wishlist";
 
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
 const statusEnum = z.enum([

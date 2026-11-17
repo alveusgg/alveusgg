@@ -4,14 +4,16 @@ import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 
-import type { PAYMENT_ISSUE_STATUSES } from "@/data/wishlist";
-
 import {
   notifyWishlistDonation,
   notifyWishlistItemFunded,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
-import { getPartialTargetCents, parsePriceCents } from "@/utils/wishlist";
+import {
+  type PAYMENT_ISSUE_STATUSES,
+  getPartialTargetCents,
+  parsePriceCents,
+} from "@/utils/wishlist";
 
 // Splits a capture into the item's credit and the excess over its remaining
 // balance. `raisedAfterCents` is the total after incrementing by the full amount.

@@ -1,14 +1,12 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { trpc } from "@/utils/trpc";
 import {
   DONATION_ORDER_STATUSES,
-  DONATION_ORDER_STATUS_LABELS,
   type DonationOrderStatus,
   PAYMENT_ISSUE_STATUSES,
-} from "@/data/wishlist";
-
-import { trpc } from "@/utils/trpc";
+} from "@/utils/wishlist";
 
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
@@ -18,6 +16,15 @@ import { Button } from "@/components/shared/form/Button";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
 const formatAmount = (amount: number) => `$${amount.toFixed(2)}`;
+
+const DONATION_ORDER_STATUS_LABELS = {
+  PENDING: "Pending",
+  CAPTURED: "Captured",
+  FAILED: "Failed",
+  REFUNDED: "Refunded",
+  DENIED: "Denied",
+  REVERSED: "Reversed",
+} satisfies Record<DonationOrderStatus, string>;
 
 const statusLabel = (status: string) =>
   DONATION_ORDER_STATUS_LABELS[status as DonationOrderStatus] ?? status;
@@ -78,7 +85,7 @@ export function WishlistDonationsAdmin() {
           <option value="">All statuses</option>
           {DONATION_ORDER_STATUSES.map((s) => (
             <option key={s} value={s}>
-              {DONATION_ORDER_STATUS_LABELS[s]}
+              {statusLabel(s)}
             </option>
           ))}
         </SelectBoxField>
