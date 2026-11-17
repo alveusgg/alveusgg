@@ -236,14 +236,25 @@ export async function verifyPayPalWebhook(
     return false;
   }
 
-  let webhookEvent: unknown;
   try {
-    webhookEvent = JSON.parse(rawBody);
+    const event: unknown = JSON.parse(rawBody);
+    if (event === null || typeof event !== "object" || Array.isArray(event)) {
+      return false;
+    }
   } catch {
     return false;
   }
 
   const token = await getAccessToken();
+  const verification = JSON.stringify({
+    transmission_id: transmissionId,
+    transmission_time: transmissionTime,
+    cert_url: certUrl,
+    auth_algo: authAlgo,
+    transmission_sig: transmissionSig,
+    webhook_id: webhookId,
+    webhook_event: null,
+  });
 
   const res = await fetch(
     `${PAYPAL_API_BASE}/v1/notifications/verify-webhook-signature`,
@@ -253,15 +264,12 @@ export async function verifyPayPalWebhook(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        transmission_id: transmissionId,
-        transmission_time: transmissionTime,
-        cert_url: certUrl,
-        auth_algo: authAlgo,
-        transmission_sig: transmissionSig,
-        webhook_id: webhookId,
-        webhook_event: webhookEvent,
-      }),
+      // Preserve the event's original JSON formatting for signature verification.
+      // @see https://developer.paypal.com/api/rest/webhooks/rest/#postback-method
+      body: verification.replace(
+        '"webhook_event":null',
+        () => `"webhook_event":${rawBody}`,
+      ),
     },
   );
 

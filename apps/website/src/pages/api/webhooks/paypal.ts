@@ -28,11 +28,11 @@ export const config = {
 
 async function readRawBody(req: NextApiRequest): Promise<string> {
   return new Promise((resolve, reject) => {
-    let data = "";
+    const chunks: Buffer[] = [];
     req.on("data", (chunk: Buffer) => {
-      data += chunk.toString();
+      chunks.push(chunk);
     });
-    req.on("end", () => resolve(data));
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
     req.on("error", reject);
   });
 }

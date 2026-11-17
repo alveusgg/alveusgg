@@ -243,7 +243,7 @@ describe("capture status on the success page", () => {
 describe("PayPal payment issue webhooks", () => {
   const send = async (event: Record<string, unknown>) => {
     const req = Readable.from([
-      JSON.stringify(event),
+      Buffer.from(JSON.stringify(event)),
     ]) as unknown as NextApiRequest & {
       method: string;
       headers: Record<string, string>;
