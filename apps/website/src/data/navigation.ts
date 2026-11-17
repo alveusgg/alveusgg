@@ -71,6 +71,10 @@ export const mainNavStructure: NavStructure = {
       community: {
         title: "Get Involved",
         links: {
+          wishlist: {
+            title: "Wishlist",
+            link: "/wishlist",
+          },
           showAndTell: {
             title: "Show & Tell",
             link: "/show-and-tell",

@@ -7,12 +7,12 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
 import { type IconProps } from "@/icons/BaseIcon";
-import IconAmazon from "@/icons/IconAmazon";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
 import IconEnvelope from "@/icons/IconEnvelope";
+import IconGift from "@/icons/IconGift";
 import IconTwitch from "@/icons/IconTwitch";
 
 import Box from "./Box";
@@ -34,12 +34,12 @@ const links = {
     description: "Donate to Alveus on Twitch.tv via PayPal's Giving Fund.",
   },
   wishlist: {
-    icon: IconAmazon,
-    title: "Amazon Wishlist",
+    icon: IconGift,
+    title: "Sanctuary Wishlist",
     link: "/wishlist",
-    external: true,
+    external: false,
     description:
-      "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
+      "Help fund supplies and enrichment for our animal ambassadors.",
   },
   poBox: {
     icon: IconBox,
