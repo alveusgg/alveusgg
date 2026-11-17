@@ -28,7 +28,10 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
       $transaction: vi.fn((fn: (client: typeof tx) => unknown) => fn(tx)),
       wishlistDonationOrder: {
         update: vi.fn(),
-        fields: new Proxy({}, { get: (_, name) => ({ name }) }),
+        fields: new Proxy(
+          {},
+          { get: (_, name) => ({ name, modelName: "WishlistDonationOrder" }) },
+        ),
       },
     },
   };

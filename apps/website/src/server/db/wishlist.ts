@@ -54,11 +54,13 @@ export function capCreditToRemaining({
 const donationOrderSql = () => {
   const quoteIdentifier = (name: string) =>
     Prisma.raw(`\`${name.replaceAll("`", "``")}\``);
-  // Field references keep the columns type checked. The client doesn't expose
-  // the table's @@map name, so it is written out here.
+  // Keep the SQL table name in sync with WishlistDonationOrder's @@map.
+  const tables = {
+    [Prisma.ModelName.WishlistDonationOrder]: "wishlist_donation_orders",
+  };
   const fields = prisma.wishlistDonationOrder.fields;
   return {
-    table: quoteIdentifier("wishlist_donation_orders"),
+    table: quoteIdentifier(tables[fields.id.modelName]),
     id: quoteIdentifier(fields.id.name),
     status: quoteIdentifier(fields.status.name),
     capturedAt: quoteIdentifier(fields.capturedAt.name),
