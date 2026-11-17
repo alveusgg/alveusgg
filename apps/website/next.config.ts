@@ -411,7 +411,7 @@ const config: NextConfig = {
     },
     {
       source: "/amazon",
-      destination: "/go/amazon",
+      destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
       permanent: false,
     },
     {
