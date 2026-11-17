@@ -451,6 +451,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/amazon",
+      destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      permanent: false,
+    },
+    {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",
       permanent: true,

@@ -215,7 +215,7 @@ const help = [
   {
     type: "wishlist",
     title: "Gift via our Amazon Wishlist",
-    link: "/wishlist",
+    link: "/amazon",
     external: true,
   },
   {
