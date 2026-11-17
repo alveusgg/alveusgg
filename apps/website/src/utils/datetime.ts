@@ -13,6 +13,16 @@ export const getToday = (timezone?: string) =>
     .setZone(timezone || DATETIME_ALVEUS_ZONE)
     .startOf("day");
 
+// The day a yearly date, such as a birthday, falls on in the given year.
+// February 29 is celebrated on February 28 in years that aren't leap years
+export const getAnniversary = (date: DateTime, year: number) => {
+  const leapDay = date.month === 2 && date.day === 29;
+  return date.set({
+    year,
+    day: leapDay && !DateTime.local(year).isInLeapYear ? 28 : date.day,
+  });
+};
+
 const getFormat = ({
   style,
   time,

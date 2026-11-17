@@ -69,6 +69,8 @@ export interface Staff extends Person {
   title: string;
   joined: PartialDateString;
   department: Department;
+  twitch?: string;
+  twitchSharedWith?: string;
 }
 
 const staff: Record<string, Staff> = {
@@ -79,6 +81,8 @@ const staff: Record<string, Staff> = {
     description: <MayaText />,
     joined: "2021-02",
     department: "leadership",
+    pronouns: "she/her",
+    twitch: "Maya",
   },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
@@ -104,6 +108,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2021-10",
     department: "operations",
+    pronouns: "he/him",
+    twitch: "theconnorobrien",
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -130,6 +136,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2021-10",
     department: "animalCare",
+    pronouns: "she/her",
+    twitch: "kayla_alveus",
   },
   lindsay: {
     image: [lindsayBellawImage, lindsayBellawFunImage],
@@ -152,6 +160,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2023-07",
     department: "animalCare",
+    pronouns: "she/her",
+    twitch: "lindsay_alveus",
   },
   sruti: {
     image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
@@ -186,6 +196,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2024-04",
     department: "animalCare",
+    pronouns: "she/her",
+    twitch: "srutiloops",
   },
   amanda: {
     image: [amandaDenaroImage, amandaDenaroFunImage],
@@ -209,6 +221,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2024-07",
     department: "animalCare",
+    pronouns: "she/her",
+    twitch: "AmandaExpress",
   },
   miranda: {
     image: [mirandaImage, mirandaFunImage],
@@ -230,6 +244,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2026-03",
     department: "animalCare",
+    pronouns: "she/her",
+    twitch: "randishae83",
   },
   linden: {
     image: lindenImage,
@@ -253,6 +269,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-12",
     department: "facilities",
+    pronouns: "she/her",
+    twitch: "lindengrows",
   },
   lukas: {
     image: lukasMeyerImage,
@@ -272,6 +290,9 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-01",
     department: "operations",
+    pronouns: "he/him",
+    twitch: "srutiloops",
+    twitchSharedWith: "Sruti",
   },
   rocky: {
     image: rockyImage,
@@ -292,6 +313,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-08",
     department: "facilities",
+    pronouns: "he/him",
+    twitch: "rocky539",
   },
   chris: {
     image: [chrisImage, chrisFunImage],
@@ -317,6 +340,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2026-06",
     department: "facilities",
+    pronouns: "he/him",
+    twitch: "lostatdepth",
   },
   space: {
     image: spaceVoyageImage,
@@ -343,6 +368,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2021-02",
     department: "operations",
+    pronouns: "he/him",
+    twitch: "SpaceVoyage",
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -355,6 +382,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2025-04",
     department: "operations",
+    pronouns: "he/him",
+    twitch: "ChandlerIRS",
   },
   jacob: {
     image: [jacobIckesImage, jacobIckesFunImage],
@@ -377,6 +406,8 @@ const staff: Record<string, Staff> = {
     ),
     joined: "2026-01",
     department: "operations",
+    pronouns: "he/him",
+    twitch: "phoenickes",
   },
 };
 

@@ -1,13 +1,22 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { type ComponentProps, useMemo } from "react";
+import {
+  type ComponentProps,
+  type MouseEvent,
+  type PointerEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/build/ambassadors/classification";
-import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import ambassadors, {
+  type Ambassador,
+} from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
@@ -31,6 +40,8 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -113,8 +124,16 @@ const sortByOptions = {
   },
 } as const satisfies Options<ActiveAmbassadorEntry>;
 
+// Keyboard focus gets the same effect as hover
 export const ambassadorImageHover =
-  "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
+  "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110 group-focus-visible:scale-102 group-focus-visible:shadow-lg group-focus-visible:brightness-105 group-focus-visible:contrast-115 group-focus-visible:saturate-110";
+
+// First sentence of the fact, for the short preview on the card
+const factSummary = (fact: string) => {
+  const firstParagraph = fact.split("\n")[0] ?? fact;
+  const match = firstParagraph.match(/^.+?[.!?](?=\s|$)/);
+  return match ? match[0] : firstParagraph;
+};
 
 const AmbassadorItem = ({
   ambassador,
@@ -127,24 +146,75 @@ const AmbassadorItem = ({
   const species = getSpecies(data.species);
   const images = useMemo(() => getAmbassadorImages(key), [key]);
 
+  const fullFact = (data as Ambassador).fact;
+  const fact = fullFact ? factSummary(fullFact) : undefined;
+
+  // On touch, the first tap on a card with a fact shows it, the second opens
+  const pointerType = useRef<string>("mouse");
+  const [armed, setArmed] = useState(false);
+
   return (
     <div>
-      <Link href={`/ambassadors/${camelToKebab(key)}`} className="group">
-        <Image
-          src={images[0].src}
-          alt={images[0].alt}
-          placeholder="blur"
-          width={700}
-          className={`aspect-4/3 h-auto w-full rounded-xl object-cover ${ambassadorImageHover}`}
-          style={{ objectPosition: images[0].position }}
-        />
+      <Link
+        href={`/ambassadors/${camelToKebab(key)}`}
+        onPointerDown={(e: PointerEvent) => {
+          pointerType.current = e.pointerType;
+        }}
+        onClick={(e: MouseEvent) => {
+          if (fact && pointerType.current === "touch" && !armed) {
+            e.preventDefault();
+            setArmed(true);
+          }
+        }}
+        onBlur={() => setArmed(false)}
+        className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700"
+      >
+        <div className="relative">
+          <Image
+            src={images[0].src}
+            alt={images[0].alt}
+            placeholder="blur"
+            width={700}
+            className={classes(
+              "aspect-4/3 h-auto w-full rounded-xl object-cover",
+              ambassadorImageHover,
+            )}
+            style={{ objectPosition: images[0].position }}
+          />
+          {/* Shows the arrow on hover or focus, scaling with the image. Cards
+              with a fact also dim and show it; without one, only the arrow */}
+          <div
+            aria-hidden="true"
+            className={classes(
+              "absolute inset-0 rounded-xl text-alveus-tan transition duration-200 group-hover:scale-102 group-focus-visible:scale-102 motion-reduce:transition-none",
+              fact &&
+                "flex flex-col justify-end gap-1 bg-alveus-green-900/90 p-4 pb-12",
+              armed
+                ? "opacity-100"
+                : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
+            )}
+          >
+            {fact ? (
+              <span className="flex flex-col gap-1">
+                <span className="font-serif text-lg font-bold">
+                  Did you know?
+                </span>
+                <span className="line-clamp-4 text-sm">{fact}</span>
+              </span>
+            ) : (
+              // Keeps the arrow legible on bright photos
+              <span className="absolute right-0 bottom-0 size-20 rounded-br-xl bg-linear-to-tl from-alveus-green-900/70 to-transparent to-60%" />
+            )}
+            <IconArrowRight size={24} className="absolute right-4 bottom-4" />
+          </div>
+        </div>
         <Heading
           level={level}
-          className="mt-2 mb-0 text-center transition-colors group-hover:text-alveus-green-700"
+          className="mt-2 mb-0 text-center transition-colors group-hover:text-alveus-green-700 group-focus-visible:text-alveus-green-700"
         >
           {data.name}
         </Heading>
-        <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
+        <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400 group-focus-visible:text-alveus-green-400">
           {species.name}
         </p>
       </Link>

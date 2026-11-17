@@ -1,16 +1,29 @@
+import type { DateTime } from "luxon";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
-import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import ambassadors, {
+  type AmbassadorKey,
+} from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
+import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import animalQuestEpisodes from "@alveusgg/data/build/animal-quest";
+import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { fetchYouTubeVideosSafe } from "@/server/apis/youtube";
 
 import { channels as youTubeChannels } from "@/data/youtube";
 
-import { formatDateTime } from "@/utils/datetime";
+import { shuffle } from "@/utils/array";
+import { classes } from "@/utils/classes";
+import { formatDateTime, getAnniversary, getToday } from "@/utils/datetime";
+import {
+  formatPartialDateString,
+  parsePartialDateString,
+  splitPartialDateString,
+} from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
@@ -18,11 +31,11 @@ import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
-import Carousel from "@/components/content/Carousel";
 import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
@@ -31,6 +44,8 @@ import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -77,37 +92,113 @@ const slides = [
   },
 ];
 
-const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
-  .filter(([, { homepage }]) => !!homepage)
-  .reduce((obj, [key, { homepage }]) => {
-    const images = getAmbassadorImages(key);
-    return {
-      ...obj,
-      [key]: (
-        <Link
-          href={`/ambassadors/${camelToKebab(key)}`}
-          draggable={false}
-          custom
-          className="group hover:text-alveus-green"
-        >
-          <Image
-            src={images[0].src}
-            alt={images[0].alt}
-            draggable={false}
-            width={200}
-            className={`mx-auto aspect-square h-auto w-full max-w-40 rounded-xl object-cover ${ambassadorImageHover}`}
-            style={{ objectPosition: images[0].position }}
-          />
-          <Heading level={3} className="text-center text-xl transition-colors">
-            {homepage?.title}
-          </Heading>
-          <p className="text-center transition-colors">
-            {homepage?.description}
-          </p>
-        </Link>
-      ),
-    };
-  }, {});
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry,
+);
+
+// The grid has four card spaces: with one or two birthdays, each birthday card
+// is wide and takes two spaces
+const FEATURED_SPACES = 4;
+
+// Active ambassadors whose birthday is on the given day. Only a full date of
+// birth has a day to celebrate, as a year or month alone parses to the 1st
+const getBirthdayAmbassadors = (today: DateTime) =>
+  activeAmbassadors.flatMap(([key, { birth }]) => {
+    if (!birth || splitPartialDateString(birth).length !== 3) return [];
+
+    const born = parsePartialDateString(birth);
+    return getAnniversary(born, today.year).hasSame(today, "day")
+      ? [{ key, age: today.year - born.year }]
+      : [];
+  });
+
+const AmbassadorCard = ({
+  ambassadorKey,
+  size = "default",
+  badge,
+}: {
+  ambassadorKey: AmbassadorKey;
+  size?: "default" | "wide";
+  badge?: ReactNode;
+}) => {
+  const ambassador = ambassadors[ambassadorKey];
+  const species = getSpecies(ambassador.species);
+  const image = getAmbassadorImages(ambassadorKey)[0];
+
+  // The whole card is one link to the ambassador, as in the previous carousel.
+  // It spans five rows of the grid (image, species, name, mission, link) and
+  // shares them with the other cards via subgrid, so each part lines up
+  // across a row even when some text wraps onto more lines.
+  return (
+    <Link
+      href={`/ambassadors/${camelToKebab(ambassadorKey)}`}
+      custom
+      className={classes(
+        "group row-span-5 grid min-w-0 grid-rows-subgrid gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-alveus-green-700",
+        size === "wide" && "col-span-2",
+      )}
+    >
+      {/* A wide card is exactly as tall as a square one (two columns less
+          the gap, halved), so swapping one in after load doesn't move the row */}
+      <div className="@container relative">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          width={size === "default" ? 400 : 800}
+          className={classes(
+            "w-full rounded-xl object-cover",
+            size === "default" && "aspect-square h-auto",
+            size === "wide" && "h-[calc((100cqw-1.5rem)/2)]",
+            ambassadorImageHover,
+          )}
+          style={{ objectPosition: image.position }}
+        />
+        {badge && (
+          <span className="absolute top-3 left-3 rounded-md bg-alveus-tan px-2 py-1 text-sm font-semibold text-alveus-green-900">
+            {badge}
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-alveus-green-700">
+        {species.name} &middot; IUCN: {getIUCNStatus(species.iucn.status)}
+      </p>
+      <Heading
+        level={3}
+        className={classes(
+          "my-0 transition-colors group-hover:text-alveus-green motion-reduce:transition-none",
+          size === "default" ? "text-2xl" : "text-3xl",
+        )}
+      >
+        {ambassador.name}
+      </Heading>
+      <p>{ambassador.mission}</p>
+      <span className="inline-flex items-center gap-1 text-red-600 underline transition-colors group-hover:text-blue-600 motion-reduce:transition-none">
+        Meet {ambassador.name}
+        <IconArrowRight className="size-4" aria-hidden="true" />
+      </span>
+    </Link>
+  );
+};
+
+const Banner = ({
+  tag,
+  title,
+  children,
+}: {
+  tag: string;
+  title: ReactNode;
+  children?: ReactNode;
+}) => (
+  <div className="mb-6 flex flex-col gap-3 rounded-xl border border-alveus-green-200 bg-alveus-green-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p className="text-sm font-semibold tracking-wide text-alveus-green-700 uppercase">
+        {tag}
+      </p>
+      <p className="font-serif text-2xl font-bold">{title}</p>
+    </div>
+    {children}
+  </div>
+);
 
 const latestAnimalQuest = animalQuestEpisodes.toSorted(
   (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
@@ -146,9 +237,17 @@ export const getStaticProps = async () => {
       .slice(0, 4),
   );
 
+  // Ambassadors picked at random from all active ambassadors, refreshed
+  // whenever the page revalidates. Birthdays are found on the client, so pick
+  // extra to still fill every space if some of these have a birthday today
+  const randomAmbassadors = shuffle(
+    activeAmbassadors.map(([key]) => key),
+  ).slice(0, FEATURED_SPACES * 2);
+
   return {
     props: {
       videos: latestVideos,
+      randomAmbassadors,
     },
     revalidate: 1800, // revalidate after 30 minutes
   };
@@ -156,8 +255,38 @@ export const getStaticProps = async () => {
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
+  randomAmbassadors,
 }) => {
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
+
+  // Today in Texas, set after mount so the first render matches the server,
+  // then updated at midnight
+  const [today, setToday] = useState<DateTime>();
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const update = () => {
+      const now = getToday();
+      setToday(now);
+      timeout = setTimeout(update, now.plus({ days: 1 }).diffNow().toMillis());
+    };
+    update();
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Ambassadors with a birthday today take the place of random picks, at most
+  // four, keeping the same number of card spaces
+  const featured = useMemo(() => {
+    const birthdays = today
+      ? getBirthdayAmbassadors(today).slice(0, FEATURED_SPACES)
+      : [];
+    const spaces = birthdays.length * (birthdays.length <= 2 ? 2 : 1);
+    return {
+      birthdays,
+      random: randomAmbassadors
+        .filter((key) => !birthdays.some((birthday) => birthday.key === key))
+        .slice(0, FEATURED_SPACES - spaces),
+    };
+  }, [today, randomAmbassadors]);
 
   const latestLightboxItems = useMemo(
     () =>
@@ -345,39 +474,69 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <Section>
-        <div className="flex flex-wrap items-center gap-y-8">
-          <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2 xl:max-w-2/3 xl:basis-2/3">
-            <div className="flex flex-wrap items-center justify-between">
-              <Heading level={2} id="ambassadors" link>
-                Ambassadors:
-              </Heading>
-              <Link
-                href="/ambassadors"
-                custom
-                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
-              >
-                See All
-                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
-              </Link>
-            </div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <Heading level={2} id="ambassadors" link className="my-0">
+            Ambassadors
+          </Heading>
+          <Link href="/ambassadors" className="text-lg">
+            See All ({activeAmbassadors.length})
+          </Link>
+        </div>
 
-            <Carousel
-              items={featuredAmbassadors}
-              auto={10000}
-              className="mt-4"
-              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+        {featured.birthdays.length > 0 && (
+          <Banner
+            tag="Happy birthday"
+            title={
+              <List
+                items={featured.birthdays.map(
+                  ({ key, age }) => `${ambassadors[key].name} turns ${age}`,
+                )}
+              />
+            }
+          >
+            <p className="text-alveus-green-700">
+              Born{" "}
+              <List
+                items={[
+                  ...new Set(
+                    featured.birthdays.map(({ key }) =>
+                      formatPartialDateString(ambassadors[key].birth),
+                    ),
+                  ),
+                ]}
+              />
+            </p>
+          </Banner>
+        )}
+
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+          {featured.birthdays.map(({ key }) => (
+            <AmbassadorCard
+              key={key}
+              ambassadorKey={key}
+              size={featured.birthdays.length <= 2 ? "wide" : "default"}
+              badge="Birthday today"
             />
-          </div>
+          ))}
+          {featured.random.map((key) => (
+            <AmbassadorCard key={key} ambassadorKey={key} />
+          ))}
+        </div>
 
-          <div className="basis-full md:basis-1/2 md:px-16 xl:basis-1/3">
-            <Heading level={3}>Do you want to support these animals?</Heading>
-            <p className="my-4">
+        <div className="mt-10 flex flex-col gap-4 rounded-xl bg-alveus-green p-6 text-alveus-tan md:flex-row md:items-center md:justify-between">
+          <div>
+            <Heading level={3} className="my-0">
+              Do you want to support these animals?
+            </Heading>
+            <p className="mt-2 max-w-2xl">
               Donations help Alveus carry on its mission to inspire online
               audiences to engage in conservation efforts while providing
               high-quality animal care to these ambassadors.
             </p>
-            <Button href="/donate">Donate Now</Button>
           </div>
+          <Button href="/donate" dark filled className="shrink-0">
+            Donate Now
+          </Button>
         </div>
       </Section>
 

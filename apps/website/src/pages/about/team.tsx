@@ -6,6 +6,7 @@ import staff, { departments } from "@/data/staff";
 import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
 import People, { type Person } from "@/components/content/People";
@@ -38,6 +39,21 @@ const staffWithDepartments = Object.fromEntries(
             </span>
           )}
         </span>
+      ),
+      description: (
+        <>
+          {person.description}
+          {person.twitch && (
+            <p>
+              You&apos;ll see {person.name.split(" ")[0]} in chat as{" "}
+              <Link href={`https://twitch.tv/${person.twitch}`} external>
+                @{person.twitch}
+              </Link>
+              {person.twitchSharedWith &&
+                `, sharing the same account with ${person.twitchSharedWith}`}
+            </p>
+          )}
+        </>
       ),
     },
   ]),
@@ -142,9 +158,12 @@ const advisors: Record<string, Person> = {
           how jumping spiders get their audience&apos;s attention when
           performing their spectacular courtship dances. Currently, he is
           researching the evolution of eye size across tarantulas. To learn more
-          about his work, visit www.spiderdaynightlive.com. Sebastian advises
-          Alveus on the care and behavior of the sanctuary&apos;s arthropod
-          ambassadors.
+          about his work, visit{" "}
+          <Link href="https://www.spiderdaynightlive.com" external>
+            www.spiderdaynightlive.com
+          </Link>
+          . Sebastian advises Alveus on the care and behavior of the
+          sanctuary&apos;s arthropod ambassadors.
         </p>
       </>
     ),
@@ -312,7 +331,7 @@ const AboutTeamPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-20 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
         <Section>
-          <People people={advisors} columns={2} align="center" />
+          <People people={advisors} />
         </Section>
       </div>
 
@@ -333,7 +352,7 @@ const AboutTeamPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-52 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Section>
-          <People people={directors} columns={2} align="center" />
+          <People people={directors} />
         </Section>
       </div>
     </>
