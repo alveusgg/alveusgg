@@ -31,6 +31,14 @@ export function getPayPalReturnParams(query: ParsedUrlQuery) {
 export const canAcceptDonations = (status: string) =>
   (DONATABLE_STATUSES as readonly string[]).includes(status);
 
+export function getWishlistArchiveConfirmation(raisedAmountCents: number) {
+  if (raisedAmountCents === 0) {
+    return "Archive this item? It will be hidden from the public wishlist.";
+  }
+
+  return `This item has received $${(raisedAmountCents / 100).toFixed(2)}. Archiving it closes the funding goal to new donations. Funds are assumed to go towards General Operations. Archive this item?`;
+}
+
 /** Parses a display price like "$29.99" into whole cents. Returns null if unparseable. */
 export function parsePriceCents(price: string | null): number | null {
   if (!price) return null;

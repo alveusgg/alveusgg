@@ -9,6 +9,7 @@ import { WISHLIST_FUNDS_NOTE } from "@/data/wishlist";
 import { classes } from "@/utils/classes";
 import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
+import { getWishlistArchiveConfirmation } from "@/utils/wishlist";
 
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
@@ -125,13 +126,24 @@ export function WishlistItemForm({
 
       if (action === "edit") {
         if (!item) return;
-        const extra =
-          itemType === "GOAL" || allowPartialDonations
-            ? { raisedAmountCents: dollarsToCents("raisedAmount") }
-            : {};
+        const raisedAmount = getStringFromFormData(formData, "raisedAmount");
         const { itemType: _itemType, ...fields } = payload;
+        if (
+          fields.status === "ARCHIVED" &&
+          item.status !== "ARCHIVED" &&
+          item.raisedAmountCents > 0 &&
+          !confirm(getWishlistArchiveConfirmation(item.raisedAmountCents))
+        ) {
+          return;
+        }
         updateMutation.mutate(
-          { id: item.id, ...fields, ...extra },
+          {
+            id: item.id,
+            ...fields,
+            ...(raisedAmount !== "" && {
+              raisedAmountCents: Math.round(Number(raisedAmount) * 100),
+            }),
+          },
           { onSuccess: () => void router.push("/admin/wishlist") },
         );
       } else {
@@ -293,7 +305,9 @@ export function WishlistItemForm({
                     prefix={
                       <IconDollar className="ml-2 size-4 text-gray-500" />
                     }
-                    defaultValue={String((item?.raisedAmountCents ?? 0) / 100)}
+                    placeholder={((item?.raisedAmountCents ?? 0) / 100).toFixed(
+                      2,
+                    )}
                   />
                 )}
               </FieldGroup>
@@ -321,11 +335,7 @@ export function WishlistItemForm({
                 type="number"
                 inputMode="decimal"
                 prefix={<IconDollar className="ml-2 size-4 text-gray-500" />}
-                defaultValue={
-                  item?.raisedAmountCents != null
-                    ? String(item.raisedAmountCents / 100)
-                    : "0"
-                }
+                placeholder={((item?.raisedAmountCents ?? 0) / 100).toFixed(2)}
               />
             )}
           </FieldGroup>

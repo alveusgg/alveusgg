@@ -1,7 +1,10 @@
 import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
 import { trpc } from "@/utils/trpc";
-import { getPartialTargetCents } from "@/utils/wishlist";
+import {
+  getPartialTargetCents,
+  getWishlistArchiveConfirmation,
+} from "@/utils/wishlist";
 
 import Link from "@/components/content/Link";
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -136,7 +139,9 @@ export default function WishlistAdminTable({
                     size="small"
                     width="auto"
                     className={secondaryButtonClasses}
-                    confirmationMessage="Archive this item? It will be hidden from the public wishlist."
+                    confirmationMessage={getWishlistArchiveConfirmation(
+                      item.raisedAmountCents,
+                    )}
                     onClick={() =>
                       deleteItem.mutate({ id: item.id, permanent: false })
                     }
