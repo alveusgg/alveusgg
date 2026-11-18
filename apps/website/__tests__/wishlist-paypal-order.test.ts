@@ -121,6 +121,10 @@ describe("PayPal order request", () => {
             items: [
               {
                 name: "Alveus Sanctuary Wishlist",
+                description:
+                  `Thank you for donating to Alveus Sanctuary toward ${item.title}. ` +
+                  "We’ll do our best to use your gift for this goal. If the item is unavailable or no longer needed, your gift will support the sanctuary’s general operations. " +
+                  "Any amount raised above the funding goal also supports general operations. Alveus provides no goods or services in exchange for your gift.",
                 quantity: "1",
                 unit_amount: expectedAmount,
                 category: "DONATION",
