@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
-    "hono": "^4.13.16",
-    "jose": "^6.2.15",
+    "hono": "^4.13.18",
+    "jose": "^6.2.17",
     "zod": "^4.6.7"
   },
   "devDependencies": {
