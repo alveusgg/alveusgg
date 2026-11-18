@@ -122,6 +122,7 @@ describe("PayPal order request", () => {
               return_url: `https://alveus.example.test/wishlist/donate/success?itemId=${item.id}`,
               cancel_url:
                 "https://alveus.example.test/wishlist?donated=cancelled",
+              shipping_preference: "NO_SHIPPING",
               user_action: "PAY_NOW",
               payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
             },

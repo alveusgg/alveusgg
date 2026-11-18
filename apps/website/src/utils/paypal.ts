@@ -66,6 +66,7 @@ export async function createPayPalOrder(
           experience_context: {
             return_url: opts.returnUrl,
             cancel_url: opts.cancelUrl,
+            shipping_preference: "NO_SHIPPING",
             user_action: "PAY_NOW",
             // Rules out eChecks and other payments that capture as pending
             payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
