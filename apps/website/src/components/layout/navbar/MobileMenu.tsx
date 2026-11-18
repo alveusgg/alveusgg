@@ -11,6 +11,8 @@ import { useActiveNav } from "@/hooks/active";
 import UserMenuMobile from "@/components/layout/navbar/UserMenuMobile";
 import { UtilityMenu } from "@/components/layout/navbar/UtilityMenu";
 
+import IconChevronDown from "@/icons/IconChevronDown";
+
 import { NavLinkSub } from "./NavLink";
 
 function Link({ link, active }: { link: NavStructureLink; active: string }) {
@@ -80,6 +82,32 @@ export function MobileMenu() {
               return (
                 <li key={key}>
                   <Link link={link} active={active} />
+                </li>
+              );
+            }
+
+            if ("links" in link && link.primaryLink) {
+              return (
+                <li key={key} className="relative">
+                  <div className="mr-12">
+                    <Link
+                      link={{ title: link.title, link: link.primaryLink }}
+                      active={active}
+                    />
+                  </div>
+                  <details className="group">
+                    <summary className="absolute top-0 right-0 flex h-10 w-12 cursor-pointer list-none items-center justify-center rounded-sm hover:bg-alveus-tan/20 [&::-webkit-details-marker]:hidden">
+                      <span className="sr-only">
+                        More {link.title.toLowerCase()} options
+                      </span>
+                      <IconChevronDown
+                        size={16}
+                        aria-hidden="true"
+                        className="transition-transform group-open:rotate-180"
+                      />
+                    </summary>
+                    <MobileMenuSubSection data={link} active={active} />
+                  </details>
                 </li>
               );
             }

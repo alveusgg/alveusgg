@@ -11,6 +11,7 @@ export type NavStructureLink = {
 
 export type NavStructureLinks = {
   title: string;
+  primaryLink?: string;
   links: Record<string, NavStructureLink>;
 };
 
@@ -79,15 +80,6 @@ export const mainNavStructure: NavStructure = {
             title: "Pollinator Census",
             link: "/census",
             external: true,
-          },
-        },
-      },
-      contribute: {
-        title: "Contribute",
-        links: {
-          wishlist: {
-            title: "Sanctuary Wishlist",
-            link: "/wishlist",
           },
         },
       },
@@ -184,6 +176,25 @@ export const mainNavStructure: NavStructure = {
   },
   donate: {
     title: "Donate",
-    link: "/donate",
+    primaryLink: "/donate",
+    links: {
+      donation: {
+        title: "Make a donation",
+        link: "/donate",
+      },
+      wishlist: {
+        title: "Wishlist & PO Box",
+        link: "/wishlist",
+      },
+      grants: {
+        title: "Foundation & Corporate Grants",
+        link: "/donate/grants",
+      },
+      givingBlock: {
+        title: "Gifts of Stock or Crypto",
+        link: "/donate/giving-block",
+        external: true,
+      },
+    },
   },
 };
