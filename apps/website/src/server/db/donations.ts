@@ -152,7 +152,7 @@ export async function removeDonations(
 
 export function getPixelLeaderboard(muralId: string, take: number = 10) {
   return prisma.pixel.groupBy({
-    by: ["identifier", "email"],
+    by: ["identifier"],
     where: {
       muralId: muralId,
     },
