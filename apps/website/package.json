@@ -140,7 +140,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.4",
     "ts-morph": "^28.0.0",
-    "tsdown": "^0.23.7",
+    "tsdown": "^0.23.5",
     "tsx": "^4.23.15",
     "typescript-eslint": "^8.72.2",
     "vitest": "^5.1.0",
