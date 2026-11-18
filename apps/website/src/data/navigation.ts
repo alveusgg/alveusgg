@@ -179,7 +179,7 @@ export const mainNavStructure: NavStructure = {
     primaryLink: "/donate",
     links: {
       donation: {
-        title: "Make a donation",
+        title: "Make a Donation",
         link: "/donate",
       },
       wishlist: {
@@ -187,11 +187,11 @@ export const mainNavStructure: NavStructure = {
         link: "/wishlist",
       },
       grants: {
-        title: "Foundation & Corporate Grants",
+        title: "Grants",
         link: "/donate/grants",
       },
       givingBlock: {
-        title: "Gifts of Stock or Crypto",
+        title: "Stock & Crypto",
         link: "/donate/giving-block",
         external: true,
       },
