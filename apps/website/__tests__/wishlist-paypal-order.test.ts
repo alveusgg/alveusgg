@@ -106,6 +106,7 @@ describe("PayPal order request", () => {
         amount,
       });
 
+      const expectedAmount = { currency_code: "USD", value: amount.toFixed(2) };
       expect(result.approvalUrl).toBe("https://paypal.test/approve");
       expect(orderBody(fetch)).toEqual({
         intent: "CAPTURE",
@@ -113,7 +114,22 @@ describe("PayPal order request", () => {
           {
             custom_id: "campaign_wishlist",
             description: "Alveus Sanctuary Wishlist",
-            amount: { currency_code: "USD", value: amount.toFixed(2) },
+            amount: {
+              ...expectedAmount,
+              breakdown: { item_total: expectedAmount },
+            },
+            items: [
+              {
+                name: "Alveus Sanctuary Wishlist",
+                description:
+                  `Thank you for donating to Alveus Sanctuary toward ${item.title}. ` +
+                  "We’ll do our best to use your gift for this goal. If the item is unavailable or no longer needed, your gift will support the sanctuary’s general operations. " +
+                  "Any amount raised above the funding goal also supports general operations. Alveus provides no goods or services in exchange for your gift.",
+                quantity: "1",
+                unit_amount: expectedAmount,
+                category: "DONATION",
+              },
+            ],
           },
         ],
         payment_source: {

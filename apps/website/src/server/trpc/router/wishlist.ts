@@ -171,6 +171,7 @@ export const wishlistRouter = router({
 
       const { orderId, approvalUrl } = await createPayPalOrder({
         amount: input.amount,
+        itemTitle: item.title,
         donorName: input.donorName,
         donorEmail: input.donorEmail,
         // PayPal appends the order ID as `token`, plus `PayerID`
