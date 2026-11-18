@@ -35,6 +35,7 @@ async function getAccessToken(): Promise<string> {
 
 export interface CreateOrderOptions {
   amount: number;
+  itemTitle: string;
   donorName?: string;
   donorEmail?: string;
   returnUrl: string;
@@ -63,6 +64,10 @@ export async function createPayPalOrder(
           items: [
             {
               name: WISHLIST_PAYPAL_DESCRIPTION,
+              description:
+                `Thank you for donating to Alveus Sanctuary toward ${opts.itemTitle}. ` +
+                "We’ll do our best to use your gift for this goal. If the item is unavailable or no longer needed, your gift will support the sanctuary’s general operations. " +
+                "Any amount raised above the funding goal also supports general operations. Alveus provides no goods or services in exchange for your gift.",
               quantity: "1",
               unit_amount: amount,
               category: "DONATION",
