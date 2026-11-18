@@ -45,6 +45,7 @@ export async function createPayPalOrder(
   opts: CreateOrderOptions,
 ): Promise<{ orderId: string; approvalUrl: string }> {
   const token = await getAccessToken();
+  const amount = { currency_code: "USD", value: opts.amount.toFixed(2) };
 
   const res = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
     method: "POST",
@@ -58,7 +59,15 @@ export async function createPayPalOrder(
         {
           custom_id: WISHLIST_PAYPAL_CUSTOM_ID,
           description: WISHLIST_PAYPAL_DESCRIPTION,
-          amount: { currency_code: "USD", value: opts.amount.toFixed(2) },
+          amount: { ...amount, breakdown: { item_total: amount } },
+          items: [
+            {
+              name: WISHLIST_PAYPAL_DESCRIPTION,
+              quantity: "1",
+              unit_amount: amount,
+              category: "DONATION",
+            },
+          ],
         },
       ],
       payment_source: {

@@ -106,6 +106,7 @@ describe("PayPal order request", () => {
         amount,
       });
 
+      const expectedAmount = { currency_code: "USD", value: amount.toFixed(2) };
       expect(result.approvalUrl).toBe("https://paypal.test/approve");
       expect(orderBody(fetch)).toEqual({
         intent: "CAPTURE",
@@ -113,7 +114,18 @@ describe("PayPal order request", () => {
           {
             custom_id: "campaign_wishlist",
             description: "Alveus Sanctuary Wishlist",
-            amount: { currency_code: "USD", value: amount.toFixed(2) },
+            amount: {
+              ...expectedAmount,
+              breakdown: { item_total: expectedAmount },
+            },
+            items: [
+              {
+                name: "Alveus Sanctuary Wishlist",
+                quantity: "1",
+                unit_amount: expectedAmount,
+                category: "DONATION",
+              },
+            ],
           },
         ],
         payment_source: {
