@@ -255,6 +255,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       amount: capture.amount,
       email: capture.payerEmail ?? order.donorEmail,
       name: capture.payerName ?? order.donorName,
+      itemId: order.wishlistItem.id,
       itemTitle: order.wishlistItem.title,
     });
     if (neonDonationId) {

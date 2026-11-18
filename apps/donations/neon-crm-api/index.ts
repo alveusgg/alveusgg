@@ -21,6 +21,10 @@ import { fetchOk, fetchWithSchema, type Options, url } from "./api";
 import { fixTimestampsTimezone } from "./utils";
 
 export { formatDateInTimezone } from "./utils";
+export {
+  getWishlistCampaignId,
+  parseWishlistCampaignCategories,
+} from "./wishlist-campaigns";
 
 export type { Donation, DonationSearch };
 export {

@@ -317,9 +317,7 @@ export const CreateAccountResponse = z.object({
 // Tender types are configured per organization in Neon. Alveus uses 17 for
 // PayPal (code PYPL).
 export const PAYPAL_TENDER_TYPE = 17;
-// The website logs wishlist donations under this campaign, and the donations
-// worker skips them
-export const WISHLIST_CAMPAIGN_ID = "24";
+export { WISHLIST_CAMPAIGN_ID } from "./wishlist-campaigns";
 
 export type CreateDonationInput = z.input<typeof CreateDonationInput>;
 // Scoped to the fields the website sets for wishlist donations.

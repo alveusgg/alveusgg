@@ -4,7 +4,11 @@ import {
   createDonation,
   findOrCreateAccount,
   formatDateInTimezone,
+  getWishlistCampaignId,
+  parseWishlistCampaignCategories,
 } from "@alveusgg/neon-crm-api";
+
+import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
@@ -26,12 +30,58 @@ export function getNeonCrmOptions() {
 const describeError = (result: { errorType: string; error: unknown }) =>
   `${result.errorType}: ${result.error instanceof Error ? result.error.message : String(result.error)}`;
 
+/** Maps category slugs to extra Neon campaigns, empty when the value is invalid. */
+export function getWishlistCampaignCategories() {
+  try {
+    return parseWishlistCampaignCategories(
+      env.WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES,
+    );
+  } catch (err) {
+    console.warn(
+      "Invalid WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES, using the default wishlist campaign:",
+      err,
+    );
+    return new Map<string, string>();
+  }
+}
+
+/** Never throws, so a Neon problem cannot fail a donation. */
+export async function getWishlistItemCampaignId(itemId: string) {
+  const campaigns = getWishlistCampaignCategories();
+  if (campaigns.size === 0) return WISHLIST_CAMPAIGN_ID;
+
+  try {
+    const item = await prisma.wishlistItem.findUnique({
+      where: { id: itemId },
+      select: {
+        categoryId: true,
+        category: { select: { slug: true, archivedAt: true } },
+      },
+    });
+    if (!item?.categoryId) return WISHLIST_CAMPAIGN_ID;
+    if (!item.category || item.category.archivedAt) {
+      console.warn(
+        `Wishlist item ${itemId} has a missing or archived category, using the default Neon campaign`,
+      );
+      return WISHLIST_CAMPAIGN_ID;
+    }
+    return getWishlistCampaignId(item.category.slug, campaigns);
+  } catch (err) {
+    console.warn(
+      `Could not load the category of wishlist item ${itemId}, using the default Neon campaign:`,
+      err,
+    );
+    return WISHLIST_CAMPAIGN_ID;
+  }
+}
+
 export type WishlistNeonDonation = {
   captureId: string;
   capturedAt: Date;
   amount: number;
   email: string | null;
   name: string | null;
+  itemId: string;
   itemTitle: string;
 };
 
@@ -69,12 +119,14 @@ export async function logWishlistDonationToNeon(
     donation.capturedAt,
     options.localTimezone,
   );
+  // Includes any excess over the item's target
+  const campaignId = await getWishlistItemCampaignId(donation.itemId);
   const created = await createDonation(options, {
     accountId: account.data.id,
     amount: donation.amount,
     date: capturedDate,
-    // The donations worker skips this campaign, so no pixels are awarded
-    campaign: { id: WISHLIST_CAMPAIGN_ID },
+    // The donations worker skips the wishlist campaigns, so no pixels are awarded
+    campaign: { id: campaignId },
     payments: [
       {
         amount: donation.amount,
