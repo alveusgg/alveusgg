@@ -1,8 +1,13 @@
+import {
+  WISHLIST_CAMPAIGN_ID,
+  getWishlistCampaignId,
+} from "@alveusgg/neon-crm-api";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
+import { getWishlistCampaignCategories } from "@/server/apis/neon-crm";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
@@ -274,12 +279,20 @@ export const adminWishlistRouter = router({
     }),
 
   // Includes archived categories, unlike the public getCategories
-  adminGetAllCategories: permittedProcedure.query(async () =>
-    prisma.wishlistCategory.findMany({
+  adminGetAllCategories: permittedProcedure.query(async () => {
+    const campaigns = getWishlistCampaignCategories();
+    const categories = await prisma.wishlistCategory.findMany({
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       include: { _count: { select: { items: true } } },
-    }),
-  ),
+    });
+    // Archived categories log to the default campaign
+    return categories.map((category) => ({
+      ...category,
+      neonCampaignId: category.archivedAt
+        ? WISHLIST_CAMPAIGN_ID
+        : getWishlistCampaignId(category.slug, campaigns),
+    }));
+  }),
 
   // The slug is set at creation and never changes, so renames keep links working
   updateCategory: permittedProcedure

@@ -912,4 +912,150 @@ describe("wishlist Neon donations", () => {
       { id: "1" },
     );
   });
+
+  describe("with additional wishlist campaigns", () => {
+    const envWithCampaigns = {
+      ...env,
+      WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES: "25:arri-wishlist,99:test",
+    } as Env;
+    const campaignFor = (id: string) => ({
+      id,
+      name: `Campaign ${id}`,
+      status: "ACTIVE",
+    });
+
+    it.each(["24", "25", "99"])(
+      "acknowledges a webhook in campaign %s without importing it",
+      async (campaignId) => {
+        const provider = await NeonDonationProvider.init(
+          service,
+          envWithCampaigns,
+        );
+        const response = await provider.handle(
+          new Request("https://example.com/neon/live", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Basic ${btoa("donations:example")}`,
+            },
+            body: JSON.stringify({
+              eventTrigger: "createDonation",
+              eventTimestamp: "2026-01-01T12:00:00Z",
+              organizationId: "example",
+              data: {
+                ...rawDonation,
+                anonymousType: "No",
+                campaign: { id: campaignId, name: "Wishlist" },
+              },
+            }),
+          }),
+        );
+
+        expect(response.status).toBe(200);
+        expect(service.add).not.toHaveBeenCalled();
+        expect(getDonation).not.toHaveBeenCalled();
+        expect(getAccount).not.toHaveBeenCalled();
+      },
+    );
+
+    it("skips the default and mapped campaigns in sync and imports the rest", async () => {
+      const campaigns: Record<string, string | null> = {
+        "1": "24",
+        "2": "25",
+        "3": "99",
+        "4": "7",
+        "5": null,
+      };
+      vi.mocked(searchDonations).mockResolvedValue({
+        ok: true,
+        data: {
+          pagination: {
+            currentPage: 0,
+            pageSize: 50,
+            totalPages: 1,
+            totalResults: 5,
+          },
+          searchResults: Object.keys(campaigns).map((id) => ({
+            "Donation ID": id,
+          })),
+        },
+      });
+      vi.mocked(getDonation).mockImplementation(async (_options, id) => {
+        const campaignId = campaigns[id];
+        return {
+          ok: true,
+          data: DonationResponse.parse({
+            ...rawDonation,
+            id,
+            anonymousType: "No",
+            campaign: campaignId ? campaignFor(campaignId) : null,
+          }),
+        };
+      });
+      const provider = await NeonDonationProvider.init(
+        service,
+        envWithCampaigns,
+      );
+
+      await expect(provider.syncRecentDonations()).resolves.toEqual({
+        complete: true,
+        found: 5,
+        imported: 2,
+        skipped: 3,
+        retrying: 0,
+      });
+      expect(service.add).toHaveBeenCalledTimes(2);
+      expect(service.add).toHaveBeenCalledWith(
+        expect.objectContaining({ providerUniqueId: "example-4" }),
+      );
+      expect(service.add).toHaveBeenCalledWith(
+        expect.objectContaining({ providerUniqueId: "example-5" }),
+      );
+      for (const id of ["1", "2", "3"]) {
+        expect(console.info).toHaveBeenCalledWith(
+          "Skipping wishlist Neon donation",
+          { id },
+        );
+      }
+    });
+
+    it("imports a mapped campaign when the variable is unset", async () => {
+      vi.mocked(searchDonations).mockResolvedValue({
+        ok: true,
+        data: {
+          pagination: {
+            currentPage: 0,
+            pageSize: 50,
+            totalPages: 1,
+            totalResults: 1,
+          },
+          searchResults: [{ "Donation ID": "2" }],
+        },
+      });
+      vi.mocked(getDonation).mockResolvedValue({
+        ok: true,
+        data: DonationResponse.parse({
+          ...rawDonation,
+          id: "2",
+          anonymousType: "No",
+          campaign: campaignFor("25"),
+        }),
+      });
+      const provider = await NeonDonationProvider.init(service, env);
+
+      await expect(provider.syncRecentDonations()).resolves.toMatchObject({
+        imported: 1,
+        skipped: 0,
+      });
+    });
+
+    it("rejects an invalid value", async () => {
+      await expect(
+        NeonDonationProvider.init(service, {
+          ...env,
+          WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES: "abc:arri-wishlist",
+        } as Env),
+      ).rejects.toThrow("campaign ID must be digits only");
+    });
+  });
 });

@@ -8,7 +8,8 @@
     ".": "./index.ts",
     "./env": "./env.ts",
     "./schema": "./schema.ts",
-    "./webhooks": "./webhooks.ts"
+    "./webhooks": "./webhooks.ts",
+    "./wishlist-campaigns": "./wishlist-campaigns.ts"
   },
   "scripts": {
     "types": "tsc --noEmit",

@@ -1,6 +1,7 @@
 /**
  * This file is included in `/next.config.js` which ensures the app isn't built with invalid env vars.
  */
+import { parseWishlistCampaignCategories } from "@alveusgg/neon-crm-api/wishlist-campaigns";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -139,6 +140,19 @@ export const env = createEnv({
     PAYPAL_CLIENT_SECRET: z.string().optional(),
     PAYPAL_WEBHOOK_ID: z.string().optional(),
     DISCORD_WISHLIST_WEBHOOK_URL: z.url().optional(),
+    WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES: z
+      .string()
+      .optional()
+      .superRefine((val, ctx) => {
+        try {
+          parseWishlistCampaignCategories(val);
+        } catch (err) {
+          ctx.addIssue({
+            code: "custom",
+            message: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -262,6 +276,8 @@ export const env = createEnv({
     PAYPAL_WEBHOOK_ID: process.env.PAYPAL_WEBHOOK_ID || undefined,
     DISCORD_WISHLIST_WEBHOOK_URL:
       process.env.DISCORD_WISHLIST_WEBHOOK_URL || undefined,
+    WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES:
+      process.env.WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES || undefined,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,

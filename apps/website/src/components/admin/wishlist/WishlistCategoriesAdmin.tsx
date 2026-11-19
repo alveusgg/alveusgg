@@ -198,6 +198,7 @@ export function WishlistCategoriesAdmin() {
               <tr className="border-b border-gray-700">
                 <th className="text-left">Name</th>
                 <th className="text-left">Slug</th>
+                <th className="text-left">Neon campaign</th>
                 <th className="text-left">Items</th>
                 <th className="text-left">Status</th>
                 <th className="text-left">Actions</th>
@@ -220,6 +221,7 @@ export function WishlistCategoriesAdmin() {
                     )}
                   </td>
                   <td className="p-1 font-mono">{category.slug}</td>
+                  <td className="p-1 font-mono">{category.neonCampaignId}</td>
                   <td className="p-1">{category._count.items}</td>
                   <td className="p-1">
                     {category.archivedAt ? "Archived" : "Active"}

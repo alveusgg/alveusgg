@@ -5,6 +5,7 @@ import {
   formatDateInTimezone,
   getAccount,
   getDonation,
+  parseWishlistCampaignCategories,
   searchDonations,
   WISHLIST_CAMPAIGN_ID,
 } from "@alveusgg/neon-crm-api";
@@ -22,6 +23,7 @@ import timingSafeCompareString from "../../utils/timing-safe-compare-string";
 
 type NeonDonationProviderOptions = Options & {
   donationDisplayNameCustomFieldId?: string;
+  additionalWishlistCampaignIds?: Iterable<string>;
   onParseError?: (
     error: ZodError,
     context: {
@@ -119,6 +121,7 @@ export class NeonDonationProvider implements DonationProvider {
   name: Providers = "neon";
   private syncPromise?: Promise<NeonSyncResult>;
   private removeFailedPromise?: Promise<void>;
+  private wishlistCampaignIds: ReadonlySet<string>;
 
   constructor(
     private options: NeonDonationProviderOptions,
@@ -129,6 +132,10 @@ export class NeonDonationProvider implements DonationProvider {
         "Neon donation providers require basic auth credentials. Please provide basicAuthUsername and basicAuthPassword .",
       );
     }
+    this.wishlistCampaignIds = new Set([
+      WISHLIST_CAMPAIGN_ID,
+      ...(options.additionalWishlistCampaignIds ?? []),
+    ]);
   }
 
   static async init(
@@ -139,6 +146,11 @@ export class NeonDonationProvider implements DonationProvider {
       ...envToOptions(env),
       donationDisplayNameCustomFieldId:
         env.NEON_DONATION_DISPLAY_NAME_CUSTOM_FIELD_ID,
+      // Throws on an invalid value, so the provider never imports and
+      // awards pixels for donations the website logs to these campaigns
+      additionalWishlistCampaignIds: parseWishlistCampaignCategories(
+        env.WISHLIST_ADDITIONAL_CAMPAIGN_CATEGORIES,
+      ).values(),
       onParseError: reportNeonParseError,
     };
 
@@ -611,7 +623,8 @@ export class NeonDonationProvider implements DonationProvider {
   }
 
   private isWishlistDonation(data: NeonDonationData) {
-    if (data.campaign?.id !== WISHLIST_CAMPAIGN_ID) return false;
+    const campaignId = data.campaign?.id;
+    if (!campaignId || !this.wishlistCampaignIds.has(campaignId)) return false;
 
     // The website logs wishlist donations in Neon, they are not part of this
     // pipeline
