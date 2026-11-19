@@ -426,6 +426,7 @@ model FileStorageObject {
   imageAttachment ImageAttachment?
   imageMetadata   ImageMetadata?
   roundsCheck     RoundsCheck?
+  wishlistItem    WishlistItem?
 
   @@index([expiresAt, deletedAt], name: "FileStorageObject_cleanup")
   @@index([expiresAt], name: "FileStorageObject_expiresAt")
@@ -532,8 +533,14 @@ model WishlistItem {
   id          String  @id @default(cuid())
   title       String
   description String? @db.Text
+  // Legacy external image, superseded by fileStorageObject when that is set
   imageUrl    String? @db.Text
   notes       String? @db.Text
+
+  fileStorageObjectId String?            @unique
+  // SetNull, not Cascade like rounds checks, so deleting a file storage
+  // object can never delete an item and its donation history
+  fileStorageObject   FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id], onDelete: SetNull)
 
   itemType ItemType @default(PRODUCT)
 
