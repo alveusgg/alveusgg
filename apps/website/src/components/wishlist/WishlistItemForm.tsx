@@ -1,13 +1,23 @@
+import { createId } from "@paralleldrive/cuid2";
 import { useRouter } from "next/router";
 import type { FormEvent } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
+import type { WishlistCategory } from "@alveusgg/database";
 
 import { classes } from "@/utils/classes";
+import {
+  type ImageMimeType,
+  imageMimeTypes,
+  maxImageUploadSize,
+} from "@/utils/files";
 import { getStringFromFormData } from "@/utils/forms";
-import { trpc } from "@/utils/trpc";
+import { createImageUrl } from "@/utils/image";
+import { extractColorFromImage } from "@/utils/process-image";
+import { type RouterOutputs, trpc } from "@/utils/trpc";
 import { getWishlistArchiveConfirmation } from "@/utils/wishlist";
+
+import useFileUpload from "@/hooks/files/upload";
 
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
@@ -20,20 +30,27 @@ import {
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
+import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { TextField } from "@/components/shared/form/TextField";
+import {
+  UploadAttachmentsField,
+  useUploadAttachmentsData,
+} from "@/components/shared/form/UploadAttachmentsField";
 
 import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
 import IconGift from "@/icons/IconGift";
+import IconTrash from "@/icons/IconTrash";
 
 import WishlistFundsNote from "./WishlistFundsNote";
 
-type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
+type AdminWishlistItem =
+  RouterOutputs["adminWishlist"]["adminGetAllItems"][number];
 
 type WishlistItemFormProps = {
   action: "create" | "edit";
-  item?: ItemWithCategory;
+  item?: AdminWishlistItem;
   categories: WishlistCategory[];
   onCreate?: () => void;
   className?: string;
@@ -47,6 +64,12 @@ const STATUS_OPTIONS = [
   "OPENED",
   "ARCHIVED",
 ] as const;
+
+const resizeImageOptions = {
+  maxWidth: 1024,
+  maxHeight: 1024,
+  quality: 90,
+};
 
 export function WishlistItemForm({
   action,
@@ -69,19 +92,71 @@ export function WishlistItemForm({
   const createMutation = trpc.adminWishlist.createItem.useMutation();
   const updateMutation = trpc.adminWishlist.updateItem.useMutation();
   const deleteMutation = trpc.adminWishlist.deleteItem.useMutation();
+  const createFileUpload = trpc.adminWishlist.createFileUpload.useMutation();
+
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  const upload = useFileUpload<ImageMimeType>(
+    (signature) => createFileUpload.mutateAsync(signature),
+    { allowedFileTypes: imageMimeTypes },
+  );
+
+  const imageAttachmentData = useUploadAttachmentsData(
+    useMemo(() => {
+      const { fileStorageObjectId, fileStorageObjectUrl } = item || {};
+      if (!fileStorageObjectId || !fileStorageObjectUrl) {
+        return [];
+      }
+
+      return [
+        {
+          status: "saved",
+          id: createId(),
+          url: fileStorageObjectUrl,
+          fileStorageObjectId,
+          extractColor: async () =>
+            await extractColorFromImage(
+              createImageUrl({
+                src: fileStorageObjectUrl,
+                width: 512,
+                quality: 100,
+              }),
+            ),
+        },
+      ];
+    }, [item]),
+  );
+  const imageFile = imageAttachmentData.files[0];
+
+  // Items created before uploads may still have an external image URL. It is
+  // shown read-only until it is cleared, and an uploaded image replaces it.
+  const [legacyImageUrl, setLegacyImageUrl] = useState(item?.imageUrl ?? null);
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      setImageError(null);
       const formData = new FormData(event.currentTarget);
+
+      if (imageFile?.status === "upload.pending") {
+        setImageError("Please wait for the image upload to finish.");
+        return;
+      }
+      if (imageFile?.status === "upload.failed") {
+        setImageError("The image upload failed, remove it and try again.");
+        return;
+      }
 
       const shared = {
         title: getStringFromFormData(formData, "title"),
         // null, not undefined, so clearing a field on edit saves the change
         description: getStringFromFormData(formData, "description") || null,
-        imageUrl: getStringFromFormData(formData, "imageUrl") || null,
+        fileStorageObjectId:
+          imageFile?.status === "upload.done" || imageFile?.status === "saved"
+            ? imageFile.fileStorageObjectId
+            : null,
         priority: getStringFromFormData(
           formData,
           "priority",
@@ -140,6 +215,7 @@ export function WishlistItemForm({
           {
             id: item.id,
             ...fields,
+            ...(item.imageUrl && !legacyImageUrl ? { imageUrl: null } : {}),
             ...(raisedAmount !== "" && {
               raisedAmountCents: Math.round(Number(raisedAmount) * 100),
             }),
@@ -158,6 +234,8 @@ export function WishlistItemForm({
       itemType,
       categoryId,
       allowPartialDonations,
+      imageFile,
+      legacyImageUrl,
       createMutation,
       updateMutation,
       router,
@@ -180,6 +258,7 @@ export function WishlistItemForm({
           <ProcedureErrorMessage error={updateMutation.error} />
         </MessageBox>
       )}
+      {imageError && <MessageBox variant="failure">{imageError}</MessageBox>}
       {deleteMutation.error && (
         <MessageBox variant="failure">
           <ProcedureErrorMessage error={deleteMutation.error} />
@@ -241,13 +320,62 @@ export function WishlistItemForm({
           defaultValue={item?.description ?? ""}
         />
 
-        <TextField
-          label="Image URL"
-          name="imageUrl"
-          inputMode="url"
-          type="url"
-          defaultValue={item?.imageUrl ?? ""}
+        <UploadAttachmentsField
+          label="Image"
+          {...imageAttachmentData}
+          maxNumber={1}
+          multiple={false}
+          upload={upload}
+          allowedFileTypes={imageMimeTypes}
+          maxFileSize={maxImageUploadSize}
+          resizeImageOptions={resizeImageOptions}
+          renderAttachment={(props) => (
+            <ImageUploadAttachment {...props}>
+              <div className="flex h-full flex-col items-start justify-center">
+                <Button
+                  size="small"
+                  width="auto"
+                  onClick={() =>
+                    imageAttachmentData.dispatch({
+                      type: "remove",
+                      id: props.fileReference.id,
+                    })
+                  }
+                  disabled={props.disabled}
+                >
+                  <IconTrash className="size-5" />
+                  Remove
+                </Button>
+              </div>
+            </ImageUploadAttachment>
+          )}
         />
+
+        {legacyImageUrl && (
+          <div>
+            <TextField
+              label="Legacy image URL"
+              value={legacyImageUrl}
+              isReadOnly
+              inputClassName="text-gray-500"
+              suffix={
+                <Button
+                  size="small"
+                  width="auto"
+                  className={secondaryButtonClasses}
+                  onClick={() => setLegacyImageUrl(null)}
+                >
+                  Clear
+                </Button>
+              }
+            />
+            <p className="mt-1 text-sm text-gray-400">
+              {imageFile
+                ? "Not shown, the uploaded image is used instead."
+                : "Shown until an image is uploaded. Upload a copy of it, then clear this URL."}
+            </p>
+          </div>
+        )}
 
         {itemType === "PRODUCT" ? (
           <>

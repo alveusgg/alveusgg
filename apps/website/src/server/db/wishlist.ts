@@ -1,8 +1,15 @@
+import { TRPCError } from "@trpc/server";
+
 import { Prisma, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
+import {
+  checkAndFixUploadedImageFileStorageObject,
+  deleteFileStorageObject,
+  getViewUrlForFileStorageObjectKey,
+} from "@/server/utils/file-storage";
 
 import {
   notifyWishlistDonation,
@@ -14,6 +21,60 @@ import {
   getPartialTargetCents,
   parsePriceCents,
 } from "@/utils/wishlist";
+
+export const wishlistImageUploadPrefix = "wishlist/";
+
+// The uploaded image takes precedence over the legacy external image URL
+export function getWishlistItemImageUrl(item: {
+  imageUrl: string | null;
+  fileStorageObject: { key: string } | null;
+}) {
+  return item.fileStorageObject
+    ? String(getViewUrlForFileStorageObjectKey(item.fileStorageObject.key))
+    : item.imageUrl;
+}
+
+// Checks that an upload is a valid wishlist image before it is linked to an item
+export async function checkWishlistImageUpload(fileStorageObjectId: string) {
+  const fileStorageObject = await prisma.fileStorageObject.findUnique({
+    where: { id: fileStorageObjectId },
+    select: { prefix: true },
+  });
+  // Only wishlist uploads, so an item can never take over another feature's file
+  if (fileStorageObject?.prefix !== wishlistImageUploadPrefix) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Image upload not found",
+    });
+  }
+
+  const { error } =
+    await checkAndFixUploadedImageFileStorageObject(fileStorageObjectId);
+  if (error) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Error checking image upload: ${error}`,
+    });
+  }
+}
+
+// Deletes an image that is no longer linked to an item. The item change is
+// already saved, so a failed deletion only marks the object as expired, and
+// the scheduled file storage cleanup deletes it later.
+export async function deleteWishlistImage(fileStorageObjectId: string) {
+  try {
+    await deleteFileStorageObject(fileStorageObjectId);
+  } catch (err) {
+    console.error(
+      `Failed to delete wishlist image ${fileStorageObjectId}, leaving it to the cleanup:`,
+      err,
+    );
+    await prisma.fileStorageObject.update({
+      where: { id: fileStorageObjectId },
+      data: { expiresAt: new Date() },
+    });
+  }
+}
 
 // Splits a capture into the item's credit and the excess over its remaining
 // balance. `raisedAfterCents` is the total after incrementing by the full amount.

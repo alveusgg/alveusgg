@@ -3,11 +3,23 @@ import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
+import { env } from "@/env";
+
+import {
+  checkWishlistImageUpload,
+  deleteWishlistImage,
+  wishlistImageUploadPrefix,
+} from "@/server/db/wishlist";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
+import {
+  createFileStorageUpload,
+  getViewUrlForFileStorageObjectKey,
+  imageUploadInputSchema,
+} from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
 
@@ -43,7 +55,7 @@ const QUANTITY_FULFILLED_ERROR =
 const baseItemFields = {
   title: z.string().min(1).max(255),
   description: z.string().max(2000).optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  fileStorageObjectId: z.cuid().optional().nullable(),
   priority: priorityEnum.default("MEDIUM"),
   status: statusEnum.default("NEEDED"),
   categoryId: z.string().optional().nullable(),
@@ -81,7 +93,9 @@ const itemUpdateInput = z
     id: z.string(),
     title: z.string().min(1).max(255).optional(),
     description: z.string().max(2000).optional().nullable(),
-    imageUrl: z.string().url().optional().nullable(),
+    // The legacy external image URL can only be cleared, new images are uploaded
+    imageUrl: z.null().optional(),
+    fileStorageObjectId: z.cuid().optional().nullable(),
     priority: priorityEnum.optional(),
     status: statusEnum.optional(),
     categoryId: z.string().optional().nullable(),
@@ -124,15 +138,22 @@ export const adminWishlistRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      return prisma.wishlistItem.findMany({
+      const items = await prisma.wishlistItem.findMany({
         where: {
           ...(input.status ? { status: input.status } : {}),
           ...(input.categoryId ? { categoryId: input.categoryId } : {}),
           ...(input.itemType ? { itemType: input.itemType } : {}),
         },
-        include: { category: true },
+        include: { category: true, fileStorageObject: true },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       });
+
+      return items.map(({ fileStorageObject, ...item }) => ({
+        ...item,
+        fileStorageObjectUrl: fileStorageObject
+          ? String(getViewUrlForFileStorageObjectKey(fileStorageObject.key))
+          : null,
+      }));
     }),
 
   adminGetFullyFundedProducts: permittedProcedure.query(async () => {
@@ -152,10 +173,14 @@ export const adminWishlistRouter = router({
   createItem: permittedProcedure
     .input(itemCreateInput)
     .mutation(async ({ input }) => {
+      if (input.fileStorageObjectId) {
+        await checkWishlistImageUpload(input.fileStorageObjectId);
+      }
+
       return prisma.wishlistItem.create({
         data: {
           ...input,
-          imageUrl: input.imageUrl ?? null,
+          fileStorageObjectId: input.fileStorageObjectId ?? null,
           notes: input.notes ?? null,
           categoryId: input.categoryId ?? null,
           ...(input.itemType === "PRODUCT"
@@ -202,11 +227,30 @@ export const adminWishlistRouter = router({
         });
       }
 
-      return prisma.wishlistItem.update({
+      // Only new uploads, since a failed check deletes the checked object
+      if (
+        data.fileStorageObjectId &&
+        data.fileStorageObjectId !== existing.fileStorageObjectId
+      ) {
+        await checkWishlistImageUpload(data.fileStorageObjectId);
+      }
+
+      const updated = await prisma.wishlistItem.update({
         where: { id },
         data,
         include: { category: true },
       });
+
+      // A replaced or removed upload is no longer linked anywhere
+      if (
+        data.fileStorageObjectId !== undefined &&
+        existing.fileStorageObjectId &&
+        existing.fileStorageObjectId !== data.fileStorageObjectId
+      ) {
+        await deleteWishlistImage(existing.fileStorageObjectId);
+      }
+
+      return updated;
     }),
 
   markAsOpened: permittedProcedure
@@ -233,7 +277,12 @@ export const adminWishlistRouter = router({
     .input(z.object({ id: z.string(), permanent: z.boolean().default(false) }))
     .mutation(async ({ input }) => {
       if (input.permanent) {
-        await prisma.wishlistItem.delete({ where: { id: input.id } });
+        const deleted = await prisma.wishlistItem.delete({
+          where: { id: input.id },
+        });
+        if (deleted.fileStorageObjectId) {
+          await deleteWishlistImage(deleted.fileStorageObjectId);
+        }
       } else {
         await prisma.wishlistItem.update({
           where: { id: input.id },
@@ -383,6 +432,34 @@ export const adminWishlistRouter = router({
           )
           .reduce((sum, g) => sum + g._count._all, 0),
         capturedAmount: captured?._sum.capturedAmount ?? 0,
+      };
+    }),
+
+  createFileUpload: permittedProcedure
+    .input(imageUploadInputSchema)
+    .mutation(async ({ input }) => {
+      const { uploadUrl, viewUrl, fileStorageObject } =
+        await createFileStorageUpload({
+          fileName: input.fileName,
+          fileType: input.fileType,
+          fileSize: input.fileSize,
+          prefix: wishlistImageUploadPrefix,
+        });
+
+      if (env.NODE_ENV === "development") {
+        // DO Spaces needs ssl, so uploads in development are proxied through
+        // the Next.js server (see the rounds checks router)
+        return {
+          viewUrl: String(viewUrl),
+          uploadUrl: `/api/file-upload${uploadUrl.pathname}${uploadUrl.search}`,
+          fileStorageObjectId: fileStorageObject.id,
+        };
+      }
+
+      return {
+        viewUrl: String(viewUrl),
+        uploadUrl: String(uploadUrl),
+        fileStorageObjectId: fileStorageObject.id,
       };
     }),
 
