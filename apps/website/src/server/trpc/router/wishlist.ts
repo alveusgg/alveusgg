@@ -61,7 +61,6 @@ export const wishlistRouter = router({
           id: true,
           title: true,
           description: true,
-          imageUrl: true,
           fileStorageObject: { select: { key: true } },
           itemType: true,
           url: true,
@@ -89,10 +88,7 @@ export const wishlistRouter = router({
       // Resolved here, so clients get a single image URL and no storage keys
       return items.map(({ fileStorageObject, ...item }) => ({
         ...item,
-        imageUrl: getWishlistItemImageUrl({
-          imageUrl: item.imageUrl,
-          fileStorageObject,
-        }),
+        imageUrl: getWishlistItemImageUrl(fileStorageObject),
       }));
     }),
 

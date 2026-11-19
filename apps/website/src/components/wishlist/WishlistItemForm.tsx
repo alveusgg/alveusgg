@@ -128,10 +128,6 @@ export function WishlistItemForm({
   );
   const imageFile = imageAttachmentData.files[0];
 
-  // Items created before uploads may still have an external image URL. It is
-  // shown read-only until it is cleared, and an uploaded image replaces it.
-  const [legacyImageUrl, setLegacyImageUrl] = useState(item?.imageUrl ?? null);
-
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const handleSubmit = useCallback(
@@ -215,7 +211,6 @@ export function WishlistItemForm({
           {
             id: item.id,
             ...fields,
-            ...(item.imageUrl && !legacyImageUrl ? { imageUrl: null } : {}),
             ...(raisedAmount !== "" && {
               raisedAmountCents: Math.round(Number(raisedAmount) * 100),
             }),
@@ -235,7 +230,6 @@ export function WishlistItemForm({
       categoryId,
       allowPartialDonations,
       imageFile,
-      legacyImageUrl,
       createMutation,
       updateMutation,
       router,
@@ -350,32 +344,6 @@ export function WishlistItemForm({
             </ImageUploadAttachment>
           )}
         />
-
-        {legacyImageUrl && (
-          <div>
-            <TextField
-              label="Legacy image URL"
-              value={legacyImageUrl}
-              isReadOnly
-              inputClassName="text-gray-500"
-              suffix={
-                <Button
-                  size="small"
-                  width="auto"
-                  className={secondaryButtonClasses}
-                  onClick={() => setLegacyImageUrl(null)}
-                >
-                  Clear
-                </Button>
-              }
-            />
-            <p className="mt-1 text-sm text-gray-400">
-              {imageFile
-                ? "Not shown, the uploaded image is used instead."
-                : "Shown until an image is uploaded. Upload a copy of it, then clear this URL."}
-            </p>
-          </div>
-        )}
 
         {itemType === "PRODUCT" ? (
           <>

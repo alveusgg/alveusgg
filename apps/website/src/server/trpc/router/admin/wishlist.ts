@@ -93,8 +93,6 @@ const itemUpdateInput = z
     id: z.string(),
     title: z.string().min(1).max(255).optional(),
     description: z.string().max(2000).optional().nullable(),
-    // The legacy external image URL can only be cleared, new images are uploaded
-    imageUrl: z.null().optional(),
     fileStorageObjectId: z.cuid().optional().nullable(),
     priority: priorityEnum.optional(),
     status: statusEnum.optional(),

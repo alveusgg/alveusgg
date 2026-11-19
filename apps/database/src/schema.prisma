@@ -533,8 +533,6 @@ model WishlistItem {
   id          String  @id @default(cuid())
   title       String
   description String? @db.Text
-  // Legacy external image, superseded by fileStorageObject when that is set
-  imageUrl    String? @db.Text
   notes       String? @db.Text
 
   fileStorageObjectId String?            @unique

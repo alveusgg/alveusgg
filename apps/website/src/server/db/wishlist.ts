@@ -24,14 +24,12 @@ import {
 
 export const wishlistImageUploadPrefix = "wishlist/";
 
-// The uploaded image takes precedence over the legacy external image URL
-export function getWishlistItemImageUrl(item: {
-  imageUrl: string | null;
-  fileStorageObject: { key: string } | null;
-}) {
-  return item.fileStorageObject
-    ? String(getViewUrlForFileStorageObjectKey(item.fileStorageObject.key))
-    : item.imageUrl;
+export function getWishlistItemImageUrl(
+  fileStorageObject: { key: string } | null,
+) {
+  return fileStorageObject
+    ? String(getViewUrlForFileStorageObjectKey(fileStorageObject.key))
+    : null;
 }
 
 // Checks that an upload is a valid wishlist image before it is linked to an item
