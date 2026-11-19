@@ -14,6 +14,7 @@ const { mockPrisma } = vi.hoisted(() => ({
       findUnique: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
+      delete: vi.fn(),
     },
     wishlistDonationOrder: {
       create: vi.fn(),
@@ -60,6 +61,11 @@ const product = {
   quantity: 2,
   quantityFulfilled: 0,
 };
+
+const PRICE_ERROR =
+  "Enter the price as a dollar amount, like 24.99 or 1,547.00";
+const PARTIAL_TARGET_ERROR =
+  "Partial donations need a readable price or a funding target";
 
 const goal = {
   ...product,
@@ -182,12 +188,365 @@ describe("donation order creation", () => {
   );
 });
 
+describe("full price donations", () => {
+  const expensive = { ...product, price: "1,547.00" };
+
+  test("accepts the exact price and orders the server price", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(expensive);
+
+    await publicCaller.createDonateOrder({
+      wishlistItemId: "item-1",
+      amount: 1547,
+    });
+
+    expect(createPayPalOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: 1547 }),
+    );
+    expect(mockPrisma.wishlistDonationOrder.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ amount: 1547 }),
+    });
+  });
+
+  test("rejects any other amount", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(expensive);
+
+    await expect(
+      publicCaller.createDonateOrder({ wishlistItemId: "item-1", amount: 50 }),
+    ).rejects.toThrow("This item is donated at its full price of $1,547.00");
+    await expect(
+      publicCaller.createDonateOrder({
+        wishlistItemId: "item-1",
+        amount: 1547.01,
+      }),
+    ).rejects.toThrow("full price of $1,547.00");
+    expect(createPayPalOrder).not.toHaveBeenCalled();
+  });
+
+  test.each(["about $40", "", null])(
+    "rejects an item with the unreadable price %j",
+    async (price) => {
+      mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+        ...product,
+        price,
+      });
+
+      await expect(
+        publicCaller.createDonateOrder({
+          wishlistItemId: "item-1",
+          amount: 40,
+        }),
+      ).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: "This item is unavailable for donations right now",
+      });
+      expect(createPayPalOrder).not.toHaveBeenCalled();
+      expect(mockPrisma.wishlistDonationOrder.create).not.toHaveBeenCalled();
+    },
+  );
+
+  test("keeps chip-ins on partial items", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...expensive,
+      allowPartialDonations: true,
+    });
+
+    await publicCaller.createDonateOrder({
+      wishlistItemId: "item-1",
+      amount: 50,
+    });
+
+    expect(createPayPalOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: 50 }),
+    );
+  });
+
+  test("keeps any amount on goals", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(goal);
+
+    await publicCaller.createDonateOrder({
+      wishlistItemId: "goal-1",
+      amount: 12.34,
+    });
+
+    expect(createPayPalOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: 12.34 }),
+    );
+  });
+
+  test("still enforces the amount limit", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "20,000",
+    });
+
+    await expect(
+      publicCaller.createDonateOrder({
+        wishlistItemId: "item-1",
+        amount: 20_000,
+      }),
+    ).rejects.toThrow();
+    expect(createPayPalOrder).not.toHaveBeenCalled();
+  });
+});
+
+describe("item price validation", () => {
+  test.each([
+    ["$24.99", "24.99"],
+    ["1,547", "1547.00"],
+    [" 1,547.5 ", "1547.50"],
+  ])("stores %j as %j", async (price, stored) => {
+    await adminCaller.createItem({
+      itemType: "PRODUCT",
+      title: "Heat lamp",
+      price,
+    });
+
+    expect(mockPrisma.wishlistItem.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ price: stored }),
+      }),
+    );
+  });
+
+  test("rejects an unreadable price on create and update", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+    await expect(
+      adminCaller.createItem({
+        itemType: "PRODUCT",
+        title: "Heat lamp",
+        price: "20-30",
+      }),
+    ).rejects.toThrow(
+      "Enter the price as a dollar amount, like 24.99 or 1,547.00",
+    );
+    await expect(
+      adminCaller.updateItem({ id: "item-1", price: "1.547,50" }),
+    ).rejects.toThrow(
+      "Enter the price as a dollar amount, like 24.99 or 1,547.00",
+    );
+    expect(mockPrisma.wishlistItem.create).not.toHaveBeenCalled();
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+
+  test.each([[""], ["   "], [null], [undefined]])(
+    "requires a price to create a product (%j)",
+    async (price) => {
+      await expect(
+        adminCaller.createItem({
+          itemType: "PRODUCT",
+          title: "Heat lamp",
+          price,
+        }),
+      ).rejects.toThrow(PRICE_ERROR);
+      expect(mockPrisma.wishlistItem.create).not.toHaveBeenCalled();
+    },
+  );
+
+  test.each([[""], [null]])(
+    "rejects clearing the price of a product (%j)",
+    async (price) => {
+      mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+      await expect(
+        adminCaller.updateItem({ id: "item-1", price }),
+      ).rejects.toThrow(PRICE_ERROR);
+      expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+    },
+  );
+
+  test("normalizes the price on update", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+    await adminCaller.updateItem({ id: "item-1", price: "$1,547" });
+
+    expect(mockPrisma.wishlistItem.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: { price: "1547.00" } }),
+    );
+  });
+
+  test("leaves goals unaffected", async () => {
+    await adminCaller.createItem({
+      itemType: "GOAL",
+      title: "Enclosure fund",
+      goalAmountCents: 50_000,
+    });
+
+    expect(mockPrisma.wishlistItem.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.not.objectContaining({ price: expect.anything() }),
+      }),
+    );
+  });
+});
+
+describe("legacy items with a missing or unreadable price", () => {
+  // What the edit form sends: every field, with the price as stored
+  const formUpdate = (price: string | null, status: "ARCHIVED" | "OPENED") => ({
+    id: "item-1",
+    title: "Heat lamp",
+    description: null,
+    imageUrl: null,
+    priority: "MEDIUM" as const,
+    status,
+    categoryId: null,
+    notes: null,
+    allowPartialDonations: false,
+    url: null,
+    price,
+    quantity: 2,
+    quantityFulfilled: 0,
+  });
+
+  test.each([["about $40"], [null], [""]])(
+    "can still change the status of an item priced %j",
+    async (price) => {
+      mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+        ...product,
+        price,
+      });
+
+      await adminCaller.updateItem(formUpdate(price || null, "ARCHIVED"));
+      await adminCaller.updateItem({ id: "item-1", status: "OPENED" });
+
+      expect(mockPrisma.wishlistItem.update).toHaveBeenCalledTimes(2);
+      for (const [call] of mockPrisma.wishlistItem.update.mock.calls) {
+        expect(call.data).not.toHaveProperty("price");
+      }
+      expect(mockPrisma.wishlistItem.update.mock.calls[0]?.[0].data).toEqual(
+        expect.objectContaining({ status: "ARCHIVED" }),
+      );
+    },
+  );
+
+  test("can still archive and delete from the table", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "about $40",
+    });
+
+    await adminCaller.deleteItem({ id: "item-1", permanent: false });
+    await adminCaller.deleteItem({ id: "item-1", permanent: true });
+
+    expect(mockPrisma.wishlistItem.update).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { status: "ARCHIVED" },
+    });
+    expect(mockPrisma.wishlistItem.delete).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+    });
+  });
+
+  test("rejects a changed price that is still unreadable", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "about $40",
+    });
+
+    await expect(
+      adminCaller.updateItem({ id: "item-1", price: "about $45" }),
+    ).rejects.toThrow(PRICE_ERROR);
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("partial donation targets", () => {
+  test("accepts a partial product with a readable price", async () => {
+    await adminCaller.createItem({
+      itemType: "PRODUCT",
+      title: "Heat lamp",
+      price: "40",
+      allowPartialDonations: true,
+    });
+
+    expect(mockPrisma.wishlistItem.create).toHaveBeenCalled();
+  });
+
+  test("rejects turning on partial donations without a target", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "about $40",
+    });
+
+    await expect(
+      adminCaller.updateItem({ id: "item-1", allowPartialDonations: true }),
+    ).rejects.toThrow(PARTIAL_TARGET_ERROR);
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+
+  test("rejects removing the only target of a partial product", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: null,
+      allowPartialDonations: true,
+      goalAmountCents: 10_000,
+    });
+
+    await expect(
+      adminCaller.updateItem({ id: "item-1", goalAmountCents: null }),
+    ).rejects.toThrow(PARTIAL_TARGET_ERROR);
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+
+  test("accepts an explicit target when the price is unreadable", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "about $40",
+    });
+
+    await adminCaller.updateItem({
+      id: "item-1",
+      allowPartialDonations: true,
+      goalAmountCents: 4_000,
+    });
+
+    expect(mockPrisma.wishlistItem.update).toHaveBeenCalled();
+  });
+
+  test("still archives a legacy partial product with no target", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: null,
+      allowPartialDonations: true,
+    });
+
+    await adminCaller.updateItem({
+      id: "item-1",
+      status: "ARCHIVED",
+      allowPartialDonations: true,
+      price: null,
+      goalAmountCents: null,
+      quantity: 2,
+    });
+
+    expect(mockPrisma.wishlistItem.update).toHaveBeenCalled();
+  });
+
+  test("rejects an order on a partial product with no target", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "about $40",
+      allowPartialDonations: true,
+    });
+
+    await expect(
+      publicCaller.createDonateOrder({ wishlistItemId: "item-1", amount: 10 }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: "This item is unavailable for donations right now",
+    });
+    expect(createPayPalOrder).not.toHaveBeenCalled();
+    expect(mockPrisma.wishlistDonationOrder.create).not.toHaveBeenCalled();
+  });
+});
+
 describe("item create and update", () => {
   test("rejects a product with more fulfilled than its quantity", async () => {
     await expect(
       adminCaller.createItem({
         itemType: "PRODUCT",
         title: "Heat lamp",
+        price: "40",
         quantity: 1,
         quantityFulfilled: 2,
       }),

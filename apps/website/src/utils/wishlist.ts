@@ -58,12 +58,37 @@ export function getWishlistArchiveConfirmation(raisedAmountCents: number) {
   return `This item has received $${(raisedAmountCents / 100).toFixed(2)}. Archiving it closes the funding goal to new donations. Funds are assumed to go towards General Operations. Archive this item?`;
 }
 
-/** Parses a display price like "$29.99" into whole cents. Returns null if unparseable. */
-export function parsePriceCents(price: string | null): number | null {
-  if (!price) return null;
-  const n = parseFloat(price.replace(/[^0-9.]/g, ""));
-  return isNaN(n) || n <= 0 ? null : Math.round(n * 100);
+const PRICE_PATTERN = /^\$?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?$/;
+
+/** Parses a price like "24.99", "$24.99", "1,547" or "1,547.50" into cents, or null */
+export function parsePriceCents(
+  price: string | null | undefined,
+): number | null {
+  const match = price?.trim().match(PRICE_PATTERN);
+  if (!match) return null;
+  const [, whole = "", fraction = ""] = match;
+  const cents =
+    Number(whole.replaceAll(",", "")) * 100 + Number(fraction.padEnd(2, "0"));
+  return cents > 0 && Number.isSafeInteger(cents) ? cents : null;
 }
+
+/** The form a parsed price is stored in, e.g. "1547.00" */
+export const normalizePrice = (cents: number) => (cents / 100).toFixed(2);
+
+const usd = (cents: number, fractionDigits: number) =>
+  (cents / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+
+/** "$1,547" for whole dollars, otherwise "$24.99" */
+export const formatPrice = (cents: number) =>
+  usd(cents, cents % 100 === 0 ? 0 : 2);
+
+/** Always two decimals, e.g. "$1,547.00" */
+export const formatPriceExact = (cents: number) => usd(cents, 2);
 
 /** Target for items that allow partial donations, defaulting to the full price */
 export function getPartialTargetCents(item: {

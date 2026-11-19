@@ -27,6 +27,7 @@ import IconBox from "@/icons/IconBox";
 import IconDollar from "@/icons/IconDollar";
 import IconGift from "@/icons/IconGift";
 
+import { PriceField } from "./PriceField";
 import WishlistFundsNote from "./WishlistFundsNote";
 
 type ItemWithCategory = WishlistItem & { category: WishlistCategory | null };
@@ -259,11 +260,10 @@ export function WishlistItemForm({
               defaultValue={item?.url ?? ""}
             />
             <FieldGroup>
-              <TextField
-                label="Price"
+              <PriceField
                 name="price"
-                placeholder="$29.99"
                 defaultValue={item?.price ?? ""}
+                isRequired={!item || !!item.price?.trim()}
               />
             </FieldGroup>
             <FieldGroup>

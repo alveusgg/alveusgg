@@ -2,8 +2,10 @@ import type { WishlistCategory, WishlistItem } from "@alveusgg/database";
 
 import { trpc } from "@/utils/trpc";
 import {
+  formatPrice,
   getPartialTargetCents,
   getWishlistArchiveConfirmation,
+  parsePriceCents,
 } from "@/utils/wishlist";
 
 import Link from "@/components/content/Link";
@@ -32,9 +34,6 @@ interface Props {
 
 const formatLabel = (value: string) =>
   value.charAt(0) + value.slice(1).toLowerCase().replace(/_/g, " ");
-
-const formatDollars = (cents: number) =>
-  `$${(cents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
 export default function WishlistAdminTable({
   items,
@@ -82,12 +81,17 @@ export default function WishlistAdminTable({
               : item.allowPartialDonations
                 ? getPartialTargetCents(item)
                 : null;
+            const priceCents = isGoal ? null : parsePriceCents(item.price);
             return (
               <tr key={item.id} className="border-b border-gray-700">
                 <td className="p-1">
                   <div className="text-lg">{item.title}</div>
                   {!isGoal && item.price && (
-                    <div className="text-sm text-gray-400">{item.price}</div>
+                    <div className="text-sm text-gray-400">
+                      {priceCents != null
+                        ? formatPrice(priceCents)
+                        : `${item.price} (unreadable price)`}
+                    </div>
                   )}
                   {!isGoal && item.url && (
                     <Link href={item.url} external className="text-sm">
@@ -110,11 +114,12 @@ export default function WishlistAdminTable({
                 <td className="p-1">{formatLabel(item.status)}</td>
                 <td className="p-1">
                   {targetCents != null
-                    ? `${formatDollars(item.raisedAmountCents)} / ${formatDollars(targetCents)} raised`
+                    ? `${formatPrice(item.raisedAmountCents)} / ${formatPrice(targetCents)} raised`
                     : `${item.quantityFulfilled}/${item.quantity}`}
                   {item.allowPartialDonations && (
                     <div className="text-sm text-gray-400">
                       Partial donations on
+                      {!isGoal && targetCents == null && " (no target)"}
                     </div>
                   )}
                 </td>

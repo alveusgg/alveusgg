@@ -4,11 +4,14 @@ import Image from "next/image";
 import type { AppRouter } from "@/server/trpc/router/_app";
 
 import { classes } from "@/utils/classes";
-import { getPartialTargetCents } from "@/utils/wishlist";
-
-import useLocaleString from "@/hooks/locale";
+import {
+  formatPrice,
+  getPartialTargetCents,
+  parsePriceCents,
+} from "@/utils/wishlist";
 
 import Box from "@/components/content/Box";
+import Button from "@/components/content/Button";
 import Link from "@/components/content/Link";
 import Progress from "@/components/content/Progress";
 import WishlistDonateButton from "@/components/wishlist/WishlistDonateButton";
@@ -64,11 +67,12 @@ function GoalProgress({
   goalCents: number;
 }) {
   const percent = percentOf(raisedCents, goalCents);
-  const raised = useLocaleString(Math.round(raisedCents / 100));
-  const goal = useLocaleString(Math.round(goalCents / 100));
   return (
     <div>
-      <ProgressText label={`$${raised} of $${goal} raised`} percent={percent} />
+      <ProgressText
+        label={`${formatPrice(raisedCents)} of ${formatPrice(goalCents)} raised`}
+        percent={percent}
+      />
       <Progress progress={percent} className="h-6" />
     </div>
   );
@@ -115,6 +119,12 @@ export default function WishlistGrid({ items, loading }: Props) {
           ? getPartialTargetCents(item)
           : null;
         const goalCents = isGoal ? item.goalAmountCents : partialTargetCents;
+        const priceCents = isGoal ? null : parsePriceCents(item.price);
+        const isUnavailable =
+          !isGoal &&
+          (item.allowPartialDonations
+            ? partialTargetCents == null
+            : priceCents == null);
 
         return (
           <li key={item.id}>
@@ -170,8 +180,8 @@ export default function WishlistGrid({ items, loading }: Props) {
                   <p className="line-clamp-3 text-sm">{item.description}</p>
                 )}
 
-                {!isGoal && item.price && (
-                  <p className="font-semibold">{item.price}</p>
+                {priceCents != null && (
+                  <p className="font-semibold">{formatPrice(priceCents)}</p>
                 )}
 
                 {goalCents != null ? (
@@ -194,11 +204,21 @@ export default function WishlistGrid({ items, loading }: Props) {
                       <IconCheckCircle className="size-5" />
                       Fully funded, thank you!
                     </p>
+                  ) : isUnavailable ? (
+                    <Button
+                      as="button"
+                      type="button"
+                      filled
+                      disabled
+                      className="w-full text-base"
+                    >
+                      Unavailable
+                    </Button>
                   ) : (
                     <WishlistDonateButton
                       itemId={item.id}
                       itemTitle={item.title}
-                      suggestedAmount={isGoal ? null : item.price}
+                      priceCents={priceCents}
                       remainingCents={
                         partialTargetCents != null
                           ? Math.max(
