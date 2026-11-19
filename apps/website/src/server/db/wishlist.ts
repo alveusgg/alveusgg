@@ -33,7 +33,7 @@ export function getWishlistItemImageUrl(
 }
 
 // Checks that an upload is a valid wishlist image before it is linked to an item
-export async function checkWishlistImageUpload(fileStorageObjectId: string) {
+async function checkWishlistImageUpload(fileStorageObjectId: string) {
   const fileStorageObject = await prisma.fileStorageObject.findUnique({
     where: { id: fileStorageObjectId },
     select: { prefix: true },
@@ -53,6 +53,34 @@ export async function checkWishlistImageUpload(fileStorageObjectId: string) {
       code: "BAD_REQUEST",
       message: `Error checking image upload: ${error}`,
     });
+  }
+}
+
+// Checks a new upload, then saves the item that links it. The check clears the
+// upload's expiry, so if the save fails the upload is expired again, and the
+// scheduled file storage cleanup deletes it unless an item links it by then.
+export async function saveWithWishlistImageUpload<T>(
+  fileStorageObjectId: string | null | undefined,
+  save: () => Promise<T>,
+) {
+  if (!fileStorageObjectId) return save();
+
+  await checkWishlistImageUpload(fileStorageObjectId);
+  try {
+    return await save();
+  } catch (err) {
+    try {
+      await prisma.fileStorageObject.updateMany({
+        where: { id: fileStorageObjectId, wishlistItem: { is: null } },
+        data: { expiresAt: new Date() },
+      });
+    } catch (expireErr) {
+      console.error(
+        `Failed to expire unlinked wishlist image ${fileStorageObjectId}:`,
+        expireErr,
+      );
+    }
+    throw err;
   }
 }
 

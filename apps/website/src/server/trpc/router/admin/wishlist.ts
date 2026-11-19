@@ -6,8 +6,8 @@ import { prisma } from "@alveusgg/database";
 import { env } from "@/env";
 
 import {
-  checkWishlistImageUpload,
   deleteWishlistImage,
+  saveWithWishlistImageUpload,
   wishlistImageUploadPrefix,
 } from "@/server/db/wishlist";
 import {
@@ -171,22 +171,20 @@ export const adminWishlistRouter = router({
   createItem: permittedProcedure
     .input(itemCreateInput)
     .mutation(async ({ input }) => {
-      if (input.fileStorageObjectId) {
-        await checkWishlistImageUpload(input.fileStorageObjectId);
-      }
-
-      return prisma.wishlistItem.create({
-        data: {
-          ...input,
-          fileStorageObjectId: input.fileStorageObjectId ?? null,
-          notes: input.notes ?? null,
-          categoryId: input.categoryId ?? null,
-          ...(input.itemType === "PRODUCT"
-            ? { price: input.price ?? null }
-            : { raisedAmountCents: 0 }),
-        },
-        include: { category: true },
-      });
+      return saveWithWishlistImageUpload(input.fileStorageObjectId, () =>
+        prisma.wishlistItem.create({
+          data: {
+            ...input,
+            fileStorageObjectId: input.fileStorageObjectId ?? null,
+            notes: input.notes ?? null,
+            categoryId: input.categoryId ?? null,
+            ...(input.itemType === "PRODUCT"
+              ? { price: input.price ?? null }
+              : { raisedAmountCents: 0 }),
+          },
+          include: { category: true },
+        }),
+      );
     }),
 
   updateItem: permittedProcedure
@@ -226,18 +224,17 @@ export const adminWishlistRouter = router({
       }
 
       // Only new uploads, since a failed check deletes the checked object
-      if (
-        data.fileStorageObjectId &&
+      const newUpload =
         data.fileStorageObjectId !== existing.fileStorageObjectId
-      ) {
-        await checkWishlistImageUpload(data.fileStorageObjectId);
-      }
-
-      const updated = await prisma.wishlistItem.update({
-        where: { id },
-        data,
-        include: { category: true },
-      });
+          ? data.fileStorageObjectId
+          : null;
+      const updated = await saveWithWishlistImageUpload(newUpload, () =>
+        prisma.wishlistItem.update({
+          where: { id },
+          data,
+          include: { category: true },
+        }),
+      );
 
       // A replaced or removed upload is no longer linked anywhere
       if (
