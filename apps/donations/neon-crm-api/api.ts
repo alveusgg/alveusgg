@@ -1,5 +1,5 @@
 import type { z, ZodError, ZodType } from "zod";
-import type { Options as AllOptions } from "./env.js";
+import type { Options as AllOptions } from "./env";
 
 export type Options = Pick<
   AllOptions,

@@ -6,6 +6,7 @@ import {
   getAccount,
   getDonation,
   searchDonations,
+  WISHLIST_CAMPAIGN_ID,
 } from "@alveusgg/neon-crm-api";
 import { type Options, envToOptions } from "@alveusgg/neon-crm-api/env";
 import {
@@ -177,7 +178,8 @@ export class NeonDonationProvider implements DonationProvider {
 
     if (
       this.shouldSkipAmountAnonymousDonation(data) ||
-      this.shouldSkipNonPositiveDonation(data)
+      this.shouldSkipNonPositiveDonation(data) ||
+      this.isWishlistDonation(data)
     ) {
       return new Response("OK", { status: 200 });
     }
@@ -583,6 +585,10 @@ export class NeonDonationProvider implements DonationProvider {
       return false;
     }
 
+    if (this.isWishlistDonation(data)) {
+      return false;
+    }
+
     if (data.status && data.status !== SUCCEEDED_STATUS) {
       return false;
     }
@@ -601,6 +607,15 @@ export class NeonDonationProvider implements DonationProvider {
     if (!category || !MANUAL_ORIGIN_CATEGORIES.has(category)) return false;
 
     console.info("Skipping manually entered Neon donation", { id, category });
+    return true;
+  }
+
+  private isWishlistDonation(data: NeonDonationData) {
+    if (data.campaign?.id !== WISHLIST_CAMPAIGN_ID) return false;
+
+    // The website logs wishlist donations in Neon, they are not part of this
+    // pipeline
+    console.info("Skipping wishlist Neon donation", { id: data.id });
     return true;
   }
 

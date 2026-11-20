@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // key_value+key2_value2
-const Tags = z.string().transform((val) => {
+export const Tags = z.string().transform((val) => {
   const keyValuePairs = val.split("+");
   return keyValuePairs.reduce(
     (output, pair) => {

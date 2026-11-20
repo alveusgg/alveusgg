@@ -36,7 +36,7 @@ const links = {
   wishlist: {
     icon: IconAmazon,
     title: "Amazon Wishlist",
-    link: "/wishlist",
+    link: "/amazon",
     external: true,
     description:
       "Donate specific items we are in need of at Alveus through our Amazon wishlist.",

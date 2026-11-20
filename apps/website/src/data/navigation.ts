@@ -82,6 +82,15 @@ export const mainNavStructure: NavStructure = {
           },
         },
       },
+      contribute: {
+        title: "Contribute",
+        links: {
+          wishlist: {
+            title: "Sanctuary Wishlist",
+            link: "/wishlist",
+          },
+        },
+      },
       series: {
         title: "Series",
         links: {

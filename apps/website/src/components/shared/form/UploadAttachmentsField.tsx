@@ -97,6 +97,9 @@ type FileUploadingPropsType = {
   renderAttachment?: (props: FileUploadRenderProps) => ReactNode;
   resizeImageOptions?: Omit<ResizeImageOptions, "type">;
   attachmentsClassName?: string;
+  // Called while added files are converted and resized, before they show up
+  // in `files` as pending uploads
+  onProcessingChange?: (isProcessing: boolean) => void;
 };
 
 export type FileAction =
@@ -151,7 +154,20 @@ export const useUploadAttachmentsData = (
   initialFiles: FileReference[] = [],
 ) => {
   const [fileReferences, dispatch] = useReducer(fileReducer, initialFiles);
-  return { files: fileReferences, dispatch };
+  const [processingCount, setProcessingCount] = useState(0);
+  const onProcessingChange = useCallback(
+    (isProcessing: boolean) =>
+      setProcessingCount((count) => count + (isProcessing ? 1 : -1)),
+    [],
+  );
+
+  // Forms should not submit while a file is being processed or uploaded, as
+  // it would be saved without that file
+  const isBusy =
+    processingCount > 0 ||
+    fileReferences.some((file) => file.status === "upload.pending");
+
+  return { files: fileReferences, dispatch, onProcessingChange, isBusy };
 };
 
 async function handleImageResize(
@@ -197,6 +213,7 @@ export const UploadAttachmentsField = ({
   resizeImageOptions,
   renderAttachment: RenderAttachment,
   attachmentsClassName = "my-3 flex flex-col gap-3",
+  onProcessingChange,
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -224,6 +241,15 @@ export const UploadAttachmentsField = ({
   }, [inputRef]);
 
   const addFiles = async (filesToAdd: FileList | null) => {
+    onProcessingChange?.(true);
+    try {
+      await processFiles(filesToAdd);
+    } finally {
+      onProcessingChange?.(false);
+    }
+  };
+
+  const processFiles = async (filesToAdd: FileList | null) => {
     if (!filesToAdd) return;
 
     const totalNumber = files.length + filesToAdd.length;
