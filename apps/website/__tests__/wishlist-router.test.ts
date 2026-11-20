@@ -67,6 +67,9 @@ const PRICE_ERROR =
 const PARTIAL_TARGET_ERROR =
   "Partial donations need a readable price or a funding target";
 
+const BOUNDS_ERROR =
+  "A full-price product must cost between $1.00 and $10,000.00. Turn on partial donations for more expensive items.";
+
 const goal = {
   ...product,
   id: "goal-1",
@@ -537,6 +540,107 @@ describe("partial donation targets", () => {
     });
     expect(createPayPalOrder).not.toHaveBeenCalled();
     expect(mockPrisma.wishlistDonationOrder.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("full price bounds", () => {
+  const create = (price: string, allowPartialDonations = false) =>
+    adminCaller.createItem({
+      itemType: "PRODUCT",
+      title: "Heat lamp",
+      price,
+      allowPartialDonations,
+    });
+
+  test.each(["20,000", "10,000.01", "0.99"])(
+    "rejects a full-price product priced %j",
+    async (price) => {
+      await expect(create(price)).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: BOUNDS_ERROR,
+      });
+      expect(mockPrisma.wishlistItem.create).not.toHaveBeenCalled();
+    },
+  );
+
+  test.each(["1", "10,000"])(
+    "accepts a full-price product priced %j",
+    async (price) => {
+      await create(price);
+      expect(mockPrisma.wishlistItem.create).toHaveBeenCalled();
+    },
+  );
+
+  test("does not bind partial products or goals", async () => {
+    await create("20,000", true);
+    await adminCaller.createItem({
+      itemType: "GOAL",
+      title: "Enclosure",
+      goalAmountCents: 5_000_000,
+    });
+    expect(mockPrisma.wishlistItem.create).toHaveBeenCalledTimes(2);
+  });
+
+  test("rejects a price change out of bounds", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+    await expect(
+      adminCaller.updateItem({ id: "item-1", price: "12,000" }),
+    ).rejects.toThrow(BOUNDS_ERROR);
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+
+  test("rejects turning partial donations off on an expensive item", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "20000.00",
+      allowPartialDonations: true,
+    });
+
+    await expect(
+      adminCaller.updateItem({ id: "item-1", allowPartialDonations: false }),
+    ).rejects.toThrow(BOUNDS_ERROR);
+    expect(mockPrisma.wishlistItem.update).not.toHaveBeenCalled();
+  });
+
+  test("still archives an existing out of bounds item", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "20000.00",
+    });
+
+    await adminCaller.updateItem({
+      id: "item-1",
+      title: "Heat lamp",
+      status: "ARCHIVED",
+      allowPartialDonations: false,
+      price: "20000.00",
+      quantity: 2,
+    });
+    await adminCaller.updateItem({ id: "item-1", status: "OPENED" });
+
+    expect(mockPrisma.wishlistItem.update).toHaveBeenCalledTimes(2);
+  });
+
+  test("checkout accepts the maximum and rejects below the minimum", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue({
+      ...product,
+      price: "10,000",
+    });
+    await publicCaller.createDonateOrder({
+      wishlistItemId: "item-1",
+      amount: 10_000,
+    });
+    expect(createPayPalOrder).toHaveBeenCalledTimes(1);
+
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(goal);
+    await expect(
+      publicCaller.createDonateOrder({
+        wishlistItemId: "goal-1",
+        amount: 0.99,
+      }),
+    ).rejects.toThrow();
+    expect(createPayPalOrder).toHaveBeenCalledTimes(1);
   });
 });
 

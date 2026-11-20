@@ -7,7 +7,6 @@ import {
   PARTIAL_DONATION_QUICK_PICKS,
   formatPrice,
   formatPriceExact,
-  normalizePrice,
   partialDonationAmount,
 } from "@/utils/wishlist";
 
@@ -52,9 +51,7 @@ export default function WishlistDonateButton({
       ? (
           Math.min(PARTIAL_DONATION_MIN_CENTS * 2, remainingCents) / 100
         ).toFixed(2)
-      : isFixed
-        ? normalizePrice(priceCents)
-        : "10.00",
+      : "10.00",
   );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -76,7 +73,7 @@ export default function WishlistDonateButton({
     try {
       const result = await createOrder.mutateAsync({
         wishlistItemId: itemId,
-        amount: parseFloat(amount),
+        amount: isFixed ? priceCents / 100 : parseFloat(amount),
         donorName: name || undefined,
         donorEmail: email || undefined,
         donorMessage: message || undefined,

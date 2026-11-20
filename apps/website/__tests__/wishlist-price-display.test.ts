@@ -96,6 +96,23 @@ describe("card price", () => {
     expect(html).not.toContain("Unavailable");
   });
 
+  test.each(["20000.00", "0.50"])(
+    "marks a full-price product priced %j unavailable",
+    (price) => {
+      const html = renderCard({ price });
+      expect(html).toMatch(
+        /<button[^>]*disabled=""[^>]*>Unavailable<\/button>/,
+      );
+      expect(html).not.toContain("Donate with PayPal");
+    },
+  );
+
+  test("keeps an expensive partial product donatable", () => {
+    const html = renderCard({ price: "20000.00", allowPartialDonations: true });
+    expect(html).toContain("Chip in");
+    expect(html).not.toContain("Unavailable");
+  });
+
   test("keeps goals donatable without a price", () => {
     const html = renderCard({
       itemType: "GOAL",
@@ -126,6 +143,15 @@ describe("admin table price", () => {
     expect(renderTable({ price: "about $40" })).toContain(
       "about $40 (unreadable price)",
     );
+  });
+
+  test("flags a full-price product outside the checkout limits", () => {
+    expect(renderTable({ price: "20000.00" })).toContain(
+      "$20,000 (outside checkout limits)",
+    );
+    expect(
+      renderTable({ price: "20000.00", allowPartialDonations: true }),
+    ).not.toContain("outside checkout limits");
   });
 
   test("flags a partial product with no target", () => {

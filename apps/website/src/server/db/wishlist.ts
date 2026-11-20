@@ -7,6 +7,7 @@ import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 import {
   notifyWishlistDonation,
   notifyWishlistItemFunded,
+  notifyWishlistItemNeedsTarget,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
 import {
@@ -160,6 +161,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
         order,
         excessAmount: credit.excessCents / 100,
         justFunded: credit.justFunded,
+        needsTarget: false,
       } as const;
     }
 
@@ -217,6 +219,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       order,
       excessAmount: 0,
       justFunded: false,
+      needsTarget: item.allowPartialDonations,
     } as const;
   });
 
@@ -244,6 +247,20 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       });
     } catch (err) {
       console.error("Discord funded alert failed (non-fatal):", err);
+    }
+  }
+
+  // Credited in full without a cap, so staff check the item
+  if (result.needsTarget) {
+    try {
+      await notifyWishlistItemNeedsTarget({
+        webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
+        itemTitle: order.wishlistItem.title,
+        paypalOrderId: order.paypalOrderId,
+        amount: capture.amount,
+      });
+    } catch (err) {
+      console.error("Discord target alert failed (non-fatal):", err);
     }
   }
 

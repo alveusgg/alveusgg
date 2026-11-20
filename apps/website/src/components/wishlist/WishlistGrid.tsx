@@ -7,6 +7,7 @@ import { classes } from "@/utils/classes";
 import {
   formatPrice,
   getPartialTargetCents,
+  isFullPriceDonatable,
   parsePriceCents,
 } from "@/utils/wishlist";
 
@@ -124,7 +125,7 @@ export default function WishlistGrid({ items, loading }: Props) {
           !isGoal &&
           (item.allowPartialDonations
             ? partialTargetCents == null
-            : priceCents == null);
+            : !isFullPriceDonatable(item));
 
         return (
           <li key={item.id}>

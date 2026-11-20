@@ -2,6 +2,10 @@ import type { ParsedUrlQuery } from "node:querystring";
 
 import { z } from "zod";
 
+// Limits on any single donation at checkout
+export const DONATION_MIN_CENTS = 100;
+export const DONATION_MAX_CENTS = 1_000_000;
+
 // Chip-in donations toward items that allow partial donations
 export const PARTIAL_DONATION_MIN_CENTS = 500;
 export const PARTIAL_DONATION_QUICK_PICKS = [10, 25, 50];
@@ -99,4 +103,19 @@ export function getPartialTargetCents(item: {
   if (item.goalAmountCents != null) return item.goalAmountCents;
   const priceCents = parsePriceCents(item.price);
   return priceCents ? priceCents * item.quantity : null;
+}
+
+/** Full-price products must fit the checkout limits, partial items and goals need not */
+export function isFullPriceDonatable(item: {
+  itemType: string;
+  allowPartialDonations: boolean;
+  price: string | null;
+}) {
+  if (item.itemType !== "PRODUCT" || item.allowPartialDonations) return true;
+  const priceCents = parsePriceCents(item.price);
+  return (
+    priceCents != null &&
+    priceCents >= DONATION_MIN_CENTS &&
+    priceCents <= DONATION_MAX_CENTS
+  );
 }

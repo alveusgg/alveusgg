@@ -5,6 +5,7 @@ import {
   formatPrice,
   getPartialTargetCents,
   getWishlistArchiveConfirmation,
+  isFullPriceDonatable,
   parsePriceCents,
 } from "@/utils/wishlist";
 
@@ -89,7 +90,7 @@ export default function WishlistAdminTable({
                   {!isGoal && item.price && (
                     <div className="text-sm text-gray-400">
                       {priceCents != null
-                        ? formatPrice(priceCents)
+                        ? `${formatPrice(priceCents)}${isFullPriceDonatable(item) ? "" : " (outside checkout limits)"}`
                         : `${item.price} (unreadable price)`}
                     </div>
                   )}

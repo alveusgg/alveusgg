@@ -10,6 +10,8 @@ import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 import {
+  DONATION_MAX_CENTS,
+  DONATION_MIN_CENTS,
   canAcceptDonations,
   formatPriceExact,
   getPartialTargetCents,
@@ -127,7 +129,10 @@ export const wishlistRouter = router({
     .input(
       z.object({
         wishlistItemId: z.string(),
-        amount: z.number().min(1).max(10_000),
+        amount: z
+          .number()
+          .min(DONATION_MIN_CENTS / 100)
+          .max(DONATION_MAX_CENTS / 100),
         donorName: z.string().max(100).optional(),
         donorEmail: z.string().email().optional(),
         donorMessage: z.string().max(500).optional(),

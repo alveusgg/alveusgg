@@ -16,6 +16,7 @@ import {
   DONATION_ORDER_STATUSES,
   PAYMENT_ISSUE_STATUSES,
   getPartialTargetCents,
+  isFullPriceDonatable,
   normalizePrice,
   parsePriceCents,
 } from "@/utils/wishlist";
@@ -48,6 +49,9 @@ const PRICE_ERROR =
 const PARTIAL_TARGET_ERROR =
   "Partial donations need a readable price or a funding target";
 
+const FULL_PRICE_BOUNDS_ERROR =
+  "A full-price product must cost between $1.00 and $10,000.00. Turn on partial donations for more expensive items.";
+
 const rawPrice = z.string().max(50).nullish();
 
 const requiredPrice = rawPrice.transform((value, ctx) => {
@@ -67,6 +71,18 @@ function assertPartialTarget(item: {
 }) {
   if (item.allowPartialDonations && getPartialTargetCents(item) == null) {
     throw new TRPCError({ code: "BAD_REQUEST", message: PARTIAL_TARGET_ERROR });
+  }
+}
+
+function assertFullPriceBounds(item: {
+  allowPartialDonations: boolean;
+  price: string | null;
+}) {
+  if (!isFullPriceDonatable({ itemType: "PRODUCT", ...item })) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: FULL_PRICE_BOUNDS_ERROR,
+    });
   }
 }
 
@@ -189,6 +205,7 @@ export const adminWishlistRouter = router({
           price: input.price,
           quantity: input.quantity,
         });
+        assertFullPriceBounds(input);
       }
       return prisma.wishlistItem.create({
         data: {
@@ -275,6 +292,12 @@ export const adminWishlistRouter = router({
           next.price !== existing.price ||
           next.quantity !== existing.quantity;
         if (targetChanged) assertPartialTarget(next);
+        if (
+          next.price !== existing.price ||
+          next.allowPartialDonations !== existing.allowPartialDonations
+        ) {
+          assertFullPriceBounds(next);
+        }
       }
 
       return prisma.wishlistItem.update({

@@ -4,6 +4,7 @@ import {
   formatPrice,
   formatPriceExact,
   getPartialTargetCents,
+  isFullPriceDonatable,
   normalizePrice,
   parsePriceCents,
 } from "@/utils/wishlist";
@@ -95,5 +96,37 @@ describe("price formatting", () => {
   test("normalizes to two decimals without separators", () => {
     expect(normalizePrice(154_700)).toBe("1547.00");
     expect(normalizePrice(2499)).toBe("24.99");
+  });
+});
+
+describe("isFullPriceDonatable", () => {
+  const product = {
+    itemType: "PRODUCT",
+    allowPartialDonations: false,
+    price: "24.99" as string | null,
+  };
+
+  test.each([
+    ["1.00", true],
+    ["10,000.00", true],
+    ["0.99", false],
+    ["10000.01", false],
+    ["about $40", false],
+    [null, false],
+  ])("checks a full-price product priced %j", (price, expected) => {
+    expect(isFullPriceDonatable({ ...product, price })).toBe(expected);
+  });
+
+  test("does not bind partial products or goals", () => {
+    expect(
+      isFullPriceDonatable({
+        ...product,
+        price: "20000",
+        allowPartialDonations: true,
+      }),
+    ).toBe(true);
+    expect(
+      isFullPriceDonatable({ ...product, itemType: "GOAL", price: null }),
+    ).toBe(true);
   });
 });
