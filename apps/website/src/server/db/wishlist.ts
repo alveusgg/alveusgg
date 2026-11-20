@@ -1,8 +1,15 @@
+import { TRPCError } from "@trpc/server";
+
 import { Prisma, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
+import {
+  checkAndFixUploadedImageFileStorageObject,
+  deleteFileStorageObject,
+  getViewUrlForFileStorageObjectKey,
+} from "@/server/utils/file-storage";
 
 import {
   notifyWishlistDonation,
@@ -14,6 +21,86 @@ import {
   getPartialTargetCents,
   parsePriceCents,
 } from "@/utils/wishlist";
+
+export const wishlistImageUploadPrefix = "wishlist/";
+
+export function getWishlistItemImageUrl(
+  fileStorageObject: { key: string } | null,
+) {
+  return fileStorageObject
+    ? String(getViewUrlForFileStorageObjectKey(fileStorageObject.key))
+    : null;
+}
+
+// Checks that an upload is a valid wishlist image before it is linked to an item
+async function checkWishlistImageUpload(fileStorageObjectId: string) {
+  const fileStorageObject = await prisma.fileStorageObject.findUnique({
+    where: { id: fileStorageObjectId },
+    select: { prefix: true },
+  });
+  // Only wishlist uploads, so an item can never take over another feature's file
+  if (fileStorageObject?.prefix !== wishlistImageUploadPrefix) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Image upload not found",
+    });
+  }
+
+  const { error } =
+    await checkAndFixUploadedImageFileStorageObject(fileStorageObjectId);
+  if (error) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Error checking image upload: ${error}`,
+    });
+  }
+}
+
+// Checks a new upload, then saves the item that links it. The check clears the
+// upload's expiry, so if the save fails the upload is expired again, and the
+// scheduled file storage cleanup deletes it unless an item links it by then.
+export async function saveWithWishlistImageUpload<T>(
+  fileStorageObjectId: string | null | undefined,
+  save: () => Promise<T>,
+) {
+  if (!fileStorageObjectId) return save();
+
+  await checkWishlistImageUpload(fileStorageObjectId);
+  try {
+    return await save();
+  } catch (err) {
+    try {
+      await prisma.fileStorageObject.updateMany({
+        where: { id: fileStorageObjectId, wishlistItem: { is: null } },
+        data: { expiresAt: new Date() },
+      });
+    } catch (expireErr) {
+      console.error(
+        `Failed to expire unlinked wishlist image ${fileStorageObjectId}:`,
+        expireErr,
+      );
+    }
+    throw err;
+  }
+}
+
+// Deletes an image that is no longer linked to an item. The item change is
+// already saved, so a failed deletion only marks the object as expired, and
+// the scheduled file storage cleanup deletes it later.
+export async function deleteWishlistImage(fileStorageObjectId: string) {
+  try {
+    await deleteFileStorageObject(fileStorageObjectId);
+  } catch (err) {
+    console.error(
+      `Failed to delete wishlist image ${fileStorageObjectId}, leaving it to the cleanup:`,
+      err,
+    );
+    await prisma.fileStorageObject.update({
+      where: { id: fileStorageObjectId },
+      data: { expiresAt: new Date() },
+    });
+  }
+}
 
 // Splits a capture into the item's credit and the excess over its remaining
 // balance. `raisedAfterCents` is the total after incrementing by the full amount.

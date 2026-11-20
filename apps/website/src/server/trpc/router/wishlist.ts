@@ -5,7 +5,10 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { recordWishlistCapture } from "@/server/db/wishlist";
+import {
+  getWishlistItemImageUrl,
+  recordWishlistCapture,
+} from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
@@ -47,7 +50,7 @@ export const wishlistRouter = router({
     .query(async ({ input }) => {
       // Explicit select: `notes` is admin-only and must never reach the
       // public API, even if new internal-only columns get added later.
-      return prisma.wishlistItem.findMany({
+      const items = await prisma.wishlistItem.findMany({
         where: {
           status: input.status ?? { not: "ARCHIVED" },
           ...(input.categorySlug
@@ -58,7 +61,7 @@ export const wishlistRouter = router({
           id: true,
           title: true,
           description: true,
-          imageUrl: true,
+          fileStorageObject: { select: { key: true } },
           itemType: true,
           url: true,
           price: true,
@@ -81,6 +84,12 @@ export const wishlistRouter = router({
           { createdAt: "desc" },
         ],
       });
+
+      // Resolved here, so clients get a single image URL and no storage keys
+      return items.map(({ fileStorageObject, ...item }) => ({
+        ...item,
+        imageUrl: getWishlistItemImageUrl(fileStorageObject),
+      }));
     }),
 
   getCategories: publicProcedure.query(async () => {

@@ -243,7 +243,6 @@ describe("item create and update", () => {
     await adminCaller.updateItem({
       id: "item-1",
       description: null,
-      imageUrl: null,
       categoryId: null,
       notes: null,
     });
@@ -252,7 +251,6 @@ describe("item create and update", () => {
       expect.objectContaining({
         data: {
           description: null,
-          imageUrl: null,
           categoryId: null,
           notes: null,
         },
