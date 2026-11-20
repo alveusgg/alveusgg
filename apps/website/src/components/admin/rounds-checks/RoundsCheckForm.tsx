@@ -102,6 +102,11 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
       event.preventDefault();
       setError(null);
 
+      if (imageAttachmentData.isBusy) {
+        setError("Please wait for the image upload to finish.");
+        return;
+      }
+
       const formData = new FormData(event.currentTarget);
 
       const imageData =
@@ -150,7 +155,16 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
         });
       }
     },
-    [imageType, imageFile, action, check, router, create, edit],
+    [
+      imageType,
+      imageFile,
+      imageAttachmentData.isBusy,
+      action,
+      check,
+      router,
+      create,
+      edit,
+    ],
   );
 
   return (
@@ -245,7 +259,11 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
         )}
       </Fieldset>
 
-      <Button type="submit" className={defaultButtonClasses}>
+      <Button
+        type="submit"
+        className={defaultButtonClasses}
+        disabled={imageAttachmentData.isBusy}
+      >
         {action === "create" ? "Create" : "Update"}
       </Button>
     </form>
