@@ -4,6 +4,8 @@ import { type AnchorHTMLAttributes, type ReactNode, type Ref } from "react";
 
 import { classes } from "@/utils/classes";
 
+import IconExternal from "@/icons/IconExternal";
+
 type NavLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
   keyof LinkProps
@@ -27,6 +29,7 @@ export const NavLink = ({
   variant = "main",
   active = false,
   external = false,
+  children,
   className,
   ref,
   ...props
@@ -52,7 +55,16 @@ export const NavLink = ({
       : {})}
     {...props}
     ref={ref}
-  />
+  >
+    {children}
+    {variant === "sub" && external && (
+      <IconExternal
+        size="0.75em"
+        aria-hidden="true"
+        className="ml-1 inline-block align-baseline"
+      />
+    )}
+  </Link>
 );
 
 export const NavLinkSub = (props: NavLinkProps) => (

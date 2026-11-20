@@ -126,7 +126,10 @@ const DonatePage: NextPage = () => {
         <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-1">
           <Box
             dark
-            className="-mt-24 w-full overflow-visible bg-alveus-green-900 shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:-scale-y-100 before:rounded-xl before:shadow-2xl"
+            className={classes(
+              "-mt-24 w-full overflow-visible bg-alveus-green-900 shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:-scale-y-100 before:rounded-xl before:shadow-2xl",
+              !consent.neon && "lg:flex lg:grow lg:flex-col",
+            )}
           >
             <div className="mb-8 flex flex-wrap items-baseline-last justify-between gap-2">
               <div>
@@ -144,22 +147,33 @@ const DonatePage: NextPage = () => {
               </div>
             </div>
 
-            <div className="-mx-8 -mb-8 overflow-hidden rounded-b-xl bg-white text-alveus-green-900">
-              <Consent item="donation form" consent="neon">
-                <NeonDonateEmbed
-                  form="general"
-                  className="w-full *:w-full *:[&_iframe]:bg-white *:[&_iframe]:outline-none"
-                />
-              </Consent>
-
-              {!consent.neon && (
-                <p className="mx-8 mb-8 text-center text-sm opacity-75">
-                  Prefer not to load embedded content?{" "}
-                  <Link href="/donate/direct" external>
-                    Open the donation form in a new tab
-                  </Link>
-                </p>
+            <div
+              className={classes(
+                "-mx-8 -mb-8 overflow-clip rounded-b-xl bg-white text-alveus-green-900",
+                !consent.neon && "lg:grow",
               )}
+            >
+              <div
+                className={classes(
+                  !consent.neon && "flow-root lg:sticky lg:top-8",
+                )}
+              >
+                <Consent item="donation form" consent="neon">
+                  <NeonDonateEmbed
+                    form="general"
+                    className="w-full *:w-full *:[&_iframe]:bg-white *:[&_iframe]:outline-none"
+                  />
+                </Consent>
+
+                {!consent.neon && (
+                  <p className="mx-8 mb-8 text-center text-sm opacity-75">
+                    Prefer not to load embedded content?{" "}
+                    <Link href="/donate/direct" external>
+                      Open the donation form in a new tab
+                    </Link>
+                  </p>
+                )}
+              </div>
             </div>
           </Box>
 

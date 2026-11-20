@@ -44,7 +44,7 @@ const links = {
   poBox: {
     icon: IconBox,
     title: "PO Box",
-    link: "/po-box",
+    link: "/wishlist#po-box",
     external: false,
     description:
       "Send something to our PO Box. Perhaps a snack for our staff or ambassador enrichment?",
