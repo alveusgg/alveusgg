@@ -77,7 +77,7 @@ const staff: Record<string, Staff> = {
   maya: {
     image: [mayaHigaImage, mayaHigaFunImage],
     name: "Maya Higa",
-    title: "Founder & Executive Director",
+    title: "Founder &\nExecutive Director",
     description: <MayaText />,
     joined: "2021-02",
     department: "leadership",

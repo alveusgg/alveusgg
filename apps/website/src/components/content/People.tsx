@@ -22,6 +22,29 @@ type PeopleProps = {
 const imageClasses =
   "aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover";
 
+export const PersonImage = ({ image }: { image: Person["image"] }) => (
+  <div className="relative aspect-square h-auto w-full overflow-clip rounded-2xl">
+    {Array.isArray(image) ? (
+      <>
+        <Image src={image[1]} width={320} alt="" className={imageClasses} />
+        <Image
+          src={image[0]}
+          width={320}
+          alt=""
+          className={classes(
+            imageClasses,
+            "absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-focus-within:top-[90%] group-focus-within:duration-1000 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000",
+          )}
+        />
+      </>
+    ) : (
+      <Image src={image} width={320} alt="" className={imageClasses} />
+    )}
+
+    <div className="absolute inset-0 rounded-2xl border-4 border-alveus-green/75" />
+  </div>
+);
+
 const People = ({ people, link }: PeopleProps) => (
   <ul className="flex flex-wrap">
     {Object.entries(people).map(([key, person]) => (
@@ -32,36 +55,7 @@ const People = ({ people, link }: PeopleProps) => (
       >
         <a id={key} className="scroll-mt-4" />
         <div className="my-auto w-full max-w-xs shrink-0 p-4">
-          <div className="relative aspect-square h-auto w-full overflow-clip rounded-2xl">
-            {Array.isArray(person.image) ? (
-              <>
-                <Image
-                  src={person.image[1]}
-                  width={320}
-                  alt=""
-                  className={imageClasses}
-                />
-                <Image
-                  src={person.image[0]}
-                  width={320}
-                  alt=""
-                  className={classes(
-                    imageClasses,
-                    "absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000",
-                  )}
-                />
-              </>
-            ) : (
-              <Image
-                src={person.image}
-                width={320}
-                alt=""
-                className={imageClasses}
-              />
-            )}
-
-            <div className="absolute inset-0 rounded-2xl border-4 border-alveus-green/75" />
-          </div>
+          <PersonImage image={person.image} />
         </div>
         <div className="my-auto grow p-4">
           <Heading
