@@ -5,7 +5,10 @@ import type * as Database from "@alveusgg/database";
 
 import { recordWishlistCapture } from "@/server/db/wishlist";
 
-import { notifyWishlistDonation } from "@/utils/discord";
+import {
+  notifyWishlistDonation,
+  notifyWishlistItemNeedsTarget,
+} from "@/utils/discord";
 
 const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
   const tx = {
@@ -41,6 +44,7 @@ vi.mock("@alveusgg/database", async (importOriginal) => ({
 }));
 vi.mock("@/utils/discord", () => ({
   notifyWishlistDonation: vi.fn(() => Promise.resolve()),
+  notifyWishlistItemNeedsTarget: vi.fn(() => Promise.resolve()),
 }));
 
 const item = {
@@ -293,5 +297,67 @@ describe("recordWishlistCapture", () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("Neon CRM is not configured"),
     );
+  });
+});
+
+describe("partial items without a target", () => {
+  const noTarget = {
+    ...item,
+    itemType: "PRODUCT",
+    allowPartialDonations: true,
+    goalAmountCents: null,
+    price: "about $40",
+  };
+
+  beforeEach(() => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  test("records the capture and alerts staff once", async () => {
+    tx.wishlistDonationOrder.findUnique.mockResolvedValue({
+      ...order,
+      wishlistItem: noTarget,
+    });
+    tx.wishlistItem.update.mockResolvedValue({
+      ...noTarget,
+      raisedAmountCents: 2_500,
+    });
+
+    const result = await recordWishlistCapture(capture);
+
+    expect(result.status).toBe("captured");
+    expect(tx.wishlistItem.update).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { raisedAmountCents: { increment: 2_500 } },
+    });
+    expect(notifyWishlistDonation).toHaveBeenCalledTimes(1);
+    expect(notifyWishlistItemNeedsTarget).toHaveBeenCalledTimes(1);
+    expect(notifyWishlistItemNeedsTarget).toHaveBeenCalledWith(
+      expect.objectContaining({
+        itemTitle: "Heat lamp",
+        paypalOrderId: "PAYPAL-ORDER-1",
+        amount: 25,
+      }),
+    );
+
+    // A webhook retry of the same capture loses the claim
+    tx.$executeRaw.mockResolvedValue(0);
+    const retry = await recordWishlistCapture(capture);
+
+    expect(retry.status).toBe("duplicate");
+    expect(notifyWishlistItemNeedsTarget).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not alert for a partial item with a target", async () => {
+    tx.wishlistDonationOrder.findUnique.mockResolvedValue({
+      ...order,
+      wishlistItem: { ...noTarget, price: "40.00" },
+    });
+
+    const result = await recordWishlistCapture(capture);
+
+    expect(result.status).toBe("captured");
+    expect(notifyWishlistItemNeedsTarget).not.toHaveBeenCalled();
   });
 });

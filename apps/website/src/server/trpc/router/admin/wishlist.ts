@@ -27,6 +27,10 @@ import { buildAmazonCartUrl } from "@/utils/amazonCart";
 import {
   DONATION_ORDER_STATUSES,
   PAYMENT_ISSUE_STATUSES,
+  getPartialTargetCents,
+  isFullPriceDonatable,
+  normalizePrice,
+  parsePriceCents,
 } from "@/utils/wishlist";
 
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
@@ -52,6 +56,48 @@ const quantityFulfilledWithinQuantity = (item: {
 const QUANTITY_FULFILLED_ERROR =
   "Quantity fulfilled cannot be more than the quantity";
 
+const PRICE_ERROR =
+  "Enter the price as a dollar amount, like 24.99 or 1,547.00";
+const PARTIAL_TARGET_ERROR =
+  "Partial donations need a readable price or a funding target";
+
+const FULL_PRICE_BOUNDS_ERROR =
+  "A full-price product must cost between $1.00 and $10,000.00. Turn on partial donations for more expensive items.";
+
+const rawPrice = z.string().max(50).nullish();
+
+const requiredPrice = rawPrice.transform((value, ctx) => {
+  const cents = parsePriceCents(value);
+  if (cents == null) {
+    ctx.addIssue({ code: "custom", message: PRICE_ERROR });
+    return z.NEVER;
+  }
+  return normalizePrice(cents);
+});
+
+function assertPartialTarget(item: {
+  allowPartialDonations: boolean;
+  goalAmountCents: number | null;
+  price: string | null;
+  quantity: number;
+}) {
+  if (item.allowPartialDonations && getPartialTargetCents(item) == null) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: PARTIAL_TARGET_ERROR });
+  }
+}
+
+function assertFullPriceBounds(item: {
+  allowPartialDonations: boolean;
+  price: string | null;
+}) {
+  if (!isFullPriceDonatable({ itemType: "PRODUCT", ...item })) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: FULL_PRICE_BOUNDS_ERROR,
+    });
+  }
+}
+
 const baseItemFields = {
   title: z.string().min(1).max(255),
   description: z.string().max(2000).optional().nullable(),
@@ -70,7 +116,7 @@ const itemCreateInput = z.discriminatedUnion("itemType", [
       itemType: z.literal("PRODUCT"),
       ...baseItemFields,
       url: z.string().url().optional().nullable(),
-      price: z.string().max(50).optional().nullable(),
+      price: requiredPrice,
       quantity: z.number().int().min(1).default(1),
       quantityFulfilled: z.number().int().min(0).default(0),
       // Target for partial donations, defaults to price x quantity when unset
@@ -100,7 +146,7 @@ const itemUpdateInput = z
     notes: z.string().max(1000).optional().nullable(),
     sortOrder: z.number().int().optional(),
     url: z.string().url().optional().nullable(),
-    price: z.string().max(50).optional().nullable(),
+    price: rawPrice,
     quantity: z.number().int().min(1).optional(),
     quantityFulfilled: z.number().int().min(0).optional(),
     goalAmountCents: z.number().int().min(100).optional().nullable(),
@@ -171,6 +217,15 @@ export const adminWishlistRouter = router({
   createItem: permittedProcedure
     .input(itemCreateInput)
     .mutation(async ({ input }) => {
+      if (input.itemType === "PRODUCT") {
+        assertPartialTarget({
+          allowPartialDonations: input.allowPartialDonations,
+          goalAmountCents: input.goalAmountCents ?? null,
+          price: input.price,
+          quantity: input.quantity,
+        });
+        assertFullPriceBounds(input);
+      }
       return saveWithWishlistImageUpload(input.fileStorageObjectId, () =>
         prisma.wishlistItem.create({
           data: {
@@ -221,6 +276,49 @@ export const adminWishlistRouter = router({
           code: "BAD_REQUEST",
           message: QUANTITY_FULFILLED_ERROR,
         });
+      }
+
+      if (existing.itemType === "PRODUCT") {
+        // The edit form resends every field, so only a changed price is
+        // checked and legacy items can still be archived or re-statused
+        if (data.price !== undefined) {
+          const sent = data.price?.trim() ?? "";
+          if (sent === (existing.price?.trim() ?? "")) {
+            delete data.price;
+          } else {
+            const cents = parsePriceCents(data.price);
+            if (cents == null) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: PRICE_ERROR,
+              });
+            }
+            data.price = normalizePrice(cents);
+          }
+        }
+
+        const next = {
+          allowPartialDonations:
+            data.allowPartialDonations ?? existing.allowPartialDonations,
+          goalAmountCents:
+            data.goalAmountCents !== undefined
+              ? data.goalAmountCents
+              : existing.goalAmountCents,
+          price: data.price ?? existing.price,
+          quantity,
+        };
+        const targetChanged =
+          next.allowPartialDonations !== existing.allowPartialDonations ||
+          next.goalAmountCents !== existing.goalAmountCents ||
+          next.price !== existing.price ||
+          next.quantity !== existing.quantity;
+        if (targetChanged) assertPartialTarget(next);
+        if (
+          next.price !== existing.price ||
+          next.allowPartialDonations !== existing.allowPartialDonations
+        ) {
+          assertFullPriceBounds(next);
+        }
       }
 
       // Only new uploads, since a failed check deletes the checked object

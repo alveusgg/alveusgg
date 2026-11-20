@@ -226,6 +226,7 @@ describe("capture status on the success page", () => {
       order: {} as never,
       excessAmount: 0,
       justFunded: false,
+      needsTarget: false,
     });
 
     const result = await caller.captureDonation({
