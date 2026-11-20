@@ -72,6 +72,8 @@ export function SendNotificationForm() {
   const submit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      if (imageAttachmentData.isBusy) return;
+
       const data = new FormData(event.currentTarget);
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;
       const fileStorageObjectId =
@@ -90,7 +92,7 @@ export function SendNotificationForm() {
         isDiscord: channels.includes("discord"),
       });
     },
-    [image, createNotification],
+    [image, imageAttachmentData.isBusy, createNotification],
   );
 
   return (
@@ -230,7 +232,11 @@ export function SendNotificationForm() {
             </div>
           </Fieldset>
 
-          <Button type="submit" className={defaultButtonClasses}>
+          <Button
+            type="submit"
+            className={defaultButtonClasses}
+            disabled={imageAttachmentData.isBusy}
+          >
             Send notification
           </Button>
         </div>
