@@ -136,7 +136,7 @@ export function WishlistItemForm({
       setImageError(null);
       const formData = new FormData(event.currentTarget);
 
-      if (imageFile?.status === "upload.pending") {
+      if (imageAttachmentData.isBusy) {
         setImageError("Please wait for the image upload to finish.");
         return;
       }
@@ -230,6 +230,7 @@ export function WishlistItemForm({
       categoryId,
       allowPartialDonations,
       imageFile,
+      imageAttachmentData.isBusy,
       createMutation,
       updateMutation,
       router,
@@ -504,7 +505,7 @@ export function WishlistItemForm({
         <Button
           type="submit"
           className={defaultButtonClasses}
-          disabled={isSaving}
+          disabled={isSaving || imageAttachmentData.isBusy}
         >
           {isSaving ? "Saving…" : action === "create" ? "Create" : "Update"}
         </Button>
