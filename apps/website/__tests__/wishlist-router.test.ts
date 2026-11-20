@@ -389,7 +389,7 @@ describe("legacy items with a missing or unreadable price", () => {
     id: "item-1",
     title: "Heat lamp",
     description: null,
-    imageUrl: null,
+    fileStorageObjectId: null,
     priority: "MEDIUM" as const,
     status,
     categoryId: null,
@@ -426,6 +426,10 @@ describe("legacy items with a missing or unreadable price", () => {
     mockPrisma.wishlistItem.findUnique.mockResolvedValue({
       ...product,
       price: "about $40",
+    });
+    mockPrisma.wishlistItem.delete.mockResolvedValue({
+      ...product,
+      fileStorageObjectId: null,
     });
 
     await adminCaller.deleteItem({ id: "item-1", permanent: false });
