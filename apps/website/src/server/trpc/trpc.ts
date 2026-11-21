@@ -5,7 +5,11 @@ import { ZodError } from "zod";
 import { env } from "@/env";
 
 import { type Context } from "@/server/trpc/context";
-import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+import {
+  checkIsSuperUserSession,
+  checkPermissions,
+  requireTwitchAuthorization,
+} from "@/server/utils/auth";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
 import type { PermissionConfig } from "@/data/permissions";
@@ -78,6 +82,11 @@ export const createCheckPermissionMiddleware = (permission: PermissionConfig) =>
  * Protected procedure
  **/
 export const protectedProcedure = t.procedure.use(logMutations).use(isAuthed);
+
+export const twitchProcedure = protectedProcedure.use(({ ctx, next }) => {
+  requireTwitchAuthorization(ctx.session.user);
+  return next({ ctx });
+});
 
 /**
  * Reusable middleware to ensure

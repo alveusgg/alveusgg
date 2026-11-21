@@ -44,6 +44,9 @@ async function validateAccessToken(
   if (response.status === 401) {
     throw new ExpiredAccessTokenError();
   }
+  if (!response.ok) {
+    throw new Error("Unable to validate Twitch authorization");
+  }
 
   return await response.json();
 }
@@ -63,7 +66,7 @@ export async function refreshAccessToken(
     const err = await validateAccessToken(service, clientId, accessToken)
       .then(() => undefined)
       .catch((error) => error);
-    if (!err || !(err instanceof ExpiredAccessTokenError)) {
+    if (!err) {
       // Store that we verified the token
       await prisma.account.update({
         where: { id: accountId, provider: service },
@@ -71,6 +74,7 @@ export async function refreshAccessToken(
       });
       return;
     }
+    if (!(err instanceof ExpiredAccessTokenError)) throw err;
   }
 
   // Attempt to refresh the token

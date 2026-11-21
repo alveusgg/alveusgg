@@ -8,7 +8,10 @@ import {
   triggerOutgoingWebhook,
 } from "@/server/outgoing-webhooks";
 import { protectedProcedure, router } from "@/server/trpc/trpc";
-import { getUserTwitchAccount } from "@/server/utils/auth";
+import {
+  getUserTwitchAccount,
+  requireTwitchAuthorization,
+} from "@/server/utils/auth";
 
 import { channels } from "@/data/twitch";
 
@@ -82,11 +85,10 @@ export const formsRouter = router({
         });
       }
 
-      // Check if twitch account is connected
-      const twitchAccount = await getUserTwitchAccount(userId, true);
-
       // Perform server side checks if required
       if (config.checks) {
+        requireTwitchAuthorization(ctx.session.user);
+        const twitchAccount = await getUserTwitchAccount(userId, true);
         // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
         const isFollowing = await getUserFollowsBroadcaster(
           twitchAccount.token,

@@ -7,7 +7,7 @@ import { trpc } from "@/utils/trpc";
 const useSubscriberAccess = (checkSubscription = true) => {
   const { data: session } = useSession();
   const hasScopes = scopeGroups.chat.every((scope) =>
-    session?.user?.scopes?.includes(scope),
+    session?.user?.twitch?.scopes?.includes(scope),
   );
 
   const subscription = trpc.stream.getSubscription.useQuery(undefined, {

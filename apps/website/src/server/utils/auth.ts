@@ -71,3 +71,15 @@ export const getUserTwitchAccount = async (userId: string, trpc = true) => {
   }
   return { token, id };
 };
+
+/** Website login alone does not grant access to the Twitch API. */
+export function requireTwitchAuthorization(user: NonNullable<Session["user"]>) {
+  if (!user.twitch || user.twitch.error) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: user.twitch
+        ? "Reconnect Twitch to use this feature."
+        : "Connect Twitch to use this feature.",
+    });
+  }
+}

@@ -40,26 +40,27 @@ const LoginWithExtraScopes = ({
 }) => {
   const { data, status } = useSession();
 
-  const currentScopes = data?.user?.scopes ?? [];
+  const currentScopes = data?.user?.twitch?.scopes ?? [];
   const requiredScopes = [
-    ...(data?.user?.scopes ?? []),
+    ...(data?.user?.twitch?.scopes ?? []),
     ...scopeGroups.default,
     ...scopeGroups[scopeGroup],
   ];
   const missingScopes = requiredScopes.filter(
     (scope) => !currentScopes.includes(scope),
   );
-  if (!missingScopes.length && !showCurrentScopes) return null;
+  if (!missingScopes.length && !data?.user?.twitch?.error && !showCurrentScopes)
+    return null;
 
   return (
     <div className={classes("flex flex-col gap-4", className)}>
-      {!!missingScopes.length && (
+      {(!!missingScopes.length || data?.user?.twitch?.error) && (
         <Button
           className="bg-twitch text-white transition-[filter] hover:brightness-110"
           onClick={() =>
             signIn(
               "twitch",
-              { redirect: false },
+              { callbackUrl: window.location.href },
               {
                 scope: requiredScopes.join(" "),
               },
@@ -67,7 +68,9 @@ const LoginWithExtraScopes = ({
           }
         >
           <IconTwitch />
-          <span>Log in</span>
+          <span>
+            {data?.user?.twitch ? "Reconnect Twitch" : "Connect Twitch"}
+          </span>
         </Button>
       )}
 
