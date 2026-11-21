@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { DateTime } from "luxon";
 import type { NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -7,6 +8,7 @@ import {
   type ImageAttachment,
   type ImageMetadata,
   type LinkAttachment,
+  type Prisma,
   type ShowAndTellEntry$attachmentsArgs,
   type ShowAndTellEntryAttachment,
   type ShowAndTellEntryAttachmentCreateWithoutEntryInput,
@@ -25,7 +27,10 @@ import {
 } from "@/data/show-and-tell";
 
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { countFirstTimeGiveAnHourParticipants } from "@/utils/give-an-hour";
 import { notEmpty } from "@/utils/helpers";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
@@ -431,6 +436,187 @@ export async function getVolunteeringMinutes({
   });
 
   return res._sum.volunteeringMinutes ?? 0;
+}
+
+type GiveAnHourRange = { start: Date; end: Date };
+
+const getGiveAnHourEntriesWhere = (ranges: GiveAnHourRange[]) =>
+  ({
+    AND: [
+      getPostFilter("approved"),
+      { volunteeringMinutes: { gt: 0 } },
+      {
+        OR: ranges.map(({ start, end }) => ({
+          createdAt: { gte: start, lt: end },
+        })),
+      },
+    ],
+  }) satisfies Prisma.ShowAndTellEntryWhereInput;
+
+async function getGiveAnHourCampaignSummary(
+  { start, end }: GiveAnHourRange,
+  now: Date,
+) {
+  const year = DateTime.fromJSDate(start, { zone: DATETIME_ALVEUS_ZONE }).year;
+  const ended = end <= now;
+
+  // Nothing can have been given for a campaign that hasn't started yet
+  if (start > now) {
+    return { year, ended, minutes: 0, posts: 0, firstTimeParticipants: 0 };
+  }
+
+  const where = getGiveAnHourEntriesWhere([{ start, end }]);
+  const [aggregate, participants] = await Promise.all([
+    prisma.showAndTellEntry.aggregate({
+      _sum: { volunteeringMinutes: true },
+      _count: { _all: true },
+      where,
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { userId: true, displayName: true },
+      where,
+      distinct: ["userId", "displayName"],
+    }),
+  ]);
+
+  const participantUserIds = participants.flatMap(({ userId }) =>
+    userId ? [userId] : [],
+  );
+  const participantDisplayNames = participants.flatMap(({ displayName }) =>
+    displayName ? [displayName] : [],
+  );
+  const previousParticipants =
+    participantUserIds.length === 0 && participantDisplayNames.length === 0
+      ? []
+      : await prisma.showAndTellEntry.findMany({
+          select: { userId: true, displayName: true },
+          where: {
+            AND: [
+              getPostFilter("approved"),
+              { createdAt: { lt: start } },
+              {
+                OR: [
+                  ...(participantUserIds.length > 0
+                    ? [{ userId: { in: participantUserIds } }]
+                    : []),
+                  ...(participantDisplayNames.length > 0
+                    ? [{ displayName: { in: participantDisplayNames } }]
+                    : []),
+                ],
+              },
+            ],
+          },
+          distinct: ["userId", "displayName"],
+        });
+
+  return {
+    year,
+    ended,
+    minutes: aggregate._sum.volunteeringMinutes ?? 0,
+    posts: aggregate._count._all,
+    firstTimeParticipants: countFirstTimeGiveAnHourParticipants(
+      participants,
+      previousParticipants,
+    ),
+  };
+}
+
+const roundedAverage = (values: number[]) =>
+  values.length === 0
+    ? 0
+    : Math.round(
+        values.reduce((total, value) => total + value, 0) / values.length,
+      );
+
+export async function getGiveAnHourStats({
+  ranges,
+}: {
+  ranges: GiveAnHourRange[];
+}) {
+  const now = new Date();
+  const where = getGiveAnHourEntriesWhere(ranges);
+  const [
+    aggregate,
+    participantsWithUserId,
+    participantsWithoutUserId,
+    places,
+    campaigns,
+  ] = await Promise.all([
+    prisma.showAndTellEntry.aggregate({
+      _sum: { volunteeringMinutes: true },
+      _count: { _all: true },
+      where,
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { userId: true },
+      where: { AND: [where, { userId: { not: null } }] },
+      distinct: ["userId"],
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { displayName: true },
+      where: {
+        AND: [where, { userId: null }, { displayName: { not: null } }],
+      },
+      distinct: ["displayName"],
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { location: true },
+      where: {
+        AND: [where, { location: { not: null } }, { NOT: { location: "" } }],
+      },
+      distinct: ["location"],
+    }),
+    Promise.all(
+      ranges.map((range) => getGiveAnHourCampaignSummary(range, now)),
+    ),
+  ]);
+  const minutes = aggregate._sum.volunteeringMinutes ?? 0;
+  const participants =
+    participantsWithUserId.length + participantsWithoutUserId.length;
+  const { locations, countries } = extractInfoFromMapFeatures(
+    places.flatMap(({ location }, index) =>
+      location ? [{ id: String(index), location }] : [],
+    ),
+  );
+  // Averages only cover campaigns that have ended, so a running one doesn't drag them down
+  const endedCampaigns = campaigns.filter(({ ended }) => ended);
+  // The record can be held by a running campaign
+  const recordCampaign = campaigns.reduce<
+    (typeof campaigns)[number] | undefined
+  >(
+    (record, campaign) =>
+      campaign.minutes > (record?.minutes ?? 0) ? campaign : record,
+    undefined,
+  );
+
+  return {
+    hours: Math.round(minutes / 60),
+    posts: aggregate._count._all,
+    participants,
+    averageHoursPerParticipant:
+      participants === 0 ? 0 : Math.round(minutes / 60 / participants),
+    locations: locations.size,
+    countries: countries.size,
+    averagePostsPerCampaign: roundedAverage(
+      endedCampaigns.map(({ posts }) => posts),
+    ),
+    averageFirstTimeParticipantsPerCampaign: roundedAverage(
+      endedCampaigns.map(({ firstTimeParticipants }) => firstTimeParticipants),
+    ),
+    averageCommunityHoursPerCampaign: roundedAverage(
+      endedCampaigns.map(({ minutes }) => minutes / 60),
+    ),
+    recordCampaign: recordCampaign
+      ? {
+          year: recordCampaign.year,
+          hours: Math.round(recordCampaign.minutes / 60),
+        }
+      : null,
+    campaigns: campaigns.map(({ year, firstTimeParticipants }) => ({
+      year,
+      firstTimeParticipants,
+    })),
+  };
 }
 
 export async function getAdminPosts({
