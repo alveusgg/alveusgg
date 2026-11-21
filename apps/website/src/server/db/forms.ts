@@ -3,24 +3,18 @@ import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
-import { decryptRecord, encryptRecord } from "@/server/db/encryption";
+import {
+  decryptFormEntryFields,
+  decryptMailingAddressFields,
+  encryptFormEntryFields,
+  encryptMailingAddressFields,
+} from "@/server/db/form-entry-encryption";
 
 import { isValidCountryCode } from "@/utils/countries";
-import { formConfigSchema } from "@/utils/forms";
+import { FORM_ENTRY_MAX_LENGTHS, formConfigSchema } from "@/utils/forms";
 import { SLUG_REGEX, convertToSlug } from "@/utils/slugs";
 
 import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
-
-const entryEncryptFields = ["givenName", "familyName"];
-
-const mailingAddressEncryptFields = [
-  "addressLine1",
-  "addressLine2",
-  "postalCode",
-  "city",
-  "state",
-  "country",
-];
 
 export type FormSchema = z.infer<typeof formSchema>;
 
@@ -41,28 +35,28 @@ export const existingFormSchema = formSchema.and(
 async function decryptFormEntryWithAddress<T extends FormEntryWithAddress>(
   entry: T,
 ) {
-  const res = await decryptRecord(entry, entryEncryptFields);
+  const res = await decryptFormEntryFields(entry);
   res.mailingAddress =
     entry.mailingAddress &&
-    (await decryptRecord(entry.mailingAddress, mailingAddressEncryptFields));
+    (await decryptMailingAddressFields(entry.mailingAddress));
   return res;
 }
 
 const formEntryMailingAddressSchema = z.object({
-  addressLine1: z.string().min(1),
-  addressLine2: z.string(), // second address line may be empty
-  postalCode: z.string().min(1),
-  city: z.string().min(1),
+  addressLine1: z.string().min(1).max(FORM_ENTRY_MAX_LENGTHS.addressLine),
+  addressLine2: z.string().max(FORM_ENTRY_MAX_LENGTHS.addressLine), // second address line may be empty
+  postalCode: z.string().min(1).max(FORM_ENTRY_MAX_LENGTHS.postalCode),
+  city: z.string().min(1).max(FORM_ENTRY_MAX_LENGTHS.city),
   country: z.custom<string>(isValidCountryCode, {
     message: "Invalid country code",
   }),
-  state: z.string(), // state may be left empty
+  state: z.string().max(FORM_ENTRY_MAX_LENGTHS.state), // state may be left empty
 });
 
 export const formEntrySchema = z.object({
-  givenName: z.string().min(1),
-  familyName: z.string().min(1),
-  email: z.email(),
+  givenName: z.string().min(1).max(FORM_ENTRY_MAX_LENGTHS.name),
+  familyName: z.string().min(1).max(FORM_ENTRY_MAX_LENGTHS.name),
+  email: z.email().max(FORM_ENTRY_MAX_LENGTHS.email),
   allowMarketingEmails: z.boolean().default(false),
   mailingAddress: formEntryMailingAddressSchema.optional(),
 });
@@ -118,31 +112,25 @@ export async function createEntry(
       user: true,
     },
     data: {
-      ...(await encryptRecord(
-        {
-          givenName: input.givenName,
-          familyName: input.familyName,
-        },
-        entryEncryptFields,
-      )),
+      ...(await encryptFormEntryFields({
+        givenName: input.givenName,
+        familyName: input.familyName,
+        email: input.email,
+      })),
       form: { connect: { id: formId } },
       user: { connect: { id: userId } },
-      email: input.email,
       allowMarketingEmails: input.allowMarketingEmails,
       mailingAddress:
         withMailingAddress && input.mailingAddress
           ? {
-              create: await encryptRecord(
-                {
-                  addressLine1: input.mailingAddress.addressLine1,
-                  addressLine2: input.mailingAddress.addressLine2,
-                  city: input.mailingAddress.city,
-                  state: input.mailingAddress.state,
-                  postalCode: input.mailingAddress.postalCode,
-                  country: input.mailingAddress.country,
-                },
-                mailingAddressEncryptFields,
-              ),
+              create: await encryptMailingAddressFields({
+                addressLine1: input.mailingAddress.addressLine1,
+                addressLine2: input.mailingAddress.addressLine2,
+                city: input.mailingAddress.city,
+                state: input.mailingAddress.state,
+                postalCode: input.mailingAddress.postalCode,
+                country: input.mailingAddress.country,
+              }),
             }
           : undefined,
     },
