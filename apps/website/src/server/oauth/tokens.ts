@@ -2,6 +2,7 @@ import { createSign, createVerify, randomUUID } from "node:crypto";
 
 import { prisma } from "@alveusgg/database";
 
+import { decryptUserEmail } from "@/server/db/user-email";
 import { getRolesForUser, getTwitchUserId } from "@/server/db/users";
 
 import {
@@ -290,6 +291,7 @@ export async function getOAuthUser(
 
   return {
     ...user,
+    email: await decryptUserEmail(user.email),
     roles,
     twitchUserId,
   };
