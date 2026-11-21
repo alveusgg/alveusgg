@@ -185,6 +185,8 @@ Set these values in `apps/website/.env` using two separately generated 32-byte B
 
 Use different keys for local development, preview and production. Keep deployment keys in the team's password manager: data encrypted with a lost key can't be recovered.
 
+For chatbot token work, configure the same `DATA_ENCRYPTION_KEYS` in `apps/chatbot/.env`.
+
 See [Field encryption](docs/field-encryption.md) for the keyring format, key rotation, backfills and backup recovery.
 
 ### Weather API

@@ -1,18 +1,21 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "./generated/client";
 
-const client = () =>
+export const createPrismaClient = ({
+  log = process.env.NODE_ENV === "development"
+    ? ["query", "error", "warn"]
+    : ["error"],
+}: { log?: ("query" | "info" | "warn" | "error")[] } = {}) =>
   new PrismaClient({
     adapter: new PrismaMariaDb(
       (process.env.DATABASE_URL ?? "")
         .replace(/^mysql:\/\//, "mariadb://")
         .replace(/([?&])sslaccept=strict/, "$1ssl=true"),
     ),
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
+    log,
   });
+
+const client = () => createPrismaClient();
 
 // Use globalThis for caching in development to avoid hot reloading issues
 const cache = (process.env.NODE_ENV === "production" ? {} : globalThis) as {
