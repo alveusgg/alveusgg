@@ -16,6 +16,9 @@
 }
 
 @theme {
+  /* TEMP: remove once @alveusgg/data ships this in its palette */
+  --color-alveus-tan-150: oklch(from #f7e4d8 l c h);
+
   --animate-spin-slow: spin 3s linear infinite;
   --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 

@@ -1,85 +1,171 @@
-import { MenuItem, MenuItems } from "@headlessui/react";
-import { type ReactNode } from "react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  type MenuItemsProps,
+} from "@headlessui/react";
+import { type ReactNode, useState } from "react";
 
 import {
   type NavStructureDropdown,
   type NavStructureLink,
 } from "@/data/navigation";
 
-import { NavLinkSub } from "@/components/layout/navbar/NavLink";
+import { classes } from "@/utils/classes";
 
-function DropdownLinks({
-  links,
-  active,
+import { useActiveNav } from "@/hooks/active";
+
+import IconChevronDown from "@/icons/IconChevronDown";
+
+import { NavLink, NavLinkSub, navLinkClasses } from "./NavLink";
+import { type NavColor, navColors } from "./colors";
+
+export const DropdownMenuItems = ({
+  color = "green",
+  ...props
+}: Pick<MenuItemsProps<"div">, "static" | "onClick"> & {
+  color?: NavColor;
+  children: ReactNode;
+}) => (
+  <MenuItems
+    as="div"
+    modal={false}
+    className={classes(
+      "absolute top-full right-0 z-10 mt-1 flex w-max min-w-40 flex-col gap-0.5 rounded-2xl border p-2 shadow-lg transition duration-100 ease-out focus:outline-hidden starting:scale-95 starting:opacity-0",
+      // Cover the gap above the panel, so the pointer can reach a menu opened on hover
+      "before:absolute before:inset-x-0 before:bottom-full before:h-2",
+      navColors[color].panel,
+    )}
+    {...props}
+  />
+);
+
+export function DropdownLink({
+  link,
+  color,
+  className,
+  children = link.title,
 }: {
-  links: Record<string, NavStructureLink>;
-  active: string;
+  link: NavStructureLink;
+  color?: NavColor;
+  className?: string;
+  children?: ReactNode;
 }) {
+  const active = useActiveNav() === link.link;
+
   return (
-    <>
-      {Object.entries(links).map(([key, link]) => (
-        <li key={key}>
-          <MenuItem>
-            {({ close }) => (
-              <NavLinkSub
-                href={link.link}
-                active={active === link.link}
-                external={link.external}
-                className="w-full min-w-max outline-blue-500 data-focus:not-hover:outline-2"
-                onClick={close}
-              >
-                {link.title}
-              </NavLinkSub>
-            )}
-          </MenuItem>
-        </li>
-      ))}
-    </>
+    <MenuItem>
+      <NavLinkSub
+        href={link.link}
+        external={link.external}
+        color={color}
+        active={active}
+        className={className}
+      >
+        {children}
+      </NavLinkSub>
+    </MenuItem>
   );
 }
 
-export const Dropdown = ({
-  dropdown,
-  active,
+const DropdownLinks = ({
+  links,
 }: {
-  dropdown: NavStructureDropdown;
-  active: string;
-}) => {
-  if ("groups" in dropdown) {
-    return (
-      <ul className="flex flex-col gap-3">
-        {Object.entries(dropdown.groups).map(([key, group]) => (
-          <li key={key}>
-            <p className="mx-2 mb-1 block border-b border-alveus-green-600 pt-1 text-sm text-alveus-green-400">
-              {group.title}
-            </p>
-            <ul className="flex flex-col gap-0.5">
-              <DropdownLinks links={group.links} active={active} />
-            </ul>
-          </li>
-        ))}
-      </ul>
-    );
-  }
+  links: Record<string, NavStructureLink>;
+}) => (
+  <ul className="flex flex-col gap-0.5">
+    {Object.entries(links).map(([key, link]) => (
+      <li key={key}>
+        <DropdownLink link={link} />
+      </li>
+    ))}
+  </ul>
+);
 
-  return (
-    <ul className="contents">
-      <DropdownLinks links={dropdown.links} active={active} />
+export const Dropdown = ({ dropdown }: { dropdown: NavStructureDropdown }) =>
+  "groups" in dropdown ? (
+    <ul className="flex flex-col gap-3">
+      {Object.entries(dropdown.groups).map(([key, group]) => (
+        <li key={key}>
+          <p className="mx-3 mb-1 border-b border-alveus-green-700 pt-1 text-sm text-alveus-green-200">
+            {group.title}
+          </p>
+          <DropdownLinks links={group.links} />
+        </li>
+      ))}
     </ul>
+  ) : (
+    <DropdownLinks links={dropdown.links} />
   );
-};
 
-export const DropdownMenuItems = ({
+export function DropdownMenu({
+  title,
+  href,
+  color,
+  active = false,
+  openOnHover = false,
   children,
 }: {
-  children: ReactNode | ReactNode[];
-}) => (
-  <MenuItems
-    transition
-    className="group/items absolute top-full right-0 z-10 mt-1 flex min-w-40 flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-hidden data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75"
-    as="div"
-    modal={false}
-  >
-    {children}
-  </MenuItems>
-);
+  title: string;
+  /** Splits the button, so the title links here and the chevron opens the menu */
+  href?: string;
+  color?: NavColor;
+  active?: boolean;
+  openOnHover?: boolean;
+  children: ReactNode;
+}) {
+  // Hovering only shows the menu, it is opened (and gets focus) by the button
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Menu
+      as="div"
+      className="relative flex"
+      onPointerEnter={(event) =>
+        setHovered(openOnHover && event.pointerType === "mouse")
+      }
+      onPointerLeave={() => setHovered(false)}
+    >
+      {({ open }) => (
+        <>
+          {href && (
+            <NavLink
+              href={href}
+              color={color}
+              active={active}
+              className="rounded-r-none pr-3"
+            >
+              {title}
+            </NavLink>
+          )}
+
+          <MenuButton
+            aria-label={
+              href ? `More ${title.toLowerCase()} options` : undefined
+            }
+            className={classes(
+              navLinkClasses({ color, active: open || active }),
+              "group/button gap-2",
+              href && "-ml-px rounded-l-none pr-3 pl-2",
+            )}
+          >
+            {!href && title}
+            <IconChevronDown
+              size={16}
+              className="translate-y-0.5 transition-transform group-data-active/button:translate-y-1"
+            />
+          </MenuButton>
+
+          <DropdownMenuItems
+            color={color}
+            static={hovered}
+            onClick={() => setHovered(false)}
+          >
+            {children}
+          </DropdownMenuItems>
+        </>
+      )}
+    </Menu>
+  );
+}

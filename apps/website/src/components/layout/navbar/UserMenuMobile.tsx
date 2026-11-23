@@ -60,7 +60,7 @@ const UserMenuMobile = () => {
       <li>
         <div className="my-3 w-full border-t opacity-30"></div>
 
-        <div className="px-5 py-2">
+        <div className="px-3 py-2">
           <ProfileInfo full />
         </div>
 
