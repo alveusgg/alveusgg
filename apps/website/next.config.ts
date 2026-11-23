@@ -456,11 +456,6 @@ const config: NextConfig = {
       permanent: false,
     },
     {
-      source: "/po-box",
-      destination: "/wishlist#po-box",
-      permanent: true,
-    },
-    {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",
       permanent: true,

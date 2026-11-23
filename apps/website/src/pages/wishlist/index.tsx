@@ -1,32 +1,27 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import { useState } from "react";
 
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
-import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import PoBoxAddress from "@/components/content/PoBoxAddress";
 import Section from "@/components/content/Section";
-import SubNav from "@/components/content/SubNav";
-import WishlistCategoryFilter from "@/components/wishlist/WishlistCategoryFilter";
-import WishlistFundedItems from "@/components/wishlist/WishlistFundedItems";
 import WishlistFundsNote from "@/components/wishlist/WishlistFundsNote";
 import WishlistGrid from "@/components/wishlist/WishlistGrid";
 
-import IconGift from "@/icons/IconGift";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
-
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const PRIORITY_ORDER = { URGENT: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 
-const sectionLinks = [
-  { name: "Wishlist goals", href: "#wishlist-goals" },
-  { name: "PO Box", href: "#po-box" },
-];
+const filterClasses = (active: boolean) =>
+  classes(
+    "rounded-full border-2 border-alveus-green px-4 py-1.5 text-sm font-semibold transition-colors",
+    active
+      ? "bg-alveus-green text-alveus-tan"
+      : "text-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
+  );
 
 const WishlistPage: NextPage = () => {
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(
@@ -61,50 +56,63 @@ const WishlistPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Wishlist & PO Box"
-        description="Send a gift from Alveus Sanctuary's Amazon wishlist or to our PO Box, or donate toward a wishlist goal."
+        title="Wishlist"
+        description="Help support Alveus Sanctuary's animal ambassadors by donating toward items on our wishlist."
       />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section
-        dark
-        className="py-12"
-        containerClassName="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12"
-      >
-        <div className="flex max-w-3xl flex-col gap-4">
-          <Heading className="my-0">Wishlist &amp; PO Box</Heading>
+      <Section dark className="py-12">
+        <div className="flex flex-col gap-4 lg:max-w-4xl">
+          <Heading className="my-0">Sanctuary Wishlist</Heading>
           <p className="text-lg">
-            Help us care for our ambassadors by sending supplies or contributing
-            to a wishlist goal.
+            Help us care for our animal ambassadors! Every item on this list
+            supports the daily needs, enrichment, and welfare of the animals at
+            Alveus.
           </p>
-        </div>
-        <div id="amazon-wishlist" className="max-w-xl scroll-mt-16">
-          <Donate
-            type="wishlist"
-            description="Choose a gift and have Amazon ship it directly to Alveus."
-          />
+          <p>
+            Donate toward any item through PayPal. Product links are for
+            reference only. Have a question?{" "}
+            <Link href="/contact-us" dark>
+              Contact us
+            </Link>
+            .
+          </p>
         </div>
       </Section>
 
-      <SubNav links={sectionLinks} className="z-20" />
-
-      <Section className="grow pt-8">
-        <Heading level={2} id="wishlist-goals" className="mt-0">
-          Wishlist goals
-        </Heading>
-        <p className="mb-8">
-          Donate toward a goal through PayPal. Product links show what we plan
-          to buy.
-        </p>
-
+      {/* Grow the last section to cover the page */}
+      <Section className="grow">
         {categoriesQuery.data && categoriesQuery.data.length > 0 && (
-          <WishlistCategoryFilter
-            categories={categoriesQuery.data}
-            active={activeCategorySlug}
-            onChange={setActiveCategorySlug}
-          />
+          <div
+            className="mb-8 flex flex-wrap justify-center gap-2"
+            role="group"
+            aria-label="Filter by category"
+          >
+            <button
+              type="button"
+              aria-pressed={activeCategorySlug === null}
+              onClick={() => setActiveCategorySlug(null)}
+              className={filterClasses(activeCategorySlug === null)}
+            >
+              All items
+            </button>
+            {categoriesQuery.data.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                aria-pressed={activeCategorySlug === cat.slug}
+                onClick={() => setActiveCategorySlug(cat.slug)}
+                className={filterClasses(activeCategorySlug === cat.slug)}
+              >
+                {cat.name}
+                <span className="ml-1.5 text-xs opacity-75">
+                  {cat._count.items}
+                </span>
+              </button>
+            ))}
+          </div>
         )}
 
         {itemsQuery.isPending ? (
@@ -114,7 +122,7 @@ const WishlistPage: NextPage = () => {
             {urgent.length > 0 && (
               <div className="mb-10">
                 <Heading
-                  level={3}
+                  level={2}
                   className="mb-4 flex items-center gap-2 text-2xl"
                 >
                   <IconWarningTriangle className="size-6 text-red-600" />
@@ -127,7 +135,7 @@ const WishlistPage: NextPage = () => {
             {needed.length > 0 && (
               <div className="mb-10">
                 {urgent.length > 0 && (
-                  <Heading level={3} className="mb-4 text-2xl">
+                  <Heading level={2} className="mb-4 text-2xl">
                     More items needed
                   </Heading>
                 )}
@@ -135,7 +143,16 @@ const WishlistPage: NextPage = () => {
               </div>
             )}
 
-            {fulfilled.length > 0 && <WishlistFundedItems items={fulfilled} />}
+            {fulfilled.length > 0 && (
+              <details className="mt-8">
+                <summary className="cursor-pointer font-semibold select-none">
+                  Show funded items ({fulfilled.length})
+                </summary>
+                <div className="mt-4 opacity-75">
+                  <WishlistGrid items={fulfilled} />
+                </div>
+              </details>
+            )}
 
             {items.length === 0 && (
               <p className="py-16 text-center">
@@ -146,45 +163,6 @@ const WishlistPage: NextPage = () => {
         )}
         <WishlistFundsNote className="mt-10 max-w-prose border-t border-alveus-green/20 pt-4" />
       </Section>
-
-      <div className="relative">
-        <Image
-          src={leafRightImage2}
-          alt=""
-          className="pointer-events-none absolute -top-40 right-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block"
-        />
-
-        <Section
-          dark
-          className="bg-alveus-green-900 py-12"
-          containerClassName="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12 lg:pr-40"
-        >
-          <div className="flex max-w-prose flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <div className="rounded-xl bg-alveus-tan p-2 text-alveus-green">
-                <IconGift size={28} aria-hidden="true" />
-              </div>
-              <Heading level={2} id="po-box" className="my-0">
-                PO Box
-              </Heading>
-            </div>
-            <p className="text-lg">
-              Didn&apos;t find what you were looking for on the wishlists, or
-              have something special in mind for the ambassadors? Mail it to our
-              PO Box.
-            </p>
-            <p>
-              Questions about sending a gift?{" "}
-              <Link href="/contact-us" dark>
-                Contact us
-              </Link>
-              .
-            </p>
-          </div>
-
-          <PoBoxAddress />
-        </Section>
-      </div>
     </>
   );
 };

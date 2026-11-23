@@ -183,7 +183,7 @@ export const mainNavStructure: NavStructure = {
         link: "/donate",
       },
       wishlist: {
-        title: "Wishlist & PO Box",
+        title: "Wishlist",
         link: "/wishlist",
       },
       grants: {
