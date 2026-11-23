@@ -1,24 +1,55 @@
-import { Menu, MenuButton } from "@headlessui/react";
 import Link from "next/link";
+import { type ComponentType, type ReactNode } from "react";
 
-import { mainNavStructure } from "@/data/navigation";
-
-import { classes } from "@/utils/classes";
+import {
+  type NavStructureDropdown,
+  type NavStructureLink,
+  donateNavStructure,
+  getNavLinks,
+  mainNavStructure,
+} from "@/data/navigation";
 
 import { useActiveNav } from "@/hooks/active";
 
-import IconChevronDown from "@/icons/IconChevronDown";
+import { type IconProps } from "@/icons/BaseIcon";
+import IconBuildingLibrary from "@/icons/IconBuildingLibrary";
+import IconHeart from "@/icons/IconHeart";
+import IconPresentationChartLine from "@/icons/IconPresentationChartLine";
+import IconShoppingBag from "@/icons/IconShoppingBag";
 
-import { Dropdown, DropdownMenuItems } from "./DropdownMenu";
-import {
-  NavLink,
-  navLinkClassesMain,
-  navLinkClassesMainActive,
-} from "./NavLink";
+import { Dropdown, DropdownLink, DropdownMenu } from "./DropdownMenu";
+import { NavLink } from "./NavLink";
 import { UtilityMenu } from "./UtilityMenu";
+
+const DonateLink = ({
+  link,
+  icon: Icon,
+  children,
+}: {
+  link: NavStructureLink;
+  icon: ComponentType<IconProps>;
+  children: ReactNode;
+}) => (
+  <DropdownLink
+    link={link}
+    color="tan"
+    className="flex items-center gap-3 py-2.5"
+  >
+    <span className="rounded-full bg-alveus-tan-150 p-2">
+      <Icon size={20} />
+    </span>
+    <span className="grow">
+      <strong className="block">{link.title}</strong>
+      <span className="block text-sm text-alveus-green-700">{children}</span>
+    </span>
+  </DropdownLink>
+);
 
 export function DesktopMenu() {
   const active = useActiveNav();
+  const isActive = (item: NavStructureDropdown) =>
+    getNavLinks(item).some((link) => link.link === active);
+  const donate = donateNavStructure.links;
 
   return (
     <div className="hidden grow flex-col gap-2 lg:flex">
@@ -33,81 +64,53 @@ export function DesktopMenu() {
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus Sanctuary
         </Link>
-        <ul className="flex grow justify-end">
-          {Object.entries(mainNavStructure).map(([key, link]) => {
-            const primaryLink = "links" in link ? link.primaryLink : undefined;
-
-            return (
-              <li key={key}>
-                {"link" in link ? (
-                  <NavLink
-                    href={link.link}
-                    active={active === link.link}
-                    external={link.external}
-                  >
-                    {link.title}
-                  </NavLink>
-                ) : (
-                  <Menu as="div" className="relative flex">
-                    {primaryLink && (
-                      <NavLink
-                        href={primaryLink}
-                        active={active === primaryLink}
-                        className="flex h-auto items-center pr-2.5"
-                      >
-                        {link.title}
-                      </NavLink>
-                    )}
-                    <MenuButton
-                      aria-label={
-                        primaryLink
-                          ? `More ${link.title.toLowerCase()} options`
-                          : undefined
-                      }
-                      className={classes(
-                        navLinkClassesMain,
-                        (("links" in link &&
-                          Object.values(link.links).some(
-                            (l) => l.link === active,
-                          )) ||
-                          ("groups" in link &&
-                            Object.values(link.groups).some((group) =>
-                              Object.values(group.links).some(
-                                (l) => l.link === active,
-                              ),
-                            ))) &&
-                          navLinkClassesMainActive,
-                        "group/button flex items-center gap-2",
-                        primaryLink && "h-auto px-2.5",
-                      )}
-                    >
-                      {!primaryLink && link.title}
-                      {primaryLink && (
-                        <span
-                          aria-hidden="true"
-                          className="h-4 border-l border-white/40"
-                        />
-                      )}
-                      <IconChevronDown
-                        size={16}
-                        aria-hidden="true"
-                        className={classes(
-                          "transition-transform",
-                          primaryLink
-                            ? "group-data-active/button:translate-y-0.5"
-                            : "translate-y-0.5 group-data-active/button:translate-y-1",
-                        )}
-                      />
-                    </MenuButton>
-
-                    <DropdownMenuItems>
-                      <Dropdown dropdown={link} active={active} />
-                    </DropdownMenuItems>
-                  </Menu>
-                )}
-              </li>
-            );
-          })}
+        <ul className="flex min-h-12.5 grow items-center justify-end gap-2">
+          {Object.entries(mainNavStructure).map(([key, item]) => (
+            <li key={key}>
+              {"link" in item ? (
+                <NavLink
+                  href={item.link}
+                  active={active === item.link}
+                  external={item.external}
+                >
+                  {item.title}
+                </NavLink>
+              ) : (
+                <DropdownMenu
+                  title={item.title}
+                  href={"links" in item ? item.primaryLink : undefined}
+                  active={isActive(item)}
+                >
+                  <Dropdown dropdown={item} />
+                </DropdownMenu>
+              )}
+            </li>
+          ))}
+          <li>
+            <DropdownMenu
+              title={donateNavStructure.title}
+              href={donateNavStructure.primaryLink}
+              color="tan"
+              active={isActive(donateNavStructure)}
+              openOnHover
+            >
+              <DonateLink link={donate.donation} icon={IconHeart}>
+                Give once or set up a recurring gift.
+              </DonateLink>
+              <DonateLink link={donate.wishlist} icon={IconShoppingBag}>
+                Help buy supplies for the ambassadors.
+              </DonateLink>
+              <DonateLink link={donate.grants} icon={IconBuildingLibrary}>
+                For foundations and corporate grants.
+              </DonateLink>
+              <DonateLink
+                link={donate.givingBlock}
+                icon={IconPresentationChartLine}
+              >
+                Donate via The Giving Block
+              </DonateLink>
+            </DropdownMenu>
+          </li>
         </ul>
       </div>
     </div>

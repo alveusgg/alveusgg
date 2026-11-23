@@ -6,27 +6,48 @@ import { classes } from "@/utils/classes";
 
 import IconExternal from "@/icons/IconExternal";
 
+import { type NavColor, navColors } from "./colors";
+
+type NavLinkStyle = {
+  variant?: "main" | "sub";
+  color?: NavColor;
+  active?: boolean;
+};
+
 type NavLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
   keyof LinkProps
 > &
-  LinkProps & {
+  LinkProps &
+  NavLinkStyle & {
     children?: ReactNode;
-    variant?: "main" | "sub";
-    active?: boolean;
     external?: boolean;
     ref?: Ref<HTMLAnchorElement>;
   };
 
-export const navLinkClasses = `block px-5 h-full transition-colors`;
-export const navLinkClassesMain = `${navLinkClasses} py-3 border-b-2 border-transparent hover:lg:border-white `;
-export const navLinkClassesMainActive = "lg:border-white";
-export const navLinkClassesSub = `${navLinkClasses} py-2 hover:bg-alveus-tan/20 rounded-sm`;
-export const navLinkClassesSubActive = "bg-alveus-tan/10";
+const variantClasses = {
+  main: "flex h-10 items-center rounded-full px-5",
+  sub: "block rounded-lg px-3 py-2 -outline-offset-2 data-focus:not-hover:outline-2",
+};
+
+export const navLinkClasses = ({
+  variant = "main",
+  color = "green",
+  active = false,
+}: NavLinkStyle = {}) =>
+  classes(
+    "transition-colors",
+    variantClasses[variant],
+    navColors[color][variant],
+    active && navColors[color].active[variant],
+  );
+
+export const navLinkClassesSub = navLinkClasses({ variant: "sub" });
 
 export const NavLink = ({
   href,
-  variant = "main",
+  variant,
+  color,
   active = false,
   external = false,
   children,
@@ -36,17 +57,7 @@ export const NavLink = ({
 }: NavLinkProps) => (
   <Link
     href={href}
-    className={classes(
-      // base classes
-      variant === "main" ? navLinkClassesMain : navLinkClassesSub,
-      // active classes
-      active &&
-        (variant === "main"
-          ? navLinkClassesMainActive
-          : navLinkClassesSubActive),
-      // custom classes
-      className,
-    )}
+    className={classes(navLinkClasses({ variant, color, active }), className)}
     {...(external
       ? {
           target: "_blank",

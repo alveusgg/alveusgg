@@ -26,6 +26,30 @@ export type NavStructure = {
   [key: string]: NavStructureLink | NavStructureDropdown;
 };
 
+export const donateNavStructure = {
+  title: "Donate",
+  primaryLink: "/donate",
+  links: {
+    donation: {
+      title: "Make a Donation",
+      link: "/donate",
+    },
+    wishlist: {
+      title: "Wishlist",
+      link: "/wishlist",
+    },
+    grants: {
+      title: "Grants",
+      link: "/donate/grants",
+    },
+    givingBlock: {
+      title: "Stock & Crypto",
+      link: "/donate/giving-block",
+      external: true,
+    },
+  },
+} satisfies NavStructureLinks;
+
 export const mainNavStructure: NavStructure = {
   home: {
     title: "Home",
@@ -174,27 +198,15 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
-  donate: {
-    title: "Donate",
-    primaryLink: "/donate",
-    links: {
-      donation: {
-        title: "Make a Donation",
-        link: "/donate",
-      },
-      wishlist: {
-        title: "Wishlist",
-        link: "/wishlist",
-      },
-      grants: {
-        title: "Grants",
-        link: "/donate/grants",
-      },
-      givingBlock: {
-        title: "Stock & Crypto",
-        link: "/donate/giving-block",
-        external: true,
-      },
-    },
-  },
+};
+
+export const getNavLinks = (
+  item: NavStructureLink | NavStructureDropdown,
+): NavStructureLink[] => {
+  if ("link" in item) return [item];
+  if ("links" in item) return Object.values(item.links);
+
+  return Object.values(item.groups).flatMap((group) =>
+    Object.values(group.links),
+  );
 };
