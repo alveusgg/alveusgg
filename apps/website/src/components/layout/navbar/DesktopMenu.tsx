@@ -92,7 +92,6 @@ export function DesktopMenu() {
               href={donateNavStructure.primaryLink}
               color="tan"
               active={isActive(donateNavStructure)}
-              openOnHover
             >
               <DonateLink link={donate.donation} icon={IconHeart}>
                 Give once or set up a recurring gift.

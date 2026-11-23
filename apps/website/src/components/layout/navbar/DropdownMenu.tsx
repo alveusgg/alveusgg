@@ -104,7 +104,6 @@ export function DropdownMenu({
   href,
   color,
   active = false,
-  openOnHover = false,
   children,
 }: {
   title: string;
@@ -112,7 +111,6 @@ export function DropdownMenu({
   href?: string;
   color?: NavColor;
   active?: boolean;
-  openOnHover?: boolean;
   children: ReactNode;
 }) {
   // Hovering only shows the menu, it is opened (and gets focus) by the button
@@ -122,9 +120,7 @@ export function DropdownMenu({
     <Menu
       as="div"
       className="relative flex"
-      onPointerEnter={(event) =>
-        setHovered(openOnHover && event.pointerType === "mouse")
-      }
+      onPointerEnter={(event) => setHovered(event.pointerType === "mouse")}
       onPointerLeave={() => setHovered(false)}
     >
       {({ open }) => (
