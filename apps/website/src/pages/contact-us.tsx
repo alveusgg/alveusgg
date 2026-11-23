@@ -42,7 +42,7 @@ const categories: ContactCategory[] = [
     ],
     buttons: [
       { text: "Donate", href: "/donate" },
-      { text: "PO Box", href: "/po-box" },
+      { text: "PO Box", href: "/wishlist#po-box" },
     ],
   },
   {
