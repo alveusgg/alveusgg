@@ -5,7 +5,7 @@ import {
   MenuItems,
   type MenuItemsProps,
 } from "@headlessui/react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import {
   type NavStructureDropdown,
@@ -115,6 +115,19 @@ export function DropdownMenu({
 }) {
   // Hovering only shows the menu, it is opened (and gets focus) by the button
   const [hovered, setHovered] = useState(false);
+
+  // Escape also dismisses a menu that is only shown by hovering
+  useEffect(() => {
+    if (!hovered) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHovered(false);
+    };
+
+    // Capture, as an open menu stops Escape from propagating when it closes
+    window.addEventListener("keydown", handleEscape, true);
+    return () => window.removeEventListener("keydown", handleEscape, true);
+  }, [hovered]);
 
   return (
     <Menu
