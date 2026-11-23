@@ -36,7 +36,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "0.82.0",
+    "@alveusgg/data": "0.83.0",
     "@alveusgg/database": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@alveusgg/neon-crm-api": "workspace:*",
