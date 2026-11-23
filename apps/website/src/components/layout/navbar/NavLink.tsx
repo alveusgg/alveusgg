@@ -26,7 +26,7 @@ type NavLinkProps = Omit<
   };
 
 const variantClasses = {
-  main: "flex h-10 items-center rounded-full px-5",
+  main: "flex h-10 items-center rounded-full px-4",
   sub: "block rounded-lg px-3 py-2 -outline-offset-2 data-focus:not-hover:outline-2",
 };
 

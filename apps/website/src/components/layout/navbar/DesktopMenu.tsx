@@ -59,12 +59,12 @@ export function DesktopMenu() {
       <div
         id="main-nav"
         tabIndex={-1}
-        className="flex items-center gap-4 border-t border-white pt-2"
+        className="flex items-center gap-2 border-t border-white pt-2 xl:gap-4"
       >
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus Sanctuary
         </Link>
-        <ul className="flex min-h-12.5 grow items-center justify-end gap-2">
+        <ul className="flex min-h-12.5 grow items-center justify-end gap-0.5 xl:gap-2">
           {Object.entries(mainNavStructure).map(([key, item]) => (
             <li key={key}>
               {"link" in item ? (
