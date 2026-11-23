@@ -1,7 +1,5 @@
 import { Fragment } from "react";
 
-import { poBoxAddress } from "@/data/po-box";
-
 import { classes } from "@/utils/classes";
 
 import Box from "@/components/content/Box";
@@ -9,6 +7,12 @@ import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardBu
 
 import IconInformationCircle from "@/icons/IconInformationCircle";
 import IconMapPin from "@/icons/IconMapPin";
+
+const poBoxAddress = [
+  "Alveus Sanctuary",
+  "500 E Whitestone Blvd #2350",
+  "Cedar Park, TX 78613",
+];
 
 const PoBoxAddress = ({ className }: { className?: string }) => (
   <Box className={classes("p-6", className)}>
