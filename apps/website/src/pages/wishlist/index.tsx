@@ -83,6 +83,7 @@ const WishlistPage: NextPage = () => {
         <div id="amazon-wishlist" className="max-w-xl scroll-mt-16">
           <Donate
             type="wishlist"
+            dark={false}
             description="Choose a gift and have Amazon ship it directly to Alveus."
           />
         </div>

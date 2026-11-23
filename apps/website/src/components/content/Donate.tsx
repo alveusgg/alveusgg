@@ -80,13 +80,18 @@ export type Type = keyof typeof links;
 const Donate = ({
   type,
   highlight = false,
+  dark = true,
   ...overrides
-}: { type: Type; highlight?: boolean } & Partial<DonateLink>) => {
+}: {
+  type: Type;
+  highlight?: boolean;
+  dark?: boolean;
+} & Partial<DonateLink>) => {
   const link = { ...links[type], ...overrides };
 
   return (
     <Box
-      dark
+      dark={dark}
       className={classes(
         "group flex flex-col p-0 transition hover:scale-102 hover:shadow-2xl motion-reduce:transition-none motion-reduce:hover:scale-100",
         highlight && "bg-carnival",
@@ -96,15 +101,22 @@ const Donate = ({
         href={link.link}
         external={link.external}
         custom
-        className="block grow rounded-xl p-4 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-alveus-tan"
+        className={classes(
+          "block grow rounded-xl p-4 focus-visible:outline-2 focus-visible:-outline-offset-4",
+          dark
+            ? "focus-visible:outline-alveus-tan"
+            : "focus-visible:outline-alveus-green",
+        )}
       >
         <div className="mb-2 flex items-center gap-4">
           <div
             className={classes(
-              "relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 transition-colors",
-              highlight
-                ? "text-carnival group-hover:bg-carnival group-hover:text-alveus-tan"
-                : "text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan",
+              "relative block overflow-clip rounded-xl border-2 p-2 transition-colors",
+              !dark
+                ? "border-alveus-green bg-alveus-green text-alveus-tan group-hover:bg-alveus-tan group-hover:text-alveus-green"
+                : highlight
+                  ? "border-alveus-tan bg-alveus-tan text-carnival group-hover:bg-carnival group-hover:text-alveus-tan"
+                  : "border-alveus-tan bg-alveus-tan text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan",
             )}
           >
             <link.icon
