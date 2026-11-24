@@ -5,7 +5,12 @@ import {
   MenuItems,
   type MenuItemsProps,
 } from "@headlessui/react";
-import { type ReactNode, useEffect, useState } from "react";
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   type NavStructureDropdown,
@@ -125,6 +130,19 @@ export const Dropdown = ({ dropdown }: { dropdown: NavStructureDropdown }) =>
     <DropdownLinks links={dropdown.links} color={dropdown.color} />
   );
 
+// Headless UI sets aria-expanded from its own open state, which hovering
+// doesn't change, so this reports the menu as expanded while it's shown on hover
+const DropdownMenuButtonElement = ({
+  shown,
+  ...props
+}: ComponentProps<"button"> & { shown: boolean }) => (
+  <button
+    type="button"
+    {...props}
+    aria-expanded={props["aria-expanded"] || shown}
+  />
+);
+
 export function DropdownMenu({
   title,
   href,
@@ -179,6 +197,8 @@ export function DropdownMenu({
           )}
 
           <MenuButton
+            as={DropdownMenuButtonElement}
+            shown={hovered}
             aria-label={
               href ? `More ${title.toLowerCase()} options` : undefined
             }
