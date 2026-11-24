@@ -74,7 +74,7 @@ function DropdownLink({
                 active && navColors[color].active.icon,
               )}
             >
-              <Icon size={20} />
+              <Icon size={20} aria-hidden="true" />
             </span>
             <span className="grow">
               <strong className="block">{link.title}</strong>
