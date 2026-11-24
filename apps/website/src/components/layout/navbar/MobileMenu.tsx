@@ -3,6 +3,7 @@ import { DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import {
   type NavStructureDropdown,
   type NavStructureLink,
+  isNavDropdown,
   mainNavStructure,
 } from "@/data/navigation";
 
@@ -38,7 +39,7 @@ const MobileMenuSubSection = ({
 }) => {
   if ("groups" in data) {
     return (
-      <ul className="ml-5 border-l border-white/30 pl-0.5">
+      <ul className="ml-3 border-l border-white/30 pl-0.5">
         {Object.entries(data.groups).map(([key, group]) => (
           <li key={key}>
             <p className="mt-3 px-3 text-sm opacity-80">{group.title}</p>
@@ -56,7 +57,7 @@ const MobileMenuSubSection = ({
   }
 
   return (
-    <ul className="ml-5 border-l border-white/30 pl-0.5">
+    <ul className="ml-3 border-l border-white/30 pl-0.5">
       {Object.entries(data.links).map(([key, link]) => (
         <li key={key}>
           <Link link={link} active={active} />
@@ -78,7 +79,7 @@ export function MobileMenu() {
 
         <ul className="flex flex-col">
           {Object.entries(mainNavStructure).map(([key, link]) => {
-            if ("link" in link) {
+            if (!isNavDropdown(link)) {
               return (
                 <li key={key}>
                   <Link link={link} active={active} />
@@ -86,17 +87,17 @@ export function MobileMenu() {
               );
             }
 
-            if ("links" in link && link.primaryLink) {
+            if (link.link) {
               return (
                 <li key={key} className="relative">
                   <div className="mr-12">
                     <Link
-                      link={{ title: link.title, link: link.primaryLink }}
+                      link={{ title: link.title, link: link.link }}
                       active={active}
                     />
                   </div>
                   <details className="group">
-                    <summary className="absolute top-0 right-0 flex h-10 w-12 cursor-pointer list-none items-center justify-center rounded-sm hover:bg-alveus-tan/20 [&::-webkit-details-marker]:hidden">
+                    <summary className="absolute top-0 right-0 flex h-10 w-12 cursor-pointer list-none items-center justify-center rounded-lg hover:bg-alveus-green-800 [&::-webkit-details-marker]:hidden">
                       <span className="sr-only">
                         More {link.title.toLowerCase()} options
                       </span>
@@ -114,7 +115,7 @@ export function MobileMenu() {
 
             return (
               <li key={key}>
-                <p className="px-5 pt-4 pb-1 opacity-80">{link.title}</p>
+                <p className="px-3 pt-4 pb-1 opacity-80">{link.title}</p>
                 <MobileMenuSubSection data={link} active={active} />
               </li>
             );
