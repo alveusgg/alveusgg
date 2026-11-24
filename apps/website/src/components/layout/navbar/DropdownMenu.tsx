@@ -24,7 +24,7 @@ import { type NavColor, navColors } from "./colors";
 export const DropdownMenuItems = ({
   color = "green",
   ...props
-}: Pick<MenuItemsProps<"div">, "static" | "onClick"> & {
+}: Pick<MenuItemsProps<"div">, "static"> & {
   color?: NavColor;
   children: ReactNode;
 }) => (
@@ -161,6 +161,9 @@ export function DropdownMenu({
       className="relative flex"
       onPointerEnter={(event) => setHovered(event.pointerType === "mouse")}
       onPointerLeave={() => setHovered(false)}
+      // Any click hands over to the menu's own open state. Capture, as Next.js
+      // links prevent default, which stops Headless UI's bubbling handlers
+      onClickCapture={() => setHovered(false)}
     >
       {({ open }) => (
         <>
@@ -192,11 +195,7 @@ export function DropdownMenu({
             />
           </MenuButton>
 
-          <DropdownMenuItems
-            color={color}
-            static={hovered}
-            onClick={() => setHovered(false)}
-          >
+          <DropdownMenuItems color={color} static={hovered}>
             {children}
           </DropdownMenuItems>
         </>
