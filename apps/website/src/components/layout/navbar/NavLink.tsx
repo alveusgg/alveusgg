@@ -57,7 +57,12 @@ export const NavLink = ({
 }: NavLinkProps) => (
   <Link
     href={href}
-    className={classes(navLinkClasses({ variant, color, active }), className)}
+    className={classes(
+      navLinkClasses({ variant, color, active }),
+      // Push the external icon to the right edge
+      variant === "sub" && external && "flex items-center gap-2",
+      className,
+    )}
     {...(external
       ? {
           target: "_blank",
@@ -72,7 +77,7 @@ export const NavLink = ({
       <IconExternal
         size="0.75em"
         aria-hidden="true"
-        className="ml-1 inline-block align-baseline"
+        className="ml-auto shrink-0"
       />
     )}
   </Link>
