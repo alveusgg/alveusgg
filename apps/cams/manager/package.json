@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@alveusgg/cams-control-client": "workspace:*",
-    "hono": "^4.13.16",
-    "jose": "^6.2.15",
+    "hono": "^4.13.18",
+    "jose": "^6.2.17",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -20,11 +20,11 @@
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-import-x": "^4.18.1",
     "globals": "^17.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1",
+    "typescript-eslint": "^8.72.2",
     "vitest": "^5.1.0",
-    "wrangler": "^4.157.0"
+    "wrangler": "^4.160.0"
   }
 }

@@ -221,8 +221,6 @@ const help = [
   {
     type: "poBox",
     title: "Send items to our PO Box",
-    link: "/po-box",
-    external: false,
   },
 ] as const;
 

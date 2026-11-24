@@ -1,4 +1,5 @@
 import { trpc } from "@/utils/trpc";
+import { formatPrice, parsePriceCents } from "@/utils/wishlist";
 
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
@@ -13,6 +14,11 @@ import {
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconCheck from "@/icons/IconCheck";
+
+const displayPrice = (price: string | null) => {
+  const cents = parsePriceCents(price);
+  return cents != null ? formatPrice(cents) : (price ?? "Not set");
+};
 
 export function WishlistFulfillmentAdmin() {
   const fundedQuery = trpc.adminWishlist.adminGetFullyFundedProducts.useQuery();
@@ -89,7 +95,7 @@ export function WishlistFulfillmentAdmin() {
                   <td className="p-1">
                     {item.category?.name ?? "Uncategorized"}
                   </td>
-                  <td className="p-1">{item.price ?? "Not set"}</td>
+                  <td className="p-1">{displayPrice(item.price)}</td>
                   <td className="p-1">
                     <Button
                       size="small"

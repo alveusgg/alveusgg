@@ -3,11 +3,23 @@ import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
+import { env } from "@/env";
+
+import {
+  deleteWishlistImage,
+  saveWithWishlistImageUpload,
+  wishlistImageUploadPrefix,
+} from "@/server/db/wishlist";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
+import {
+  createFileStorageUpload,
+  getViewUrlForFileStorageObjectKey,
+  imageUploadInputSchema,
+} from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
 
@@ -15,6 +27,10 @@ import { buildAmazonCartUrl } from "@/utils/amazonCart";
 import {
   DONATION_ORDER_STATUSES,
   PAYMENT_ISSUE_STATUSES,
+  getPartialTargetCents,
+  isFullPriceDonatable,
+  normalizePrice,
+  parsePriceCents,
 } from "@/utils/wishlist";
 
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
@@ -40,10 +56,52 @@ const quantityFulfilledWithinQuantity = (item: {
 const QUANTITY_FULFILLED_ERROR =
   "Quantity fulfilled cannot be more than the quantity";
 
+const PRICE_ERROR =
+  "Enter the price as a dollar amount, like 24.99 or 1,547.00";
+const PARTIAL_TARGET_ERROR =
+  "Partial donations need a readable price or a funding target";
+
+const FULL_PRICE_BOUNDS_ERROR =
+  "A full-price product must cost between $1.00 and $10,000.00. Turn on partial donations for more expensive items.";
+
+const rawPrice = z.string().max(50).nullish();
+
+const requiredPrice = rawPrice.transform((value, ctx) => {
+  const cents = parsePriceCents(value);
+  if (cents == null) {
+    ctx.addIssue({ code: "custom", message: PRICE_ERROR });
+    return z.NEVER;
+  }
+  return normalizePrice(cents);
+});
+
+function assertPartialTarget(item: {
+  allowPartialDonations: boolean;
+  goalAmountCents: number | null;
+  price: string | null;
+  quantity: number;
+}) {
+  if (item.allowPartialDonations && getPartialTargetCents(item) == null) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: PARTIAL_TARGET_ERROR });
+  }
+}
+
+function assertFullPriceBounds(item: {
+  allowPartialDonations: boolean;
+  price: string | null;
+}) {
+  if (!isFullPriceDonatable({ itemType: "PRODUCT", ...item })) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: FULL_PRICE_BOUNDS_ERROR,
+    });
+  }
+}
+
 const baseItemFields = {
   title: z.string().min(1).max(255),
   description: z.string().max(2000).optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  fileStorageObjectId: z.cuid().optional().nullable(),
   priority: priorityEnum.default("MEDIUM"),
   status: statusEnum.default("NEEDED"),
   categoryId: z.string().optional().nullable(),
@@ -58,7 +116,7 @@ const itemCreateInput = z.discriminatedUnion("itemType", [
       itemType: z.literal("PRODUCT"),
       ...baseItemFields,
       url: z.string().url().optional().nullable(),
-      price: z.string().max(50).optional().nullable(),
+      price: requiredPrice,
       quantity: z.number().int().min(1).default(1),
       quantityFulfilled: z.number().int().min(0).default(0),
       // Target for partial donations, defaults to price x quantity when unset
@@ -81,14 +139,14 @@ const itemUpdateInput = z
     id: z.string(),
     title: z.string().min(1).max(255).optional(),
     description: z.string().max(2000).optional().nullable(),
-    imageUrl: z.string().url().optional().nullable(),
+    fileStorageObjectId: z.cuid().optional().nullable(),
     priority: priorityEnum.optional(),
     status: statusEnum.optional(),
     categoryId: z.string().optional().nullable(),
     notes: z.string().max(1000).optional().nullable(),
     sortOrder: z.number().int().optional(),
     url: z.string().url().optional().nullable(),
-    price: z.string().max(50).optional().nullable(),
+    price: rawPrice,
     quantity: z.number().int().min(1).optional(),
     quantityFulfilled: z.number().int().min(0).optional(),
     goalAmountCents: z.number().int().min(100).optional().nullable(),
@@ -124,15 +182,22 @@ export const adminWishlistRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      return prisma.wishlistItem.findMany({
+      const items = await prisma.wishlistItem.findMany({
         where: {
           ...(input.status ? { status: input.status } : {}),
           ...(input.categoryId ? { categoryId: input.categoryId } : {}),
           ...(input.itemType ? { itemType: input.itemType } : {}),
         },
-        include: { category: true },
+        include: { category: true, fileStorageObject: true },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       });
+
+      return items.map(({ fileStorageObject, ...item }) => ({
+        ...item,
+        fileStorageObjectUrl: fileStorageObject
+          ? String(getViewUrlForFileStorageObjectKey(fileStorageObject.key))
+          : null,
+      }));
     }),
 
   adminGetFullyFundedProducts: permittedProcedure.query(async () => {
@@ -152,18 +217,29 @@ export const adminWishlistRouter = router({
   createItem: permittedProcedure
     .input(itemCreateInput)
     .mutation(async ({ input }) => {
-      return prisma.wishlistItem.create({
-        data: {
-          ...input,
-          imageUrl: input.imageUrl ?? null,
-          notes: input.notes ?? null,
-          categoryId: input.categoryId ?? null,
-          ...(input.itemType === "PRODUCT"
-            ? { price: input.price ?? null }
-            : { raisedAmountCents: 0 }),
-        },
-        include: { category: true },
-      });
+      if (input.itemType === "PRODUCT") {
+        assertPartialTarget({
+          allowPartialDonations: input.allowPartialDonations,
+          goalAmountCents: input.goalAmountCents ?? null,
+          price: input.price,
+          quantity: input.quantity,
+        });
+        assertFullPriceBounds(input);
+      }
+      return saveWithWishlistImageUpload(input.fileStorageObjectId, () =>
+        prisma.wishlistItem.create({
+          data: {
+            ...input,
+            fileStorageObjectId: input.fileStorageObjectId ?? null,
+            notes: input.notes ?? null,
+            categoryId: input.categoryId ?? null,
+            ...(input.itemType === "PRODUCT"
+              ? { price: input.price ?? null }
+              : { raisedAmountCents: 0 }),
+          },
+          include: { category: true },
+        }),
+      );
     }),
 
   updateItem: permittedProcedure
@@ -202,11 +278,72 @@ export const adminWishlistRouter = router({
         });
       }
 
-      return prisma.wishlistItem.update({
-        where: { id },
-        data,
-        include: { category: true },
-      });
+      if (existing.itemType === "PRODUCT") {
+        // The edit form resends every field, so only a changed price is
+        // checked and legacy items can still be archived or re-statused
+        if (data.price !== undefined) {
+          const sent = data.price?.trim() ?? "";
+          if (sent === (existing.price?.trim() ?? "")) {
+            delete data.price;
+          } else {
+            const cents = parsePriceCents(data.price);
+            if (cents == null) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: PRICE_ERROR,
+              });
+            }
+            data.price = normalizePrice(cents);
+          }
+        }
+
+        const next = {
+          allowPartialDonations:
+            data.allowPartialDonations ?? existing.allowPartialDonations,
+          goalAmountCents:
+            data.goalAmountCents !== undefined
+              ? data.goalAmountCents
+              : existing.goalAmountCents,
+          price: data.price ?? existing.price,
+          quantity,
+        };
+        const targetChanged =
+          next.allowPartialDonations !== existing.allowPartialDonations ||
+          next.goalAmountCents !== existing.goalAmountCents ||
+          next.price !== existing.price ||
+          next.quantity !== existing.quantity;
+        if (targetChanged) assertPartialTarget(next);
+        if (
+          next.price !== existing.price ||
+          next.allowPartialDonations !== existing.allowPartialDonations
+        ) {
+          assertFullPriceBounds(next);
+        }
+      }
+
+      // Only new uploads, since a failed check deletes the checked object
+      const newUpload =
+        data.fileStorageObjectId !== existing.fileStorageObjectId
+          ? data.fileStorageObjectId
+          : null;
+      const updated = await saveWithWishlistImageUpload(newUpload, () =>
+        prisma.wishlistItem.update({
+          where: { id },
+          data,
+          include: { category: true },
+        }),
+      );
+
+      // A replaced or removed upload is no longer linked anywhere
+      if (
+        data.fileStorageObjectId !== undefined &&
+        existing.fileStorageObjectId &&
+        existing.fileStorageObjectId !== data.fileStorageObjectId
+      ) {
+        await deleteWishlistImage(existing.fileStorageObjectId);
+      }
+
+      return updated;
     }),
 
   markAsOpened: permittedProcedure
@@ -233,7 +370,12 @@ export const adminWishlistRouter = router({
     .input(z.object({ id: z.string(), permanent: z.boolean().default(false) }))
     .mutation(async ({ input }) => {
       if (input.permanent) {
-        await prisma.wishlistItem.delete({ where: { id: input.id } });
+        const deleted = await prisma.wishlistItem.delete({
+          where: { id: input.id },
+        });
+        if (deleted.fileStorageObjectId) {
+          await deleteWishlistImage(deleted.fileStorageObjectId);
+        }
       } else {
         await prisma.wishlistItem.update({
           where: { id: input.id },
@@ -383,6 +525,34 @@ export const adminWishlistRouter = router({
           )
           .reduce((sum, g) => sum + g._count._all, 0),
         capturedAmount: captured?._sum.capturedAmount ?? 0,
+      };
+    }),
+
+  createFileUpload: permittedProcedure
+    .input(imageUploadInputSchema)
+    .mutation(async ({ input }) => {
+      const { uploadUrl, viewUrl, fileStorageObject } =
+        await createFileStorageUpload({
+          fileName: input.fileName,
+          fileType: input.fileType,
+          fileSize: input.fileSize,
+          prefix: wishlistImageUploadPrefix,
+        });
+
+      if (env.NODE_ENV === "development") {
+        // DO Spaces needs ssl, so uploads in development are proxied through
+        // the Next.js server (see the rounds checks router)
+        return {
+          viewUrl: String(viewUrl),
+          uploadUrl: `/api/file-upload${uploadUrl.pathname}${uploadUrl.search}`,
+          fileStorageObjectId: fileStorageObject.id,
+        };
+      }
+
+      return {
+        viewUrl: String(viewUrl),
+        uploadUrl: String(uploadUrl),
+        fileStorageObjectId: fileStorageObject.id,
       };
     }),
 

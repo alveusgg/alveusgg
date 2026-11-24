@@ -117,6 +117,45 @@ export async function notifyWishlistItemFunded({
   }
 }
 
+/**
+ * Tells staff a donation was credited to an item that has partial donations
+ * on but no target to cap it at.
+ */
+export async function notifyWishlistItemNeedsTarget(opts: {
+  webhookUrl: string | undefined;
+  itemTitle: string;
+  paypalOrderId: string;
+  amount: number;
+}): Promise<void> {
+  if (!opts.webhookUrl) return;
+
+  const embed = {
+    title: "Wishlist item needs review",
+    description:
+      "This item has partial donations on but no target, so the donation was credited without a cap. Set a price or funding target.",
+    color: 0xb45309,
+    fields: [
+      { name: "Item", value: opts.itemTitle, inline: false },
+      { name: "Amount", value: `$${opts.amount.toFixed(2)}`, inline: true },
+      { name: "PayPal order", value: opts.paypalOrderId, inline: false },
+    ],
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    const response = await fetch(opts.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: "Wishlist Bot", embeds: [embed] }),
+    });
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned ${response.status}`);
+    }
+  } catch (err) {
+    console.error("Discord wishlist target webhook failed:", err);
+  }
+}
+
 const paymentIssueLabels = {
   DENIED: "denied",
   REFUNDED: "refunded",

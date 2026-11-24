@@ -88,47 +88,6 @@ const config: NextConfig = {
       },
       // S3 - File Storage
       s3Pattern,
-      // Wishlist: retailer product image CDNs
-      {
-        protocol: "https",
-        hostname: "m.media-amazon.com",
-      },
-      {
-        protocol: "https",
-        hostname: "assets.petco.com",
-      },
-      {
-        protocol: "https",
-        hostname: "s7d2.scene7.com",
-      },
-      {
-        protocol: "https",
-        hostname: "i5.walmartimages.com",
-      },
-      {
-        protocol: "https",
-        hostname: "target.scene7.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.heb.com",
-      },
-      {
-        protocol: "https",
-        hostname: "mobileimages.lowes.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.thdstatic.com",
-      },
-      {
-        protocol: "https",
-        hostname: "img.chewy.com",
-      },
-      {
-        protocol: "https",
-        hostname: "i.ibb.co",
-      },
     ],
     // Allow localhost requests if the S3 pattern requires it
     dangerouslyAllowLocalIP: s3Pattern.hostname === "localhost",
@@ -454,6 +413,11 @@ const config: NextConfig = {
       source: "/amazon",
       destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
       permanent: false,
+    },
+    {
+      source: "/po-box",
+      destination: "/wishlist#po-box",
+      permanent: true,
     },
     {
       source: "/plushies",
