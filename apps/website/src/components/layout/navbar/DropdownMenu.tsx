@@ -160,17 +160,17 @@ export function DropdownMenu({
   // Hovering only shows the menu, it is opened (and gets focus) by the button
   const [hovered, setHovered] = useState(false);
 
-  // Escape also dismisses a menu that is only shown by hovering
+  // Escape and Tab, which close an open menu, also dismiss one shown by hovering
   useEffect(() => {
     if (!hovered) return;
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setHovered(false);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || event.key === "Tab") setHovered(false);
     };
 
-    // Capture, as an open menu stops Escape from propagating when it closes
-    window.addEventListener("keydown", handleEscape, true);
-    return () => window.removeEventListener("keydown", handleEscape, true);
+    // Capture, as an open menu stops these keys from propagating when it closes
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [hovered]);
 
   return (
