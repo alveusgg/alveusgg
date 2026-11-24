@@ -340,6 +340,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       captureId: capture.captureId,
       capturedAt,
       amount: capture.amount,
+      excessAmount: result.excessAmount,
       email: capture.payerEmail ?? order.donorEmail,
       name: capture.payerName ?? order.donorName,
       itemTitle: order.wishlistItem.title,

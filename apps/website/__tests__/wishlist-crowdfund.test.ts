@@ -354,6 +354,26 @@ describe("recordWishlistCapture with partial donations", () => {
     expect(db.item.raisedAmountCents).toBe(5_000);
     expect(db.item.status).toBe("FULFILLED");
     expect(db.orders.map((o) => o.excessAmount)).toEqual([15, 25]);
+    expect(neonDonationBodies()).toMatchObject([
+      {
+        amount: 25,
+        payments: [
+          {
+            amount: 25,
+            note: "PayPal capture ID: CAPTURE-1 (Wishlist: Desk lamp). Item credit $10.00, general operations $15.00.",
+          },
+        ],
+      },
+      {
+        amount: 25,
+        payments: [
+          {
+            amount: 25,
+            note: "PayPal capture ID: CAPTURE-2 (Wishlist: Desk lamp). Item credit $0.00, general operations $25.00.",
+          },
+        ],
+      },
+    ]);
     expect(discord.notifyWishlistItemFunded).toHaveBeenCalledTimes(1);
     expect(discord.notifyWishlistDonation).toHaveBeenCalledTimes(2);
   });
