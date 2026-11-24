@@ -30,6 +30,7 @@ export type WishlistNeonDonation = {
   captureId: string;
   capturedAt: Date;
   amount: number;
+  excessAmount: number;
   email: string | null;
   name: string | null;
   itemTitle: string;
@@ -69,6 +70,12 @@ export async function logWishlistDonationToNeon(
     donation.capturedAt,
     options.localTimezone,
   );
+  // The monthly PayPal import skips transactions with this capture ID.
+  const captureNote = `PayPal capture ID: ${donation.captureId} (Wishlist: ${donation.itemTitle})`;
+  const note =
+    donation.excessAmount > 0
+      ? `${captureNote}. Item credit $${(donation.amount - donation.excessAmount).toFixed(2)}, general operations $${donation.excessAmount.toFixed(2)}.`
+      : captureNote;
   const created = await createDonation(options, {
     accountId: account.data.id,
     amount: donation.amount,
@@ -81,8 +88,7 @@ export async function logWishlistDonationToNeon(
         tenderType: PAYPAL_TENDER_TYPE,
         paymentStatus: "Succeeded",
         receivedDate: capturedDate,
-        // The monthly PayPal import skips transactions with this capture ID
-        note: `PayPal capture ID: ${donation.captureId} (Wishlist: ${donation.itemTitle})`,
+        note,
       },
     ],
   });
