@@ -13,9 +13,9 @@ import { useActiveNav } from "@/hooks/active";
 
 import { type IconProps } from "@/icons/BaseIcon";
 import IconBuildingLibrary from "@/icons/IconBuildingLibrary";
+import IconGift from "@/icons/IconGift";
 import IconHeart from "@/icons/IconHeart";
 import IconPresentationChartLine from "@/icons/IconPresentationChartLine";
-import IconShoppingBag from "@/icons/IconShoppingBag";
 
 import { Dropdown, DropdownLink, DropdownMenu } from "./DropdownMenu";
 import { NavLink } from "./NavLink";
@@ -96,7 +96,7 @@ export function DesktopMenu() {
               <DonateLink link={donate.donation} icon={IconHeart}>
                 Give once or set up a recurring gift.
               </DonateLink>
-              <DonateLink link={donate.wishlist} icon={IconShoppingBag}>
+              <DonateLink link={donate.wishlist} icon={IconGift}>
                 Help buy supplies for the ambassadors.
               </DonateLink>
               <DonateLink link={donate.grants} icon={IconBuildingLibrary}>
