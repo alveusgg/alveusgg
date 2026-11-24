@@ -13,8 +13,12 @@ import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 import {
+  DONATION_MAX_CENTS,
+  DONATION_MIN_CENTS,
   canAcceptDonations,
+  formatPriceExact,
   getPartialTargetCents,
+  parsePriceCents,
   partialDonationAmount,
 } from "@/utils/wishlist";
 
@@ -134,7 +138,10 @@ export const wishlistRouter = router({
     .input(
       z.object({
         wishlistItemId: z.string(),
-        amount: z.number().min(1).max(10_000),
+        amount: z
+          .number()
+          .min(DONATION_MIN_CENTS / 100)
+          .max(DONATION_MAX_CENTS / 100),
         donorName: z.string().max(100).optional(),
         donorEmail: z.string().email().optional(),
         donorMessage: z.string().max(500).optional(),
@@ -157,6 +164,12 @@ export const wishlistRouter = router({
       const partialTargetCents = item.allowPartialDonations
         ? getPartialTargetCents(item)
         : null;
+      if (item.allowPartialDonations && partialTargetCents == null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This item is unavailable for donations right now",
+        });
+      }
       if (partialTargetCents != null) {
         const remainingCents = partialTargetCents - item.raisedAmountCents;
         if (remainingCents <= 0) {
@@ -176,10 +189,30 @@ export const wishlistRouter = router({
         }
       }
 
+      // Products without partial donations are donated one unit at a time,
+      // at the price stored on the server
+      let orderAmount = input.amount;
+      if (item.itemType === "PRODUCT" && !item.allowPartialDonations) {
+        const priceCents = parsePriceCents(item.price);
+        if (priceCents == null) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This item is unavailable for donations right now",
+          });
+        }
+        if (Math.round(input.amount * 100) !== priceCents) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `This item is donated at its full price of ${formatPriceExact(priceCents)}`,
+          });
+        }
+        orderAmount = priceCents / 100;
+      }
+
       const baseUrl = env.NEXT_PUBLIC_BASE_URL;
 
       const { orderId, approvalUrl } = await createPayPalOrder({
-        amount: input.amount,
+        amount: orderAmount,
         itemTitle: item.title,
         donorName: input.donorName,
         donorEmail: input.donorEmail,
@@ -193,7 +226,7 @@ export const wishlistRouter = router({
         data: {
           paypalOrderId: orderId,
           wishlistItemId: item.id,
-          amount: input.amount,
+          amount: orderAmount,
           donorName: input.donorName ?? null,
           donorEmail: input.donorEmail ?? null,
           donorMessage: input.donorMessage ?? null,

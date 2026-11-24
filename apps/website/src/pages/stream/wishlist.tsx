@@ -5,6 +5,7 @@ import type { NextPage } from "next";
 import { useEffect, useRef, useState } from "react";
 
 import { trpc } from "@/utils/trpc";
+import { formatPrice } from "@/utils/wishlist";
 
 import IconGift from "@/icons/IconGift";
 
@@ -77,8 +78,8 @@ const WishlistOverlayPage: NextPage = () => {
                 New wishlist donation
               </p>
               <p className="font-serif text-3xl font-bold">
-                {current.donorName?.trim() || "Anonymous"} donated $
-                {current.amount.toFixed(2)}
+                {current.donorName?.trim() || "Anonymous"} donated{" "}
+                {formatPrice(Math.round(current.amount * 100))}
               </p>
               <p className="text-lg">toward {current.itemTitle}</p>
             </div>

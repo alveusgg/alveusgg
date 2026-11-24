@@ -14,6 +14,7 @@ import {
 import {
   notifyWishlistDonation,
   notifyWishlistItemFunded,
+  notifyWishlistItemNeedsTarget,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
 import {
@@ -247,6 +248,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
         order,
         excessAmount: credit.excessCents / 100,
         justFunded: credit.justFunded,
+        needsTarget: false,
       } as const;
     }
 
@@ -304,6 +306,7 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
       order,
       excessAmount: 0,
       justFunded: false,
+      needsTarget: item.allowPartialDonations,
     } as const;
   });
 
@@ -334,12 +337,27 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     }
   }
 
+  // Credited in full without a cap, so staff check the item
+  if (result.needsTarget) {
+    try {
+      await notifyWishlistItemNeedsTarget({
+        webhookUrl: env.DISCORD_WISHLIST_WEBHOOK_URL,
+        itemTitle: order.wishlistItem.title,
+        paypalOrderId: order.paypalOrderId,
+        amount: capture.amount,
+      });
+    } catch (err) {
+      console.error("Discord target alert failed (non-fatal):", err);
+    }
+  }
+
   // A Neon failure is logged and never fails or rolls back the donation.
   try {
     const neonDonationId = await logWishlistDonationToNeon({
       captureId: capture.captureId,
       capturedAt,
       amount: capture.amount,
+      excessAmount: result.excessAmount,
       email: capture.payerEmail ?? order.donorEmail,
       name: capture.payerName ?? order.donorName,
       itemTitle: order.wishlistItem.title,
