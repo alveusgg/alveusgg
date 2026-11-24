@@ -90,7 +90,7 @@ const DonateSuccessPage: NextPage = () => {
               )}
               {excessAmount > 0 && (
                 <p>
-                  {`This item reached its target with your help, so the extra $${excessAmount.toFixed(2)} supports the sanctuary’s general operations.`}
+                  {`This item has reached its funding goal. The extra $${excessAmount.toFixed(2)} supports Alveus Sanctuary. For items tagged ARRI, the excess supports the Alveus Research and Recovery Institute.`}
                 </p>
               )}
               <p>
