@@ -1,10 +1,9 @@
 import { DisclosureButton, DisclosurePanel } from "@headlessui/react";
 
 import {
-  type NavStructure,
   type NavStructureDropdown,
   type NavStructureLink,
-  donateNavStructure,
+  isNavDropdown,
   mainNavStructure,
 } from "@/data/navigation";
 
@@ -16,11 +15,6 @@ import { UtilityMenu } from "@/components/layout/navbar/UtilityMenu";
 import IconChevronDown from "@/icons/IconChevronDown";
 
 import { NavLinkSub } from "./NavLink";
-
-const navStructure: NavStructure = {
-  ...mainNavStructure,
-  donate: donateNavStructure,
-};
 
 function Link({ link, active }: { link: NavStructureLink; active: string }) {
   return (
@@ -84,8 +78,8 @@ export function MobileMenu() {
         </div>
 
         <ul className="flex flex-col">
-          {Object.entries(navStructure).map(([key, link]) => {
-            if ("link" in link) {
+          {Object.entries(mainNavStructure).map(([key, link]) => {
+            if (!isNavDropdown(link)) {
               return (
                 <li key={key}>
                   <Link link={link} active={active} />
@@ -93,12 +87,12 @@ export function MobileMenu() {
               );
             }
 
-            if ("links" in link && link.primaryLink) {
+            if (link.link) {
               return (
                 <li key={key} className="relative">
                   <div className="mr-12">
                     <Link
-                      link={{ title: link.title, link: link.primaryLink }}
+                      link={{ title: link.title, link: link.link }}
                       active={active}
                     />
                   </div>

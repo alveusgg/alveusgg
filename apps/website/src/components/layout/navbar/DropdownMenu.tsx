@@ -41,18 +41,15 @@ export const DropdownMenuItems = ({
   />
 );
 
-export function DropdownLink({
+function DropdownLink({
   link,
-  color,
-  className,
-  children = link.title,
+  color = "green",
 }: {
   link: NavStructureLink;
   color?: NavColor;
-  className?: string;
-  children?: ReactNode;
 }) {
   const active = useActiveNav() === link.link;
+  const { icon: Icon, description } = link;
 
   return (
     <MenuItem>
@@ -61,9 +58,36 @@ export function DropdownLink({
         external={link.external}
         color={color}
         active={active}
-        className={className}
+        className={Icon && "group/link flex items-center gap-3 py-2.5"}
       >
-        {children}
+        {Icon ? (
+          <>
+            <span
+              className={classes(
+                "rounded-full p-2 transition-colors",
+                navColors[color].icon,
+                active && navColors[color].active.icon,
+              )}
+            >
+              <Icon size={20} />
+            </span>
+            <span className="grow">
+              <strong className="block">{link.title}</strong>
+              {description && (
+                <span
+                  className={classes(
+                    "block text-sm",
+                    navColors[color].description,
+                  )}
+                >
+                  {description}
+                </span>
+              )}
+            </span>
+          </>
+        ) : (
+          link.title
+        )}
       </NavLinkSub>
     </MenuItem>
   );
@@ -71,13 +95,15 @@ export function DropdownLink({
 
 const DropdownLinks = ({
   links,
+  color,
 }: {
   links: Record<string, NavStructureLink>;
+  color?: NavColor;
 }) => (
   <ul className="flex flex-col gap-0.5">
     {Object.entries(links).map(([key, link]) => (
       <li key={key}>
-        <DropdownLink link={link} />
+        <DropdownLink link={link} color={color} />
       </li>
     ))}
   </ul>
@@ -91,12 +117,12 @@ export const Dropdown = ({ dropdown }: { dropdown: NavStructureDropdown }) =>
           <p className="mx-3 mb-1 border-b border-alveus-green-700 pt-1 text-sm text-alveus-green-200">
             {group.title}
           </p>
-          <DropdownLinks links={group.links} />
+          <DropdownLinks links={group.links} color={dropdown.color} />
         </li>
       ))}
     </ul>
   ) : (
-    <DropdownLinks links={dropdown.links} />
+    <DropdownLinks links={dropdown.links} color={dropdown.color} />
   );
 
 export function DropdownMenu({

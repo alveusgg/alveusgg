@@ -1,5 +1,15 @@
+import { type ComponentType } from "react";
+
 import { typeSafeObjectFromEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
+
+import { type NavColor } from "@/components/layout/navbar/colors";
+
+import { type IconProps } from "@/icons/BaseIcon";
+import IconBuildingLibrary from "@/icons/IconBuildingLibrary";
+import IconGift from "@/icons/IconGift";
+import IconHeart from "@/icons/IconHeart";
+import IconPresentationChartLine from "@/icons/IconPresentationChartLine";
 
 import murals from "./murals";
 
@@ -7,16 +17,23 @@ export type NavStructureLink = {
   title: string;
   link: string;
   external?: boolean;
+  /** Shows the link as a larger item, with an icon and description, on desktop */
+  icon?: ComponentType<IconProps>;
+  description?: string;
 };
 
-export type NavStructureLinks = {
+type NavStructureDropdownBase = {
   title: string;
-  primaryLink?: string;
+  /** Makes the title a link, with the dropdown opened separately */
+  link?: string;
+  color?: NavColor;
+};
+
+export type NavStructureLinks = NavStructureDropdownBase & {
   links: Record<string, NavStructureLink>;
 };
 
-type NavStructureGroups = {
-  title: string;
+type NavStructureGroups = NavStructureDropdownBase & {
   groups: Record<string, NavStructureLinks>;
 };
 
@@ -26,29 +43,9 @@ export type NavStructure = {
   [key: string]: NavStructureLink | NavStructureDropdown;
 };
 
-export const donateNavStructure = {
-  title: "Donate",
-  primaryLink: "/donate",
-  links: {
-    donation: {
-      title: "Make a Donation",
-      link: "/donate",
-    },
-    wishlist: {
-      title: "Wishlist",
-      link: "/wishlist",
-    },
-    grants: {
-      title: "Grants",
-      link: "/donate/grants",
-    },
-    givingBlock: {
-      title: "Stock & Crypto",
-      link: "/donate/giving-block",
-      external: true,
-    },
-  },
-} satisfies NavStructureLinks;
+export const isNavDropdown = (
+  item: NavStructureLink | NavStructureDropdown,
+): item is NavStructureDropdown => "links" in item || "groups" in item;
 
 export const mainNavStructure: NavStructure = {
   home: {
@@ -198,12 +195,44 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
+  donate: {
+    title: "Donate",
+    link: "/donate",
+    color: "tan",
+    links: {
+      donation: {
+        title: "Make a Donation",
+        link: "/donate",
+        icon: IconHeart,
+        description: "Give once or set up a recurring gift.",
+      },
+      wishlist: {
+        title: "Wishlist",
+        link: "/wishlist",
+        icon: IconGift,
+        description: "Help buy supplies for the ambassadors.",
+      },
+      grants: {
+        title: "Grants",
+        link: "/donate/grants",
+        icon: IconBuildingLibrary,
+        description: "For foundations and corporate grants.",
+      },
+      givingBlock: {
+        title: "Stock & Crypto",
+        link: "/donate/giving-block",
+        external: true,
+        icon: IconPresentationChartLine,
+        description: "Donate via The Giving Block",
+      },
+    },
+  },
 };
 
 export const getNavLinks = (
   item: NavStructureLink | NavStructureDropdown,
 ): NavStructureLink[] => {
-  if ("link" in item) return [item];
+  if (!isNavDropdown(item)) return [item];
   if ("links" in item) return Object.values(item.links);
 
   return Object.values(item.groups).flatMap((group) =>

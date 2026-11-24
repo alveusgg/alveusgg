@@ -2,11 +2,7 @@ import type { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-import {
-  donateNavStructure,
-  getNavLinks,
-  mainNavStructure,
-} from "@/data/navigation";
+import { getNavLinks, mainNavStructure } from "@/data/navigation";
 
 export const useActivePath = (href: LinkProps["href"], exact = false) => {
   const router = useRouter();
@@ -22,10 +18,7 @@ export const useActivePath = (href: LinkProps["href"], exact = false) => {
   return currentRoute.startsWith(url.replace(/\/?$/, "/"));
 };
 
-const flatNavStructure = [
-  ...Object.values(mainNavStructure),
-  donateNavStructure,
-]
+const flatNavStructure = Object.values(mainNavStructure)
   .flatMap(getNavLinks)
   .map((item) => item.link);
 
