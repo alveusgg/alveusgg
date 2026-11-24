@@ -33,9 +33,9 @@ const DonateLink = ({
   <DropdownLink
     link={link}
     color="tan"
-    className="flex items-center gap-3 py-2.5"
+    className="group/link flex items-center gap-3 py-2.5"
   >
-    <span className="rounded-full bg-alveus-tan-150 p-2">
+    <span className="rounded-full bg-alveus-tan-150 p-2 transition-colors group-hover/link:bg-alveus-tan-100 group-data-focus/link:bg-alveus-tan-100">
       <Icon size={20} />
     </span>
     <span className="grow">
