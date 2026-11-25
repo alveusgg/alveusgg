@@ -79,7 +79,7 @@ export const showAndTellRouter = router({
     .input(showAndTellCreateInputSchema)
     .mutation(
       async ({ ctx, input }) =>
-        await createPost(ctx.res, input, ctx.session?.user?.id),
+        await createPost(ctx.res, input, (await ctx.getSession())?.user?.id),
     ),
 
   update: protectedProcedure
