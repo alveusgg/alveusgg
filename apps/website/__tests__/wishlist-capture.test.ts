@@ -38,7 +38,7 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
         update: vi.fn(),
         fields: new Proxy({}, { get: (_, name) => ({ name }) }),
       },
-      wishlistChatChannel: {
+      twitchChannelChatAlert: {
         findMany: vi.fn(),
       },
     },
@@ -59,7 +59,7 @@ vi.mock("@/server/apis/twitch", () => ({
 }));
 vi.mock("@/server/db/twitch-channels", () => ({
   getChatBotAccount: vi.fn(() =>
-    Promise.resolve({ userId: "chat-bot-id", accessToken: "chat-token" }),
+    Promise.resolve({ userId: "bot-user-id", accessToken: "chat-token" }),
   ),
 }));
 
@@ -115,7 +115,7 @@ beforeEach(() => {
     raisedAmountCents: 2_500,
   });
   mockPrisma.wishlistDonationOrder.update.mockResolvedValue({});
-  mockPrisma.wishlistChatChannel.findMany.mockResolvedValue([
+  mockPrisma.twitchChannelChatAlert.findMany.mockResolvedValue([
     { channelId: channels.alveus.id },
   ]);
 });
@@ -247,31 +247,32 @@ describe("recordWishlistCapture", () => {
     expect(mockPrisma.wishlistDonationOrder.update).not.toHaveBeenCalled();
   });
 
-  test("thanks the donor in the chat of each listed channel", async () => {
+  test("thanks the donor in the chat of each channel with wishlist alerts", async () => {
     mockEnv.NEON_CRM_API_KEY = undefined;
     vi.spyOn(console, "warn").mockImplementation(() => {});
-    mockPrisma.wishlistChatChannel.findMany.mockResolvedValue([
+    mockPrisma.twitchChannelChatAlert.findMany.mockResolvedValue([
       { channelId: channels.alveus.id },
       { channelId: channels.maya.id },
     ]);
 
     await recordWishlistCapture(capture);
 
-    expect(mockPrisma.wishlistChatChannel.findMany).toHaveBeenCalledWith({
+    expect(mockPrisma.twitchChannelChatAlert.findMany).toHaveBeenCalledWith({
+      where: { alert: "WISHLIST_DONATION" },
       select: { channelId: true },
     });
     const message =
       "alveusLove Stream Name donated $25 towards Heat lamp! https://short.example.test/wishlist";
     expect(vi.mocked(sendChatMessage).mock.calls).toEqual([
-      ["chat-token", "chat-bot-id", channels.alveus.id, message],
-      ["chat-token", "chat-bot-id", channels.maya.id, message],
+      ["chat-token", "bot-user-id", channels.alveus.id, message],
+      ["chat-token", "bot-user-id", channels.maya.id, message],
     ]);
   });
 
-  test("posts nothing when no channel is listed", async () => {
+  test("posts nothing when no channel has wishlist alerts", async () => {
     mockEnv.NEON_CRM_API_KEY = undefined;
     vi.spyOn(console, "warn").mockImplementation(() => {});
-    mockPrisma.wishlistChatChannel.findMany.mockResolvedValue([]);
+    mockPrisma.twitchChannelChatAlert.findMany.mockResolvedValue([]);
 
     const result = await recordWishlistCapture(capture);
 

@@ -5,7 +5,6 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { getUserByName, getUsersByIds } from "@/server/apis/twitch";
 import {
   deleteWishlistImage,
   saveWithWishlistImageUpload,
@@ -467,56 +466,6 @@ export const adminWishlistRouter = router({
         ),
       );
       return { success: true };
-    }),
-
-  adminGetChatChannels: permittedProcedure.query(async () => {
-    const chatChannels = await prisma.wishlistChatChannel.findMany({
-      orderBy: { createdAt: "asc" },
-    });
-    // Names come from Twitch, so renamed channels show their current name
-    const users = await getUsersByIds(
-      chatChannels.map(({ channelId }) => channelId),
-    ).catch((err) => {
-      console.error("Failed to look up wishlist chat channel names:", err);
-      return [];
-    });
-    return chatChannels.map(({ channelId }) => ({
-      channelId,
-      username: users.find((user) => user.id === channelId)?.login ?? null,
-    }));
-  }),
-
-  addChatChannel: permittedProcedure
-    .input(
-      z.object({
-        username: z
-          .string()
-          .trim()
-          .regex(/^@?\w{1,25}$/, "Enter a Twitch channel name"),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      // Stored by user ID, so a renamed channel keeps getting messages
-      const user = await getUserByName(input.username.replace(/^@/, ""));
-      if (!user) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No Twitch channel with that name",
-        });
-      }
-      await prisma.wishlistChatChannel.upsert({
-        where: { channelId: user.id },
-        create: { channelId: user.id },
-        update: {},
-      });
-    }),
-
-  removeChatChannel: permittedProcedure
-    .input(z.object({ channelId: z.string() }))
-    .mutation(async ({ input }) => {
-      await prisma.wishlistChatChannel.deleteMany({
-        where: { channelId: input.channelId },
-      });
     }),
 
   adminGetDonations: permittedProcedure

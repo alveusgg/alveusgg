@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 
+import { chatAlertLabels } from "@/data/twitch";
+
 import { formatDateTime } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -14,6 +17,7 @@ import {
   LinkButton,
   dangerButtonClasses,
 } from "@/components/shared/form/Button";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
 
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
@@ -52,7 +56,7 @@ function ChannelConfigRow({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const chatBotMutation = trpc.adminTwitch.setChatBotChannel.useMutation({
+  const chatAlertMutation = trpc.adminTwitch.setChatAlert.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
@@ -150,25 +154,26 @@ function ChannelConfigRow({
             {moderator ? "Reconnect" : "Connect"}
           </Button>
         </div>
-        <div className="flex flex-row items-center gap-2 border-t border-gray-700 py-2">
-          <span className="flex-1">
-            Chat bot:{" "}
-            {channel.isChatBot
-              ? `✓ The website's chat messages are posted as ${channel.username}`
-              : "No"}
-          </span>
-          <Button
-            size="small"
-            width="auto"
-            disabled={chatBotMutation.isPending}
-            onClick={() =>
-              chatBotMutation.mutate(
-                channel.isChatBot ? null : channel.channelId,
-              )
-            }
-          >
-            {channel.isChatBot ? "Stop using" : "Use as chat bot"}
-          </Button>
+        <div className="flex flex-row flex-wrap items-center gap-x-6 gap-y-2 border-t border-gray-700 py-2">
+          <span>Chat alerts:</span>
+          {typeSafeObjectEntries(chatAlertLabels).map(([alert, label]) => (
+            <CheckboxField
+              key={alert}
+              isSelected={channel.chatAlerts.some(
+                (chatAlert) => chatAlert.alert === alert,
+              )}
+              isDisabled={chatAlertMutation.isPending}
+              onChange={(enabled) =>
+                chatAlertMutation.mutate({
+                  channelId: channel.channelId,
+                  alert,
+                  enabled,
+                })
+              }
+            >
+              {label}
+            </CheckboxField>
+          ))}
         </div>
       </div>
     </li>
@@ -210,16 +215,6 @@ export function ChannelConfig() {
       )}
 
       {channels.isPending && <p>Loading channels …</p>}
-
-      {channels.isSuccess && (
-        <p className="mb-2">
-          The website posts its chat messages, like pixel and wishlist
-          donations, as the chat bot channel&apos;s account.{" "}
-          {channels.data.some((channel) => channel.isChatBot)
-            ? null
-            : "No channel is picked, so they are posted as AlveusGG."}
-        </p>
-      )}
 
       {channels.isSuccess &&
         (channels.data?.length ? (

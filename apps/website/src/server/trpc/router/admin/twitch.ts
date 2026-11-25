@@ -1,17 +1,18 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { ChatAlertType } from "@alveusgg/database";
+
 import {
   getUserByName,
   setupWebhookSubscriptionsForBroadcasters,
 } from "@/server/apis/twitch";
 import {
-  canPostAsChatBot,
   createTwitchChannel,
   deleteTwitchChannel,
   editTwitchChannel,
   getTwitchChannels,
-  setChatBotChannel,
+  setTwitchChannelChatAlert,
 } from "@/server/db/twitch-channels";
 import {
   createCheckPermissionMiddleware,
@@ -82,19 +83,17 @@ export const adminTwitchRouter = router({
       }
     }),
 
-  setChatBotChannel: permittedProcedure
-    .input(z.string().nullable())
-    .mutation(async ({ input: channelId }) => {
-      // Picking an account without a token would stop all chat messages
-      if (channelId && !(await canPostAsChatBot(channelId))) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "Sign in to the website as this channel with the API scopes first, so it can send chat messages",
-        });
-      }
-      await setChatBotChannel(channelId);
-    }),
+  setChatAlert: permittedProcedure
+    .input(
+      z.object({
+        channelId: z.string(),
+        alert: z.enum(ChatAlertType),
+        enabled: z.boolean(),
+      }),
+    )
+    .mutation(({ input }) =>
+      setTwitchChannelChatAlert(input.channelId, input.alert, input.enabled),
+    ),
 
   deleteChannel: permittedProcedure
     .input(z.string())

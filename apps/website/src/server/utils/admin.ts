@@ -73,11 +73,6 @@ const menuItems = [
     permission: permissions.manageWishlist,
   },
   {
-    label: "Wishlist Settings",
-    href: "/admin/wishlist/settings",
-    permission: permissions.manageWishlist,
-  },
-  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,

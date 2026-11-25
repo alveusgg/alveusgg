@@ -269,13 +269,18 @@ const usersResponseSchema = z.object({
   ),
 });
 
-async function getUsers(params: URLSearchParams) {
-  const response = await fetch(`https://api.twitch.tv/helix/users?${params}`, {
-    method: "GET",
-    headers: {
-      ...(await getApplicationAuthHeaders()),
+export async function getUserByName(userName: string) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?${new URLSearchParams({
+      login: userName,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getApplicationAuthHeaders()),
+      },
     },
-  });
+  );
 
   if (response.status === 403) {
     throw new ExpiredAccessTokenError();
@@ -288,18 +293,7 @@ async function getUsers(params: URLSearchParams) {
   }
 
   const data = await usersResponseSchema.parseAsync(json);
-  return data.data;
-}
-
-export async function getUserByName(userName: string) {
-  const users = await getUsers(new URLSearchParams({ login: userName }));
-  return users[0];
-}
-
-// Twitch returns up to 100 users per request
-export async function getUsersByIds(userIds: string[]) {
-  if (userIds.length === 0) return [];
-  return getUsers(new URLSearchParams(userIds.map((id) => ["id", id])));
+  return data.data[0];
 }
 
 const liveStreamsResponseSchema = z.object({

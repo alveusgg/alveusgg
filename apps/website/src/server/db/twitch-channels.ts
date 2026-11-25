@@ -1,27 +1,18 @@
-import { prisma } from "@alveusgg/database";
+import { type ChatAlertType, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { refreshAccessToken } from "@/server/utils/oauth2";
 
-import { channels } from "@/data/twitch";
-
 /**
- * The account that posts the website's chat messages, like pixel and wishlist
- * donations, in every channel: the channel picked as the chat bot in the
- * Twitch admin, or AlveusGG while none is picked
+ * The bot account that posts the website's chat alerts, like pixel and
+ * wishlist donations, set with BOT_USER_ID like the chatbot's
  */
 export async function getChatBotAccount() {
-  const chatBot = await prisma.twitchChannel.findFirst({
-    where: { isChatBot: true },
-    select: { channelId: true },
-  });
-  const userId = chatBot?.channelId ?? channels.alveusgg.id;
-
   const account = await prisma.account.findFirst({
     where: {
       provider: "twitch",
-      providerAccountId: userId,
+      providerAccountId: env.BOT_USER_ID,
     },
     select: {
       access_token: true,
@@ -29,42 +20,28 @@ export async function getChatBotAccount() {
   });
 
   if (!account?.access_token) {
-    throw new Error(`No Twitch account found for chat bot ${userId}`);
+    throw new Error(`No Twitch account found for bot user ${env.BOT_USER_ID}`);
   }
 
-  return { userId, accessToken: account.access_token };
+  return { userId: env.BOT_USER_ID, accessToken: account.access_token };
 }
 
-// Whether the channel's own account signed in with the scope to send chat
-export async function canPostAsChatBot(channelId: string) {
-  const account = await prisma.account.findFirst({
-    where: {
-      provider: "twitch",
-      providerAccountId: channelId,
-      access_token: { not: null },
-      scope: { contains: "user:write:chat" },
-    },
-    select: { id: true },
-  });
-  return account !== null;
-}
-
-// Picks the chat bot channel, or none to post as AlveusGG
-export async function setChatBotChannel(channelId: string | null) {
-  await prisma.$transaction([
-    prisma.twitchChannel.updateMany({
-      where: { isChatBot: true },
-      data: { isChatBot: false },
-    }),
-    ...(channelId
-      ? [
-          prisma.twitchChannel.update({
-            where: { channelId },
-            data: { isChatBot: true },
-          }),
-        ]
-      : []),
-  ]);
+// Turns one chat alert on or off for a channel
+export async function setTwitchChannelChatAlert(
+  channelId: string,
+  alert: ChatAlertType,
+  enabled: boolean,
+) {
+  if (enabled) {
+    await prisma.twitchChannelChatAlert.createMany({
+      data: [{ channelId, alert }],
+      skipDuplicates: true,
+    });
+  } else {
+    await prisma.twitchChannelChatAlert.deleteMany({
+      where: { channelId, alert },
+    });
+  }
 }
 
 export async function getTwitchChannels() {
@@ -83,6 +60,7 @@ export async function getTwitchChannels() {
           user: true,
         },
       },
+      chatAlerts: { select: { alert: true } },
     },
   });
 }
