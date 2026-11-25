@@ -25,7 +25,7 @@ vi.mock("@/server/utils/auth", () => ({
 }));
 
 const caller = wishlistRouter.createCaller({
-  session: null,
+  getSession: async () => null,
 } as unknown as Context);
 
 const product = {

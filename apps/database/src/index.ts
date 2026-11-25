@@ -7,6 +7,10 @@ const client = () =>
       (process.env.DATABASE_URL ?? "")
         .replace(/^mysql:\/\//, "mariadb://")
         .replace(/([?&])sslaccept=strict/, "$1ssl=true"),
+      // The binary protocol prepares, executes and closes a statement for
+      // every query (the adapter turns the prepare cache off), so each query
+      // costs two round trips to the database instead of one
+      { useTextProtocol: true },
     ),
     log:
       process.env.NODE_ENV === "development"

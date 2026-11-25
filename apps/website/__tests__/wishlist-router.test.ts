@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { getPublicWishlist } from "@/server/db/wishlist";
 import type { Context } from "@/server/trpc/context";
 import { adminWishlistRouter } from "@/server/trpc/router/admin/wishlist";
 import { wishlistRouter } from "@/server/trpc/router/wishlist";
+import { captureException } from "@/server/utils/sentry";
 
 import { createPayPalOrder } from "@/utils/paypal";
 import { getPayPalReturnParams } from "@/utils/wishlist";
@@ -21,17 +23,27 @@ const { mockPrisma } = vi.hoisted(() => ({
       findMany: vi.fn(),
       groupBy: vi.fn(),
     },
+    wishlistCategory: {
+      findMany: vi.fn(),
+    },
+    fileStorageObject: {
+      findMany: vi.fn(),
+    },
   },
 }));
 
 vi.mock("@/env", () => ({
-  env: { NEXT_PUBLIC_BASE_URL: "https://alveus.example.test" },
+  env: {
+    NEXT_PUBLIC_BASE_URL: "https://alveus.example.test",
+    FILE_STORAGE_CDN_URL: "https://files.example.test",
+  },
 }));
 vi.mock("@alveusgg/database", () => ({ prisma: mockPrisma }));
 vi.mock("@/server/utils/auth", () => ({
   checkPermissions: () => true,
   checkIsSuperUserSession: () => false,
 }));
+vi.mock("@/server/utils/sentry", () => ({ captureException: vi.fn() }));
 vi.mock("@/utils/paypal", () => ({
   createPayPalOrder: vi.fn(() =>
     Promise.resolve({
@@ -42,11 +54,14 @@ vi.mock("@/utils/paypal", () => ({
   capturePayPalOrder: vi.fn(),
 }));
 
+const revalidate = vi.fn();
 const publicCaller = wishlistRouter.createCaller({
-  session: null,
+  getSession: async () => null,
+  res: { revalidate },
 } as unknown as Context);
 const adminCaller = adminWishlistRouter.createCaller({
-  session: { user: { id: "user-1", name: "admin" } },
+  getSession: async () => ({ user: { id: "user-1", name: "admin" } }),
+  res: { revalidate },
 } as unknown as Context);
 
 const product = {
@@ -131,24 +146,101 @@ describe("PayPal return URL", () => {
   });
 });
 
-describe("public item list", () => {
-  test("does not accept the archived status", async () => {
-    await expect(
-      publicCaller.getPublicItems({ status: "ARCHIVED" as "NEEDED" }),
-    ).rejects.toThrow();
-    expect(mockPrisma.wishlistItem.findMany).not.toHaveBeenCalled();
-  });
+describe("public wishlist", () => {
+  const archivedFilter = { status: { not: "ARCHIVED" } };
 
-  test("hides archived items by default", async () => {
+  test("hides archived items with their categories and images", async () => {
     mockPrisma.wishlistItem.findMany.mockResolvedValue([]);
+    mockPrisma.wishlistCategory.findMany.mockResolvedValue([]);
+    mockPrisma.fileStorageObject.findMany.mockResolvedValue([]);
 
-    await publicCaller.getPublicItems({});
+    await getPublicWishlist();
 
     expect(mockPrisma.wishlistItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: archivedFilter }),
+    );
+    expect(mockPrisma.wishlistCategory.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { items: { some: archivedFilter } } }),
+    );
+    expect(mockPrisma.fileStorageObject.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { status: { not: "ARCHIVED" } },
+        where: { wishlistItem: { is: archivedFilter } },
       }),
     );
+  });
+
+  test("attaches categories and image URLs to items", async () => {
+    mockPrisma.wishlistItem.findMany.mockResolvedValue([
+      { ...product, categoryId: "cat-1", fileStorageObjectId: "file-1" },
+      { ...goal, categoryId: "cat-old", fileStorageObjectId: null },
+    ]);
+    mockPrisma.wishlistCategory.findMany.mockResolvedValue([
+      {
+        id: "cat-1",
+        name: "Heat",
+        slug: "heat",
+        archivedAt: null,
+        _count: { items: 1 },
+      },
+      {
+        id: "cat-old",
+        name: "Old",
+        slug: "old",
+        archivedAt: new Date(),
+        _count: { items: 1 },
+      },
+    ]);
+    mockPrisma.fileStorageObject.findMany.mockResolvedValue([
+      { id: "file-1", key: "wishlist/lamp.png" },
+    ]);
+
+    const { items, categories } = await getPublicWishlist();
+
+    expect(items[0]).toMatchObject({
+      category: { id: "cat-1", name: "Heat", slug: "heat" },
+      imageUrl: "https://files.example.test/wishlist/lamp.png",
+    });
+    expect(items[0]).not.toHaveProperty("fileStorageObjectId");
+    // An archived category still labels its items, but is not a filter
+    expect(items[1]).toMatchObject({
+      category: { slug: "old" },
+      imageUrl: null,
+    });
+    expect(categories).toEqual([
+      { id: "cat-1", name: "Heat", slug: "heat", _count: { items: 1 } },
+    ]);
+  });
+});
+
+describe("wishlist page revalidation", () => {
+  const fundedItem = { ...product, status: "FULFILLED" };
+
+  test("regenerates the page after a change", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(fundedItem);
+
+    await adminCaller.markAsOpened({ id: "item-1" });
+
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith("/wishlist");
+  });
+
+  test("leaves the page alone when the change fails", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+    await expect(adminCaller.markAsOpened({ id: "item-1" })).rejects.toThrow(
+      "fully funded",
+    );
+    expect(revalidate).not.toHaveBeenCalled();
+  });
+
+  test("keeps a saved change when regenerating fails", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(fundedItem);
+    revalidate.mockRejectedValueOnce(new Error("timeout"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(
+      adminCaller.markAsOpened({ id: "item-1" }),
+    ).resolves.toBeDefined();
+    expect(captureException).toHaveBeenCalledOnce();
   });
 });
 

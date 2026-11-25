@@ -177,8 +177,10 @@ afterEach(() => {
 });
 
 describe("capture status on the success page", () => {
+  const revalidate = vi.fn();
   const caller = wishlistRouter.createCaller({
-    session: null,
+    getSession: async () => null,
+    res: { revalidate },
   } as unknown as Context);
 
   const paypalCapture = (captureStatus: string) =>
@@ -217,6 +219,7 @@ describe("capture status on the success page", () => {
     expect(result).toMatchObject({ success: true, processing: true });
     expect(recordWishlistCapture).not.toHaveBeenCalled();
     expect(db.orders[0]?.status).toBe("PENDING");
+    expect(revalidate).not.toHaveBeenCalled();
   });
 
   test("records a completed capture", async () => {
@@ -238,6 +241,7 @@ describe("capture status on the success page", () => {
     expect(recordWishlistCapture).toHaveBeenCalledWith(
       expect.objectContaining({ captureId: "CAPTURE-1", amount: 25 }),
     );
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith("/wishlist");
   });
 });
 
@@ -254,6 +258,7 @@ describe("PayPal payment issue webhooks", () => {
     const res = {
       statusCode: 0,
       body: undefined as unknown,
+      revalidate: vi.fn(),
       status(code: number) {
         this.statusCode = code;
         return this;
@@ -416,6 +421,7 @@ describe("PayPal payment issue webhooks", () => {
 
     expect(late.statusCode).toBe(200);
     expect(late.body).toEqual({ received: true, alreadyProcessed: true });
+    expect(late.revalidate).not.toHaveBeenCalled();
     expect(db.orders[0]).toMatchObject({
       status: "REFUNDED",
       paypalTransactionId: null,

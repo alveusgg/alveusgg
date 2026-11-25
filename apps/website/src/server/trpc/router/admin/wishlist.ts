@@ -7,6 +7,7 @@ import { env } from "@/env";
 
 import {
   deleteWishlistImage,
+  revalidateWishlistPage,
   saveWithWishlistImageUpload,
   wishlistImageUploadPrefix,
 } from "@/server/db/wishlist";
@@ -172,6 +173,13 @@ const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageWishlist),
 );
 
+// For changes that show on the public wishlist page, which regenerate it
+const pageChangeProcedure = permittedProcedure.use(async ({ ctx, next }) => {
+  const result = await next();
+  if (result.ok) await revalidateWishlistPage(ctx.res);
+  return result;
+});
+
 export const adminWishlistRouter = router({
   adminGetAllItems: permittedProcedure
     .input(
@@ -214,7 +222,7 @@ export const adminWishlistRouter = router({
     return { items, amazonCartUrl: cartUrl };
   }),
 
-  createItem: permittedProcedure
+  createItem: pageChangeProcedure
     .input(itemCreateInput)
     .mutation(async ({ input }) => {
       if (input.itemType === "PRODUCT") {
@@ -242,7 +250,7 @@ export const adminWishlistRouter = router({
       );
     }),
 
-  updateItem: permittedProcedure
+  updateItem: pageChangeProcedure
     .input(itemUpdateInput)
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
@@ -346,7 +354,7 @@ export const adminWishlistRouter = router({
       return updated;
     }),
 
-  markAsOpened: permittedProcedure
+  markAsOpened: pageChangeProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       const item = await prisma.wishlistItem.findUnique({
@@ -366,7 +374,7 @@ export const adminWishlistRouter = router({
       });
     }),
 
-  deleteItem: permittedProcedure
+  deleteItem: pageChangeProcedure
     .input(z.object({ id: z.string(), permanent: z.boolean().default(false) }))
     .mutation(async ({ input }) => {
       if (input.permanent) {
@@ -385,7 +393,7 @@ export const adminWishlistRouter = router({
       return { success: true };
     }),
 
-  reorderItems: permittedProcedure
+  reorderItems: pageChangeProcedure
     .input(z.object({ orderedIds: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await prisma.$transaction(
@@ -399,7 +407,7 @@ export const adminWishlistRouter = router({
       return { success: true };
     }),
 
-  createCategory: permittedProcedure
+  createCategory: pageChangeProcedure
     .input(categoryInput)
     .mutation(async ({ input }) => {
       // New categories go to the end of the list unless an order is given
@@ -424,7 +432,7 @@ export const adminWishlistRouter = router({
   ),
 
   // The slug is set at creation and never changes, so renames keep links working
-  updateCategory: permittedProcedure
+  updateCategory: pageChangeProcedure
     .input(
       categoryInput
         .pick({ name: true, sortOrder: true })
@@ -436,7 +444,7 @@ export const adminWishlistRouter = router({
     }),
 
   // Categories are archived rather than deleted, so items keep their category
-  archiveCategory: permittedProcedure
+  archiveCategory: pageChangeProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) =>
       prisma.wishlistCategory.update({
@@ -445,7 +453,7 @@ export const adminWishlistRouter = router({
       }),
     ),
 
-  unarchiveCategory: permittedProcedure
+  unarchiveCategory: pageChangeProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) =>
       prisma.wishlistCategory.update({
@@ -454,7 +462,7 @@ export const adminWishlistRouter = router({
       }),
     ),
 
-  reorderCategories: permittedProcedure
+  reorderCategories: pageChangeProcedure
     .input(z.object({ orderedIds: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await prisma.$transaction(

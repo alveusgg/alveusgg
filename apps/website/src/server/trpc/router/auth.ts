@@ -11,9 +11,7 @@ import { issueAccessTokenForUser } from "@/server/oauth/tokens";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const authRouter = router({
-  getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
-  }),
+  getSession: publicProcedure.query(({ ctx }) => ctx.getSession()),
   mintOAuthAccessToken: protectedProcedure.mutation(async ({ ctx }) => {
     if (!hasOAuthSigningKey()) {
       throw new TRPCError({
