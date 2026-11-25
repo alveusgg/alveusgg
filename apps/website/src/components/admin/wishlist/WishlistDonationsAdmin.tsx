@@ -15,8 +15,6 @@ import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
-import { WishlistChatChannels } from "./WishlistChatChannels";
-
 const formatAmount = (amount: number) => `$${amount.toFixed(2)}`;
 
 const DONATION_ORDER_STATUS_LABELS = {
@@ -57,8 +55,6 @@ export function WishlistDonationsAdmin() {
 
   return (
     <>
-      <WishlistChatChannels />
-
       <Headline>Wishlist donations</Headline>
 
       <Panel>

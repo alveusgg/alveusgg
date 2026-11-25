@@ -163,8 +163,8 @@ const donationOrderSql = () => {
   };
 };
 
-// Thanks the donor in the chat of each channel picked in the wishlist admin,
-// like the pixel unlock messages. Only the name the donor gave is shown, since
+// Thanks the donor in the chat of each channel in the wishlist settings, like
+// the pixel unlock messages. Only the name the donor gave is shown, since
 // the form says it may be on stream.
 async function sendWishlistDonationChatMessages({
   donorName,
@@ -175,8 +175,7 @@ async function sendWishlistDonationChatMessages({
   amountCents: number;
   itemTitle: string;
 }) {
-  const chatChannels = await prisma.twitchChannel.findMany({
-    where: { wishlistChatMessages: true },
+  const chatChannels = await prisma.wishlistChatChannel.findMany({
     select: { channelId: true },
   });
   if (chatChannels.length === 0) return;

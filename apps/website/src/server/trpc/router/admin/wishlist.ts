@@ -5,6 +5,7 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
+import { getUserByName } from "@/server/apis/twitch";
 import {
   deleteWishlistImage,
   saveWithWishlistImageUpload,
@@ -468,26 +469,40 @@ export const adminWishlistRouter = router({
       return { success: true };
     }),
 
-  // The Twitch channels from the Twitch admin, and whether wishlist donations
-  // are posted in their chat
   adminGetChatChannels: permittedProcedure.query(() =>
-    prisma.twitchChannel.findMany({
-      select: {
-        channelId: true,
-        label: true,
-        username: true,
-        wishlistChatMessages: true,
-      },
-      orderBy: { label: "asc" },
-    }),
+    prisma.wishlistChatChannel.findMany({ orderBy: { createdAt: "asc" } }),
   ),
 
-  setChatChannel: permittedProcedure
-    .input(z.object({ channelId: z.string(), enabled: z.boolean() }))
+  addChatChannel: permittedProcedure
+    .input(
+      z.object({
+        username: z
+          .string()
+          .trim()
+          .regex(/^@?\w{1,25}$/, "Enter a Twitch channel name"),
+      }),
+    )
     .mutation(async ({ input }) => {
-      await prisma.twitchChannel.update({
+      // Stored by user ID, so a renamed channel keeps getting messages
+      const user = await getUserByName(input.username.replace(/^@/, ""));
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No Twitch channel with that name",
+        });
+      }
+      await prisma.wishlistChatChannel.upsert({
+        where: { channelId: user.id },
+        create: { channelId: user.id, username: user.login },
+        update: { username: user.login },
+      });
+    }),
+
+  removeChatChannel: permittedProcedure
+    .input(z.object({ channelId: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.wishlistChatChannel.deleteMany({
         where: { channelId: input.channelId },
-        data: { wishlistChatMessages: input.enabled },
       });
     }),
 
