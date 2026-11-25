@@ -26,7 +26,6 @@ export type PublicWishlistItem =
 
 interface Props {
   items: PublicWishlistItem[];
-  loading?: boolean;
 }
 
 const PRIORITY_LABEL: Record<string, { label: string; cls: string }> = {
@@ -79,35 +78,10 @@ function GoalProgress({
   );
 }
 
-function SkeletonCard() {
-  return (
-    <Box className="flex animate-pulse flex-col gap-3 p-0">
-      <div className="h-44 bg-alveus-green-100" />
-      <div className="flex flex-col gap-2 p-4">
-        <div className="h-3 w-1/3 rounded-sm bg-alveus-green-100" />
-        <div className="h-4 w-3/4 rounded-sm bg-alveus-green-100" />
-        <div className="mt-2 h-10 rounded-xl bg-alveus-green-100" />
-      </div>
-    </Box>
-  );
-}
-
-const SKELETON_KEYS = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
 const gridClasses =
   "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
-export default function WishlistGrid({ items, loading }: Props) {
-  if (loading) {
-    return (
-      <div className={gridClasses}>
-        {SKELETON_KEYS.map((key) => (
-          <SkeletonCard key={key} />
-        ))}
-      </div>
-    );
-  }
-
+export default function WishlistGrid({ items }: Props) {
   return (
     <ul className={gridClasses}>
       {items.map((item) => {
