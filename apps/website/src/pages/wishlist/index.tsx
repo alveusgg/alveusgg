@@ -1,8 +1,8 @@
-import type { NextPage } from "next";
+import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
 
-import { trpc } from "@/utils/trpc";
+import { getPublicWishlist } from "@/server/db/wishlist";
 
 import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
@@ -28,19 +28,26 @@ const sectionLinks = [
   { name: "PO Box", href: "#po-box" },
 ];
 
-const WishlistPage: NextPage = () => {
+// Pre-rendered with the items, so the page loads without a request to the
+// database. Changes to items and categories, and recorded donations,
+// regenerate it (see revalidateWishlistPage). The hourly regeneration only
+// catches up after a revalidation fails.
+export const getStaticProps = async () => ({
+  props: { wishlist: await getPublicWishlist() },
+  revalidate: 3600,
+});
+
+const WishlistPage: NextPage<
+  InferGetStaticPropsType<typeof getStaticProps>
+> = ({ wishlist }) => {
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(
     null,
   );
 
-  const wishlistQuery = trpc.wishlist.getPublicWishlist.useQuery();
-  const categories = wishlistQuery.data?.categories ?? [];
-
-  // Filtered here, since the query returns every public item
-  const allItems = wishlistQuery.data?.items ?? [];
+  // Filtered here, since the page already has every public item
   const items = activeCategorySlug
-    ? allItems.filter((i) => i.category?.slug === activeCategorySlug)
-    : allItems;
+    ? wishlist.items.filter((i) => i.category?.slug === activeCategorySlug)
+    : wishlist.items;
 
   const sorted = [...items].sort((a, b) => {
     const pDiff =
@@ -101,50 +108,44 @@ const WishlistPage: NextPage = () => {
           to buy.
         </p>
 
-        {categories.length > 0 && (
+        {wishlist.categories.length > 0 && (
           <WishlistCategoryFilter
-            categories={categories}
+            categories={wishlist.categories}
             active={activeCategorySlug}
             onChange={setActiveCategorySlug}
           />
         )}
 
-        {wishlistQuery.isPending ? (
-          <WishlistGrid items={[]} loading />
-        ) : (
-          <>
+        {urgent.length > 0 && (
+          <div className="mb-10">
+            <Heading
+              level={3}
+              className="mb-4 flex items-center gap-2 text-2xl"
+            >
+              <IconWarningTriangle className="size-6 text-red-600" />
+              Urgent needs
+            </Heading>
+            <WishlistGrid items={urgent} />
+          </div>
+        )}
+
+        {needed.length > 0 && (
+          <div className="mb-10">
             {urgent.length > 0 && (
-              <div className="mb-10">
-                <Heading
-                  level={3}
-                  className="mb-4 flex items-center gap-2 text-2xl"
-                >
-                  <IconWarningTriangle className="size-6 text-red-600" />
-                  Urgent needs
-                </Heading>
-                <WishlistGrid items={urgent} />
-              </div>
+              <Heading level={3} className="mb-4 text-2xl">
+                More items needed
+              </Heading>
             )}
+            <WishlistGrid items={needed} />
+          </div>
+        )}
 
-            {needed.length > 0 && (
-              <div className="mb-10">
-                {urgent.length > 0 && (
-                  <Heading level={3} className="mb-4 text-2xl">
-                    More items needed
-                  </Heading>
-                )}
-                <WishlistGrid items={needed} />
-              </div>
-            )}
+        {fulfilled.length > 0 && <WishlistFundedItems items={fulfilled} />}
 
-            {fulfilled.length > 0 && <WishlistFundedItems items={fulfilled} />}
-
-            {items.length === 0 && (
-              <p className="py-16 text-center">
-                No items in this category right now. Check back soon!
-              </p>
-            )}
-          </>
+        {items.length === 0 && (
+          <p className="py-16 text-center">
+            No items in this category right now. Check back soon!
+          </p>
         )}
         <WishlistFundsNote className="mt-10 max-w-prose border-t border-alveus-green/20 pt-4" />
       </Section>
