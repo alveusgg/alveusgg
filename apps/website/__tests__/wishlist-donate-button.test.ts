@@ -16,6 +16,9 @@ vi.mock("@/utils/trpc", () => ({
       createDonateOrder: {
         useMutation: () => ({ mutateAsync, isPending: false, error: null }),
       },
+      getDonationOptions: {
+        useQuery: () => ({ data: undefined, isFetching: false }),
+      },
     },
   },
 }));

@@ -15,10 +15,8 @@ import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
 import {
   DONATION_MAX_CENTS,
   DONATION_MIN_CENTS,
-  canAcceptDonations,
   formatPriceExact,
-  getPartialTargetCents,
-  parsePriceCents,
+  getDonationOptions,
   partialDonationAmount,
 } from "@/utils/wishlist";
 
@@ -64,6 +62,26 @@ export const wishlistRouter = router({
     }));
   }),
 
+  // Checked when the donate dialog opens, since the page may be outdated by then
+  getDonationOptions: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const item = await prisma.wishlistItem.findUnique({
+        where: { id: input.id },
+        select: {
+          status: true,
+          itemType: true,
+          allowPartialDonations: true,
+          price: true,
+          quantity: true,
+          goalAmountCents: true,
+          raisedAmountCents: true,
+        },
+      });
+      if (!item) throw new TRPCError({ code: "NOT_FOUND" });
+      return getDonationOptions(item);
+    }),
+
   createDonateOrder: publicProcedure
     .input(
       z.object({
@@ -82,33 +100,15 @@ export const wishlistRouter = router({
         where: { id: input.wishlistItemId },
       });
       if (!item) throw new TRPCError({ code: "NOT_FOUND" });
-      if (!canAcceptDonations(item.status)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This item is no longer accepting donations",
-        });
+      const options = getDonationOptions(item);
+      if (!options.available) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: options.reason });
       }
 
       // Chip-ins are checked against the remaining balance here, and capped
       // again at capture time in case other donors finish first.
-      const partialTargetCents = item.allowPartialDonations
-        ? getPartialTargetCents(item)
-        : null;
-      if (item.allowPartialDonations && partialTargetCents == null) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This item is unavailable for donations right now",
-        });
-      }
-      if (partialTargetCents != null) {
-        const remainingCents = partialTargetCents - item.raisedAmountCents;
-        if (remainingCents <= 0) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "This item is already fully funded",
-          });
-        }
-        const amount = partialDonationAmount(remainingCents).safeParse(
+      if (options.remainingCents != null) {
+        const amount = partialDonationAmount(options.remainingCents).safeParse(
           input.amount,
         );
         if (!amount.success) {
@@ -119,24 +119,16 @@ export const wishlistRouter = router({
         }
       }
 
-      // Products without partial donations are donated one unit at a time,
-      // at the price stored on the server
+      // Full-price products are ordered at the price stored on the server
       let orderAmount = input.amount;
-      if (item.itemType === "PRODUCT" && !item.allowPartialDonations) {
-        const priceCents = parsePriceCents(item.price);
-        if (priceCents == null) {
+      if (options.priceCents != null) {
+        if (Math.round(input.amount * 100) !== options.priceCents) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "This item is unavailable for donations right now",
+            message: `This item is donated at its full price of ${formatPriceExact(options.priceCents)}`,
           });
         }
-        if (Math.round(input.amount * 100) !== priceCents) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `This item is donated at its full price of ${formatPriceExact(priceCents)}`,
-          });
-        }
-        orderAmount = priceCents / 100;
+        orderAmount = options.priceCents / 100;
       }
 
       const baseUrl = env.NEXT_PUBLIC_BASE_URL;

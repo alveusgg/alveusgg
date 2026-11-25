@@ -119,3 +119,54 @@ export function isFullPriceDonatable(item: {
     priceCents <= DONATION_MAX_CENTS
   );
 }
+
+export type DonationOptions =
+  | { available: false; reason: string }
+  | {
+      available: true;
+      // Set for products donated at their full price
+      priceCents: number | null;
+      // Set for items that allow partial donations (chip in)
+      remainingCents: number | null;
+    };
+
+/** What a donor can give to an item in its current state, or why they can't */
+export function getDonationOptions(item: {
+  status: string;
+  itemType: string;
+  allowPartialDonations: boolean;
+  price: string | null;
+  quantity: number;
+  goalAmountCents: number | null;
+  raisedAmountCents: number;
+}): DonationOptions {
+  if (!canAcceptDonations(item.status)) {
+    return {
+      available: false,
+      reason: "This item is no longer accepting donations",
+    };
+  }
+  const unavailable = {
+    available: false,
+    reason: "This item is unavailable for donations right now",
+  } as const;
+
+  if (item.allowPartialDonations) {
+    const targetCents = getPartialTargetCents(item);
+    if (targetCents == null) return unavailable;
+    const remainingCents = targetCents - item.raisedAmountCents;
+    if (remainingCents <= 0) {
+      return { available: false, reason: "This item is already fully funded" };
+    }
+    return { available: true, priceCents: null, remainingCents };
+  }
+
+  // Products without partial donations are donated one unit at a time
+  if (item.itemType === "PRODUCT") {
+    const priceCents = parsePriceCents(item.price);
+    if (priceCents == null || !isFullPriceDonatable(item)) return unavailable;
+    return { available: true, priceCents, remainingCents: null };
+  }
+
+  return { available: true, priceCents: null, remainingCents: null };
+}

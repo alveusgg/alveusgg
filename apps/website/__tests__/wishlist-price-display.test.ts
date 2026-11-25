@@ -10,6 +10,7 @@ import WishlistGrid, {
 vi.mock("@/utils/trpc", () => {
   const procedure = {
     useMutation: () => ({ mutate: vi.fn(), isPending: false, error: null }),
+    useQuery: () => ({ data: undefined, isFetching: false }),
   };
   const namespace = new Proxy({}, { get: () => procedure });
   return { trpc: new Proxy({}, { get: () => namespace }) };
