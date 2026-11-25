@@ -38,6 +38,9 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
         update: vi.fn(),
         fields: new Proxy({}, { get: (_, name) => ({ name }) }),
       },
+      twitchChannel: {
+        findMany: vi.fn(),
+      },
     },
   };
 });
@@ -110,6 +113,9 @@ beforeEach(() => {
     raisedAmountCents: 2_500,
   });
   mockPrisma.wishlistDonationOrder.update.mockResolvedValue({});
+  mockPrisma.twitchChannel.findMany.mockResolvedValue([
+    { channelId: channels.alveus.id },
+  ]);
 });
 
 afterEach(() => {
@@ -239,18 +245,38 @@ describe("recordWishlistCapture", () => {
     expect(mockPrisma.wishlistDonationOrder.update).not.toHaveBeenCalled();
   });
 
-  test("thanks the donor in the Alveus chat", async () => {
+  test("thanks the donor in the chat of each selected channel", async () => {
     mockEnv.NEON_CRM_API_KEY = undefined;
     vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockPrisma.twitchChannel.findMany.mockResolvedValue([
+      { channelId: channels.alveus.id },
+      { channelId: channels.maya.id },
+    ]);
 
     await recordWishlistCapture(capture);
 
-    expect(sendChatMessage).toHaveBeenCalledExactlyOnceWith(
-      "chat-token",
-      channels.alveusgg.id,
-      channels.alveus.id,
-      "alveusLove Stream Name donated $25 towards Heat lamp! https://short.example.test/wishlist",
-    );
+    expect(mockPrisma.twitchChannel.findMany).toHaveBeenCalledWith({
+      where: { wishlistChatMessages: true },
+      select: { channelId: true },
+    });
+    const message =
+      "alveusLove Stream Name donated $25 towards Heat lamp! https://short.example.test/wishlist";
+    expect(vi.mocked(sendChatMessage).mock.calls).toEqual([
+      ["chat-token", channels.alveusgg.id, channels.alveus.id, message],
+      ["chat-token", channels.alveusgg.id, channels.maya.id, message],
+    ]);
+  });
+
+  test("posts nothing when no channel is selected", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockPrisma.twitchChannel.findMany.mockResolvedValue([]);
+
+    const result = await recordWishlistCapture(capture);
+
+    expect(result.status).toBe("captured");
+    expect(getAlveusggAccessToken).not.toHaveBeenCalled();
+    expect(sendChatMessage).not.toHaveBeenCalled();
   });
 
   test("shows a donor without a name as anonymous, never their PayPal name", async () => {
@@ -280,7 +306,7 @@ describe("recordWishlistCapture", () => {
 
     expect(result.status).toBe("captured");
     expect(error).toHaveBeenCalledWith(
-      expect.stringContaining("Twitch chat message failed"),
+      expect.stringContaining("Twitch chat messages failed"),
       expect.any(Error),
     );
   });

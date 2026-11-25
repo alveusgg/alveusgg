@@ -163,9 +163,10 @@ const donationOrderSql = () => {
   };
 };
 
-// Thanks the donor in the Alveus chat, like the pixel unlock messages. Only
-// the name the donor gave is shown, since the form says it may be on stream.
-async function sendWishlistDonationChatMessage({
+// Thanks the donor in the chat of each channel picked in the wishlist admin,
+// like the pixel unlock messages. Only the name the donor gave is shown, since
+// the form says it may be on stream.
+async function sendWishlistDonationChatMessages({
   donorName,
   amountCents,
   itemTitle,
@@ -174,12 +175,31 @@ async function sendWishlistDonationChatMessage({
   amountCents: number;
   itemTitle: string;
 }) {
+  const chatChannels = await prisma.twitchChannel.findMany({
+    where: { wishlistChatMessages: true },
+    select: { channelId: true },
+  });
+  if (chatChannels.length === 0) return;
+
+  const accessToken = await getAlveusggAccessToken();
   const name = donorName?.replace(/\s+/g, " ").trim() || "Anonymous";
-  await sendChatMessage(
-    await getAlveusggAccessToken(),
-    channels.alveusgg.id,
-    channels.alveus.id,
-    `alveusLove ${name} donated ${formatPrice(amountCents)} towards ${itemTitle}! ${getShortBaseUrl()}/wishlist`,
+  const message = `alveusLove ${name} donated ${formatPrice(amountCents)} towards ${itemTitle}! ${getShortBaseUrl()}/wishlist`;
+  await Promise.all(
+    chatChannels.map(async ({ channelId }) => {
+      try {
+        await sendChatMessage(
+          accessToken,
+          channels.alveusgg.id,
+          channelId,
+          message,
+        );
+      } catch (err) {
+        console.error(
+          `Twitch chat message in channel ${channelId} failed (non-fatal):`,
+          err,
+        );
+      }
+    }),
   );
 }
 
@@ -378,13 +398,13 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
   }
 
   try {
-    await sendWishlistDonationChatMessage({
+    await sendWishlistDonationChatMessages({
       donorName: order.donorName,
       amountCents,
       itemTitle: order.wishlistItem.title,
     });
   } catch (err) {
-    console.error("Twitch chat message failed (non-fatal):", err);
+    console.error("Twitch chat messages failed (non-fatal):", err);
   }
 
   // A Neon failure is logged and never fails or rolls back the donation.

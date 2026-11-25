@@ -468,6 +468,29 @@ export const adminWishlistRouter = router({
       return { success: true };
     }),
 
+  // The Twitch channels from the Twitch admin, and whether wishlist donations
+  // are posted in their chat
+  adminGetChatChannels: permittedProcedure.query(() =>
+    prisma.twitchChannel.findMany({
+      select: {
+        channelId: true,
+        label: true,
+        username: true,
+        wishlistChatMessages: true,
+      },
+      orderBy: { label: "asc" },
+    }),
+  ),
+
+  setChatChannel: permittedProcedure
+    .input(z.object({ channelId: z.string(), enabled: z.boolean() }))
+    .mutation(async ({ input }) => {
+      await prisma.twitchChannel.update({
+        where: { channelId: input.channelId },
+        data: { wishlistChatMessages: input.enabled },
+      });
+    }),
+
   adminGetDonations: permittedProcedure
     .input(
       z.object({
