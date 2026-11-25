@@ -43,10 +43,10 @@ vi.mock("@/utils/paypal", () => ({
 }));
 
 const publicCaller = wishlistRouter.createCaller({
-  session: null,
+  getSession: async () => null,
 } as unknown as Context);
 const adminCaller = adminWishlistRouter.createCaller({
-  session: { user: { id: "user-1", name: "admin" } },
+  getSession: async () => ({ user: { id: "user-1", name: "admin" } }),
 } as unknown as Context);
 
 const product = {

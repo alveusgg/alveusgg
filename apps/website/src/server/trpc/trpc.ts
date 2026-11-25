@@ -31,8 +31,9 @@ export const router = t.router;
 // Middleware to log mutations
 const logMutations = t.middleware(async ({ path, type, next, ctx }) => {
   if (type === "mutation") {
-    const user = ctx.session?.user
-      ? `@${ctx.session.user.name ?? "unknown"} (${ctx.session.user.id})`
+    const session = await ctx.getSession();
+    const user = session?.user
+      ? `@${session.user.name ?? "unknown"} (${session.user.id})`
       : "Unauthenticated";
 
     console.log(
@@ -53,13 +54,14 @@ export const publicProcedure = t.procedure.use(logMutations);
  * users are logged in
  */
 const isAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  const session = await ctx.getSession();
+  if (!session || !session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...session, user: session.user },
     },
   });
 });
@@ -83,14 +85,15 @@ export const protectedProcedure = t.procedure.use(logMutations).use(isAuthed);
  * Reusable middleware to ensure
  * users are logged with superuser privileges
  */
-const isAuthedSuperUser = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !checkIsSuperUserSession(ctx.session)) {
+const isAuthedSuperUser = t.middleware(async ({ ctx, next }) => {
+  const session = await ctx.getSession();
+  if (!session || !checkIsSuperUserSession(session)) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...session, user: session.user },
     },
   });
 });

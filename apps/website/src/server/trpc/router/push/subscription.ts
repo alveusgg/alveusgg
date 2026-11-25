@@ -32,7 +32,7 @@ export const pushSubscriptionRouter = router({
           userId: true,
         },
         where: {
-          userId: ctx.session?.user?.id,
+          userId: (await ctx.getSession())?.user?.id,
           endpoint: input.endpoint,
           deletedAt: null,
         },
@@ -42,6 +42,7 @@ export const pushSubscriptionRouter = router({
   register: publicProcedure
     .input(baseRegistrationSchema)
     .mutation(async ({ ctx, input }) => {
+      const userId = (await ctx.getSession())?.user?.id;
       const subscription = await ctx.prisma.pushSubscription.findFirst({
         where: { endpoint: input.endpoint },
         select: { id: true },
@@ -51,7 +52,7 @@ export const pushSubscriptionRouter = router({
         await ctx.prisma.pushSubscription.update({
           where: { endpoint: input.endpoint },
           data: {
-            userId: ctx.session?.user?.id,
+            userId,
             p256dh: input.p256dh,
             auth: input.auth,
             deletedAt: null,
@@ -61,7 +62,7 @@ export const pushSubscriptionRouter = router({
         await ctx.prisma.pushSubscription.create({
           data: {
             endpoint: input.endpoint,
-            userId: ctx.session?.user?.id,
+            userId,
             p256dh: input.p256dh,
             auth: input.auth,
             tags: {

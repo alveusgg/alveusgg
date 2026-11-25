@@ -178,7 +178,7 @@ afterEach(() => {
 
 describe("capture status on the success page", () => {
   const caller = wishlistRouter.createCaller({
-    session: null,
+    getSession: async () => null,
   } as unknown as Context);
 
   const paypalCapture = (captureStatus: string) =>
