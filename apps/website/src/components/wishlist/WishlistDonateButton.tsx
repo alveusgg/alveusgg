@@ -39,20 +39,33 @@ const MESSAGE_MAX_LENGTH = 500;
 export default function WishlistDonateButton({
   itemId,
   itemTitle,
-  priceCents,
-  remainingCents = null,
+  priceCents: pagePriceCents,
+  remainingCents: pageRemainingCents = null,
 }: Props) {
-  const isPartial = remainingCents != null;
-  const isFixed = !isPartial && priceCents != null;
-  const remainingDollars = isPartial ? (remainingCents / 100).toFixed(2) : "";
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(
-    isPartial
+    pageRemainingCents != null
       ? (
-          Math.min(PARTIAL_DONATION_MIN_CENTS * 2, remainingCents) / 100
+          Math.min(PARTIAL_DONATION_MIN_CENTS * 2, pageRemainingCents) / 100
         ).toFixed(2)
       : "10.00",
   );
+
+  // The page may have been open for a while, so the dialog checks the item
+  // again, falling back to the page's values until (or unless) that succeeds
+  const latest = trpc.wishlist.getDonationOptions.useQuery(
+    { id: itemId },
+    { enabled: open },
+  );
+  const options = latest.data;
+  const priceCents = options?.available ? options.priceCents : pagePriceCents;
+  const remainingCents = options?.available
+    ? options.remainingCents
+    : pageRemainingCents;
+
+  const isPartial = remainingCents != null;
+  const isFixed = !isPartial && priceCents != null;
+  const remainingDollars = isPartial ? (remainingCents / 100).toFixed(2) : "";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -140,151 +153,165 @@ export default function WishlistDonateButton({
         closeModal={() => setOpen(false)}
         closeLabel="Cancel"
       >
-        <form
-          className="flex flex-col gap-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void handleDonate();
-          }}
-        >
-          <p className="text-sm text-gray-600">
-            {isPartial
-              ? `Chip in any amount from ${formatPrice(Math.min(PARTIAL_DONATION_MIN_CENTS, remainingCents))} through PayPal. ${formatPrice(remainingCents)} is left to raise.`
-              : "Your donation goes to Alveus through PayPal."}
-          </p>
+        {options && !options.available ? (
+          <MessageBox variant="warning">
+            <p>{options.reason}.</p>
+            <p>Reload the page to see the latest wishlist.</p>
+          </MessageBox>
+        ) : (
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleDonate();
+            }}
+          >
+            <p className="text-sm text-gray-600">
+              {isPartial
+                ? `Chip in any amount from ${formatPrice(Math.min(PARTIAL_DONATION_MIN_CENTS, remainingCents))} through PayPal. ${formatPrice(remainingCents)} is left to raise.`
+                : "Your donation goes to Alveus through PayPal."}
+            </p>
 
-          {isFixed ? (
+            {isFixed ? (
+              <div>
+                <p>Amount (USD)</p>
+                <p className="text-xl font-semibold">
+                  {formatPriceExact(priceCents)}
+                </p>
+              </div>
+            ) : (
+              <>
+                <TextField
+                  label="Amount (USD)"
+                  name="amount"
+                  type="number"
+                  inputMode="decimal"
+                  value={amount}
+                  onChange={(value) => setAmount(value)}
+                  prefix={<span className="pl-2 text-sm text-gray-500">$</span>}
+                  isRequired
+                  isInvalid={!!amountError}
+                  aria-describedby={
+                    amountError ? "wishlist-amount-error" : undefined
+                  }
+                />
+                {amountError && (
+                  <p
+                    id="wishlist-amount-error"
+                    className="-mt-2 text-sm text-red-700"
+                  >
+                    {amountError}
+                  </p>
+                )}
+
+                <div
+                  className="flex flex-wrap gap-2"
+                  role="group"
+                  aria-label="Suggested amounts"
+                >
+                  {presets.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      aria-pressed={amount === preset}
+                      onClick={() => setAmount(preset)}
+                      className={presetClasses(amount === preset)}
+                    >
+                      {presetLabel(preset)}
+                    </button>
+                  ))}
+                  {isPartial && (
+                    <button
+                      type="button"
+                      aria-pressed={amount === remainingDollars}
+                      onClick={() => setAmount(remainingDollars)}
+                      className={presetClasses(amount === remainingDollars)}
+                    >
+                      {`Fund the rest (${formatPrice(remainingCents)})`}
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+
+            <TextField
+              label="Your name (optional, may be shown on stream)"
+              name="name"
+              value={name}
+              onChange={(value) => setName(value)}
+              maxLength={100}
+            />
+
             <div>
-              <p>Amount (USD)</p>
-              <p className="text-xl font-semibold">
-                {formatPriceExact(priceCents)}
-              </p>
-            </div>
-          ) : (
-            <>
               <TextField
-                label="Amount (USD)"
-                name="amount"
-                type="number"
-                inputMode="decimal"
-                value={amount}
-                onChange={(value) => setAmount(value)}
-                prefix={<span className="pl-2 text-sm text-gray-500">$</span>}
-                isRequired
-                isInvalid={!!amountError}
+                label="Email for receipt (optional)"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(value) => {
+                  setEmail(value);
+                  validateEmail(value);
+                }}
+                isInvalid={!!emailError}
                 aria-describedby={
-                  amountError ? "wishlist-amount-error" : undefined
+                  emailError ? "wishlist-email-error" : undefined
                 }
               />
-              {amountError && (
+              {emailError && (
                 <p
-                  id="wishlist-amount-error"
-                  className="-mt-2 text-sm text-red-700"
+                  id="wishlist-email-error"
+                  className="mt-1 text-sm text-red-700"
                 >
-                  {amountError}
+                  {emailError}
                 </p>
               )}
+            </div>
 
-              <div
-                className="flex flex-wrap gap-2"
-                role="group"
-                aria-label="Suggested amounts"
-              >
-                {presets.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    aria-pressed={amount === preset}
-                    onClick={() => setAmount(preset)}
-                    className={presetClasses(amount === preset)}
-                  >
-                    {presetLabel(preset)}
-                  </button>
-                ))}
-                {isPartial && (
-                  <button
-                    type="button"
-                    aria-pressed={amount === remainingDollars}
-                    onClick={() => setAmount(remainingDollars)}
-                    className={presetClasses(amount === remainingDollars)}
-                  >
-                    {`Fund the rest (${formatPrice(remainingCents)})`}
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-
-          <TextField
-            label="Your name (optional, may be shown on stream)"
-            name="name"
-            value={name}
-            onChange={(value) => setName(value)}
-            maxLength={100}
-          />
-
-          <div>
-            <TextField
-              label="Email for receipt (optional)"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(value) => {
-                setEmail(value);
-                validateEmail(value);
-              }}
-              isInvalid={!!emailError}
-              aria-describedby={emailError ? "wishlist-email-error" : undefined}
-            />
-            {emailError && (
-              <p
-                id="wishlist-email-error"
-                className="mt-1 text-sm text-red-700"
-              >
-                {emailError}
+            <div>
+              <TextAreaField
+                label="Leave a message (optional, may be read on stream)"
+                name="message"
+                value={message}
+                onChange={(value) =>
+                  setMessage(value.slice(0, MESSAGE_MAX_LENGTH))
+                }
+                maxLength={MESSAGE_MAX_LENGTH}
+                inputClassName="min-h-20"
+              />
+              <p className="text-right text-sm text-gray-500">
+                {message.length}/{MESSAGE_MAX_LENGTH}
               </p>
+            </div>
+
+            {createOrder.error && (
+              <MessageBox variant="failure">
+                <p>Failed to start the payment. Please try again.</p>
+                <ProcedureErrorMessage error={createOrder.error} />
+              </MessageBox>
             )}
-          </div>
 
-          <div>
-            <TextAreaField
-              label="Leave a message (optional, may be read on stream)"
-              name="message"
-              value={message}
-              onChange={(value) =>
-                setMessage(value.slice(0, MESSAGE_MAX_LENGTH))
+            <FormButton
+              type="submit"
+              className={approveButtonClasses}
+              disabled={
+                !isValidAmount ||
+                !!emailError ||
+                createOrder.isPending ||
+                latest.isFetching
               }
-              maxLength={MESSAGE_MAX_LENGTH}
-              inputClassName="min-h-20"
-            />
-            <p className="text-right text-sm text-gray-500">
-              {message.length}/{MESSAGE_MAX_LENGTH}
-            </p>
-          </div>
-
-          {createOrder.error && (
-            <MessageBox variant="failure">
-              <p>Failed to start the payment. Please try again.</p>
-              <ProcedureErrorMessage error={createOrder.error} />
-            </MessageBox>
-          )}
-
-          <FormButton
-            type="submit"
-            className={approveButtonClasses}
-            disabled={!isValidAmount || !!emailError || createOrder.isPending}
-          >
-            <IconPayPal className="size-4" />
-            {createOrder.isPending
-              ? "Redirecting to PayPal …"
-              : isFixed
-                ? `Donate ${formatPriceExact(priceCents)} with PayPal`
-                : isValidAmount
-                  ? `Donate ${isPartial ? formatPriceExact(Math.round(amountNum * 100)) : `$${amountNum.toFixed(2)}`} with PayPal`
-                  : "Donate with PayPal"}
-          </FormButton>
-          <WishlistFundsNote className="border-t border-gray-200 pt-3 text-gray-600" />
-        </form>
+            >
+              <IconPayPal className="size-4" />
+              {createOrder.isPending
+                ? "Redirecting to PayPal …"
+                : isFixed
+                  ? `Donate ${formatPriceExact(priceCents)} with PayPal`
+                  : isValidAmount
+                    ? `Donate ${isPartial ? formatPriceExact(Math.round(amountNum * 100)) : `$${amountNum.toFixed(2)}`} with PayPal`
+                    : "Donate with PayPal"}
+            </FormButton>
+            <WishlistFundsNote className="border-t border-gray-200 pt-3 text-gray-600" />
+          </form>
+        )}
       </ModalDialog>
     </>
   );
