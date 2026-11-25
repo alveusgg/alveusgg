@@ -462,11 +462,26 @@ model TwitchChannel {
   broadcasterAccountId String?
   moderatorAccountId   String?
 
-  broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
-  moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+  broadcasterAccount Account?                 @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
+  moderatorAccount   Account?                 @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+  chatAlerts         TwitchChannelChatAlert[]
 
   @@index([broadcasterAccountId], name: "TwitchChannel_broadcaster")
   @@index([moderatorAccountId], name: "TwitchChannel_moderator")
+}
+
+enum ChatAlertType {
+  WISHLIST_DONATION
+}
+
+// Chat alerts the website's bot posts in a channel's chat
+model TwitchChannelChatAlert {
+  channelId String
+  alert     ChatAlertType
+
+  channel TwitchChannel @relation(fields: [channelId], references: [channelId], onDelete: Cascade)
+
+  @@id([channelId, alert])
 }
 
 model RoundsCheck {

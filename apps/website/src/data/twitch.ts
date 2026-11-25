@@ -1,4 +1,4 @@
-import { type CalendarEvent } from "@alveusgg/database";
+import { type CalendarEvent, type ChatAlertType } from "@alveusgg/database";
 
 export const scopeLabels = {
   // User
@@ -20,6 +20,11 @@ export const scopeLabels = {
 } as const satisfies Record<string, string>;
 
 export type Scope = keyof typeof scopeLabels;
+
+// Chat alerts the website's bot can post, picked per channel in the Twitch admin
+export const chatAlertLabels = {
+  WISHLIST_DONATION: "Wishlist donations",
+} as const satisfies Record<ChatAlertType, string>;
 
 export const isScope = (scope: string): scope is Scope => scope in scopeLabels;
 

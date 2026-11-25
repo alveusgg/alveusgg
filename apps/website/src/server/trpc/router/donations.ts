@@ -4,8 +4,6 @@ import type { NextApiRequest } from "next";
 import pluralize from "pluralize";
 import { z } from "zod";
 
-import { prisma } from "@alveusgg/database";
-
 import {
   DonationSchema,
   type Pixel,
@@ -29,6 +27,7 @@ import {
   removeDonations,
   renamePixel,
 } from "@/server/db/donations";
+import { getChatBotAccount } from "@/server/db/twitch-channels";
 import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 import {
   createCheckPermissionMiddleware,
@@ -466,19 +465,7 @@ const sendChatMessages = async (
     metadata: { twitchBroadcasterId?: string };
   })[],
 ) => {
-  const account = await prisma.account.findFirst({
-    where: {
-      provider: "twitch",
-      providerAccountId: channels.alveusgg.id,
-    },
-    select: {
-      access_token: true,
-    },
-  });
-
-  if (!account?.access_token) {
-    throw new Error("No Twitch account found");
-  }
+  const chatBot = await getChatBotAccount();
 
   const pixelsByBroadcasterId = Object.groupBy(
     pixels,
@@ -495,8 +482,8 @@ const sendChatMessages = async (
         const pixels = users[identifier];
 
         await sendChatMessage(
-          account.access_token,
-          channels.alveusgg.id,
+          chatBot.accessToken,
+          chatBot.userId,
           broadcasterId,
           `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! ${getShortBaseUrl()}/pixels?s=${encodeURIComponent(identifier).replace(/^%40/, "@")}`,
         );

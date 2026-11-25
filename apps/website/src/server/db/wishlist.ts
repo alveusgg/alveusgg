@@ -6,6 +6,8 @@ import { Prisma, prisma } from "@alveusgg/database";
 import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
+import { sendChatMessage } from "@/server/apis/twitch";
+import { getChatBotAccount } from "@/server/db/twitch-channels";
 import {
   checkAndFixUploadedImageFileStorageObject,
   deleteFileStorageObject,
@@ -19,8 +21,10 @@ import {
   notifyWishlistItemNeedsTarget,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
+import { getShortBaseUrl } from "@/utils/short-url";
 import {
   type PAYMENT_ISSUE_STATUSES,
+  formatPrice,
   getPartialTargetCents,
   parsePriceCents,
 } from "@/utils/wishlist";
@@ -254,6 +258,46 @@ const donationOrderSql = () => {
   };
 };
 
+// Thanks the donor in the chat of each channel with wishlist alerts turned on
+// in the Twitch admin, like the pixel unlock messages. Only the name the donor gave is shown, since
+// the form says it may be on stream.
+async function sendWishlistDonationChatMessages({
+  donorName,
+  amountCents,
+  itemTitle,
+}: {
+  donorName: string | null;
+  amountCents: number;
+  itemTitle: string;
+}) {
+  const chatChannels = await prisma.twitchChannelChatAlert.findMany({
+    where: { alert: "WISHLIST_DONATION" },
+    select: { channelId: true },
+  });
+  if (chatChannels.length === 0) return;
+
+  const chatBot = await getChatBotAccount();
+  const name = donorName?.replace(/\s+/g, " ").trim() || "Anonymous";
+  const message = `alveusLove ${name} donated ${formatPrice(amountCents)} towards ${itemTitle}! ${getShortBaseUrl()}/wishlist`;
+  await Promise.all(
+    chatChannels.map(async ({ channelId }) => {
+      try {
+        await sendChatMessage(
+          chatBot.accessToken,
+          chatBot.userId,
+          channelId,
+          message,
+        );
+      } catch (err) {
+        console.error(
+          `Twitch chat message in channel ${channelId} failed (non-fatal):`,
+          err,
+        );
+      }
+    }),
+  );
+}
+
 export type WishlistCapture = {
   paypalOrderId: string;
   captureId: string;
@@ -446,6 +490,16 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     } catch (err) {
       console.error("Discord target alert failed (non-fatal):", err);
     }
+  }
+
+  try {
+    await sendWishlistDonationChatMessages({
+      donorName: order.donorName,
+      amountCents,
+      itemTitle: order.wishlistItem.title,
+    });
+  } catch (err) {
+    console.error("Twitch chat messages failed (non-fatal):", err);
   }
 
   // A Neon failure is logged and never fails or rolls back the donation.

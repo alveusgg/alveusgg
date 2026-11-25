@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { ChatAlertType } from "@alveusgg/database";
+
 import {
   getUserByName,
   setupWebhookSubscriptionsForBroadcasters,
@@ -10,6 +12,7 @@ import {
   deleteTwitchChannel,
   editTwitchChannel,
   getTwitchChannels,
+  setTwitchChannelChatAlert,
 } from "@/server/db/twitch-channels";
 import {
   createCheckPermissionMiddleware,
@@ -79,6 +82,18 @@ export const adminTwitchRouter = router({
         }
       }
     }),
+
+  setChatAlert: permittedProcedure
+    .input(
+      z.object({
+        channelId: z.string(),
+        alert: z.enum(ChatAlertType),
+        enabled: z.boolean(),
+      }),
+    )
+    .mutation(({ input }) =>
+      setTwitchChannelChatAlert(input.channelId, input.alert, input.enabled),
+    ),
 
   deleteChannel: permittedProcedure
     .input(z.string())

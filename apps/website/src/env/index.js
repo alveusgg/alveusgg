@@ -68,6 +68,8 @@ export const env = createEnv({
     OAUTH_KID: z.string().optional(),
     OAUTH_CLIENTS_JSON: z.string().optional(),
     TWITCH_EXCLUDED_CLIPS: listOfSchema(z.string()).optional(),
+    // The bot account that posts chat alerts, defaulting to AlveusGG
+    BOT_USER_ID: z.string().default("858050963"),
     ACTION_API_SECRET: z.string(),
     CRON_SECRET: z.string().optional(),
     WEATHER_API_KEY: z.string().optional(),
@@ -204,6 +206,7 @@ export const env = createEnv({
     OAUTH_KID: process.env.OAUTH_KID,
     OAUTH_CLIENTS_JSON: process.env.OAUTH_CLIENTS_JSON,
     TWITCH_EXCLUDED_CLIPS: process.env.TWITCH_EXCLUDED_CLIPS,
+    BOT_USER_ID: process.env.BOT_USER_ID,
     ACTION_API_SECRET: process.env.ACTION_API_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
     WEATHER_API_KEY: process.env.WEATHER_API_KEY,

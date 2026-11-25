@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 
+import { chatAlertLabels } from "@/data/twitch";
+
 import { formatDateTime } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -14,6 +17,7 @@ import {
   LinkButton,
   dangerButtonClasses,
 } from "@/components/shared/form/Button";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
 
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
@@ -49,6 +53,10 @@ function ChannelConfigRow({
   onUpdate: () => void;
 }) {
   const deleteMutation = trpc.adminTwitch.deleteChannel.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
+  const chatAlertMutation = trpc.adminTwitch.setChatAlert.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
@@ -145,6 +153,27 @@ function ChannelConfigRow({
           >
             {moderator ? "Reconnect" : "Connect"}
           </Button>
+        </div>
+        <div className="flex flex-row flex-wrap items-center gap-x-6 gap-y-2 border-t border-gray-700 py-2">
+          <span>Chat alerts:</span>
+          {typeSafeObjectEntries(chatAlertLabels).map(([alert, label]) => (
+            <CheckboxField
+              key={alert}
+              isSelected={channel.chatAlerts.some(
+                (chatAlert) => chatAlert.alert === alert,
+              )}
+              isDisabled={chatAlertMutation.isPending}
+              onChange={(enabled) =>
+                chatAlertMutation.mutate({
+                  channelId: channel.channelId,
+                  alert,
+                  enabled,
+                })
+              }
+            >
+              {label}
+            </CheckboxField>
+          ))}
         </div>
       </div>
     </li>

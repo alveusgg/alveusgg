@@ -1,8 +1,48 @@
-import { prisma } from "@alveusgg/database";
+import { type ChatAlertType, prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
 import { refreshAccessToken } from "@/server/utils/oauth2";
+
+/**
+ * The bot account that posts the website's chat alerts, like pixel and
+ * wishlist donations, set with BOT_USER_ID like the chatbot's
+ */
+export async function getChatBotAccount() {
+  const account = await prisma.account.findFirst({
+    where: {
+      provider: "twitch",
+      providerAccountId: env.BOT_USER_ID,
+    },
+    select: {
+      access_token: true,
+    },
+  });
+
+  if (!account?.access_token) {
+    throw new Error(`No Twitch account found for bot user ${env.BOT_USER_ID}`);
+  }
+
+  return { userId: env.BOT_USER_ID, accessToken: account.access_token };
+}
+
+// Turns one chat alert on or off for a channel
+export async function setTwitchChannelChatAlert(
+  channelId: string,
+  alert: ChatAlertType,
+  enabled: boolean,
+) {
+  if (enabled) {
+    await prisma.twitchChannelChatAlert.createMany({
+      data: [{ channelId, alert }],
+      skipDuplicates: true,
+    });
+  } else {
+    await prisma.twitchChannelChatAlert.deleteMany({
+      where: { channelId, alert },
+    });
+  }
+}
 
 export async function getTwitchChannels() {
   return prisma.twitchChannel.findMany({
@@ -20,6 +60,7 @@ export async function getTwitchChannels() {
           user: true,
         },
       },
+      chatAlerts: { select: { alert: true } },
     },
   });
 }
