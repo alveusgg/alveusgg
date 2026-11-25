@@ -33,6 +33,85 @@ export function getWishlistItemImageUrl(
     : null;
 }
 
+const publicItemWhere = { status: { not: "ARCHIVED" } } as const;
+
+/**
+ * Everything the public wishlist page shows. The three queries run in
+ * parallel, since loading categories and images as relations of the items
+ * waits for the items first, adding a database round trip.
+ */
+export async function getPublicWishlist() {
+  const [items, categories, images] = await Promise.all([
+    // Explicit select: `notes` is admin-only and must never reach the
+    // public API, even if new internal-only columns get added later.
+    prisma.wishlistItem.findMany({
+      where: publicItemWhere,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        fileStorageObjectId: true,
+        itemType: true,
+        url: true,
+        price: true,
+        quantity: true,
+        quantityFulfilled: true,
+        goalAmountCents: true,
+        raisedAmountCents: true,
+        allowPartialDonations: true,
+        priority: true,
+        status: true,
+        sortOrder: true,
+        categoryId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: [
+        { sortOrder: "asc" },
+        { priority: "desc" },
+        { createdAt: "desc" },
+      ],
+    }),
+    // Includes archived categories, so their items keep the category badge
+    prisma.wishlistCategory.findMany({
+      where: { items: { some: publicItemWhere } },
+      orderBy: { sortOrder: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        archivedAt: true,
+        _count: { select: { items: { where: publicItemWhere } } },
+      },
+    }),
+    prisma.fileStorageObject.findMany({
+      where: { wishlistItem: { is: publicItemWhere } },
+      select: { id: true, key: true },
+    }),
+  ]);
+
+  const categoriesById = new Map(
+    categories.map(({ id, name, slug }) => [id, { id, name, slug }]),
+  );
+  const imagesById = new Map(images.map((image) => [image.id, image]));
+
+  return {
+    // Resolved here, so clients get a single image URL and no storage keys
+    items: items.map(({ fileStorageObjectId, ...item }) => ({
+      ...item,
+      category:
+        (item.categoryId && categoriesById.get(item.categoryId)) || null,
+      imageUrl: getWishlistItemImageUrl(
+        (fileStorageObjectId && imagesById.get(fileStorageObjectId)) || null,
+      ),
+    })),
+    // Archived categories are not offered as filters
+    categories: categories
+      .filter((category) => category.archivedAt === null)
+      .map(({ archivedAt: _, ...category }) => category),
+  };
+}
+
 // Checks that an upload is a valid wishlist image before it is linked to an item
 async function checkWishlistImageUpload(fileStorageObjectId: string) {
   const fileStorageObject = await prisma.fileStorageObject.findUnique({

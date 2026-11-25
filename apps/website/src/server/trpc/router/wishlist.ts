@@ -5,10 +5,7 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import {
-  getWishlistItemImageUrl,
-  recordWishlistCapture,
-} from "@/server/db/wishlist";
+import { getPublicWishlist, recordWishlistCapture } from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
@@ -21,13 +18,6 @@ import {
   parsePriceCents,
   partialDonationAmount,
 } from "@/utils/wishlist";
-
-const publicStatusEnum = z.enum([
-  "NEEDED",
-  "PARTIALLY_FULFILLED",
-  "FULFILLED",
-  "OPENED",
-]);
 
 /** What the success page shows for an order another call already captured */
 const getCapturedSummary = async (orderId: string) => {
@@ -44,68 +34,7 @@ const getCapturedSummary = async (orderId: string) => {
 };
 
 export const wishlistRouter = router({
-  getPublicItems: publicProcedure
-    .input(
-      z.object({
-        categorySlug: z.string().optional(),
-        status: publicStatusEnum.optional(),
-      }),
-    )
-    .query(async ({ input }) => {
-      // Explicit select: `notes` is admin-only and must never reach the
-      // public API, even if new internal-only columns get added later.
-      const items = await prisma.wishlistItem.findMany({
-        where: {
-          status: input.status ?? { not: "ARCHIVED" },
-          ...(input.categorySlug
-            ? { category: { slug: input.categorySlug } }
-            : {}),
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          fileStorageObject: { select: { key: true } },
-          itemType: true,
-          url: true,
-          price: true,
-          quantity: true,
-          quantityFulfilled: true,
-          goalAmountCents: true,
-          raisedAmountCents: true,
-          allowPartialDonations: true,
-          priority: true,
-          status: true,
-          sortOrder: true,
-          categoryId: true,
-          category: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-        orderBy: [
-          { sortOrder: "asc" },
-          { priority: "desc" },
-          { createdAt: "desc" },
-        ],
-      });
-
-      // Resolved here, so clients get a single image URL and no storage keys
-      return items.map(({ fileStorageObject, ...item }) => ({
-        ...item,
-        imageUrl: getWishlistItemImageUrl(fileStorageObject),
-      }));
-    }),
-
-  getCategories: publicProcedure.query(async () => {
-    const visibleItems = { status: { not: "ARCHIVED" } } as const;
-    return prisma.wishlistCategory.findMany({
-      where: { archivedAt: null, items: { some: visibleItems } },
-      orderBy: { sortOrder: "asc" },
-      include: {
-        _count: { select: { items: { where: visibleItems } } },
-      },
-    });
-  }),
+  getPublicWishlist: publicProcedure.query(() => getPublicWishlist()),
 
   // Recent donations for the stream overlay, which runs logged out in OBS.
   // Returns only what is shown on stream, never donor emails.

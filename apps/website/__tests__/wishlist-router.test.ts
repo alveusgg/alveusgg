@@ -21,11 +21,20 @@ const { mockPrisma } = vi.hoisted(() => ({
       findMany: vi.fn(),
       groupBy: vi.fn(),
     },
+    wishlistCategory: {
+      findMany: vi.fn(),
+    },
+    fileStorageObject: {
+      findMany: vi.fn(),
+    },
   },
 }));
 
 vi.mock("@/env", () => ({
-  env: { NEXT_PUBLIC_BASE_URL: "https://alveus.example.test" },
+  env: {
+    NEXT_PUBLIC_BASE_URL: "https://alveus.example.test",
+    FILE_STORAGE_CDN_URL: "https://files.example.test",
+  },
 }));
 vi.mock("@alveusgg/database", () => ({ prisma: mockPrisma }));
 vi.mock("@/server/utils/auth", () => ({
@@ -131,24 +140,69 @@ describe("PayPal return URL", () => {
   });
 });
 
-describe("public item list", () => {
-  test("does not accept the archived status", async () => {
-    await expect(
-      publicCaller.getPublicItems({ status: "ARCHIVED" as "NEEDED" }),
-    ).rejects.toThrow();
-    expect(mockPrisma.wishlistItem.findMany).not.toHaveBeenCalled();
-  });
+describe("public wishlist", () => {
+  const archivedFilter = { status: { not: "ARCHIVED" } };
 
-  test("hides archived items by default", async () => {
+  test("hides archived items with their categories and images", async () => {
     mockPrisma.wishlistItem.findMany.mockResolvedValue([]);
+    mockPrisma.wishlistCategory.findMany.mockResolvedValue([]);
+    mockPrisma.fileStorageObject.findMany.mockResolvedValue([]);
 
-    await publicCaller.getPublicItems({});
+    await publicCaller.getPublicWishlist();
 
     expect(mockPrisma.wishlistItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: archivedFilter }),
+    );
+    expect(mockPrisma.wishlistCategory.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { items: { some: archivedFilter } } }),
+    );
+    expect(mockPrisma.fileStorageObject.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { status: { not: "ARCHIVED" } },
+        where: { wishlistItem: { is: archivedFilter } },
       }),
     );
+  });
+
+  test("attaches categories and image URLs to items", async () => {
+    mockPrisma.wishlistItem.findMany.mockResolvedValue([
+      { ...product, categoryId: "cat-1", fileStorageObjectId: "file-1" },
+      { ...goal, categoryId: "cat-old", fileStorageObjectId: null },
+    ]);
+    mockPrisma.wishlistCategory.findMany.mockResolvedValue([
+      {
+        id: "cat-1",
+        name: "Heat",
+        slug: "heat",
+        archivedAt: null,
+        _count: { items: 1 },
+      },
+      {
+        id: "cat-old",
+        name: "Old",
+        slug: "old",
+        archivedAt: new Date(),
+        _count: { items: 1 },
+      },
+    ]);
+    mockPrisma.fileStorageObject.findMany.mockResolvedValue([
+      { id: "file-1", key: "wishlist/lamp.png" },
+    ]);
+
+    const { items, categories } = await publicCaller.getPublicWishlist();
+
+    expect(items[0]).toMatchObject({
+      category: { id: "cat-1", name: "Heat", slug: "heat" },
+      imageUrl: "https://files.example.test/wishlist/lamp.png",
+    });
+    expect(items[0]).not.toHaveProperty("fileStorageObjectId");
+    // An archived category still labels its items, but is not a filter
+    expect(items[1]).toMatchObject({
+      category: { slug: "old" },
+      imageUrl: null,
+    });
+    expect(categories).toEqual([
+      { id: "cat-1", name: "Heat", slug: "heat", _count: { items: 1 } },
+    ]);
   });
 });
 
