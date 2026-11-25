@@ -5,11 +5,15 @@ import { Prisma, prisma } from "@alveusgg/database";
 import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
+import { sendChatMessage } from "@/server/apis/twitch";
+import { getAlveusggAccessToken } from "@/server/db/twitch-channels";
 import {
   checkAndFixUploadedImageFileStorageObject,
   deleteFileStorageObject,
   getViewUrlForFileStorageObjectKey,
 } from "@/server/utils/file-storage";
+
+import { channels } from "@/data/twitch";
 
 import {
   notifyWishlistDonation,
@@ -17,8 +21,10 @@ import {
   notifyWishlistItemNeedsTarget,
   notifyWishlistPaymentIssue,
 } from "@/utils/discord";
+import { getShortBaseUrl } from "@/utils/short-url";
 import {
   type PAYMENT_ISSUE_STATUSES,
+  formatPrice,
   getPartialTargetCents,
   parsePriceCents,
 } from "@/utils/wishlist";
@@ -156,6 +162,26 @@ const donationOrderSql = () => {
     updatedAt: quoteIdentifier(fields.updatedAt.name),
   };
 };
+
+// Thanks the donor in the Alveus chat, like the pixel unlock messages. Only
+// the name the donor gave is shown, since the form says it may be on stream.
+async function sendWishlistDonationChatMessage({
+  donorName,
+  amountCents,
+  itemTitle,
+}: {
+  donorName: string | null;
+  amountCents: number;
+  itemTitle: string;
+}) {
+  const name = donorName?.replace(/\s+/g, " ").trim() || "Anonymous";
+  await sendChatMessage(
+    await getAlveusggAccessToken(),
+    channels.alveusgg.id,
+    channels.alveus.id,
+    `alveusLove ${name} donated ${formatPrice(amountCents)} towards ${itemTitle}! ${getShortBaseUrl()}/wishlist`,
+  );
+}
 
 export type WishlistCapture = {
   paypalOrderId: string;
@@ -349,6 +375,16 @@ export async function recordWishlistCapture(capture: WishlistCapture) {
     } catch (err) {
       console.error("Discord target alert failed (non-fatal):", err);
     }
+  }
+
+  try {
+    await sendWishlistDonationChatMessage({
+      donorName: order.donorName,
+      amountCents,
+      itemTitle: order.wishlistItem.title,
+    });
+  } catch (err) {
+    console.error("Twitch chat message failed (non-fatal):", err);
   }
 
   // A Neon failure is logged and never fails or rolls back the donation.

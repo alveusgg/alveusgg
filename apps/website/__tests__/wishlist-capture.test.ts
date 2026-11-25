@@ -3,7 +3,11 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { Prisma } from "@alveusgg/database";
 import type * as Database from "@alveusgg/database";
 
+import { sendChatMessage } from "@/server/apis/twitch";
+import { getAlveusggAccessToken } from "@/server/db/twitch-channels";
 import { recordWishlistCapture } from "@/server/db/wishlist";
+
+import { channels } from "@/data/twitch";
 
 import {
   notifyWishlistDonation,
@@ -25,6 +29,7 @@ const { mockEnv, mockPrisma, tx } = vi.hoisted(() => {
       NEON_CRM_BASE_URL: "https://neon.example.test/v2/",
       NEON_CRM_API_KEY: "test-key" as string | undefined,
       NEON_CRM_ORG_ID: "example",
+      NEXT_PUBLIC_SHORT_BASE_URL: "https://short.example.test",
     },
     tx,
     mockPrisma: {
@@ -45,6 +50,12 @@ vi.mock("@alveusgg/database", async (importOriginal) => ({
 vi.mock("@/utils/discord", () => ({
   notifyWishlistDonation: vi.fn(() => Promise.resolve()),
   notifyWishlistItemNeedsTarget: vi.fn(() => Promise.resolve()),
+}));
+vi.mock("@/server/apis/twitch", () => ({
+  sendChatMessage: vi.fn(() => Promise.resolve()),
+}));
+vi.mock("@/server/db/twitch-channels", () => ({
+  getAlveusggAccessToken: vi.fn(() => Promise.resolve("chat-token")),
 }));
 
 const item = {
@@ -224,7 +235,54 @@ describe("recordWishlistCapture", () => {
     expect(tx.wishlistItem.update).not.toHaveBeenCalled();
     expect(fetch).not.toHaveBeenCalled();
     expect(notifyWishlistDonation).not.toHaveBeenCalled();
+    expect(sendChatMessage).not.toHaveBeenCalled();
     expect(mockPrisma.wishlistDonationOrder.update).not.toHaveBeenCalled();
+  });
+
+  test("thanks the donor in the Alveus chat", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await recordWishlistCapture(capture);
+
+    expect(sendChatMessage).toHaveBeenCalledExactlyOnceWith(
+      "chat-token",
+      channels.alveusgg.id,
+      channels.alveus.id,
+      "alveusLove Stream Name donated $25 towards Heat lamp! https://short.example.test/wishlist",
+    );
+  });
+
+  test("shows a donor without a name as anonymous, never their PayPal name", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    tx.wishlistDonationOrder.findUnique.mockResolvedValue({
+      ...order,
+      donorName: " ",
+    });
+
+    await recordWishlistCapture({ ...capture, amount: 12.5 });
+
+    expect(vi.mocked(sendChatMessage).mock.calls[0]?.[3]).toBe(
+      "alveusLove Anonymous donated $12.50 towards Heat lamp! https://short.example.test/wishlist",
+    );
+  });
+
+  test("keeps the donation when the chat message fails", async () => {
+    mockEnv.NEON_CRM_API_KEY = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(getAlveusggAccessToken).mockRejectedValueOnce(
+      new Error("No Twitch account found"),
+    );
+
+    const result = await recordWishlistCapture(capture);
+
+    expect(result.status).toBe("captured");
+    expect(error).toHaveBeenCalledWith(
+      expect.stringContaining("Twitch chat message failed"),
+      expect.any(Error),
+    );
   });
 
   test("keeps the donation when Neon fails", async () => {

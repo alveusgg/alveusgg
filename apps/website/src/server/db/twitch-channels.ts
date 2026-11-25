@@ -4,6 +4,27 @@ import { env } from "@/env";
 
 import { refreshAccessToken } from "@/server/utils/oauth2";
 
+import { channels } from "@/data/twitch";
+
+// The alveusgg account sends the website's chat messages, like donation alerts
+export async function getAlveusggAccessToken() {
+  const account = await prisma.account.findFirst({
+    where: {
+      provider: "twitch",
+      providerAccountId: channels.alveusgg.id,
+    },
+    select: {
+      access_token: true,
+    },
+  });
+
+  if (!account?.access_token) {
+    throw new Error("No Twitch account found");
+  }
+
+  return account.access_token;
+}
+
 export async function getTwitchChannels() {
   return prisma.twitchChannel.findMany({
     include: {
