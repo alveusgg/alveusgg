@@ -7,7 +7,7 @@ import { classes } from "@/utils/classes";
 import Button from "@/components/content/Button";
 
 type WishlistCategory =
-  inferRouterOutputs<AppRouter>["wishlist"]["getCategories"][number];
+  inferRouterOutputs<AppRouter>["wishlist"]["getPublicWishlist"]["categories"][number];
 
 export const wishlistButtonClasses =
   "cursor-pointer px-3 py-1 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700";

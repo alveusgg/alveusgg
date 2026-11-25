@@ -33,13 +33,14 @@ const WishlistPage: NextPage = () => {
     null,
   );
 
-  const itemsQuery = trpc.wishlist.getPublicItems.useQuery({
-    categorySlug: activeCategorySlug ?? undefined,
-  });
+  const wishlistQuery = trpc.wishlist.getPublicWishlist.useQuery();
+  const categories = wishlistQuery.data?.categories ?? [];
 
-  const categoriesQuery = trpc.wishlist.getCategories.useQuery();
-
-  const items = (itemsQuery.data ?? []).filter((i) => i.status !== "ARCHIVED");
+  // Filtered here, since the query returns every public item
+  const allItems = wishlistQuery.data?.items ?? [];
+  const items = activeCategorySlug
+    ? allItems.filter((i) => i.category?.slug === activeCategorySlug)
+    : allItems;
 
   const sorted = [...items].sort((a, b) => {
     const pDiff =
@@ -100,15 +101,15 @@ const WishlistPage: NextPage = () => {
           to buy.
         </p>
 
-        {categoriesQuery.data && categoriesQuery.data.length > 0 && (
+        {categories.length > 0 && (
           <WishlistCategoryFilter
-            categories={categoriesQuery.data}
+            categories={categories}
             active={activeCategorySlug}
             onChange={setActiveCategorySlug}
           />
         )}
 
-        {itemsQuery.isPending ? (
+        {wishlistQuery.isPending ? (
           <WishlistGrid items={[]} loading />
         ) : (
           <>

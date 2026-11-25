@@ -22,7 +22,7 @@ import IconGift from "@/icons/IconGift";
 
 // Public items only: the public query never includes admin-only fields like notes
 export type PublicWishlistItem =
-  inferRouterOutputs<AppRouter>["wishlist"]["getPublicItems"][number];
+  inferRouterOutputs<AppRouter>["wishlist"]["getPublicWishlist"]["items"][number];
 
 interface Props {
   items: PublicWishlistItem[];
