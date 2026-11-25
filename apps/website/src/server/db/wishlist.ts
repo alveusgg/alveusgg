@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { NextApiResponse } from "next";
 
 import { Prisma, prisma } from "@alveusgg/database";
 
@@ -10,6 +11,7 @@ import {
   deleteFileStorageObject,
   getViewUrlForFileStorageObjectKey,
 } from "@/server/utils/file-storage";
+import { captureException } from "@/server/utils/sentry";
 
 import {
   notifyWishlistDonation,
@@ -110,6 +112,22 @@ export async function getPublicWishlist() {
       .filter((category) => category.archivedAt === null)
       .map(({ archivedAt: _, ...category }) => category),
   };
+}
+
+export type PublicWishlist = Awaited<ReturnType<typeof getPublicWishlist>>;
+
+/**
+ * Regenerates the public wishlist page after its items or categories change.
+ * The change is already saved, so a failure is only reported, and the page
+ * catches up with the next change or its hourly regeneration.
+ */
+export async function revalidateWishlistPage(res: NextApiResponse) {
+  try {
+    await res.revalidate("/wishlist");
+  } catch (err) {
+    console.error("Failed to revalidate /wishlist", err);
+    captureException(err);
+  }
 }
 
 // Checks that an upload is a valid wishlist image before it is linked to an item

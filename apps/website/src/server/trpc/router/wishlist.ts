@@ -5,7 +5,10 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { getPublicWishlist, recordWishlistCapture } from "@/server/db/wishlist";
+import {
+  recordWishlistCapture,
+  revalidateWishlistPage,
+} from "@/server/db/wishlist";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 import { capturePayPalOrder, createPayPalOrder } from "@/utils/paypal";
@@ -34,8 +37,6 @@ const getCapturedSummary = async (orderId: string) => {
 };
 
 export const wishlistRouter = router({
-  getPublicWishlist: publicProcedure.query(() => getPublicWishlist()),
-
   // Recent donations for the stream overlay, which runs logged out in OBS.
   // Returns only what is shown on stream, never donor emails.
   getRecentDonationAlerts: publicProcedure.query(async () => {
@@ -174,7 +175,7 @@ export const wishlistRouter = router({
         wishlistItemId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const existing = await prisma.wishlistDonationOrder.findFirst({
         where: { paypalOrderId: input.paypalOrderId },
       });
@@ -238,6 +239,10 @@ export const wishlistRouter = router({
       if (result.status === "duplicate") {
         return getCapturedSummary(existing.id);
       }
+
+      // Before returning, so the wishlist shows the donation when the donor
+      // goes back to it
+      await revalidateWishlistPage(ctx.res);
 
       return {
         success: true,
