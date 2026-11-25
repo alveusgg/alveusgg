@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import { getPublicWishlist } from "@/server/db/wishlist";
 
-import { trpc } from "@/utils/trpc";
-
 import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -30,24 +28,20 @@ const sectionLinks = [
   { name: "PO Box", href: "#po-box" },
 ];
 
-// Pre-rendered and regenerated in the background, so the items arrive with
-// the cached HTML instead of after a request to the database. The client
-// refetches on load to show donations made since.
+// Pre-rendered with the items, so the page loads without a request to the
+// database. Changes to items and categories, and recorded donations,
+// regenerate it (see revalidateWishlistPage). The hourly regeneration only
+// catches up after a revalidation fails.
 export const getStaticProps = async () => ({
   props: { wishlist: await getPublicWishlist() },
-  revalidate: 60,
+  revalidate: 3600,
 });
 
 const WishlistPage: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
-> = ({ wishlist: initialWishlist }) => {
+> = ({ wishlist }) => {
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(
     null,
-  );
-
-  const { data: wishlist } = trpc.wishlist.getPublicWishlist.useQuery(
-    undefined,
-    { initialData: initialWishlist, refetchOnWindowFocus: false },
   );
 
   // Filtered here, since the page already has every public item

@@ -1,13 +1,10 @@
-import type { inferRouterOutputs } from "@trpc/server";
-
-import type { AppRouter } from "@/server/trpc/router/_app";
+import type { PublicWishlist } from "@/server/db/wishlist";
 
 import { classes } from "@/utils/classes";
 
 import Button from "@/components/content/Button";
 
-type WishlistCategory =
-  inferRouterOutputs<AppRouter>["wishlist"]["getPublicWishlist"]["categories"][number];
+type WishlistCategory = PublicWishlist["categories"][number];
 
 export const wishlistButtonClasses =
   "cursor-pointer px-3 py-1 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alveus-green-700";

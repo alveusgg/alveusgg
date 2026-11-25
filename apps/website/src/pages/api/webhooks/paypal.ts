@@ -10,6 +10,7 @@ import {
   type WishlistPaymentIssueStatus,
   recordWishlistCapture,
   recordWishlistPaymentIssue,
+  revalidateWishlistPage,
 } from "@/server/db/wishlist";
 
 import {
@@ -196,6 +197,7 @@ export default async function handler(
       console.log(
         `PayPal webhook: recorded capture ${captureId} for PayPal order ${paypalOrderId}`,
       );
+      await revalidateWishlistPage(res);
     }
   } catch (err) {
     // The capture is applied in a single transaction, so a failure leaves

@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
+import { getPublicWishlist } from "@/server/db/wishlist";
 import type { Context } from "@/server/trpc/context";
 import { adminWishlistRouter } from "@/server/trpc/router/admin/wishlist";
 import { wishlistRouter } from "@/server/trpc/router/wishlist";
+import { captureException } from "@/server/utils/sentry";
 
 import { createPayPalOrder } from "@/utils/paypal";
 import { getPayPalReturnParams } from "@/utils/wishlist";
@@ -41,6 +43,7 @@ vi.mock("@/server/utils/auth", () => ({
   checkPermissions: () => true,
   checkIsSuperUserSession: () => false,
 }));
+vi.mock("@/server/utils/sentry", () => ({ captureException: vi.fn() }));
 vi.mock("@/utils/paypal", () => ({
   createPayPalOrder: vi.fn(() =>
     Promise.resolve({
@@ -51,11 +54,14 @@ vi.mock("@/utils/paypal", () => ({
   capturePayPalOrder: vi.fn(),
 }));
 
+const revalidate = vi.fn();
 const publicCaller = wishlistRouter.createCaller({
   getSession: async () => null,
+  res: { revalidate },
 } as unknown as Context);
 const adminCaller = adminWishlistRouter.createCaller({
   getSession: async () => ({ user: { id: "user-1", name: "admin" } }),
+  res: { revalidate },
 } as unknown as Context);
 
 const product = {
@@ -148,7 +154,7 @@ describe("public wishlist", () => {
     mockPrisma.wishlistCategory.findMany.mockResolvedValue([]);
     mockPrisma.fileStorageObject.findMany.mockResolvedValue([]);
 
-    await publicCaller.getPublicWishlist();
+    await getPublicWishlist();
 
     expect(mockPrisma.wishlistItem.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: archivedFilter }),
@@ -188,7 +194,7 @@ describe("public wishlist", () => {
       { id: "file-1", key: "wishlist/lamp.png" },
     ]);
 
-    const { items, categories } = await publicCaller.getPublicWishlist();
+    const { items, categories } = await getPublicWishlist();
 
     expect(items[0]).toMatchObject({
       category: { id: "cat-1", name: "Heat", slug: "heat" },
@@ -203,6 +209,38 @@ describe("public wishlist", () => {
     expect(categories).toEqual([
       { id: "cat-1", name: "Heat", slug: "heat", _count: { items: 1 } },
     ]);
+  });
+});
+
+describe("wishlist page revalidation", () => {
+  const fundedItem = { ...product, status: "FULFILLED" };
+
+  test("regenerates the page after a change", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(fundedItem);
+
+    await adminCaller.markAsOpened({ id: "item-1" });
+
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith("/wishlist");
+  });
+
+  test("leaves the page alone when the change fails", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(product);
+
+    await expect(adminCaller.markAsOpened({ id: "item-1" })).rejects.toThrow(
+      "fully funded",
+    );
+    expect(revalidate).not.toHaveBeenCalled();
+  });
+
+  test("keeps a saved change when regenerating fails", async () => {
+    mockPrisma.wishlistItem.findUnique.mockResolvedValue(fundedItem);
+    revalidate.mockRejectedValueOnce(new Error("timeout"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(
+      adminCaller.markAsOpened({ id: "item-1" }),
+    ).resolves.toBeDefined();
+    expect(captureException).toHaveBeenCalledOnce();
   });
 });
 

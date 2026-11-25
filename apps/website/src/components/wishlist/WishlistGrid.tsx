@@ -1,7 +1,6 @@
-import type { inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
 
-import type { AppRouter } from "@/server/trpc/router/_app";
+import type { PublicWishlist } from "@/server/db/wishlist";
 
 import { classes } from "@/utils/classes";
 import {
@@ -21,8 +20,7 @@ import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconGift from "@/icons/IconGift";
 
 // Public items only: the public query never includes admin-only fields like notes
-export type PublicWishlistItem =
-  inferRouterOutputs<AppRouter>["wishlist"]["getPublicWishlist"]["items"][number];
+export type PublicWishlistItem = PublicWishlist["items"][number];
 
 interface Props {
   items: PublicWishlistItem[];
