@@ -52,6 +52,10 @@ function ChannelConfigRow({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
+  const chatBotMutation = trpc.adminTwitch.setChatBotChannel.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
 
   const moderator = channel.moderatorAccount;
   const broadcaster = channel.broadcasterAccount;
@@ -146,6 +150,26 @@ function ChannelConfigRow({
             {moderator ? "Reconnect" : "Connect"}
           </Button>
         </div>
+        <div className="flex flex-row items-center gap-2 border-t border-gray-700 py-2">
+          <span className="flex-1">
+            Chat bot:{" "}
+            {channel.isChatBot
+              ? `✓ The website's chat messages are posted as ${channel.username}`
+              : "No"}
+          </span>
+          <Button
+            size="small"
+            width="auto"
+            disabled={chatBotMutation.isPending}
+            onClick={() =>
+              chatBotMutation.mutate(
+                channel.isChatBot ? null : channel.channelId,
+              )
+            }
+          >
+            {channel.isChatBot ? "Stop using" : "Use as chat bot"}
+          </Button>
+        </div>
       </div>
     </li>
   );
@@ -186,6 +210,16 @@ export function ChannelConfig() {
       )}
 
       {channels.isPending && <p>Loading channels …</p>}
+
+      {channels.isSuccess && (
+        <p className="mb-2">
+          The website posts its chat messages, like pixel and wishlist
+          donations, as the chat bot channel&apos;s account.{" "}
+          {channels.data.some((channel) => channel.isChatBot)
+            ? null
+            : "No channel is picked, so they are posted as AlveusGG."}
+        </p>
+      )}
 
       {channels.isSuccess &&
         (channels.data?.length ? (

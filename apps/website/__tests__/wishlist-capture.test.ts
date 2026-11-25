@@ -4,7 +4,7 @@ import type { Prisma } from "@alveusgg/database";
 import type * as Database from "@alveusgg/database";
 
 import { sendChatMessage } from "@/server/apis/twitch";
-import { getAlveusggAccessToken } from "@/server/db/twitch-channels";
+import { getChatBotAccount } from "@/server/db/twitch-channels";
 import { recordWishlistCapture } from "@/server/db/wishlist";
 
 import { channels } from "@/data/twitch";
@@ -58,7 +58,9 @@ vi.mock("@/server/apis/twitch", () => ({
   sendChatMessage: vi.fn(() => Promise.resolve()),
 }));
 vi.mock("@/server/db/twitch-channels", () => ({
-  getAlveusggAccessToken: vi.fn(() => Promise.resolve("chat-token")),
+  getChatBotAccount: vi.fn(() =>
+    Promise.resolve({ userId: "chat-bot-id", accessToken: "chat-token" }),
+  ),
 }));
 
 const item = {
@@ -261,8 +263,8 @@ describe("recordWishlistCapture", () => {
     const message =
       "alveusLove Stream Name donated $25 towards Heat lamp! https://short.example.test/wishlist";
     expect(vi.mocked(sendChatMessage).mock.calls).toEqual([
-      ["chat-token", channels.alveusgg.id, channels.alveus.id, message],
-      ["chat-token", channels.alveusgg.id, channels.maya.id, message],
+      ["chat-token", "chat-bot-id", channels.alveus.id, message],
+      ["chat-token", "chat-bot-id", channels.maya.id, message],
     ]);
   });
 
@@ -274,7 +276,7 @@ describe("recordWishlistCapture", () => {
     const result = await recordWishlistCapture(capture);
 
     expect(result.status).toBe("captured");
-    expect(getAlveusggAccessToken).not.toHaveBeenCalled();
+    expect(getChatBotAccount).not.toHaveBeenCalled();
     expect(sendChatMessage).not.toHaveBeenCalled();
   });
 
@@ -297,7 +299,7 @@ describe("recordWishlistCapture", () => {
     mockEnv.NEON_CRM_API_KEY = undefined;
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
-    vi.mocked(getAlveusggAccessToken).mockRejectedValueOnce(
+    vi.mocked(getChatBotAccount).mockRejectedValueOnce(
       new Error("No Twitch account found"),
     );
 

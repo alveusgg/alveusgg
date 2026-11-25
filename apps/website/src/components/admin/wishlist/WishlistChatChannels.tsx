@@ -39,10 +39,11 @@ export function WishlistChatChannels() {
 
       <Panel>
         <p className="mb-4">
-          The AlveusGG account posts each new donation in the chat of these
-          channels, like &quot;alveusLove Name donated $25 towards Item!&quot;.
-          It needs no access to the channels, but their chat rules apply, like
-          followers-only mode. With no channels listed, nothing is posted.
+          The chat bot from the Twitch admin, AlveusGG by default, posts each
+          new donation in the chat of these channels, like &quot;alveusLove Name
+          donated $25 towards Item!&quot;. It needs no access to the channels,
+          but their chat rules apply, like followers-only mode. With no channels
+          listed, nothing is posted.
         </p>
 
         {remove.error && (

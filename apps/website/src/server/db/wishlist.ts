@@ -6,14 +6,12 @@ import { env } from "@/env";
 
 import { logWishlistDonationToNeon } from "@/server/apis/neon-crm";
 import { sendChatMessage } from "@/server/apis/twitch";
-import { getAlveusggAccessToken } from "@/server/db/twitch-channels";
+import { getChatBotAccount } from "@/server/db/twitch-channels";
 import {
   checkAndFixUploadedImageFileStorageObject,
   deleteFileStorageObject,
   getViewUrlForFileStorageObjectKey,
 } from "@/server/utils/file-storage";
-
-import { channels } from "@/data/twitch";
 
 import {
   notifyWishlistDonation,
@@ -180,15 +178,15 @@ async function sendWishlistDonationChatMessages({
   });
   if (chatChannels.length === 0) return;
 
-  const accessToken = await getAlveusggAccessToken();
+  const chatBot = await getChatBotAccount();
   const name = donorName?.replace(/\s+/g, " ").trim() || "Anonymous";
   const message = `alveusLove ${name} donated ${formatPrice(amountCents)} towards ${itemTitle}! ${getShortBaseUrl()}/wishlist`;
   await Promise.all(
     chatChannels.map(async ({ channelId }) => {
       try {
         await sendChatMessage(
-          accessToken,
-          channels.alveusgg.id,
+          chatBot.accessToken,
+          chatBot.userId,
           channelId,
           message,
         );

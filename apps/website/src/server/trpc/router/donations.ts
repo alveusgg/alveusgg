@@ -27,7 +27,7 @@ import {
   removeDonations,
   renamePixel,
 } from "@/server/db/donations";
-import { getAlveusggAccessToken } from "@/server/db/twitch-channels";
+import { getChatBotAccount } from "@/server/db/twitch-channels";
 import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 import {
   createCheckPermissionMiddleware,
@@ -465,7 +465,7 @@ const sendChatMessages = async (
     metadata: { twitchBroadcasterId?: string };
   })[],
 ) => {
-  const accessToken = await getAlveusggAccessToken();
+  const chatBot = await getChatBotAccount();
 
   const pixelsByBroadcasterId = Object.groupBy(
     pixels,
@@ -482,8 +482,8 @@ const sendChatMessages = async (
         const pixels = users[identifier];
 
         await sendChatMessage(
-          accessToken,
-          channels.alveusgg.id,
+          chatBot.accessToken,
+          chatBot.userId,
           broadcasterId,
           `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! ${getShortBaseUrl()}/pixels?s=${encodeURIComponent(identifier).replace(/^%40/, "@")}`,
         );

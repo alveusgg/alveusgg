@@ -6,10 +6,12 @@ import {
   setupWebhookSubscriptionsForBroadcasters,
 } from "@/server/apis/twitch";
 import {
+  canPostAsChatBot,
   createTwitchChannel,
   deleteTwitchChannel,
   editTwitchChannel,
   getTwitchChannels,
+  setChatBotChannel,
 } from "@/server/db/twitch-channels";
 import {
   createCheckPermissionMiddleware,
@@ -78,6 +80,20 @@ export const adminTwitchRouter = router({
           break;
         }
       }
+    }),
+
+  setChatBotChannel: permittedProcedure
+    .input(z.string().nullable())
+    .mutation(async ({ input: channelId }) => {
+      // Picking an account without a token would stop all chat messages
+      if (channelId && !(await canPostAsChatBot(channelId))) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Sign in to the website as this channel with the API scopes first, so it can send chat messages",
+        });
+      }
+      await setChatBotChannel(channelId);
     }),
 
   deleteChannel: permittedProcedure
