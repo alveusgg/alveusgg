@@ -610,7 +610,6 @@ model WishlistDonationOrder {
 // AlveusGG account posts them, so no tokens for these channels are needed.
 model WishlistChatChannel {
   channelId String   @id
-  username  String
   createdAt DateTime @default(now())
 
   @@map("wishlist_chat_channels")

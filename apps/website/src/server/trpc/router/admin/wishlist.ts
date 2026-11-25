@@ -5,7 +5,7 @@ import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
-import { getUserByName } from "@/server/apis/twitch";
+import { getUserByName, getUsersByIds } from "@/server/apis/twitch";
 import {
   deleteWishlistImage,
   saveWithWishlistImageUpload,
@@ -469,9 +469,22 @@ export const adminWishlistRouter = router({
       return { success: true };
     }),
 
-  adminGetChatChannels: permittedProcedure.query(() =>
-    prisma.wishlistChatChannel.findMany({ orderBy: { createdAt: "asc" } }),
-  ),
+  adminGetChatChannels: permittedProcedure.query(async () => {
+    const chatChannels = await prisma.wishlistChatChannel.findMany({
+      orderBy: { createdAt: "asc" },
+    });
+    // Names come from Twitch, so renamed channels show their current name
+    const users = await getUsersByIds(
+      chatChannels.map(({ channelId }) => channelId),
+    ).catch((err) => {
+      console.error("Failed to look up wishlist chat channel names:", err);
+      return [];
+    });
+    return chatChannels.map(({ channelId }) => ({
+      channelId,
+      username: users.find((user) => user.id === channelId)?.login ?? null,
+    }));
+  }),
 
   addChatChannel: permittedProcedure
     .input(
@@ -493,8 +506,8 @@ export const adminWishlistRouter = router({
       }
       await prisma.wishlistChatChannel.upsert({
         where: { channelId: user.id },
-        create: { channelId: user.id, username: user.login },
-        update: { username: user.login },
+        create: { channelId: user.id },
+        update: {},
       });
     }),
 

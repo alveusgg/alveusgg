@@ -39,11 +39,10 @@ export function WishlistChatChannels() {
 
       <Panel>
         <p className="mb-4">
-          The chat bot from the Twitch admin, AlveusGG by default, posts each
-          new donation in the chat of these channels, like &quot;alveusLove Name
-          donated $25 towards Item!&quot;. It needs no access to the channels,
-          but their chat rules apply, like followers-only mode. With no channels
-          listed, nothing is posted.
+          The chat bot posts each new donation in the chat of these channels,
+          like &quot;alveusLove Name donated $25 towards Item!&quot;. It needs
+          no access to the channels, but their chat rules apply, like
+          followers-only mode. With no channels listed, nothing is posted.
         </p>
 
         {remove.error && (
@@ -64,14 +63,19 @@ export function WishlistChatChannels() {
           <ul className="flex flex-col gap-2">
             {channels.data.map((channel) => (
               <li key={channel.channelId} className="flex items-center gap-4">
-                <Link
-                  href={`https://www.twitch.tv/${channel.username}`}
-                  external
-                  dark
-                  className="flex-1"
-                >
-                  {channel.username}
-                </Link>
+                <span className="flex-1">
+                  {channel.username ? (
+                    <Link
+                      href={`https://www.twitch.tv/${channel.username}`}
+                      external
+                      dark
+                    >
+                      {channel.username}
+                    </Link>
+                  ) : (
+                    `Channel ${channel.channelId}`
+                  )}
+                </span>
                 <Button
                   size="small"
                   width="auto"
