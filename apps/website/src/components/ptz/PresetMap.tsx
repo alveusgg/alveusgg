@@ -179,6 +179,7 @@ const PresetMap = ({
         maxZoom={25}
         fitView
         proOptions={{ hideAttribution: true }}
+        forceColorMode="light"
       >
         <PresetMapControls />
       </ReactFlow>

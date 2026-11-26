@@ -300,6 +300,7 @@ const Tree = <T extends Record<string, unknown>>({
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
+      forceColorMode="light"
       fitView
       onInit={onInit}
     >
