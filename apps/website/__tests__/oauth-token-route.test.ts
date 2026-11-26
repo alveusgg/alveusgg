@@ -63,6 +63,12 @@ vi.mock("@/server/oauth/keys", () => {
   };
 });
 
+vi.mock("@/server/db/user-email", () => {
+  return {
+    decryptUserEmail: async (email: string | null) => email,
+  };
+});
+
 vi.mock("@/server/oauth/tokens", async () => {
   const actual = await vi.importActual("@/server/oauth/tokens");
   return {

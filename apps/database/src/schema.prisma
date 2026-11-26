@@ -69,7 +69,8 @@ model Session {
 model User {
   id                 String             @id @default(cuid())
   name               String?
-  email              String?            @unique
+  email              String?            @db.Text // encrypted (v2), plaintext until backfilled
+  emailHash          String?            @unique @db.Char(43) // blind index of the normalized email
   emailVerified      DateTime?
   image              String?
   accounts           Account[]
