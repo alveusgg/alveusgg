@@ -14,6 +14,7 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import socials from "@/components/shared/data/socials";
 import updateChannels from "@/components/shared/data/updateChannels";
 
+import IconEnvelope from "@/icons/IconEnvelope";
 import IconGitHub from "@/icons/IconGitHub";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
@@ -170,7 +171,7 @@ const Footer = () => {
               </p>
             </div>
 
-            <div className="flex flex-col gap-4 xl:justify-self-end">
+            <div className="flex w-fit flex-col gap-4 xl:justify-self-end">
               <div>
                 <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
                   Follow us
@@ -179,7 +180,7 @@ const Footer = () => {
                 <ul className="flex flex-wrap gap-2">
                   {Object.entries(socials).map(([key, social]) => (
                     <li key={key}>
-                      <a
+                      <Link
                         className={buttonClasses}
                         href={social.link}
                         target="_blank"
@@ -187,42 +188,64 @@ const Footer = () => {
                         title={social.title}
                       >
                         <social.icon size={24} />
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div>
-                <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
-                  Announcement channels
-                </p>
+              <div className="flex flex-wrap justify-between gap-4">
+                <div>
+                  <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
+                    Notifications
+                  </p>
 
-                <ul className="flex flex-wrap gap-2">
-                  <li>
-                    <NotificationsButton
-                      size={24}
-                      className={buttonClasses}
-                      openDirectionX="right"
-                      openDirectionY="top"
-                    />
-                  </li>
-                  {Object.entries(updateChannels).map(
-                    ([key, updateChannel]) => (
-                      <li key={key}>
-                        <a
-                          className={buttonClasses}
-                          href={updateChannel.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={updateChannel.title}
-                        >
-                          <updateChannel.icon size={24} />
-                        </a>
-                      </li>
-                    ),
-                  )}
-                </ul>
+                  <ul className="flex flex-wrap gap-2">
+                    <li>
+                      <NotificationsButton
+                        size={24}
+                        className={buttonClasses}
+                        openDirectionX="right"
+                        openDirectionY="top"
+                      />
+                    </li>
+                    {Object.entries(updateChannels).map(
+                      ([key, updateChannel]) => (
+                        <li key={key}>
+                          <Link
+                            className={buttonClasses}
+                            href={updateChannel.link}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={updateChannel.title}
+                          >
+                            <updateChannel.icon size={24} />
+                          </Link>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-bold tracking-widest text-alveus-green-200 uppercase">
+                    Newsletter
+                  </p>
+
+                  <ul className="flex flex-wrap gap-2">
+                    <li>
+                      <Link
+                        className={buttonClasses}
+                        href="/go/emails"
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Email newsletter"
+                      >
+                        <IconEnvelope size={24} />
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
