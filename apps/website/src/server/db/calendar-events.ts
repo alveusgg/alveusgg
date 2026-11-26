@@ -22,6 +22,7 @@ import {
   getScheduleSegments,
   removeScheduleSegment,
 } from "@/server/apis/twitch";
+import { decryptAccountTokens } from "@/server/db/account-tokens";
 
 import { getFormattedTitle, regularEventsWeekly } from "@/data/calendar-events";
 import { type ChannelWithCalendarEvents, channels } from "@/data/twitch";
@@ -299,8 +300,9 @@ export async function syncTwitchSchedule(channel: ChannelWithCalendarEvents) {
       },
     },
   });
-  const { access_token, providerAccountId } =
-    twitchChannel?.broadcasterAccount ?? {};
+  const { access_token, providerAccountId } = twitchChannel?.broadcasterAccount
+    ? await decryptAccountTokens(twitchChannel.broadcasterAccount)
+    : {};
   if (!access_token || !providerAccountId) {
     throw new Error(`No access token found for ${username} Twitch account`);
   }
