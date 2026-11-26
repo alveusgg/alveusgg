@@ -3,6 +3,7 @@ import {
   commonCountries,
   otherCountries,
 } from "@/utils/countries";
+import { FORM_ENTRY_MAX_LENGTHS } from "@/utils/forms";
 
 import { FieldGroup } from "../shared/form/FieldGroup";
 import { Fieldset } from "../shared/form/Fieldset";
@@ -16,6 +17,7 @@ export const ShippingAddressFieldset = () => {
         <TextField
           label="Street Address"
           name="address-line1"
+          maxLength={FORM_ENTRY_MAX_LENGTHS.addressLine}
           type="text"
           autoComplete="address-line1"
           isRequired={true}
@@ -25,6 +27,7 @@ export const ShippingAddressFieldset = () => {
         <TextField
           label="Second address line"
           name="address-line2"
+          maxLength={FORM_ENTRY_MAX_LENGTHS.addressLine}
           type="text"
           autoComplete="address-line2"
         />
@@ -34,6 +37,7 @@ export const ShippingAddressFieldset = () => {
         <TextField
           label="City"
           name="city"
+          maxLength={FORM_ENTRY_MAX_LENGTHS.city}
           autoComplete="address-level2"
           isRequired={true}
           minLength={1}
@@ -42,6 +46,7 @@ export const ShippingAddressFieldset = () => {
         <TextField
           label="ZIP / Postal Code"
           name="postal-code"
+          maxLength={FORM_ENTRY_MAX_LENGTHS.postalCode}
           autoComplete="postal-code"
           isRequired={true}
           minLength={1}
@@ -52,6 +57,7 @@ export const ShippingAddressFieldset = () => {
         <TextField
           label="State / Province / Region"
           name="state"
+          maxLength={FORM_ENTRY_MAX_LENGTHS.state}
           autoComplete="address-level1"
         />
 
