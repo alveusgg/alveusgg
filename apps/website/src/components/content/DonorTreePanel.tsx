@@ -6,8 +6,9 @@ import {
   type NodeProps,
   ReactFlow,
   type ReactFlowInstance,
+  useOptionsStore,
   useReactFlow,
-  useStore,
+  useViewportStore,
 } from "@xyflow/react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -49,9 +50,9 @@ const TreeImageNode = ({ data }: NodeProps<Node<ImageData>>) => {
   // after mount the store viewport is a hardcoded zoom 1 (above
   // FULL_RES_ZOOM), which would fire the high-res request on every mount before
   // the initial fit applies.
-  const crossedThreshold = useStore(
-    (s) => s.panZoom !== null && s.transform[2] >= FULL_RES_ZOOM,
-  );
+  const panZoomReady = useOptionsStore((s) => s.panZoom !== null);
+  const zoomedIn = useViewportStore((s) => s.transform[2] >= FULL_RES_ZOOM);
+  const crossedThreshold = panZoomReady && zoomedIn;
   // Latch on: once the user has zoomed in far enough to load the high-res
   // image, keep it mounted even after zooming back out — there's no benefit to
   // tearing it down and re-fetching it next time they zoom in.
@@ -130,8 +131,11 @@ const nodeTypes = {
 
 // --- Zoom floor ---
 
-// fitView's default relative padding of 0.1 scales the raw fit zoom by 1/1.1.
-const FIT_PADDING = 1.1;
+// Mirrors fitView's default padding of "5%", which xyflow resolves to whole
+// pixels on each side of each axis.
+const FIT_PADDING = 0.05;
+const fitAxisZoom = (viewport: number, content: number) =>
+  (viewport - 2 * Math.floor(viewport * FIT_PADDING)) / content;
 
 // Keeps the zoom floor at the fitted zoom for the current panel size, so the
 // image can always be zoomed out to exactly fit but no further — including
@@ -152,9 +156,12 @@ const PanelMinZoom = ({
 }) => {
   // Rendered inside <ReactFlow>, so the instance is available from context.
   const reactFlow = useReactFlow();
-  const fitZoom = useStore((s) =>
+  const fitZoom = useViewportStore((s) =>
     s.width && s.height
-      ? Math.min(s.width / image.width, s.height / image.height) / FIT_PADDING
+      ? Math.min(
+          fitAxisZoom(s.width, image.width),
+          fitAxisZoom(s.height, image.height),
+        )
       : null,
   );
   const prevFitZoom = useRef<number | null>(null);
@@ -232,7 +239,7 @@ export default function DonorTreePanel({
         width,
         height,
       },
-      { padding: 0.1, duration: 800 },
+      { padding: "5%", duration: 800 },
     );
   }, [flow, activeAnnotation]);
 
@@ -342,6 +349,7 @@ export default function DonorTreePanel({
         defaultViewport={{ x: 0, y: 0, zoom: 0.05 }}
         onInit={handleInit}
         proOptions={{ hideAttribution: true }}
+        forceColorMode="light"
       >
         <Controls showInteractive={false}>
           {onToggleFullscreen && (
