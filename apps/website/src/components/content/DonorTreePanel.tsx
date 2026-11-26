@@ -6,8 +6,9 @@ import {
   type NodeProps,
   ReactFlow,
   type ReactFlowInstance,
+  useOptionsStore,
   useReactFlow,
-  useStore,
+  useViewportStore,
 } from "@xyflow/react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -49,9 +50,9 @@ const TreeImageNode = ({ data }: NodeProps<Node<ImageData>>) => {
   // after mount the store viewport is a hardcoded zoom 1 (above
   // FULL_RES_ZOOM), which would fire the high-res request on every mount before
   // the initial fit applies.
-  const crossedThreshold = useStore(
-    (s) => s.panZoom !== null && s.transform[2] >= FULL_RES_ZOOM,
-  );
+  const panZoomReady = useOptionsStore((s) => s.panZoom !== null);
+  const zoomedIn = useViewportStore((s) => s.transform[2] >= FULL_RES_ZOOM);
+  const crossedThreshold = panZoomReady && zoomedIn;
   // Latch on: once the user has zoomed in far enough to load the high-res
   // image, keep it mounted even after zooming back out — there's no benefit to
   // tearing it down and re-fetching it next time they zoom in.
@@ -152,7 +153,7 @@ const PanelMinZoom = ({
 }) => {
   // Rendered inside <ReactFlow>, so the instance is available from context.
   const reactFlow = useReactFlow();
-  const fitZoom = useStore((s) =>
+  const fitZoom = useViewportStore((s) =>
     s.width && s.height
       ? Math.min(s.width / image.width, s.height / image.height) / FIT_PADDING
       : null,
